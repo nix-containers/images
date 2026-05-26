@@ -73,7 +73,6 @@ jobs:
 
       - name: Build nix2container image
         if: env.NIX_INSTALLED == 'true'
-        continue-on-error: true
         run: |
           # Source Nix environment
           . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
@@ -83,7 +82,6 @@ jobs:
 
       - name: Load and push image to registry
         if: env.NIX_INSTALLED == 'true' && env.BUILD_SUCCESS == 'true'
-        continue-on-error: true
         run: |
           # Load the nix2container image and push directly to registry
           if [ -f ./result ]; then
