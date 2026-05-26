@@ -49,6 +49,11 @@ jobs:
           CHANGED=${{ toJSON(needs.check-version-changes.outputs.changed-images) }}
           FULL=${{ toJSON(needs.discover-images.outputs.matrix) }}
 
+          # GHA's toJSON(undefined) yields the literal string "null"; normalize.
+          [ "$IMAGES" = "null" ] && IMAGES=""
+          [ "$FORCE" = "null" ] && FORCE="false"
+          [ "$CHANGES_DETECTED" = "null" ] && CHANGES_DETECTED="false"
+
           if [ -n "$IMAGES" ]; then
             MATRIX=$(printf '%s' "$FULL" | jq -c --arg list "$IMAGES" '
               ($list | split(",") | map(gsub("^\\s+|\\s+$"; ""))) as $sel
