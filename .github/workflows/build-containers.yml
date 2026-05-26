@@ -38,14 +38,17 @@ jobs:
       run: ${{ steps.pick.outputs.run }}
     steps:
       - id: pick
-        env:
-          IMAGES: ${{ github.event.inputs.images }}
-          FORCE: ${{ github.event.inputs.force_rebuild }}
-          CHANGES_DETECTED: ${{ needs.check-version-changes.outputs.changes-detected }}
-          CHANGED: ${{ needs.check-version-changes.outputs.changed-images }}
-          FULL: ${{ needs.discover-images.outputs.matrix }}
+        # Values are passed via toJSON to safely embed JSON (e.g. the matrix)
+        # into shell assignments — bare interpolation of a JSON object into a
+        # YAML env: entry silently drops the variable.
         run: |
           set -euo pipefail
+          IMAGES=${{ toJSON(github.event.inputs.images) }}
+          FORCE=${{ toJSON(github.event.inputs.force_rebuild) }}
+          CHANGES_DETECTED=${{ toJSON(needs.check-version-changes.outputs.changes-detected) }}
+          CHANGED=${{ toJSON(needs.check-version-changes.outputs.changed-images) }}
+          FULL=${{ toJSON(needs.discover-images.outputs.matrix) }}
+
           if [ -n "$IMAGES" ]; then
             MATRIX=$(printf '%s' "$FULL" | jq -c --arg list "$IMAGES" '
               ($list | split(",") | map(gsub("^\\s+|\\s+$"; ""))) as $sel
