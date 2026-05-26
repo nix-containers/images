@@ -7,7 +7,7 @@
 # and there's no cache hit. Until nixpkgs catches up to a working version,
 # we fetch the official static binary directly and autoPatchelf it.
 
-{ stdenv, lib, fetchurl, autoPatchelfHook }:
+{ stdenv, lib, fetchurl, autoPatchelfHook, zlib }:
 
 let
   version = "1.38.1";
@@ -37,7 +37,7 @@ stdenv.mkDerivation {
   sourceRoot = ".";
 
   nativeBuildInputs = [ autoPatchelfHook ];
-  buildInputs = [ stdenv.cc.cc.lib ];
+  buildInputs = [ stdenv.cc.cc.lib zlib ];
 
   dontConfigure = true;
   dontBuild = true;
