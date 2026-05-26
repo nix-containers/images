@@ -33,6 +33,9 @@ stdenv.mkDerivation {
     hash = sys.hash;
   };
 
+  # Tarball contains files at the root (no top-level directory).
+  sourceRoot = ".";
+
   nativeBuildInputs = [ autoPatchelfHook ];
   buildInputs = [ stdenv.cc.cc.lib ];
 
