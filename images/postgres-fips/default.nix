@@ -16,6 +16,17 @@ let
     tzdata
   ];
 
+  # Postgres runs as uid:gid 999:999. initdb does a getpwuid() lookup
+  # against /etc/passwd and refuses to run without an entry, so we bake one
+  # in (plus /etc/group, /tmp, /home/postgres) via the shared helper.
+  postgresUser = {
+    uid = 999;
+    gid = 999;
+    name = "postgres";
+    home = "/home/postgres";
+  };
+  userEnv = nonRoot.mkCustomUserEnv pkgs postgresUser [];
+
   entrypoint = pkgs.writeShellApplication {
     name = "docker-entrypoint.sh";
     runtimeInputs = imagePkgs;
@@ -33,7 +44,7 @@ in nix2container.buildImage {
   copyToRoot = [
     (buildEnv {
       name = "postgres-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ entrypoint ];
+      paths = base.basePackages ++ imagePkgs ++ [ entrypoint userEnv ];
     })
   ];
 
