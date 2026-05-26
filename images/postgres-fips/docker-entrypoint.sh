@@ -43,9 +43,11 @@ initialize_db() {
   fi
 
   echo "[entrypoint] running initdb in $PGDATA (user=$POSTGRES_USER)"
-  local pwfile
-  pwfile=$(mktemp)
+  # Use /var/run/postgresql (we ensured it exists above); the nix-base image
+  # doesn't ship a /tmp.
+  local pwfile=/var/run/postgresql/.pwfile.$$
   printf '%s' "$POSTGRES_PASSWORD" > "$pwfile"
+  chmod 600 "$pwfile"
   # shellcheck disable=SC2086  # intentional word-split on POSTGRES_INITDB_ARGS
   initdb \
     --username="$POSTGRES_USER" \
