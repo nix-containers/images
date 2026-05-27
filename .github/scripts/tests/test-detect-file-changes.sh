@@ -77,5 +77,60 @@ test_per_image_multiple
 test_per_image_dedup
 test_per_image_unknown_filtered
 
+test_shared_lib() {
+  local out
+  out=$(run "lib/categories.nix")
+  assert_eq "shared lib/ -> rebuild-all" \
+    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    "$out"
+}
+
+test_shared_pkgs() {
+  local out
+  out=$(run "pkgs/some-package/default.nix")
+  assert_eq "shared pkgs/ -> rebuild-all" \
+    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    "$out"
+}
+
+test_shared_bundler() {
+  local out
+  out=$(run "bundler/foo.nix")
+  assert_eq "shared bundler/ -> rebuild-all" \
+    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    "$out"
+}
+
+test_shared_flake_lock() {
+  local out
+  out=$(run "flake.lock")
+  assert_eq "shared flake.lock -> rebuild-all" \
+    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    "$out"
+}
+
+test_shared_flake_nix() {
+  local out
+  out=$(run "flake.nix")
+  assert_eq "shared flake.nix -> rebuild-all" \
+    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    "$out"
+}
+
+test_shared_root_nix() {
+  local out
+  out=$(run "chart-image-mapping.nix")
+  assert_eq "shared root *.nix -> rebuild-all" \
+    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    "$out"
+}
+
+test_shared_lib
+test_shared_pkgs
+test_shared_bundler
+test_shared_flake_lock
+test_shared_flake_nix
+test_shared_root_nix
+
 printf '\n%d passed, %d failed\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]
