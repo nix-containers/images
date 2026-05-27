@@ -35,6 +35,18 @@ let
 
   userEnv = nonRoot.mkCustomUserEnv pkgs keycloakUser [];
 
+  # mkCustomUserEnv always adds /tmp (real dir, mode 1777). When pulled into
+  # buildEnv, /tmp becomes a SYMLINK back to the nix-store userEnv path —
+  # which collides with tmpDir's real /tmp at image-build time
+  # ("the file '/tmp' already exists in the graph"). Strip /tmp from the
+  # userEnv copy so tmpDir is the only contributor for that path.
+  userEnvSansTmp = pkgs.runCommand "keycloak-user-env-no-tmp" {} ''
+    mkdir -p $out
+    cp -rL ${userEnv}/. $out/
+    chmod -R u+w $out
+    rm -rf $out/tmp
+  '';
+
   # Pre-create writable data dirs under /opt/keycloak (compose convention).
   # perms below assigns 999:999 ownership so the dirs are writable when the
   # container runs as the keycloak user under cap_drop: ALL (no runtime chown).
@@ -63,7 +75,7 @@ in nix2container.buildImage {
       copyToRoot = [
         (buildEnv {
           name = "keycloak-fips-root";
-          paths = base.basePackages ++ imagePkgs ++ [ userEnv kcDirs ];
+          paths = base.basePackages ++ imagePkgs ++ [ userEnvSansTmp kcDirs ];
         })
         # tmpDir intentionally OUTSIDE buildEnv — buildEnv would symlink it
         # back to the nix store and re-introduce the read-only /tmp problem.
