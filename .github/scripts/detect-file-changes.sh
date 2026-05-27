@@ -5,13 +5,23 @@
 # FULL_MATRIX env var (small fixtures, tests) or via FULL_MATRIX_PATH
 # pointing to a file (used by CI: matrices for thousands of images blow
 # past ARG_MAX if passed in env).
-# Writes classification JSON to stdout.
+#
+# Output shape: {"changes-detected": "true|false",
+#                "changed-images": {"include": [...]},
+#                "rebuild-all": "true|false"}
+#
+# When rebuild-all is true, changed-images is INTENTIONALLY empty. The
+# consumer (select-matrix in build-containers.yml) substitutes the full
+# discovered matrix on its own. This keeps the 200KB+ matrix from
+# transiting step boundaries and re-hitting ARG_MAX.
 set -euo pipefail
 
-if [ -n "${FULL_MATRIX_PATH:-}" ]; then
-  FULL_MATRIX="$(cat "$FULL_MATRIX_PATH")"
+if [ -z "${FULL_MATRIX_PATH:-}" ]; then
+  : "${FULL_MATRIX:?FULL_MATRIX or FULL_MATRIX_PATH required}"
+  FULL_MATRIX_PATH="$(mktemp)"
+  printf '%s' "$FULL_MATRIX" > "$FULL_MATRIX_PATH"
+  trap 'rm -f "$FULL_MATRIX_PATH"' EXIT
 fi
-: "${FULL_MATRIX:?FULL_MATRIX or FULL_MATRIX_PATH required}"
 
 CHANGED_PATHS=$(jq -Rs 'split("\n") | map(select(length > 0))')
 
@@ -30,16 +40,17 @@ REBUILD_ALL=$(printf '%s' "$CHANGED_PATHS" | jq -r '
 ')
 
 if [ "$REBUILD_ALL" = "true" ]; then
-  CHANGED_INCLUDE=$(jq -c '.include' <<< "$FULL_MATRIX")
+  CHANGED_INCLUDE='[]'
   CHANGES_DETECTED="true"
 else
   PER_IMAGE_NAMES=$(printf '%s' "$CHANGED_PATHS" | jq -c '
     [.[] | capture("^images/(?<n>[^/]+)/.+")? | .n] | unique
   ')
+  # --slurpfile loads from disk, avoiding ARG_MAX when the full matrix is huge.
   CHANGED_INCLUDE=$(jq -cn \
     --argjson names "$PER_IMAGE_NAMES" \
-    --argjson full "$FULL_MATRIX" '
-    [$full.include[] | select(.name as $n | $names | index($n))]
+    --slurpfile full "$FULL_MATRIX_PATH" '
+    [$full[0].include[] | select(.name as $n | $names | index($n))]
   ')
   CHANGES_DETECTED=$(printf '%s' "$CHANGED_INCLUDE" | jq -r 'if length > 0 then "true" else "false" end')
 fi

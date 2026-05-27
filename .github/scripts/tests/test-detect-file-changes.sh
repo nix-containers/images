@@ -81,7 +81,7 @@ test_shared_lib() {
   local out
   out=$(run "lib/categories.nix")
   assert_eq "shared lib/ -> rebuild-all" \
-    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    '{"changes-detected":"true","changed-images":{"include":[]},"rebuild-all":"true"}' \
     "$out"
 }
 
@@ -89,7 +89,7 @@ test_shared_pkgs() {
   local out
   out=$(run "pkgs/some-package/default.nix")
   assert_eq "shared pkgs/ -> rebuild-all" \
-    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    '{"changes-detected":"true","changed-images":{"include":[]},"rebuild-all":"true"}' \
     "$out"
 }
 
@@ -97,7 +97,7 @@ test_shared_bundler() {
   local out
   out=$(run "bundler/foo.nix")
   assert_eq "shared bundler/ -> rebuild-all" \
-    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    '{"changes-detected":"true","changed-images":{"include":[]},"rebuild-all":"true"}' \
     "$out"
 }
 
@@ -105,7 +105,7 @@ test_shared_flake_lock() {
   local out
   out=$(run "flake.lock")
   assert_eq "shared flake.lock -> rebuild-all" \
-    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    '{"changes-detected":"true","changed-images":{"include":[]},"rebuild-all":"true"}' \
     "$out"
 }
 
@@ -113,7 +113,7 @@ test_shared_flake_nix() {
   local out
   out=$(run "flake.nix")
   assert_eq "shared flake.nix -> rebuild-all" \
-    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    '{"changes-detected":"true","changed-images":{"include":[]},"rebuild-all":"true"}' \
     "$out"
 }
 
@@ -121,7 +121,7 @@ test_shared_root_nix() {
   local out
   out=$(run "chart-image-mapping.nix")
   assert_eq "shared root *.nix -> rebuild-all" \
-    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    '{"changes-detected":"true","changed-images":{"include":[]},"rebuild-all":"true"}' \
     "$out"
 }
 
@@ -178,7 +178,7 @@ test_mixed_shared_wins() {
   out=$(run "lib/foo.nix
 images/postgres-fips/test.nix")
   assert_eq "mixed shared + per-image -> rebuild-all wins" \
-    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"},{"name":"redis","path":"images/redis/"}]},"rebuild-all":"true"}' \
+    '{"changes-detected":"true","changed-images":{"include":[]},"rebuild-all":"true"}' \
     "$out"
 }
 

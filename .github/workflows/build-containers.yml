@@ -56,6 +56,7 @@ jobs:
           VERSION_MATRIX=${{ toJSON(needs.check-version-changes.outputs.changed-images) }}
           FILE_CHANGED=${{ toJSON(needs.detect-file-changes.outputs.changes-detected) }}
           FILE_MATRIX=${{ toJSON(needs.detect-file-changes.outputs.changed-images) }}
+          FILE_REBUILD_ALL=${{ toJSON(needs.detect-file-changes.outputs.rebuild-all) }}
           FULL=${{ toJSON(needs.discover-images.outputs.matrix) }}
 
           # GHA's toJSON(undefined) yields the literal string "null"; normalize.
@@ -63,6 +64,7 @@ jobs:
           [ "$FORCE" = "null" ] && FORCE="false"
           [ "$VERSION_CHANGED" = "null" ] && VERSION_CHANGED="false"
           [ "$FILE_CHANGED" = "null" ] && FILE_CHANGED="false"
+          [ "$FILE_REBUILD_ALL" = "null" ] && FILE_REBUILD_ALL="false"
           [ "$VERSION_MATRIX" = "null" ] && VERSION_MATRIX='{"include":[]}'
           [ "$FILE_MATRIX" = "null" ] && FILE_MATRIX='{"include":[]}'
 
@@ -75,10 +77,18 @@ jobs:
             echo "run=true" >> "$GITHUB_OUTPUT"
             echo "Selected images: $IMAGES"
             echo "Matrix: $MATRIX"
-          elif [ "$FORCE" = "true" ]; then
+          elif [ "$FORCE" = "true" ] || [ "$FILE_REBUILD_ALL" = "true" ]; then
+            # FORCE: explicit user request. FILE_REBUILD_ALL: detect-file-changes
+            # signalled a shared-path change (lib/, flake.lock, etc.) without
+            # returning the matrix itself (which would be 200KB+ for 3000+ images
+            # and break GHA's exec at the step boundary).
             echo "matrix=$FULL" >> "$GITHUB_OUTPUT"
             echo "run=true" >> "$GITHUB_OUTPUT"
-            echo "force_rebuild=true; using full discovered matrix"
+            if [ "$FORCE" = "true" ]; then
+              echo "force_rebuild=true; using full discovered matrix"
+            else
+              echo "file-change rebuild-all triggered; using full discovered matrix"
+            fi
           elif [ "$VERSION_CHANGED" = "true" ] || [ "$FILE_CHANGED" = "true" ]; then
             # Union the two matrices on .name; preserves {name,path} entries.
             MATRIX=$(jq -cn \
