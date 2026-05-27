@@ -200,6 +200,20 @@ test_empty_input() {
     "$out"
 }
 
+test_full_matrix_path() {
+  # When FULL_MATRIX_PATH is set, script reads matrix from that file instead
+  # of the FULL_MATRIX env var. CI uses this path to avoid E2BIG when the
+  # matrix exceeds the kernel's ARG_MAX (repo has thousands of images).
+  local tmpfile out
+  tmpfile=$(mktemp)
+  printf '%s' "$FULL_MATRIX" > "$tmpfile"
+  out=$(printf '%s' "images/postgres-fips/test.nix" | env -u FULL_MATRIX FULL_MATRIX_PATH="$tmpfile" "$SCRIPT")
+  rm -f "$tmpfile"
+  assert_eq "FULL_MATRIX_PATH file-based matrix loading" \
+    '{"changes-detected":"true","changed-images":{"include":[{"name":"postgres-fips","path":"images/postgres-fips/"}]},"rebuild-all":"false"}' \
+    "$out"
+}
+
 test_ignored_readme
 test_ignored_docs
 test_ignored_workflows
@@ -208,6 +222,7 @@ test_ignored_root_json
 test_mixed_shared_wins
 test_mixed_image_plus_ignored
 test_empty_input
+test_full_matrix_path
 
 printf '\n%d passed, %d failed\n' "$PASS" "$FAIL"
 [ "$FAIL" -eq 0 ]

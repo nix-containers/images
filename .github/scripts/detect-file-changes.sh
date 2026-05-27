@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 # Classify changed file paths into per-image and shared-rebuild-all buckets.
-# Reads paths from stdin (one per line). Reads FULL_MATRIX env var (JSON of
-# discovered images, shape: {"include":[{"name","path"},...]}).
+# Reads paths from stdin (one per line). Discovered-images matrix
+# (shape: {"include":[{"name","path"},...]}) is supplied either as
+# FULL_MATRIX env var (small fixtures, tests) or via FULL_MATRIX_PATH
+# pointing to a file (used by CI: matrices for thousands of images blow
+# past ARG_MAX if passed in env).
 # Writes classification JSON to stdout.
 set -euo pipefail
 
-: "${FULL_MATRIX:?FULL_MATRIX env var required}"
+if [ -n "${FULL_MATRIX_PATH:-}" ]; then
+  FULL_MATRIX="$(cat "$FULL_MATRIX_PATH")"
+fi
+: "${FULL_MATRIX:?FULL_MATRIX or FULL_MATRIX_PATH required}"
 
 CHANGED_PATHS=$(jq -Rs 'split("\n") | map(select(length > 0))')
 
