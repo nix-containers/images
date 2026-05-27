@@ -24,6 +24,11 @@ let
     keycloak
     bash
     coreutils
+    # kc.sh-wrapped pipes through sed/xargs during startup. coreutils doesn't
+    # include either, so the script fails immediately with "command not found"
+    # if these aren't on PATH.
+    gnused
+    findutils
     cacert
     tzdata
   ];
@@ -40,6 +45,15 @@ let
     chmod 755 $out/opt/keycloak/data/sessions
   '';
 
+  # The nix-base /tmp is a symlink to a read-only nix-store path, so the JVM
+  # can't create temp files there ("ThreadContextFcntl::create_tempfile"
+  # assertion fires immediately on Quarkus startup). Bake a real writable
+  # /tmp into a dedicated layer (outside buildEnv, so it isn't symlinked).
+  tmpDir = pkgs.runCommand "keycloak-fips-tmp" {} ''
+    mkdir -p $out/tmp
+    chmod 1777 $out/tmp
+  '';
+
 in nix2container.buildImage {
   name = "keycloak-fips";
   tag = pkgs.keycloak.version;
@@ -51,6 +65,9 @@ in nix2container.buildImage {
           name = "keycloak-fips-root";
           paths = base.basePackages ++ imagePkgs ++ [ userEnv kcDirs ];
         })
+        # tmpDir intentionally OUTSIDE buildEnv — buildEnv would symlink it
+        # back to the nix store and re-introduce the read-only /tmp problem.
+        tmpDir
       ];
       perms = [
         {
@@ -66,6 +83,11 @@ in nix2container.buildImage {
           mode = "0755";
           uid = keycloakUser.uid;
           gid = keycloakUser.gid;
+        }
+        {
+          path = tmpDir;
+          regex = "/tmp";
+          mode = "1777";
         }
       ];
     })
