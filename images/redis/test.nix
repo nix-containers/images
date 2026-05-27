@@ -1,5 +1,8 @@
 { pkgs, image }:
 
+# Fixture edit for PR #11 verification — confirms detect-file-changes
+# correctly triggers test-images for this image when its test.nix changes.
+# This PR is throwaway and should not be merged.
 pkgs.writeShellScript "test-redis" ''
   set -euo pipefail
   
