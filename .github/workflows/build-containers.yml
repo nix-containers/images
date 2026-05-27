@@ -90,11 +90,18 @@ jobs:
               echo "file-change rebuild-all triggered; using full discovered matrix"
             fi
           elif [ "$VERSION_CHANGED" = "true" ] || [ "$FILE_CHANGED" = "true" ]; then
-            # Union the two matrices on .name; preserves {name,path} entries.
+            # Union the two matrices on .name. check-version-changes emits the
+            # matrix as a bare array (e.g. "[]" when empty), while
+            # detect-file-changes emits it as {"include":[...]} — normalize
+            # both shapes before concat.
             MATRIX=$(jq -cn \
               --argjson v "$VERSION_MATRIX" \
               --argjson f "$FILE_MATRIX" '
-              {include: (($v.include // []) + ($f.include // []) | unique_by(.name))}
+              def to_array:
+                if type == "object" and has("include") then .include
+                elif type == "array" then .
+                else [] end;
+              {include: (($v | to_array) + ($f | to_array) | unique_by(.name))}
             ')
             echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
             echo "run=true" >> "$GITHUB_OUTPUT"
