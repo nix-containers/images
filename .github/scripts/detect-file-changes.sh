@@ -5,5 +5,26 @@
 # Writes classification JSON to stdout.
 set -euo pipefail
 
-# Stub — emits empty result so first test fails on content, not exit code.
-printf '{"changes-detected":"false","changed-images":{"include":[]},"rebuild-all":"false"}\n'
+: "${FULL_MATRIX:?FULL_MATRIX env var required}"
+
+# Read all changed paths from stdin into a JSON array.
+CHANGED_PATHS=$(jq -Rs 'split("\n") | map(select(length > 0))')
+
+# Extract per-image names from paths matching images/<name>/...
+PER_IMAGE_NAMES=$(printf '%s' "$CHANGED_PATHS" | jq -c '
+  [.[] | capture("^images/(?<n>[^/]+)/.+")? | .n] | unique
+')
+
+# Filter against the discovered matrix: drop names that no longer exist.
+CHANGED_INCLUDE=$(jq -cn \
+  --argjson names "$PER_IMAGE_NAMES" \
+  --argjson full "$FULL_MATRIX" '
+  [$full.include[] | select(.name as $n | $names | index($n))]
+')
+
+CHANGES_DETECTED=$(printf '%s' "$CHANGED_INCLUDE" | jq -r 'if length > 0 then "true" else "false" end')
+
+jq -cn \
+  --arg detected "$CHANGES_DETECTED" \
+  --argjson inc "$CHANGED_INCLUDE" \
+  '{"changes-detected": $detected, "changed-images": {"include": $inc}, "rebuild-all": "false"}'
