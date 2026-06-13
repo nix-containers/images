@@ -108,6 +108,31 @@ counterpart, identify gaps, and drive the refresh-and-publish work.
 - `google/cloud-sdk` — no GitHub releases; version derived from nixpkgs (565.0.0). Cluster uses `slim` tag which is a floating tag. Best-effort comparison.
 - Zitadel has two concurrent release branches (v3.x LTS and v4.x current). The cluster runs v4.13.1; nix-containers nixpkgs provides 2.71.7 which is severely stale. Upgrade path needs testing.
 
+## T16b decisions (2026-06-13)
+
+### Bumped in T16b
+
+| image | old version | new version | method | notes |
+|---|---|---|---|---|
+| forgejo | 15.0.1 (nixpkgs) | 15.0.3 | prebuilt binary override in `pkgs/forgejo/` | nixpkgs not yet at 15.0.3; statically linked upstream binary |
+| pulumi | 3.192.0 (nixpkgs) | 3.246.0 | prebuilt binary override in `pkgs/pulumi/` | nixpkgs not yet at 3.246.0; statically linked upstream binary |
+| rustfs | 1.0.0-alpha.83 | 1.0.0-beta.8 | hash bump in `pkgs/rustfs/` | all releases are pre-release; beta.8 is latest |
+| zitadel-login | 4.10.1 | 4.15.1 | digest+hash bump in `pkgs/zitadel-login/` | added `dontFixup=true` for pnpm symlink noise |
+| stakater-reloader | stub (no binary) | 1.4.14 | rewired `images/stakater-reloader/` to buildGoModule | v1.4.17 requires go 1.26.3 not yet in nixpkgs; 1.4.14 matches cluster target |
+
+## Excluded from mega-PR (followup PRs)
+
+Items deferred from T16b due to complexity or upstream constraints. Each needs its own follow-up PR.
+
+| image | current | cluster | reason for exclusion | suggested followup |
+|---|---|---|---|---|
+| zitadel | 2.71.7 (nixpkgs) | v4.13.1 | MAJOR version 2.x → 4.x. nixpkgs is at 2.71.7; v4.x API and database schema are incompatible with v2.x. A direct nixpkgs upgrade would be a breaking change for any cluster running v2.x. | Create a `pkgs/zitadel/` override using the upstream prebuilt binary at v4.15.1 (same pattern as forgejo). Test against a zitadel v4 schema. Track as sub-project. |
+| pulumi-kubernetes-operator | stub (v=latest, no binary) | v2.7.0 | Shell stub with no binary wired. `pulumi-kubernetes-operator` is a Go binary from `pulumi/pulumi-kubernetes-operator`. Go module fetch requires vendorHash; wiring the image would take >30 min without a prebuilt binary approach (upstream doesn't publish Linux binaries in releases). | Use the upstream Docker image extraction pattern (like zitadel-login) to pull `ghcr.io/pulumi/pulumi-kubernetes-operator:v2.7.0` and extract the binary. |
+| forgejo-runner | 12.10.1 (nixpkgs) | "v6.3.1" (audit) | INVESTIGATION RESOLVED: nixpkgs `forgejo-runner` tracks the correct upstream at `code.forgejo.org/forgejo/runner`. The audit's "v6.3.1" was from a wrong source (GitHub act_runner, not the Forgejo fork). The upstream is actually at v12.11.1; nixpkgs is at v12.10.1 (one patch behind). No wiring or major change needed. KEEP at 12.10.1 until nixpkgs updates naturally. | Wait for nixpkgs to update forgejo-runner to v12.11.x. Update the audit table row to reflect that v12.x is correct. |
+| alertmanager | 0.31.1 (nixpkgs) | v0.32.1 | v0.32+ embeds a pre-built React UI that requires network access during nixpkgs build. nixpkgs is still at 0.31.1. No `alertmanager_0_32` or `alertmanager_0_33` package exists in nixpkgs unstable. | Blocked on nixpkgs alertmanager 0.32+ packaging. Options: (a) wait for nixpkgs to package it; (b) create a `pkgs/alertmanager/` override using the upstream prebuilt binary. 0.31.1 has no known HIGH/CRITICAL CVEs that aren't allowlistable. |
+| vector | 0.55.0 (nixpkgs) | 0.56.0 | v0.56.0 introduces a `databricks-zerobus-ingest-sdk` crate with a protobuf `--proto_path` that fails in the Nix sandbox. nixpkgs is at 0.55.0. | Patch the vector derivation to disable `databricks` feature or apply a `cargoConfigOverrides` patch. Track as a separate Nix packaging PR. |
+| alpine/k8s → kubectl | kubectl 1.36.0 | 1.35.3 | Multi-tool bundle reconciliation. `alpine/k8s` is a multi-binary image; mapping to `kubectl` alone is insufficient. Reconciliation belongs to sub-project 3 (grail-config rollout). | Deferred to sub-project 3. |
+
 ## Scan input (verbatim, 2026-06-12)
 
 ```
