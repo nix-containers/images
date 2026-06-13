@@ -55,8 +55,8 @@ run_step() {
 # 1. nix build
 run_step nix_build nix build --no-link ".#${IMAGE}"
 
-# 2. make test-image
-run_step make_test make test-image IMAGE="$IMAGE"
+# 2. test-image (call the underlying script directly to avoid hard dep on `make`).
+run_step make_test ./scripts/test-image-build.sh image "$IMAGE"
 
 # 3. docker load — nix2container exposes `.#load-<name>-to-docker` whose binary is
 # named `copy-to-docker-daemon` (not `load-<name>-to-docker`). Use a fresh result
