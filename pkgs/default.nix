@@ -37,6 +37,12 @@
   # vendored abseil_cpp build fails with no cache hit. Use upstream prebuilt
   # binary (1.39.0) until nixpkgs ships a working derivation.
   dragonflydb = pkgs.callPackage ./dragonflydb { };
+  # Override nixpkgs' forgejo: bump to 15.0.3 ahead of nixpkgs 15.0.1.
+  # Uses the upstream statically-linked prebuilt binary.
+  forgejo = pkgs.callPackage ./forgejo { };
+  # Override nixpkgs' pulumi: bump to 3.246.0 ahead of nixpkgs 3.192.0.
+  # Uses the upstream statically-linked prebuilt binary.
+  pulumi = pkgs.callPackage ./pulumi { };
   external-secrets = pkgs.callPackage ./external-secrets { };
   flux = pkgs.callPackage ./flux { };
   flux-source-watcher = pkgs.callPackage ./flux-source-watcher { };
