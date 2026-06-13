@@ -80,6 +80,83 @@ ignore:
   - vulnerability: GO-2026-4958
     # package: github.com/moby/spdystream, fix: 0.5.1
 
+  # google.golang.org/grpc v1.74.2 → fixed in 1.79.3; velero 1.18.1 has not revendored yet
+  # CVE-2026-33186: gRPC-Go authz bypass (CRITICAL)
+  # Surfaced during the 2026-06-13 refresh scan of velero:1.18.1.
+  - vulnerability: CVE-2026-33186
+    # package: google.golang.org/grpc, fix: 1.79.3
+  - vulnerability: GHSA-p77j-4mvh-x3m3
+    # package: google.golang.org/grpc, fix: 1.79.3
+  - vulnerability: GO-2026-4762
+    # package: google.golang.org/grpc, fix: 1.79.3
+
+  # go.opentelemetry.io/otel v1.36.0 → fixed in 1.41.0; velero 1.18.1 has not revendored yet
+  - vulnerability: CVE-2026-29181
+    # package: go.opentelemetry.io/otel, fix: 1.41.0
+  - vulnerability: GHSA-mh2q-q3fh-2475
+    # package: go.opentelemetry.io/otel, fix: 1.41.0
+
+  # go.opentelemetry.io/otel/sdk v1.36.0 → fixed in 1.40.0/1.43.0; velero 1.18.1 has not revendored yet
+  - vulnerability: CVE-2026-24051
+    # package: go.opentelemetry.io/otel/sdk, fix: 1.40.0
+  - vulnerability: GHSA-9h8m-3fm2-qjrq
+    # package: go.opentelemetry.io/otel/sdk, fix: 1.40.0
+  - vulnerability: GO-2026-4394
+    # package: go.opentelemetry.io/otel/sdk, fix: 1.40.0
+  - vulnerability: CVE-2026-39883
+    # package: go.opentelemetry.io/otel/sdk, fix: 1.43.0
+  - vulnerability: GHSA-hfvc-g4fc-pqhx
+    # package: go.opentelemetry.io/otel/sdk, fix: 1.43.0
+
+  # golang.org/x/crypto v0.41.0 → fixed in 0.43.0; velero 1.18.1 has not revendored yet
+  - vulnerability: GO-2025-4116
+    # package: golang.org/x/crypto, fix: 0.43.0
+
+  # github.com/projectcontour/contour v1.33.3 → fixed in 1.33.4; external-dns 0.21.0 has not revendored
+  # CVE-2026-41246: Contour/Envoy vulnerability (HIGH)
+  # Surfaced during the 2026-06-13 refresh scan of external-dns:0.21.0.
+  - vulnerability: CVE-2026-41246
+    # package: github.com/projectcontour/contour, fix: 1.33.4
+  - vulnerability: GHSA-x4mj-7f9g-29h4
+    # package: github.com/projectcontour/contour, fix: 1.33.4
+
+  # urllib3 2.6.3 → fixed in 2.7.0; nixpkgs unstable ships 2.6.3 (as of 2026-06-13)
+  # k8s-sidecar 2.7.3 depends on python3.withPackages using nixpkgs urllib3
+  - vulnerability: CVE-2026-44431
+    # package: urllib3, fix: 2.7.0
+  - vulnerability: CVE-2026-44432
+    # package: urllib3, fix: 2.7.0
+  - vulnerability: GHSA-mf9v-mfxr-j63j
+    # package: urllib3, fix: 2.7.0
+  - vulnerability: GHSA-qccp-gfcp-xxvc
+    # package: urllib3, fix: 2.7.0
+
+  # Python 3.13.13 CVEs — nixpkgs toolchain residuals; k8s-sidecar 2.7.3
+  - vulnerability: CVE-2026-3298
+    # package: python 3.13.13
+  - vulnerability: CVE-2026-9669
+    # package: python 3.13.13
+  - vulnerability: CVE-2026-4786
+    # package: python 3.13.13
+  - vulnerability: CVE-2026-7210
+    # package: python 3.13.13
+  - vulnerability: CVE-2026-6100
+    # package: python 3.13.13
+
+  # SQLite 3.51.2 → fixed in 3.53.2; nixpkgs toolchain residual; k8s-sidecar 2.7.3
+  - vulnerability: CVE-2026-11822
+    # package: sqlite, fix: 3.53.2
+  - vulnerability: CVE-2026-11824
+    # package: sqlite, fix: 3.53.2
+
+  # github.com/go-jose/go-jose/v4 v4.1.4 — false positive: trivy says fixed in v4.0.5 (4.1.4 > 4.0.5)
+  - vulnerability: CVE-2026-34986
+    # package: go-jose/v4, false-positive version comparison
+  - vulnerability: GHSA-78h2-9frx-2jm8
+    # package: go-jose/v4, false-positive version comparison
+  - vulnerability: GO-2026-4945
+    # package: go-jose/v4, false-positive version comparison
+
   # openssl 3.6.2 → fixed in 3.6.3; nixpkgs nix store still has 3.6.2 cached (as of 2026-06-13)
   # affects istio-proxyv2 via iptables/iproute2 transitive dependency
   # Surfaced during the 2026-06-13 refresh scan of istio-proxyv2:1.30.1.
