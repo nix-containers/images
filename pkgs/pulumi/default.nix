@@ -28,7 +28,7 @@ in stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     mkdir -p $out/bin
-    cp pulumi/pulumi $out/bin/pulumi
+    cp pulumi $out/bin/pulumi
     chmod +x $out/bin/pulumi
     runHook postInstall
   '';
