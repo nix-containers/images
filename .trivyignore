@@ -118,6 +118,15 @@ CVE-2026-28377
 # Surfaced during the 2026-06-13 refresh scan of google-cloud-sdk:565.0.0.
 private-key
 
+# redis 8.8.0 — false positives: Debian-packaging-specific CVEs
+# Surfaced during the 2026-06-13 verify of redis:8.8.0.
+# CVE-2022-0543 and CVE-2022-3734 are specific to Debian/Ubuntu Redis packaging where
+# the Lua library was shipped as a separate shared library. nixpkgs builds Redis statically
+# without the vulnerable Debian-specific Lua packaging. No upstream fix exists because
+# it is not a Redis upstream vulnerability.
+CVE-2022-0543
+CVE-2022-3734
+
 # keycloak 26.6.3 — vendored Java dependency CVEs upstream has not revendored
 # Surfaced during the 2026-06-13 verify of keycloak:26.6.3.
 #
