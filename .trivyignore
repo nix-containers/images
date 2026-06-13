@@ -164,3 +164,15 @@ CVE-2026-42327
 # rustls-webpki 0.101.7 → fixed in 0.103.13; vendored in nixpkgs vaultwarden 1.36.0
 # nixpkgs upstream has not yet bumped the crate; fix exists upstream
 GHSA-82j2-j2ch-gfr8
+
+# twentycrm v2.12.0 — vendored upstream image CVEs; build strategy is dockerTools.pullImage
+# (true buildNpmPackage derivation is followup work; these CVEs are inherited from upstream image)
+# Surfaced during the 2026-06-13 verify of twentycrm:v2.12.0.
+#
+# esbuild 0.28.0 → fixed in 0.28.1; vendored by twentycrm v2.12.0 upstream Node package;
+# pending upstream revendor (twentyhq/twenty has not yet bumped esbuild)
+GHSA-gv7w-rqvm-qjhr
+#
+# curl 8.19.0-r0 — from upstream twentycrm OS layer (Alpine); reroll on next upstream image refresh
+CVE-2026-5773
+CVE-2026-6276

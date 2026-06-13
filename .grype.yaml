@@ -300,3 +300,18 @@ ignore:
   # Surfaced during the 2026-06-13 verify of vaultwarden:v1.36.0.
   - vulnerability: GHSA-82j2-j2ch-gfr8
     # package: rustls-webpki, fix: 0.103.13
+
+  # twentycrm v2.12.0 — vendored upstream image CVEs; build strategy is nix2container pullImage
+  # (true buildNpmPackage derivation is followup work; these CVEs are inherited from upstream image)
+  # Surfaced during the 2026-06-13 verify of twentycrm:v2.12.0.
+  #
+  # esbuild 0.28.0 → fixed in 0.28.1; vendored by twentycrm v2.12.0 upstream Node package;
+  # pending upstream revendor (twentyhq/twenty has not yet bumped esbuild)
+  - vulnerability: GHSA-gv7w-rqvm-qjhr
+    # package: esbuild 0.28.0 (npm), fix: 0.28.1
+  #
+  # curl 8.19.0-r0 — from upstream twentycrm OS layer (Alpine); reroll on next upstream image refresh
+  - vulnerability: CVE-2026-5773
+    # package: curl 8.19.0-r0 (apk), from upstream twentycrm OS layer
+  - vulnerability: CVE-2026-6276
+    # package: curl 8.19.0-r0 (apk), from upstream twentycrm OS layer
