@@ -71,3 +71,35 @@ ignore:
     # package: github.com/prometheus/prometheus, fix: 0.311.3
   - vulnerability: CVE-2026-42154
     # package: github.com/prometheus/prometheus, fix: 0.305.2
+
+  # github.com/moby/spdystream v0.5.0 → fixed in 0.5.1
+  # istio 1.30.1 has not yet revendored; applies to istio-pilot and istio-proxyv2
+  # Surfaced during the 2026-06-13 refresh scan of istio-pilot:1.30.1 and istio-proxyv2:1.30.1.
+  - vulnerability: GHSA-pc3f-x583-g7j2
+    # package: github.com/moby/spdystream, fix: 0.5.1
+  - vulnerability: GO-2026-4958
+    # package: github.com/moby/spdystream, fix: 0.5.1
+
+  # openssl 3.6.2 → fixed in 3.6.3; nixpkgs nix store still has 3.6.2 cached (as of 2026-06-13)
+  # affects istio-proxyv2 via iptables/iproute2 transitive dependency
+  # Surfaced during the 2026-06-13 refresh scan of istio-proxyv2:1.30.1.
+  - vulnerability: CVE-2026-45447
+    # package: openssl, fix: 3.6.3
+  - vulnerability: CVE-2026-9076
+    # package: openssl, fix: 3.6.3
+  - vulnerability: CVE-2026-7383
+    # package: openssl, fix: 3.6.3
+  - vulnerability: CVE-2026-34180
+    # package: openssl, fix: 3.6.3
+  - vulnerability: CVE-2026-42764
+    # package: openssl, fix: 3.6.3
+  - vulnerability: CVE-2026-34183
+    # package: openssl, fix: 3.6.3
+  - vulnerability: CVE-2026-42765
+    # package: openssl, fix: 3.6.3
+  - vulnerability: CVE-2026-45445
+    # package: openssl, fix: 3.6.3
+  - vulnerability: CVE-2026-34182
+    # package: openssl, fix: 3.6.3; CRITICAL
+  - vulnerability: CVE-2026-34181
+    # package: openssl, fix: 3.6.3

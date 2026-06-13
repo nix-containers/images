@@ -27,3 +27,19 @@ CVE-2026-39821
 # keda 2.20.1 vendors prometheus at v0.304.2; upstream has not revendored yet
 CVE-2026-42151
 CVE-2026-42154
+
+# istio.io/istio pseudo-version false positives — trivy matches old CVEs (2019-2022)
+# against istio.io/istio v0.0.0-20260604142548-10229c76f285 (Istio 1.30.1 code).
+# All "fixed" versions (1.1.13, 1.9.8, 1.10.4, 1.11.1, 1.12.4, 1.13.1) are far
+# below 1.30.1; trivy cannot resolve the pseudo-version to its real semver.
+# Surfaced during the 2026-06-13 refresh scan of istio-pilot:1.30.1 and istio-proxyv2:1.30.1.
+CVE-2019-14993
+CVE-2021-39155
+CVE-2021-39156
+CVE-2022-23635
+
+# github.com/moby/spdystream v0.5.0 → fixed in 0.5.1
+# istio 1.30.1 has not yet revendored; upstream issue tracked
+# https://github.com/istio/istio/issues/spdystream
+# Surfaced during the 2026-06-13 refresh scan of istio-pilot:1.30.1 and istio-proxyv2:1.30.1.
+CVE-2026-35469
