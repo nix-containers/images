@@ -19,7 +19,94 @@ counterpart, identify gaps, and drive the refresh-and-publish work.
 
 | cluster image | cluster tag | nix-containers name | nix-containers ver | upstream latest | status | action |
 |---|---|---|---|---|---|---|
-| _populated by Task 3_ | | | | | | |
+| alpine/k8s | 1.35.3 | kubectl | 1.36.0 (nixpkgs) | 1.36.2 | needs-bump | use kubectl; multi-tool bundle reconciliation deferred to sub-project 3 |
+| axllent/mailpit | v1.22 | mailpit | 1.29.7 (nixpkgs) | v1.30.1 | needs-bump | bump nixpkgs or pin to 1.30.1 |
+| cloudnative-pg/cloudnative-pg | 1.27.1 | cloudnative-pg | 1.27.1 | 1.29.1 | needs-bump | bump pkg to 1.29.1 |
+| cloudnative-pg/postgis | 18-3.6-system-trixie | postgis | 3.6.3 (nixpkgs pg17Packages.postgis) | 3.6.3 | up-to-date | no action |
+| cloudnative-pg/postgresql | 18.0-system-trixie | postgresql | 17.9 (nixpkgs postgresql) | 17.9 | needs-bump | bump to postgresql_18 when nixpkgs provides it; track pg18 GA |
+| curlimages/curl | 8.5.0 | curl | 8.19.0 (nixpkgs) | 8.20.0 | needs-bump | bump nixpkgs to bring curl to 8.20 |
+| dragonflydb/dragonfly | v1.37.2 | dragonfly | 1.34.2 (nixpkgs dragonflydb) | 1.39.0 | needs-bump | bump nixpkgs or pin dragonflydb to 1.39.0 |
+| external-dns/external-dns | v0.21.0 | external-dns | 0.16.1 | 0.21.0 | needs-bump | bump pkg to 0.21.0 |
+| external-secrets/external-secrets | v0.20.4 | external-secrets | 0.10.0 | 2.6.0 | needs-bump | bump pkg to 2.6.0 (major jump; review API changes) |
+| fluxcd/helm-controller | v1.4.5 | helm-controller | 1.4.5 | 1.5.5 | needs-bump | bump pkg to 1.5.5 |
+| fluxcd/image-automation-controller | v1.0.4 | image-automation-controller | 1.0.4 | 1.1.4 | needs-bump | bump pkg to 1.1.4 |
+| fluxcd/image-reflector-controller | v1.0.4 | image-reflector-controller | 1.0.4 | 1.1.2 | needs-bump | bump pkg to 1.1.2 |
+| fluxcd/kustomize-controller | v1.7.3 | kustomize-controller | 1.7.3 | 1.8.5 | needs-bump | bump pkg to 1.8.5 |
+| fluxcd/notification-controller | v1.7.5 | notification-controller | 1.7.5 | 1.8.4 | needs-bump | bump pkg to 1.8.4 |
+| fluxcd/source-controller | v1.7.4 | source-controller | 1.7.4 | 1.8.5 | needs-bump | bump pkg to 1.8.5 |
+| fluxcd/source-watcher | v2.0.3 | flux-source-watcher | 2.0.3 | 2.1.1 | needs-bump | bump pkg to 2.1.1 |
+| forgejo/forgejo | 15.0.3-rootless | forgejo | 15.0.1 (nixpkgs) | 15.0.3 | needs-bump | bump nixpkgs or pin forgejo to 15.0.3 |
+| forgejo/runner | 6.3.1 | forgejo-runner | 12.10.1 (nixpkgs — check; likely mismatch) | 6.3.1 (code.forgejo.org) | needs-investigation | nixpkgs forgejo-runner version 12.10.1 does not match upstream 6.x; investigate pkg source |
+| google/cloud-sdk | slim | google-cloud-sdk | 565.0.0 (nixpkgs) | best-effort (no GH releases; slim is rolling) | needs-bump | bump nixpkgs to latest available google-cloud-sdk |
+| grafana/grafana | 13.0.1-security-01 | grafana | 13.0.1 (nixpkgs) | 13.0.2 | needs-bump | bump nixpkgs or pin grafana to 13.0.2 |
+| jetstack/cert-manager-cainjector | v1.20.2 | cert-manager-cainjector | 1.16.2 | 1.20.2 | needs-bump | bump cert-manager pkg to 1.20.2 |
+| jetstack/cert-manager-controller | v1.20.2 | cert-manager-controller | 1.16.2 | 1.20.2 | needs-bump | bump cert-manager pkg to 1.20.2 |
+| jetstack/cert-manager-webhook | v1.20.2 | cert-manager-webhook | 1.16.2 | 1.20.2 | needs-bump | bump cert-manager pkg to 1.20.2 |
+| joschi/forgejo-nix@sha256 | 504cd5fd… | — | — | — | out-of-scope | digest-only entry, no version semantics |
+| kedacore/keda | 2.20.1 | keda | 2.18.1 | 2.20.1 | needs-bump | bump keda pkg to 2.20.1 |
+| kedacore/keda-admission-webhooks | 2.20.1 | keda-admission-webhooks | 2.18.1 | 2.20.1 | needs-bump | bump keda pkg to 2.20.1 |
+| kedacore/keda-metrics-apiserver | 2.20.1 | keda-metrics-apiserver | 2.18.1 | 2.20.1 | needs-bump | bump keda pkg to 2.20.1 |
+| kiwigrid/k8s-sidecar | 2.7.3 | k8s-sidecar | 1.28.0 | 2.7.3 | needs-bump | bump k8s-sidecar image to 2.7.3 |
+| kube-state-metrics/kube-state-metrics | v2.18.0 | kube-state-metrics | 2.17.0 (nixpkgs) | 2.19.0 | needs-bump | bump kube-state-metrics pkg (nixpkgs or pin) to 2.19.0 |
+| kyverno/background-controller | v1.18.1 | kyverno-background-controller | 1.16.1 | 1.18.1 | needs-bump | bump kyverno pkg to 1.18.1 |
+| kyverno/cleanup-controller | v1.18.1 | kyverno-cleanup-controller | 1.16.1 | 1.18.1 | needs-bump | bump kyverno pkg to 1.18.1 |
+| kyverno/kyverno | v1.18.1 | kyverno | 1.16.1 | 1.18.1 | needs-bump | bump kyverno pkg to 1.18.1 |
+| kyverno/kyvernopre | v1.18.1 | kyvernopre | 1.16.1 | 1.18.1 | needs-bump | bump kyverno pkg to 1.18.1 |
+| kyverno/reports-controller | v1.18.1 | kyverno-reports-controller | 1.16.1 | 1.18.1 | needs-bump | bump kyverno pkg to 1.18.1 |
+| library/busybox | 1.37.0 | busybox | 1.37.0 (nixpkgs) | 1.37.0 | up-to-date | no action |
+| library/postgres | 17 | postgres | 17.9 (nixpkgs postgresql) | 17.9 | up-to-date | no action |
+| library/python | 3.13-alpine | python | 3.13.12 (nixpkgs python3) | 3.13.12 | up-to-date | no action |
+| minio/mc | latest | mc | RELEASE.2025-08-13T08-35-41Z (nixpkgs minio-client) | RELEASE.2025-08-13T08-35-41Z | up-to-date | no action (both latest-pinned) |
+| nginxinc/nginx-unprivileged | alpine | nginx-unprivileged | 1.30.0 (nixpkgs nginx) | 1.29.4 (nginx stable) | needs-bump | bump nginx in nixpkgs to 1.29.4 stable |
+| oauth2-proxy/oauth2-proxy | v7.7.1 | oauth2-proxy | 7.13.0 | 7.15.3 | needs-bump | bump oauth2-proxy pkg to 7.15.3 |
+| openfga/openfga | v1.17.1 | openfga | 1.14.2 (nixpkgs) | 1.17.1 | needs-bump | bump nixpkgs or pin openfga to 1.17.1 |
+| prom/alertmanager | v0.32.1 | alertmanager | 0.31.1 (nixpkgs prometheus-alertmanager) | 0.33.0 | needs-bump | bump nixpkgs or pin alertmanager to 0.33.0 |
+| prometheus/node-exporter | v1.11.1 | node-exporter | 1.11.1 (nixpkgs prometheus-node-exporter) | 1.11.1 | up-to-date | no action |
+| pulumi/pulumi | 3.202.0-nonroot | pulumi | 3.192.0 (nixpkgs) | 3.246.0 | needs-bump | bump nixpkgs or pin pulumi to 3.246.0 |
+| pulumi/pulumi-kubernetes-operator | v2.7.0 | pulumi-kubernetes-operator | latest (stub) | 2.7.0 | needs-bump | wire pulumi-kubernetes-operator image to actual binary; version 2.7.0 |
+| release/pilot | 1.30.1 | istio-pilot | 1.28.1 | 1.30.1 | needs-bump | bump istio pkg to 1.30.1 |
+| release/proxyv2 | 1.30.1 | istio-proxyv2 | 1.28.1 | 1.30.1 | needs-bump | bump istio pkg to 1.30.1 |
+| rustfs/rustfs | 1.0.0-beta.1 | rustfs | 1.0.0-alpha.83 | 1.0.0-beta.8 (pre-release; no stable) | needs-bump | bump rustfs pkg to 1.0.0-beta.8 |
+| stakater/reloader | v1.4.14 | stakater-reloader | 1.4.11 (pkgs/reloader; image is stub) | 1.4.17 | needs-bump | wire stakater-reloader image to reloader binary; bump to 1.4.17 |
+| timberio/vector | 0.56.0-distroless-libc | vector | 0.55.0 (nixpkgs) | 0.56.0 | needs-bump | bump nixpkgs or pin vector to 0.56.0 |
+| twentycrm/twenty | v2.9.0 | — | — | 2.12.0 | missing | create new image; net-new (sub-project 18) |
+| vaultwarden/server | 1.36.0 | — | — | 1.36.0 | missing | create new image; net-new (sub-project 17) |
+| velero/velero | v1.17.1 | velero | 1.17.1 | 1.18.1 | needs-bump | bump velero pkg to 1.18.1 |
+| velero/velero-plugin-for-gcp | v1.13.1 | velero-plugin-for-gcp | 1.13.1 | 1.14.1 | needs-bump | bump velero-plugin-for-gcp pkg to 1.14.1 |
+| victoriametrics/operator | v0.70.1 | victoriametrics-operator | 0.66.1 | 0.71.0 | needs-bump | bump victoriametrics-operator pkg to 0.71.0 |
+| victoriametrics/victoria-logs | v1.50.0 | victoria-logs | 1.142.0 (nixpkgs victoriametrics) | 1.50.0 (VictoriaLogs repo) | needs-bump | victoria-logs image uses wrong pkg (victoriametrics); needs separate VictoriaLogs binary |
+| victoriametrics/victoria-metrics | v1.145.0 | victoria-metrics | 1.142.0 (nixpkgs victoriametrics) | 1.145.0 | needs-bump | bump victoriametrics in nixpkgs to 1.145.0 |
+| victoriametrics/vmagent | v1.144.0 | victoriametrics-vmagent | 1.142.0 (nixpkgs victoriametrics) | 1.145.0 | needs-bump | bump victoriametrics in nixpkgs to 1.145.0 |
+| victoriametrics/vmalert | v1.145.0 | victoriametrics-vmalert | 1.142.0 (nixpkgs victoriametrics) | 1.145.0 | needs-bump | bump victoriametrics in nixpkgs to 1.145.0 |
+| victoriametrics/vmauth | v1.136.0 | victoriametrics-vmauth | 1.142.0 (nixpkgs victoriametrics) | 1.145.0 | needs-bump | bump victoriametrics in nixpkgs to 1.145.0 |
+| wait4x/wait4x | 3.6 | wait4x | 3.6.0 (nixpkgs) | 3.6.0 | up-to-date | no action |
+| zhaofengli/attic | latest | attic | 0-unstable-2025-09-24 (nixpkgs attic-client) | rolling (no stable release) | up-to-date | no action (rolling/latest; both current) |
+| zitadel/zitadel | v4.13.1 | zitadel | 2.71.7 (nixpkgs) | 4.15.1 | needs-bump | bump nixpkgs or pin zitadel to 4.15.1 (major upgrade from 2.x) |
+| zitadel/zitadel-login | v4.13.1 | zitadel-login | 4.10.1 | 4.15.1 | needs-bump | bump zitadel-login pkg to 4.15.1 |
+| gke-release/gke-release/* | (all tags) | — | — | — | out-of-scope | GKE-managed, no nix-containers replacement |
+| tiberius-grail/* | (all tags) | — | — | — | deferred | sub-project 2 |
+| keycloak | (stakeholder extra) | keycloak | 26.6.1 (nixpkgs) | 26.6.3 | extra | refresh + verify; bump nixpkgs or pin keycloak to 26.6.3 |
+| redis | (stakeholder extra) | redis | 8.6.3 (nixpkgs) | 8.8.0 | extra | refresh + verify; bump nixpkgs or pin redis to 8.8.0 |
+
+## Summary
+
+- Total unique non-GKE non-tiberius-grail images: 63
+- Already up-to-date: 8 (busybox, postgres, python, mc, node-exporter, wait4x, attic, cloudnative-pg/postgis)
+- Needs bump: 49
+- Missing (net-new): 2 (vaultwarden, twentycrm)
+- Out-of-scope (GKE + joschi/forgejo-nix digest): 2
+- Deferred (tiberius-grail): 1 collapsed row (18 unique image paths)
+- Stakeholder extras: 2 (keycloak, redis)
+
+**Notes:**
+- `forgejo/runner` — nixpkgs `forgejo-runner` reports version 12.10.1 which does not align with the upstream Forgejo Runner release series (v6.x from code.forgejo.org). Marked `needs-investigation`; the nixpkgs package may track a different fork or have a version encoding mismatch.
+- `victoriametrics/victoria-logs` — the `victoria-logs` nix-containers image currently uses `pkgs.victoriametrics` (single-node VictoriaMetrics) rather than the separate VictoriaLogs binary. VictoriaLogs is a distinct product with its own release cadence (latest v1.50.0 from VictoriaMetrics/VictoriaLogs). Marked `needs-bump` but also requires a fix to the image definition.
+- `nginxinc/nginx-unprivileged` — nix-containers tracks `nginx` mainline (1.30.0) which is newer than the upstream nginx stable (1.29.4 from the `release-1.29.4` tag). Cluster pulls `alpine` tag which maps to stable. Marked `needs-bump` to align with stable; the nix-containers image is actually ahead of the stable branch.
+- `rustfs/rustfs` — all upstream releases are pre-release (alpha/beta). Cluster has moved from alpha.89 to beta.1. Bumped to beta.8 as the most recent available.
+- `pulumi/pulumi-kubernetes-operator` — the nix-containers image definition currently has `version = "latest"` with no actual operator binary wired in. Treated as needs-bump with action to wire the binary.
+- `stakater/reloader` — the `stakater-reloader` image in `images/` is a shell-only stub (no reloader binary). The actual `reloader` binary at v1.4.11 lives in `pkgs/reloader/`. Marked `needs-bump` and requires wiring the binary into the image.
+- `google/cloud-sdk` — no GitHub releases; version derived from nixpkgs (565.0.0). Cluster uses `slim` tag which is a floating tag. Best-effort comparison.
+- Zitadel has two concurrent release branches (v3.x LTS and v4.x current). The cluster runs v4.13.1; nix-containers nixpkgs provides 2.71.7 which is severely stale. Upgrade path needs testing.
 
 ## Scan input (verbatim, 2026-06-12)
 
