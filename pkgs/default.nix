@@ -72,6 +72,8 @@
   velero = pkgs.callPackage ./velero { };
   velero-plugin-for-gcp = pkgs.callPackage ./velero-plugin-for-gcp { };
   vertical-pod-autoscaler = pkgs.callPackage ./vertical-pod-autoscaler { };
+  # Override nixpkgs' victoriametrics: bump core to v1.145.0 ahead of nixpkgs
+  victoriametrics = pkgs.callPackage ./victoriametrics { };
   victoriametrics-cluster = pkgs.callPackage ./victoriametrics-cluster { };
   victoriametrics-cluster-fips = pkgs.callPackage ./victoriametrics-cluster-fips { };
   victoriametrics-fips = pkgs.callPackage ./victoriametrics-fips { };
