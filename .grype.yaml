@@ -1,0 +1,58 @@
+# Accepted residual CVEs — see docs/audits/cluster-image-audit.md
+# Mirrors .trivyignore for grype.
+# These are upstream toolchain or x/* ecosystem vulnerabilities whose fixes exist
+# upstream but are not yet propagated to nixpkgs unstable (for stdlib) or to the
+# flux image releases we consume (for vendored x/* libs).
+# Surfaced during the 2026-06-13 refresh scan of helm-controller:v1.5.5.
+#
+# Stakeholder-approved on 2026-06-12: accept-with-documentation.
+ignore:
+  # stdlib go1.26.3 → fixed in 1.26.4; nixpkgs unstable still ships 1.26.3 (as of 2026-06-10)
+  - vulnerability: CVE-2026-42504
+    # package: stdlib, fix: 1.26.4
+  - vulnerability: GO-2026-5038
+    # package: stdlib, fix: 1.26.4
+
+  # golang.org/x/crypto v0.50.0 → fixed in 0.52.0; fluxcd 1.5.x has not revendored yet
+  - vulnerability: CVE-2026-39833
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: GO-2026-5005
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: CVE-2026-39832
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: GO-2026-5006
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: CVE-2026-46597
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: GO-2026-5013
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: CVE-2026-39830
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: GO-2026-5017
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: CVE-2026-39829
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: GO-2026-5018
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: CVE-2026-39831
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: GO-2026-5019
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: CVE-2026-39834
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: GO-2026-5020
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: CVE-2026-42508
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: GO-2026-5021
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: CVE-2026-46595
+    # package: golang.org/x/crypto, fix: 0.52.0
+  - vulnerability: GO-2026-5023
+    # package: golang.org/x/crypto, fix: 0.52.0
+
+  # golang.org/x/net v0.53.0 → fixed in 0.55.0; fluxcd 1.5.x has not revendored yet
+  - vulnerability: CVE-2026-39821
+    # package: golang.org/x/net, fix: 0.55.0
+  - vulnerability: GO-2026-5026
+    # package: golang.org/x/net, fix: 0.55.0
