@@ -35,7 +35,7 @@
   dex = pkgs.callPackage ./dex { };
   # Override nixpkgs' dragonflydb: it builds from source (1.34.2) and the
   # vendored abseil_cpp build fails with no cache hit. Use upstream prebuilt
-  # binary (1.38.1) until nixpkgs ships a working derivation.
+  # binary (1.39.0) until nixpkgs ships a working derivation.
   dragonflydb = pkgs.callPackage ./dragonflydb { };
   external-secrets = pkgs.callPackage ./external-secrets { };
   flux = pkgs.callPackage ./flux { };
@@ -57,6 +57,7 @@
   mimir = pkgs.callPackage ./mimir { };
   node-feature-discovery = pkgs.callPackage ./node-feature-discovery { };
   oauth2-proxy = pkgs.callPackage ./oauth2-proxy { };
+  openfga = pkgs.callPackage ./openfga { };
   prometheus-adapter = pkgs.callPackage ./prometheus-adapter { };
   reloader = pkgs.callPackage ./reloader { };
   rustfs = pkgs.callPackage ./rustfs { };
