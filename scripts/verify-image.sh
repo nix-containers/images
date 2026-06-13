@@ -58,26 +58,25 @@ run_step nix_build nix build --no-link ".#${IMAGE}"
 # 2. make test-image
 run_step make_test make test-image IMAGE="$IMAGE"
 
-# 3. docker load
+# 3. docker load — nix2container exposes `.#load-<name>-to-docker` whose binary is
+# named `copy-to-docker-daemon` (not `load-<name>-to-docker`). Use a fresh result
+# symlink scoped per image to avoid collisions if multiple images are verified
+# in sequence.
 echo "==> [$IMAGE] step: docker_load"
-if nix build --no-link ".#load-${IMAGE}-to-docker" 2>/dev/null; then
-  # Find the script path. The build leaves a result symlink unless --no-link.
-  # Rebuild with link to get the script.
-  if nix build ".#load-${IMAGE}-to-docker" 2>/dev/null && [ -x "./result/bin/load-${IMAGE}-to-docker" ]; then
-    if ./result/bin/load-${IMAGE}-to-docker; then
-      STEPS[docker_load]=0
-      echo "    [$IMAGE] docker_load OK"
-    else
-      STEPS[docker_load]=1
-      echo "    [$IMAGE] docker_load FAILED (load script failed)" >&2
-    fi
+LOAD_LINK="./result-load-${IMAGE}"
+rm -f "$LOAD_LINK"
+if nix build --out-link "$LOAD_LINK" ".#load-${IMAGE}-to-docker" 2>/dev/null \
+   && [ -x "${LOAD_LINK}/bin/copy-to-docker-daemon" ]; then
+  if "${LOAD_LINK}/bin/copy-to-docker-daemon"; then
+    STEPS[docker_load]=0
+    echo "    [$IMAGE] docker_load OK"
   else
     STEPS[docker_load]=1
-    echo "    [$IMAGE] docker_load FAILED (load script not produced)" >&2
+    echo "    [$IMAGE] docker_load FAILED (load script failed)" >&2
   fi
 else
   STEPS[docker_load]=1
-  echo "    [$IMAGE] docker_load FAILED (nix build .#load-* failed)" >&2
+  echo "    [$IMAGE] docker_load FAILED (nix build .#load-* failed or no copy-to-docker-daemon)" >&2
 fi
 
 # Determine the loaded tag (best-effort).
