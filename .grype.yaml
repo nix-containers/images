@@ -221,6 +221,16 @@ ignore:
   - vulnerability: CVE-2026-34181
     # package: openssl, fix: 3.6.3
 
+  # redis 8.8.0 — false positives: Debian-packaging-specific CVEs
+  # Surfaced during the 2026-06-13 verify of redis:8.8.0.
+  # CVE-2022-0543 and CVE-2022-3734 are specific to Debian/Ubuntu Redis packaging where
+  # Lua was a separate shared library. nixpkgs builds Redis without this Debian-specific
+  # packaging; no upstream fix exists as it is not a Redis upstream vulnerability.
+  - vulnerability: CVE-2022-0543
+    # package: redis (debian packaging false positive), no upstream fix
+  - vulnerability: CVE-2022-3734
+    # package: redis (debian packaging false positive), no upstream fix
+
   # keycloak 26.6.3 — vendored Java (Netty) CVEs; keycloak has not revendored to 4.1.135.Final yet
   # Surfaced during the 2026-06-13 verify of keycloak:26.6.3.
   - vulnerability: CVE-2026-44249
