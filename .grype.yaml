@@ -220,3 +220,33 @@ ignore:
     # package: openssl, fix: 3.6.3; CRITICAL
   - vulnerability: CVE-2026-34181
     # package: openssl, fix: 3.6.3
+
+  # vaultwarden 1.36.0 — false positives: scanners detect internal Rust crate "vaultwarden"
+  # at version 1.0.0 but we ship the application at 1.36.0 which incorporates all fixes.
+  # Surfaced during the 2026-06-13 verify of vaultwarden:v1.36.0.
+  - vulnerability: CVE-2024-55225
+    # package: vaultwarden app 1.36.0 > fixed 1.32.5; false positive on internal crate version
+  - vulnerability: GHSA-x7m9-mv49-fv73
+    # package: vaultwarden app 1.36.0 > fixed 1.32.5; false positive on internal crate version
+  - vulnerability: CVE-2026-27802
+    # package: vaultwarden app 1.36.0 > fixed 1.35.4; false positive on internal crate version
+  - vulnerability: GHSA-h4hq-rgvh-wh27
+    # package: vaultwarden app 1.36.0 > fixed 1.35.4; false positive on internal crate version
+  - vulnerability: CVE-2026-27803
+    # package: vaultwarden app 1.36.0 > fixed 1.35.4; false positive on internal crate version
+  - vulnerability: GHSA-r32r-j5jq-3w4m
+    # package: vaultwarden app 1.36.0 > fixed 1.35.4; false positive on internal crate version
+
+  # openssl Rust crate 0.10.78 → fixed in 0.10.79; vendored in nixpkgs vaultwarden 1.36.0
+  # nixpkgs upstream has not yet bumped this dependency
+  # Surfaced during the 2026-06-13 verify of vaultwarden:v1.36.0.
+  - vulnerability: CVE-2026-42327
+    # package: openssl (rust crate), fix: 0.10.79
+  - vulnerability: GHSA-xp3w-r5p5-63rr
+    # package: openssl (rust crate), fix: 0.10.79
+
+  # rustls-webpki 0.101.7 → fixed in 0.103.13; vendored in nixpkgs vaultwarden 1.36.0
+  # nixpkgs upstream has not yet bumped this dependency
+  # Surfaced during the 2026-06-13 verify of vaultwarden:v1.36.0.
+  - vulnerability: GHSA-82j2-j2ch-gfr8
+    # package: rustls-webpki, fix: 0.103.13

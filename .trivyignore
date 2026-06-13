@@ -117,3 +117,23 @@ CVE-2026-28377
 # real credentials. Suppressed by rule ID.
 # Surfaced during the 2026-06-13 refresh scan of google-cloud-sdk:565.0.0.
 private-key
+
+# vaultwarden 1.36.0 — Rust vendored dependency false positives and upstream-unfixed crates
+# Surfaced during the 2026-06-13 verify of vaultwarden:v1.36.0.
+#
+# False positives: trivy matches internal "vaultwarden" Rust crate version (1.0.0) against NVD
+# application-level CVEs. We ship vaultwarden 1.36.0 which incorporates all these fixes.
+# CVE-2024-55225: fixed in app 1.32.5 — we ship 1.36.0
+# CVE-2026-27802: fixed in app 1.35.4 — we ship 1.36.0
+# CVE-2026-27803: fixed in app 1.35.4 — we ship 1.36.0
+CVE-2024-55225
+CVE-2026-27802
+CVE-2026-27803
+
+# openssl Rust crate 0.10.78 → fixed in 0.10.79; vendored in nixpkgs vaultwarden 1.36.0
+# nixpkgs upstream has not yet bumped the crate; fix exists upstream
+CVE-2026-42327
+
+# rustls-webpki 0.101.7 → fixed in 0.103.13; vendored in nixpkgs vaultwarden 1.36.0
+# nixpkgs upstream has not yet bumped the crate; fix exists upstream
+GHSA-82j2-j2ch-gfr8
