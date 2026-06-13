@@ -221,6 +221,46 @@ ignore:
   - vulnerability: CVE-2026-34181
     # package: openssl, fix: 3.6.3
 
+  # keycloak 26.6.3 — vendored Java (Netty) CVEs; keycloak has not revendored to 4.1.135.Final yet
+  # Surfaced during the 2026-06-13 verify of keycloak:26.6.3.
+  - vulnerability: CVE-2026-44249
+    # package: io.netty:netty-handler 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: GHSA-x4gw-5cx5-pgmh
+    # package: io.netty:netty-handler 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: CVE-2026-45416
+    # package: io.netty:netty-handler 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: GHSA-3qp7-7mw8-wx86
+    # package: io.netty:netty-handler 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: CVE-2026-44893
+    # package: io.netty:netty-codec-haproxy 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: GHSA-h2qv-fj59-j46j
+    # package: io.netty:netty-codec-haproxy 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: CVE-2026-48059
+    # package: io.netty:netty-codec-haproxy 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: GHSA-cc37-9q2j-3hfv
+    # package: io.netty:netty-codec-haproxy 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: CVE-2026-45674
+    # package: io.netty:netty-resolver-dns 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: GHSA-5pvg-856g-cp85
+    # package: io.netty:netty-resolver-dns 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: CVE-2026-47691
+    # package: io.netty:netty-resolver-dns 4.1.133.Final, fix: 4.1.135.Final
+  - vulnerability: GHSA-676x-f7gg-47vc
+    # package: io.netty:netty-resolver-dns 4.1.133.Final, fix: 4.1.135.Final
+
+  # keycloak 26.6.3 — false positive: CVE-2017-12159 fixed in keycloak 3.3.1; we ship 26.6.3
+  - vulnerability: CVE-2017-12159
+    # package: keycloak, false-positive: fixed in 3.3.1, we ship 26.6.3
+
+  # keycloak 26.6.3 — libtiff and cups nixpkgs toolchain residuals (JDK 21 transitive)
+  # Surfaced during the 2026-06-13 verify of keycloak:26.6.3.
+  - vulnerability: CVE-2023-52356
+    # package: libtiff, toolchain residual via openjdk21
+  - vulnerability: CVE-2026-4775
+    # package: libtiff, toolchain residual via openjdk21
+  - vulnerability: CVE-2018-6553
+    # package: cups, toolchain residual via openjdk21
+
   # vaultwarden 1.36.0 — false positives: scanners detect internal Rust crate "vaultwarden"
   # at version 1.0.0 but we ship the application at 1.36.0 which incorporates all fixes.
   # Surfaced during the 2026-06-13 verify of vaultwarden:v1.36.0.
