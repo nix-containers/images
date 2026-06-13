@@ -149,6 +149,46 @@ ignore:
   - vulnerability: CVE-2026-11824
     # package: sqlite, fix: 3.53.2
 
+  # stdlib go1.26.2 → fixed in 1.26.3; nixpkgs unstable ships 1.26.2 (as of 2026-06-13)
+  # New CVEs surfaced during the 2026-06-13 refresh scan of google-cloud-sdk:565.0.0.
+  - vulnerability: CVE-2026-33811
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: CVE-2026-33814
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: CVE-2026-39820
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: CVE-2026-39823
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: CVE-2026-39825
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: CVE-2026-39836
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: CVE-2026-42499
+    # package: stdlib, fix: 1.26.3
+
+  # github.com/grafana/tempo vendored in grafana 13.0.1; upstream has not revendored yet
+  # CVE-2026-21728: Tempo DoS via large queries (HIGH); CVE-2026-28377: S3 info disclosure (HIGH)
+  - vulnerability: CVE-2026-21728
+    # package: github.com/grafana/tempo, fix: 2.8.4
+  - vulnerability: GHSA-p4r4-xvrq-gvmc
+    # package: github.com/grafana/tempo, fix: 2.8.4
+  - vulnerability: CVE-2026-28377
+    # package: github.com/grafana/tempo, fix: 2.10.3
+  - vulnerability: GHSA-ffqx-q65f-36jf
+    # package: github.com/grafana/tempo, fix: 2.10.3
+
+  # stdlib go1.26.2 additional GO-database IDs — same underlying issue as CVE batch above
+  - vulnerability: GO-2026-4986
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: GO-2026-4977
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: GO-2026-4971
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: GO-2026-4981
+    # package: stdlib, fix: 1.26.3
+  - vulnerability: CVE-2026-42501
+    # package: stdlib, fix: 1.26.3
+
   # github.com/go-jose/go-jose/v4 v4.1.4 — false positive: trivy says fixed in v4.0.5 (4.1.4 > 4.0.5)
   - vulnerability: CVE-2026-34986
     # package: go-jose/v4, false-positive version comparison
