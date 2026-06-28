@@ -47,7 +47,7 @@ let
 in
 nix2container.buildImage {
   name = "node";
-  tag = "latest";
+  tag = pkgs.nodejs.version;  # version-tagged (matches org.opencontainers.image.version)
 
   copyToRoot = [
     (buildEnv {

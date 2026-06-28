@@ -47,7 +47,7 @@ let
 in
 nix2container.buildImage {
   name = "python";
-  tag = "latest";
+  tag = pkgs.python3.version;  # version-tagged (matches org.opencontainers.image.version)
 
   copyToRoot = [
     (buildEnv {

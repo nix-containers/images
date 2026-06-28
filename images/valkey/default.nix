@@ -28,7 +28,7 @@ let
 in
 nix2container.buildImage {
   name = "valkey";
-  tag = "latest";
+  tag = pkgs.valkey.version;  # version-tagged (matches org.opencontainers.image.version)
 
   copyToRoot = [
     (buildEnv {

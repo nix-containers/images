@@ -44,7 +44,7 @@ let
 in
 nix2container.buildImage {
   name = "mariadb";
-  tag = "latest";
+  tag = pkgs.mariadb.version;  # version-tagged (matches org.opencontainers.image.version)
 
   copyToRoot = [
     (buildEnv {
