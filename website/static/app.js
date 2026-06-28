@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadImages();
   document.getElementById('search').addEventListener('input', filter);
   document.getElementById('category-filter').addEventListener('change', filter);
+  document.getElementById('chart-filter').addEventListener('change', filter);
 });
 
 async function loadImages() {
@@ -43,12 +44,15 @@ function populateCategoryFilter() {
 function filter() {
   const q = document.getElementById('search').value.toLowerCase();
   const cat = document.getElementById('category-filter').value;
+  const chartsOnly = document.getElementById('chart-filter').checked;
   filteredImages = allImages.filter(i => {
     const matchesQ = !q ||
       i.name.toLowerCase().includes(q) ||
       (i.description || '').toLowerCase().includes(q);
     const matchesCat = !cat || i.category === cat;
-    return matchesQ && matchesCat;
+    const matchesChart = !chartsOnly ||
+      (Array.isArray(i.usedByCharts) && i.usedByCharts.length > 0);
+    return matchesQ && matchesCat && matchesChart;
   });
   render();
 }
