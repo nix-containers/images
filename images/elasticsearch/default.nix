@@ -6,6 +6,7 @@
 let
   elasticsearchPackages = with pkgs; [
     elasticsearch
+    openjdk17_headless  # ES 7.17 runs on JDK 17; the package has no bundled JRE
     bash
     busybox
     coreutils
@@ -66,7 +67,7 @@ nix2container.buildImage {
     Env = base.defaultEnv ++ nonRoot.userEnv ++ [
       "PATH=${lib.makeBinPath elasticsearchPackages}"
       "ES_HOME=${pkgs.elasticsearch}"
-      "ES_JAVA_HOME=${pkgs.elasticsearch.jre}"
+      "ES_JAVA_HOME=${pkgs.openjdk17_headless}"
       # Keep the JVM small so it fits the CI runner; the single-node start only
       # needs to launch and stay up, not serve a workload.
       "ES_JAVA_OPTS=-Xms512m -Xmx512m"
