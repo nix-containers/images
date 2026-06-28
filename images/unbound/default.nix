@@ -30,6 +30,9 @@ let
         interface: 0.0.0.0
         port: 5353
         do-daemonize: no
+        do-ip6: no
+        so-sndbuf: 0
+        so-rcvbuf: 0
         access-control: 0.0.0.0/0 allow
         chroot: ""
         username: "unbound"
