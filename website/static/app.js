@@ -28,6 +28,9 @@ function updateStats(data) {
     allImages.filter(i => i.hasTest).length;
   document.getElementById('categories-count').textContent =
     new Set(allImages.map(i => i.category)).size;
+  const totalCritical = allImages.reduce(
+    (acc, i) => acc + ((i.scan && i.scan.critical) || 0), 0);
+  document.getElementById('critical-count').textContent = totalCritical;
 }
 
 function populateCategoryFilter() {
