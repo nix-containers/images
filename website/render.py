@@ -10,6 +10,7 @@ Writes:
   - <out>/images-data.json (slim version, no full README HTML)
 """
 import argparse
+import glob
 import json
 import os
 import subprocess
@@ -48,6 +49,40 @@ def render_nix(nix_text: str, pygmentize_bin: str) -> str:
     return p.stdout
 
 
+def scan_for_image(image_name: str, scan_dir: str | None) -> dict | None:
+    """Return a dict of severity counts (or None if no data exists).
+
+    Trivy artifacts are named like '<image>_<tag>-trivy.json'. When
+    multiple files exist for one image, pick the lex-greatest filename
+    (typically the newest tag).
+    """
+    if not scan_dir:
+        return None
+    pattern = os.path.join(scan_dir, f"{image_name}_*-trivy.json")
+    matches = sorted(glob.glob(pattern))
+    if not matches:
+        return None
+    target = matches[-1]
+    try:
+        with open(target) as f:
+            doc = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return None
+
+    counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "unknown": 0}
+    for result in doc.get("Results", []) or []:
+        for vuln in result.get("Vulnerabilities", []) or []:
+            sev = (vuln.get("Severity") or "UNKNOWN").lower()
+            if sev in counts:
+                counts[sev] += 1
+            else:
+                counts["unknown"] += 1
+    counts["total"] = sum(counts[s] for s in ("critical", "high", "medium", "low", "unknown"))
+    counts["scannedAt"] = doc.get("CreatedAt", "")
+    counts["sourceFile"] = os.path.basename(target)
+    return counts
+
+
 def fill_template(template: str, mapping: dict) -> str:
     """Mustache-style substitution. {{KEY}} -> mapping[KEY]. Raises if any
     placeholder is left unfilled — better to catch typos at build time."""
@@ -68,6 +103,8 @@ def main():
     ap.add_argument("--out", required=True, help="Output directory (will be created)")
     ap.add_argument("--cmark", required=True, help="Path to cmark binary")
     ap.add_argument("--pygmentize", required=True, help="Path to pygmentize binary")
+    ap.add_argument("--scan-data", default=None,
+                    help="Optional path to directory of *-trivy.json files")
     args = ap.parse_args()
 
     out = Path(args.out)
@@ -111,6 +148,20 @@ def main():
         else:
             used_by_html = '<p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>'
         mapping["USED_BY_HTML"] = used_by_html
+        scan = scan_for_image(name, args.scan_data)
+        if scan:
+            scan_html = (
+                '<div class="space-y-1 text-sm">'
+                f'<div class="flex justify-between"><span class="text-accent-bad font-mono">Critical</span><span>{scan["critical"]}</span></div>'
+                f'<div class="flex justify-between"><span class="text-accent-warn font-mono">High</span><span>{scan["high"]}</span></div>'
+                f'<div class="flex justify-between"><span class="text-fg-muted font-mono">Medium</span><span>{scan["medium"]}</span></div>'
+                f'<div class="flex justify-between"><span class="text-fg-muted font-mono">Low</span><span>{scan["low"]}</span></div>'
+                f'<div class="text-xs text-fg-muted mt-2">Source: {scan["sourceFile"]}</div>'
+                '</div>'
+            )
+        else:
+            scan_html = '<p class="text-fg-muted italic text-sm">No scan data available.</p>'
+        mapping["SCAN_PANEL_HTML"] = scan_html
         page_html = fill_template(image_template, mapping)
         page_dir = out / "images" / name
         page_dir.mkdir(parents=True, exist_ok=True)
@@ -125,6 +176,7 @@ def main():
             "hasTest": img.get("hasTest", False),
             "pullCommand": img.get("pullCommand", ""),
             "usedByCharts": img.get("usedByCharts", []),
+            "scan": scan or None,
         })
 
     slim_data = {
