@@ -1,20 +1,19 @@
 { pkgs, lib }:
 
 let
-  # Get all image directories
   imagesPath = ../images;
   allFiles = lib.filesystem.listFilesRecursive imagesPath;
-  imageFiles = builtins.filter (path: 
+  imageFiles = builtins.filter (path:
     let
       pathStr = toString path;
       relativePath = lib.removePrefix (toString imagesPath + "/") pathStr;
       parts = lib.splitString "/" relativePath;
     in
-      builtins.length parts == 2 && 
+      builtins.length parts == 2 &&
       builtins.elemAt parts 1 == "default.nix" &&
       !(builtins.any (part: part == "fake_nixpkgs" || part == "root" || part == "patches") parts)
   ) allFiles;
-  
+
   imageNames = lib.lists.unique (map (path:
     let
       pathStr = toString path;
@@ -24,32 +23,27 @@ let
       builtins.elemAt parts 0
   ) imageFiles);
 
-  # Generate image metadata
+  extractLabel = nixContent: label: default:
+    let
+      pattern = "\"${label}\"\\s*=\\s*\"([^\"]+)\"";
+      match = builtins.match ".*${pattern}.*" nixContent;
+    in if match != null then builtins.head match else default;
+
   generateImageData = imageName:
     let
       readmePath = imagesPath + "/${imageName}/README.md";
       nixPath = imagesPath + "/${imageName}/default.nix";
       testPath = imagesPath + "/${imageName}/test.nix";
-      
-      readmeContent = if builtins.pathExists readmePath 
-        then builtins.readFile readmePath 
-        else "# ${imageName}\n\nNo README available.";
-        
+
+      readmeContent = if builtins.pathExists readmePath
+        then builtins.readFile readmePath
+        else "";
+
       nixContent = if builtins.pathExists nixPath
         then builtins.readFile nixPath
         else "";
-        
-      hasTest = builtins.pathExists testPath;
-      
-      # Extract metadata from Nix file
-      extractLabel = label: default:
-        let
-          pattern = "\"${label}\"\\s*=\\s*\"([^\"]+)\"";
-          match = builtins.match ".*${pattern}.*" nixContent;
-        in if match != null then builtins.head match else default;
-      
-      # Extract version - handle both static strings and package references
-      extractVersion = 
+
+      version =
         let
           staticMatch = builtins.match ".*\"org\\.opencontainers\\.image\\.version\"\\s*=\\s*\"([^\"]+)\".*" nixContent;
           dynamicMatch = builtins.match ".*\"org\\.opencontainers\\.image\\.version\"\\s*=\\s*pkgs\\.([^;]+)\\.version.*" nixContent;
@@ -59,54 +53,70 @@ let
           else "latest";
     in {
       name = imageName;
-      description = extractLabel "org\\.opencontainers\\.image\\.description" "Container image for ${imageName}";
-      version = extractVersion;
-      category = extractLabel "io\\.nix-containers\\.image\\.category" "utility";
-      upstream = extractLabel "io\\.nix-containers\\.image\\.upstream" "";
-      aliases = extractLabel "io\\.nix-containers\\.image\\.aliases" imageName;
-      hasTest = hasTest;
+      description = extractLabel nixContent "org\\.opencontainers\\.image\\.description"
+                       "Container image for ${imageName}";
+      version = version;
+      category = extractLabel nixContent "io\\.nix-containers\\.image\\.category" "utility";
+      upstream = extractLabel nixContent "io\\.nix-containers\\.image\\.upstream" "";
+      aliases = extractLabel nixContent "io\\.nix-containers\\.image\\.aliases" imageName;
+      hasTest = builtins.pathExists testPath;
       readme = readmeContent;
       pullCommand = "docker pull ghcr.io/nix-containers/images/${imageName}:latest";
       nixCode = nixContent;
     };
 
-  # Generate all image data
   imagesData = map generateImageData imageNames;
-  
-  # Convert to JSON
-  imagesJson = builtins.toJSON {
-    images = imagesData;
-    lastUpdated = "BUILD_TIME_PLACEHOLDER";
-    totalCount = builtins.length imagesData;
-  };
 
-in pkgs.stdenv.mkDerivation {
+  imagesJsonFull = pkgs.writeText "images-data-full.json" (builtins.toJSON {
+    images = imagesData;
+    totalCount = builtins.length imagesData;
+  });
+
+in
+pkgs.stdenv.mkDerivation {
   name = "nix-containers-website";
-  
   src = ./.;
-  
-  buildInputs = with pkgs; [ jq ];
-  
+
+  buildInputs = [
+    pkgs.tailwindcss
+    pkgs.cmark
+    pkgs.python3
+    pkgs.python3Packages.pygments
+  ];
+
   buildPhase = ''
-    # Copy static assets
-    mkdir -p $out
-    cp -r public/* $out/ 2>/dev/null || true
-    cp index.html $out/ 2>/dev/null || true
-    
-    # Generate images data
-    echo '${imagesJson}' | jq '.' > $out/images-data.json
-    
-    # Replace BUILD_TIME_PLACEHOLDER with actual build time
-    BUILD_TIME=$(date -Iseconds)
-    sed -i "s/BUILD_TIME_PLACEHOLDER/$BUILD_TIME/g" $out/images-data.json
-    
-    # Copy website files
-    cp ${./static}/* $out/ 2>/dev/null || true
+    runHook preBuild
+
+    export HOME=$TMPDIR
+    OUT_DIR=$out
+    mkdir -p $OUT_DIR
+
+    echo "-> Compiling Tailwind CSS..."
+    mkdir -p $OUT_DIR/static/css
+    tailwindcss -c tailwind/tailwind.config.js \
+      -i tailwind/input.css \
+      -o $OUT_DIR/static/css/site.css \
+      --minify
+
+    echo "-> Copying static assets..."
+    mkdir -p $OUT_DIR/static/fonts
+    cp -r static/fonts/* $OUT_DIR/static/fonts/
+    cp static/app.js $OUT_DIR/static/app.js
+
+    echo "-> Rendering pages..."
+    python3 render.py \
+      --data ${imagesJsonFull} \
+      --templates ./templates \
+      --out $OUT_DIR \
+      --cmark ${pkgs.cmark}/bin/cmark \
+      --pygmentize ${pkgs.python3Packages.pygments}/bin/pygmentize
+
+    echo "-> Build complete. Output:"
+    ls -la $OUT_DIR/
+    echo "Image pages: $(ls $OUT_DIR/images/ | wc -l)"
+
+    runHook postBuild
   '';
-  
-  installPhase = ''
-    echo "Static website generated at $out"
-    echo "Images data available at $out/images-data.json"
-    echo "Total images: ${toString (builtins.length imagesData)}"
-  '';
+
+  dontInstall = true;
 }
