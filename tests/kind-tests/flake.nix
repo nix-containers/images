@@ -11,6 +11,8 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
+        chartRoutingJson = import ./chart-routing.nix { inherit pkgs; };
+
         # Chart test definitions
         chartTests = {
           infrastructure = [ "cert-manager" "coredns" "crossplane" "keda" ];
@@ -203,6 +205,9 @@
           teardown = teardownCluster;
           load-image = loadImage;
           run-tests = runAllTests;
+
+          # Chart <-> image routing JSON (used by CI matrix builder)
+          chart-routing-json = chartRoutingJson;
 
           # Individual test scripts
           test-cert-manager = mkChartTest "infrastructure" "cert-manager";
