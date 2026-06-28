@@ -104,6 +104,12 @@ pkgs.stdenv.mkDerivation {
     pkgs.python3Packages.pygments
   ];
 
+  # When SCAN_DATA_PATH is set (e.g. by deploy-website.yml after
+  # downloading the security-scan-results artifact), per-image pages
+  # gain a vulnerability panel. When unset, build proceeds without.
+  # Requires --impure to read the env var; CI passes that flag.
+  SCAN_DATA_PATH = builtins.getEnv "SCAN_DATA_PATH";
+
   buildPhase = ''
     runHook preBuild
 
@@ -124,12 +130,20 @@ pkgs.stdenv.mkDerivation {
     cp static/app.js $OUT_DIR/static/app.js
 
     echo "-> Rendering pages..."
+    SCAN_ARG=""
+    if [ -n "''${SCAN_DATA_PATH:-}" ] && [ -d "$SCAN_DATA_PATH" ]; then
+      echo "   Using SCAN_DATA_PATH=$SCAN_DATA_PATH"
+      SCAN_ARG="--scan-data $SCAN_DATA_PATH"
+    else
+      echo "   No scan data; vulnerability panels will be omitted"
+    fi
     python3 render.py \
       --data ${imagesJsonFull} \
       --templates ./templates \
       --out $OUT_DIR \
       --cmark ${pkgs.cmark}/bin/cmark \
-      --pygmentize ${pkgs.python3Packages.pygments}/bin/pygmentize
+      --pygmentize ${pkgs.python3Packages.pygments}/bin/pygmentize \
+      $SCAN_ARG
 
     echo "-> Build complete. Output:"
     ls -la $OUT_DIR/
