@@ -59,6 +59,11 @@ nix2container.buildImage {
       "HOST=0.0.0.0"
       "PORT=1411"
       "TRUST_PROXY=true"
+      # pocket-id refuses to start without an ENCRYPTION_KEY (>=16 bytes) that
+      # encrypts the SQLite-stored secrets. This is a smoke-test-friendly
+      # placeholder so the image runs out of the box; PRODUCTION DEPLOYMENTS
+      # MUST override it with their own secret.
+      "ENCRYPTION_KEY=change-me-pocket-id-default-key!"
     ];
     ExposedPorts = {
       "1411/tcp" = {};
