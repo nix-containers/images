@@ -25,7 +25,7 @@ let
 
   extractLabel = nixContent: label: default:
     let
-      pattern = "\"${label}\"\\s*=\\s*\"([^\"]+)\"";
+      pattern = "\"${label}\"[[:space:]]*=[[:space:]]*\"([^\"]+)\"";
       match = builtins.match ".*${pattern}.*" nixContent;
     in if match != null then builtins.head match else default;
 
@@ -45,8 +45,8 @@ let
 
       version =
         let
-          staticMatch = builtins.match ".*\"org\\.opencontainers\\.image\\.version\"\\s*=\\s*\"([^\"]+)\".*" nixContent;
-          dynamicMatch = builtins.match ".*\"org\\.opencontainers\\.image\\.version\"\\s*=\\s*pkgs\\.([^;]+)\\.version.*" nixContent;
+          staticMatch = builtins.match ".*\"org\\.opencontainers\\.image\\.version\"[[:space:]]*=[[:space:]]*\"([^\"]+)\".*" nixContent;
+          dynamicMatch = builtins.match ".*\"org\\.opencontainers\\.image\\.version\"[[:space:]]*=[[:space:]]*pkgs\\.([^;]+)\\.version.*" nixContent;
         in
           if staticMatch != null then builtins.head staticMatch
           else if dynamicMatch != null then "dynamic-${builtins.head dynamicMatch}"
