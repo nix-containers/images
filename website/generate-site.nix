@@ -23,6 +23,25 @@ let
       builtins.elemAt parts 0
   ) imageFiles);
 
+  # Reverse-lookup: nixImage -> [chart names]
+  # Source of truth: ../chart-image-mapping.nix (attrset of tiers, each
+  # tier is an attrset of entries with { nixImage, usedBy, ... } fields).
+  chartMapping = import ../chart-image-mapping.nix;
+
+  chartsPerImageRaw =
+    lib.foldl' (acc: entry:
+      acc // { ${entry.nixImage} =
+        lib.unique ((acc.${entry.nixImage} or []) ++ entry.usedBy); }
+    ) {} (lib.flatten (
+      lib.mapAttrsToList (_tier: entries:
+        lib.mapAttrsToList (_name: e: {
+          inherit (e) nixImage usedBy;
+        }) entries
+      ) chartMapping
+    ));
+
+  chartsForImage = imageName: chartsPerImageRaw.${imageName} or [];
+
   extractLabel = nixContent: label: default:
     let
       pattern = "\"${label}\"[[:space:]]*=[[:space:]]*\"([^\"]+)\"";
@@ -63,6 +82,7 @@ let
       readme = readmeContent;
       pullCommand = "docker pull ghcr.io/nix-containers/images/${imageName}:latest";
       nixCode = nixContent;
+      usedByCharts = chartsForImage imageName;
     };
 
   imagesData = map generateImageData imageNames;
