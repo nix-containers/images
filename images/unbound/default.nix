@@ -24,7 +24,12 @@ let
   # working dir on the writable /tmp mkImage provides, iterator-only so no
   # DNSSEC trust-anchor file is needed (recursive resolution uses unbound's
   # built-in root hints). Operators override by mounting their own config.
-  unboundConfig = pkgs.writeTextDir "etc/unbound/unbound.conf" ''
+  #
+  # NB: write to /etc/unbound.conf, NOT /etc/unbound/unbound.conf — the unbound
+  # package ships its own /etc/unbound/unbound.conf and mkImage's application
+  # layer (the package) overrides that exact path, shadowing a config placed
+  # there. A sibling path is not shadowed, so unbound actually reads this one.
+  unboundConfig = pkgs.writeTextDir "etc/unbound.conf" ''
     server:
         verbosity: 1
         interface: 0.0.0.0
@@ -53,7 +58,7 @@ mkImage {
   # Run the resolver in the foreground (-d) with the baked config so the kind
   # probe reaches a Running pod (was `unbound --help`, a one-shot).
   entrypoint = [ "unbound" ];
-  cmd = [ "-d" "-c" "/etc/unbound/unbound.conf" ];
+  cmd = [ "-d" "-c" "/etc/unbound.conf" ];
   extraContents = [ unboundConfig passwdEnv ];
 
   labels = {
