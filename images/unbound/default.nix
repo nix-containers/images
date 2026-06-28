@@ -7,8 +7,14 @@ let
   # /etc/passwd entry for the nonroot (65532) user. unbound drops privileges to
   # its configured `username` at startup and fatals if that user can't be
   # resolved; mkImage ships no passwd, so provide one and point unbound at the
-  # same user it already runs as (setuid to your own uid is a no-op).
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
+  # same user it already runs as (setuid to your own uid is a no-op). A minimal
+  # passwd-only derivation (just /etc) — mkDefaultUserEnv also ships a /tmp
+  # symlink that collides with mkImage's writable /tmp layer.
+  passwdEnv = pkgs.runCommand "unbound-passwd" {} ''
+    mkdir -p $out/etc
+    printf 'root:x:0:0:root:/root:/sbin/nologin\nnonroot:x:65532:65532:nonroot:/home/nonroot:/sbin/nologin\n' > $out/etc/passwd
+    printf 'root:x:0:\nnonroot:x:65532:\n' > $out/etc/group
+  '';
 
   # Minimal non-root resolver config. The stub ran `unbound --help` (a one-shot,
   # not a server). Listen on 0.0.0.0:5353 (>1024 so the nonroot user can bind;
@@ -44,7 +50,7 @@ mkImage {
   # probe reaches a Running pod (was `unbound --help`, a one-shot).
   entrypoint = [ "unbound" ];
   cmd = [ "-d" "-c" "/etc/unbound/unbound.conf" ];
-  extraContents = [ unboundConfig userEnv ];
+  extraContents = [ unboundConfig passwdEnv ];
 
   labels = {
     "org.opencontainers.image.title" = "unbound";
