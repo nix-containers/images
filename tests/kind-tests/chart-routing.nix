@@ -25,7 +25,7 @@ let
   # chartsPerImage: { "<nixImage>": [ "<chart>", ... ] }
   chartsPerImage =
     pkgs.lib.foldl' (acc: e:
-      acc // { ${e.nixImage} = (acc.${e.nixImage} or []) ++ e.usedBy; }
+      acc // { ${e.nixImage} = pkgs.lib.unique ((acc.${e.nixImage} or []) ++ e.usedBy); }
     ) {} flatEntries;
 
   # imagesPerChart: invert chartsPerImage
