@@ -9,6 +9,13 @@
 # GEOSERVER_DATA_DIR / mounting their own data dir.
 set -euo pipefail
 
+# Pass non-server invocations straight through (e.g. `--version`, `--help`, a
+# shell) so probes don't start the long-running server. Only a bare entrypoint
+# (no args) launches GeoServer.
+if [ "$#" -gt 0 ]; then
+  exec "$@"
+fi
+
 export GEOSERVER_DATA_DIR="${GEOSERVER_DATA_DIR:-/tmp/geoserver/data}"
 mkdir -p "$GEOSERVER_DATA_DIR"
 
