@@ -4,16 +4,17 @@
 # https://nlnetlabs.nl/projects/unbound/
 
 let
-  # /etc/passwd entry for the nonroot (65532) user. unbound drops privileges to
-  # its configured `username` at startup and fatals if that user can't be
-  # resolved; mkImage ships no passwd, so provide one and point unbound at the
-  # same user it already runs as (setuid to your own uid is a no-op). A minimal
-  # passwd-only derivation (just /etc) — mkDefaultUserEnv also ships a /tmp
-  # symlink that collides with mkImage's writable /tmp layer.
+  # unbound drops privileges at startup to its configured `username` (compiled
+  # default "unbound") and fatals if that user can't be resolved — and mkImage
+  # ships no /etc/passwd, so the lookup fails. Provide a passwd that maps the
+  # "unbound" user to the SAME uid (65532) the container already runs as, so the
+  # setuid is a no-op that succeeds regardless of how the config is read. A
+  # minimal passwd-only derivation (just /etc) — mkDefaultUserEnv also ships a
+  # /tmp symlink that collides with mkImage's writable /tmp layer.
   passwdEnv = pkgs.runCommand "unbound-passwd" {} ''
     mkdir -p $out/etc
-    printf 'root:x:0:0:root:/root:/sbin/nologin\nnonroot:x:65532:65532:nonroot:/home/nonroot:/sbin/nologin\n' > $out/etc/passwd
-    printf 'root:x:0:\nnonroot:x:65532:\n' > $out/etc/group
+    printf 'root:x:0:0:root:/root:/sbin/nologin\nunbound:x:65532:65532:unbound:/tmp:/sbin/nologin\n' > $out/etc/passwd
+    printf 'root:x:0:\nunbound:x:65532:\n' > $out/etc/group
   '';
 
   # Minimal non-root resolver config. The stub ran `unbound --help` (a one-shot,
@@ -31,7 +32,7 @@ let
         do-daemonize: no
         access-control: 0.0.0.0/0 allow
         chroot: ""
-        username: "nonroot"
+        username: "unbound"
         directory: "/tmp"
         pidfile: "/tmp/unbound.pid"
         use-syslog: no
