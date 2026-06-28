@@ -98,6 +98,19 @@ def main():
             "NIX_HTML": nix_html,
             "BUILD_TIME": build_time,
         }
+        used_by = img.get("usedByCharts", []) or []
+        if used_by:
+            chips = " ".join(
+                f'<span class="inline-block bg-bg-input text-fg-primary rounded-full px-3 py-1 text-xs font-mono mr-2 mb-2">{c}</span>'
+                for c in used_by
+            )
+            used_by_html = (
+                '<p class="text-fg-muted text-sm mb-3">This image is consumed by:</p>'
+                f'<div class="flex flex-wrap">{chips}</div>'
+            )
+        else:
+            used_by_html = '<p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>'
+        mapping["USED_BY_HTML"] = used_by_html
         page_html = fill_template(image_template, mapping)
         page_dir = out / "images" / name
         page_dir.mkdir(parents=True, exist_ok=True)
@@ -111,6 +124,7 @@ def main():
             "version": img.get("version", "latest"),
             "hasTest": img.get("hasTest", False),
             "pullCommand": img.get("pullCommand", ""),
+            "usedByCharts": img.get("usedByCharts", []),
         })
 
     slim_data = {
