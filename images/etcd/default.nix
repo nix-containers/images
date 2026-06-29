@@ -27,9 +27,9 @@ mkImage {
   ];
   user = "0:0";  # etcd typically needs root for data directory access
 
-  env = {
-    ETCD_DATA_DIR = "/tmp/etcd";
-  };
+  # NB: no ETCD_DATA_DIR env — etcd fatals ("conflicting environment variable
+  # is shadowed by corresponding command-line flag") when the env duplicates
+  # the --data-dir flag set above. The flag is the single source of truth.
 
   labels = {
     "org.opencontainers.image.title" = "etcd";
