@@ -20,13 +20,14 @@ mkImage {
   name = "seaweedfs";
   tag = pkgs.seaweedfs.version;
   entrypoint = [ "${pkgs.seaweedfs}/bin/weed" ];
-  # Was `--help` (a one-shot). Run the all-in-one server (master + volume) bound
-  # to all interfaces, with data under the writable /tmp mkImage provides (weed
-  # creates the dir). Operators run dedicated `weed master` / `weed volume` /
-  # `weed filer` and point -dir at a real volume.
+  # Was `--help` (a one-shot). Run the all-in-one `server` (master + volume +
+  # filer). `-dir` also sets `-mdir` (master metadata) and must pre-exist and be
+  # writable; point it at the writable /tmp mkImage provides (a /tmp/seaweed
+  # subdir does NOT exist, so weed panics on the meta-folder writability check).
+  # Bind to 0.0.0.0 so the HTTP/gRPC services are reachable.
   cmd = [
     "server"
-    "-dir=/tmp/seaweed"
+    "-dir=/tmp"
     "-ip.bind=0.0.0.0"
   ];
   # Chainguard runs seaweedfs as root
