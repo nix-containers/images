@@ -20,7 +20,15 @@ mkImage {
   name = "seaweedfs";
   tag = pkgs.seaweedfs.version;
   entrypoint = [ "${pkgs.seaweedfs}/bin/weed" ];
-  cmd = [ "--help" ];
+  # Was `--help` (a one-shot). Run the all-in-one server (master + volume) bound
+  # to all interfaces, with data under the writable /tmp mkImage provides (weed
+  # creates the dir). Operators run dedicated `weed master` / `weed volume` /
+  # `weed filer` and point -dir at a real volume.
+  cmd = [
+    "server"
+    "-dir=/tmp/seaweed"
+    "-ip.bind=0.0.0.0"
+  ];
   # Chainguard runs seaweedfs as root
   user = "0:0";
 
