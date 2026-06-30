@@ -66,92 +66,43 @@
     el.scrollTop = el.scrollHeight;
   }
 
-  // Load one packages-listing page via a hidden iframe, wait for React
-  // to populate the package card anchors (the static HTML is just a
-  // skeleton — server doesn't ship the rows), then extract the package
-  // names + visibility from the rendered DOM.
-  async function scrapeListingPage(page) {
-    const url = `/orgs/${ORG}/packages?page=${page}`;
-    const iframe = document.createElement('iframe');
-    iframe.style.cssText =
-      'position:absolute; left:-99999px; width:1024px; height:768px; border:0;';
-    iframe.src = url;
-    document.body.appendChild(iframe);
-    try {
-      await new Promise(r => iframe.addEventListener('load', r, { once: true }));
-      // Wait for anchors to render. Poll up to 10s.
-      const deadline = Date.now() + 10000;
-      let anchors = [];
-      while (Date.now() < deadline) {
-        const doc = iframe.contentDocument;
-        if (doc) {
-          anchors = Array.from(
-            doc.querySelectorAll(`a[href*="/orgs/${ORG}/packages/container/"]`)
-          );
-          if (anchors.length > 0) break;
-        }
-        await new Promise(r => setTimeout(r, 250));
-      }
-      const items = [];
-      const seenThisPage = new Set();
-      for (const a of anchors) {
-        const m = a.getAttribute('href').match(
-          new RegExp(`/orgs/${ORG}/packages/container/(?:package/)?([^/?#]+)`)
-        );
-        if (!m) continue;
-        const encoded = m[1];
-        let name;
-        try { name = decodeURIComponent(encoded); } catch { name = encoded; }
-        if (seenThisPage.has(name)) continue;
-        seenThisPage.add(name);
-        const card = a.closest('li, article, div');
-        const txt = (card ? card.textContent : '').toLowerCase();
-        const isPrivate = /\bprivate\b/.test(txt);
-        const isInternal = !isPrivate && /\binternal\b/.test(txt);
-        const visibility = isPrivate ? 'private' : (isInternal ? 'internal' : 'public');
-        items.push({ name, visibility });
-      }
-      return items;
-    } finally {
-      iframe.remove();
+  // Scrape the LIVE DOM of the current page. React has already
+  // hydrated the package cards by the time Tampermonkey fires at
+  // document-idle, so the anchors are present.
+  function scrapeCurrentPage() {
+    const items = [];
+    const seenThisPage = new Set();
+    const anchors = Array.from(
+      document.querySelectorAll(`a[href*="/orgs/${ORG}/packages/container/"]`)
+    );
+    for (const a of anchors) {
+      const m = a.getAttribute('href').match(
+        new RegExp(`/orgs/${ORG}/packages/container/(?:package/)?([^/?#]+)`)
+      );
+      if (!m) continue;
+      const encoded = m[1];
+      let name;
+      try { name = decodeURIComponent(encoded); } catch { name = encoded; }
+      if (seenThisPage.has(name)) continue;
+      seenThisPage.add(name);
+      const card = a.closest('li, article, div');
+      const txt = (card ? card.textContent : '').toLowerCase();
+      const isPrivate = /\bprivate\b/.test(txt);
+      const isInternal = !isPrivate && /\binternal\b/.test(txt);
+      const visibility = isPrivate ? 'private' : (isInternal ? 'internal' : 'public');
+      items.push({ name, visibility });
     }
+    return items;
   }
 
-  // Walk pages until one returns no items.
-  async function listAllPackages() {
-    const out = [];
-    const seen = new Set();
-    for (let page = 1; page <= 200; page++) {
-      let items = [];
-      for (let attempt = 1; attempt <= 3; attempt++) {
-        try {
-          items = await scrapeListingPage(page);
-          break;
-        } catch (e) {
-          log(`page ${page} attempt ${attempt}/3 failed: ${e.message}`);
-          await new Promise(r => setTimeout(r, 1000 * attempt));
-        }
-      }
-      if (items.length === 0) {
-        log(`page ${page}: empty (end of listing)`);
-        break;
-      }
-      let added = 0;
-      for (const it of items) {
-        if (seen.has(it.name)) continue;
-        seen.add(it.name);
-        out.push(it);
-        added++;
-      }
-      log(`listed page ${page}: +${added} new (running total ${out.length})`);
-      // If a page returned only duplicates of earlier pages, the listing
-      // has wrapped and we should stop.
-      if (added === 0) break;
-      // Light throttle.
-      await new Promise(r => setTimeout(r, 200));
-    }
-    return out;
+  // localStorage keys for the cross-page-navigation state machine.
+  const LS_KEY = 'nc-bulk-flip-state';
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); }
+    catch { return null; }
   }
+  function saveState(s) { localStorage.setItem(LS_KEY, JSON.stringify(s)); }
+  function clearState() { localStorage.removeItem(LS_KEY); }
 
   // Flip one package to public. Returns 'flipped', 'already-public',
   // 'error: <reason>'. Confirmed via inspection of the settings page
@@ -213,34 +164,88 @@
     host.prepend(btn);
   }
 
+  // Phase 1 of bulk: listing. Auto-navigates page by page, scraping the
+  // live DOM at each step. State persists in localStorage so a navigation
+  // doesn't lose our progress. When we hit an empty page (no anchors),
+  // transitions to phase 'flipping' and reloads to start phase 2.
+  async function continueListing(state) {
+    log(`Listing… page ${state.currentPage}, collected ${state.collected.length} so far`);
+    const items = scrapeCurrentPage();
+    let added = 0;
+    const seen = new Set(state.collected.map(p => p.name));
+    for (const it of items) {
+      if (seen.has(it.name)) continue;
+      seen.add(it.name);
+      state.collected.push(it);
+      added++;
+    }
+    log(`page ${state.currentPage}: +${added} (running total ${state.collected.length})`);
+    if (added === 0 || items.length === 0) {
+      // End of listing — switch to flipping.
+      const targets = state.collected
+        .filter(p => p.visibility === 'private' && p.name.startsWith('images/'))
+        .map(p => p.name);
+      state.phase = 'flipping';
+      state.targets = targets;
+      state.flipIndex = 0;
+      state.ok = 0;
+      state.skipped = 0;
+      state.failed = 0;
+      saveState(state);
+      log(`Total: ${state.collected.length} packages. Private under images/: ${targets.length}.`);
+      log('Starting flip phase…');
+      // Phase 2 doesn't navigate; continues on this page.
+      await continueFlipping(state);
+      return;
+    }
+    state.currentPage++;
+    saveState(state);
+    // Throttle to be polite, then navigate.
+    await new Promise(r => setTimeout(r, 500));
+    window.location.href = `/orgs/${ORG}/packages?page=${state.currentPage}`;
+  }
+
+  // Phase 2: flipping. Iterates state.targets and POSTs each through
+  // flipPackagePublic. Stays on the same page; no navigation needed.
+  async function continueFlipping(state) {
+    while (state.flipIndex < state.targets.length) {
+      const i = state.flipIndex;
+      const name = state.targets[i];
+      try {
+        const res = await flipPackagePublic(name);
+        if (res === 'flipped') state.ok++;
+        else if (res === 'already-public') state.skipped++;
+        else { state.failed++; log(`[${i + 1}/${state.targets.length}] ${name} → ${res}`); }
+      } catch (e) {
+        state.failed++;
+        log(`[${i + 1}/${state.targets.length}] ${name} → exception ${e.message}`);
+      }
+      state.flipIndex++;
+      if (state.flipIndex % 50 === 0) {
+        log(`progress: ${state.flipIndex}/${state.targets.length} — ok=${state.ok} skipped=${state.skipped} failed=${state.failed}`);
+        saveState(state);
+      }
+      await new Promise(r => setTimeout(r, 250));
+    }
+    log(`Done. flipped=${state.ok} skipped=${state.skipped} failed=${state.failed}`);
+    clearState();
+  }
+
   async function runBulk() {
     const btn = document.getElementById('nc-bulk-flip-btn');
     if (btn) btn.disabled = true;
-    log('Listing packages…');
-    const all = await listAllPackages();
-    log(`Total: ${all.length} container packages.`);
-    const targets = all
-      .filter(p => p.visibility === 'private' && p.name.startsWith('images/'))
-      .map(p => p.name);
-    log(`Private under images/: ${targets.length}`);
-    let ok = 0, skipped = 0, failed = 0;
-    for (let i = 0; i < targets.length; i++) {
-      const name = targets[i];
-      try {
-        const res = await flipPackagePublic(name);
-        if (res === 'flipped') ok++;
-        else if (res === 'already-public') skipped++;
-        else { failed++; log(`[${i + 1}/${targets.length}] ${name} → ${res}`); }
-      } catch (e) {
-        failed++; log(`[${i + 1}/${targets.length}] ${name} → exception ${e.message}`);
-      }
-      if ((i + 1) % 50 === 0) {
-        log(`progress: ${i + 1}/${targets.length} — ok=${ok} skipped=${skipped} failed=${failed}`);
-      }
-      // Throttle so we don't overwhelm GitHub's rate limits.
-      await new Promise(r => setTimeout(r, 250));
+    let state = loadState();
+    if (state) {
+      log('Found in-progress state; resuming.');
+    } else {
+      state = { phase: 'listing', collected: [], currentPage: 1 };
+      saveState(state);
     }
-    log(`Done. flipped=${ok} skipped=${skipped} failed=${failed}`);
+    if (state.phase === 'listing') {
+      await continueListing(state);
+    } else if (state.phase === 'flipping') {
+      await continueFlipping(state);
+    }
     if (btn) btn.disabled = false;
   }
 
@@ -270,8 +275,16 @@
   }
 
   // Pick the right injector based on the current path.
-  if (/\/packages\/?(\?|$)/.test(window.location.pathname + window.location.search)) {
+  const pathAndQuery = window.location.pathname + window.location.search;
+  if (/\/packages\/?(\?|$)/.test(pathAndQuery)) {
     injectBulkButton();
+    // Auto-resume if an in-progress state exists (we got here via the
+    // listing phase auto-navigation, not a fresh click).
+    const state = loadState();
+    if (state) {
+      // Give React a moment to populate the page before scraping.
+      setTimeout(() => runBulk(), 1500);
+    }
   } else if (/\/packages\/container\/.+\/settings$/.test(window.location.pathname)) {
     injectSingleButton();
   }
