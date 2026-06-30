@@ -66,74 +66,89 @@
     el.scrollTop = el.scrollHeight;
   }
 
-  // List every container package the session can see by scraping the
-  // org packages HTML listing pages (`/orgs/<org>/packages?page=N`).
-  // Why not REST? api.github.com is cross-origin and CORS-blocks
-  // credentialed requests; /api/v3 (GHES path) 404s on dotcom.
-  //
-  // Each listing page contains a link per package whose href matches
-  // /orgs/<org>/packages/container/<encoded-name>; we extract the
-  // name and look for a 'Private' label in the same package card to
-  // mark visibility.
-  async function listAllPackages() {
-    const out = [];
-    const seen = new Set();
-    for (let page = 1; page <= 200; page++) {
-      let html = null;
-      for (let attempt = 1; attempt <= 5; attempt++) {
-        const resp = await fetch(
-          `/orgs/${ORG}/packages?page=${page}`,
-          { credentials: 'include' }
-        ).catch(() => null);
-        if (resp && resp.ok) {
-          html = await resp.text().catch(() => null);
-          break;
+  // Load one packages-listing page via a hidden iframe, wait for React
+  // to populate the package card anchors (the static HTML is just a
+  // skeleton — server doesn't ship the rows), then extract the package
+  // names + visibility from the rendered DOM.
+  async function scrapeListingPage(page) {
+    const url = `/orgs/${ORG}/packages?page=${page}`;
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText =
+      'position:absolute; left:-99999px; width:1024px; height:768px; border:0;';
+    iframe.src = url;
+    document.body.appendChild(iframe);
+    try {
+      await new Promise(r => iframe.addEventListener('load', r, { once: true }));
+      // Wait for anchors to render. Poll up to 10s.
+      const deadline = Date.now() + 10000;
+      let anchors = [];
+      while (Date.now() < deadline) {
+        const doc = iframe.contentDocument;
+        if (doc) {
+          anchors = Array.from(
+            doc.querySelectorAll(`a[href*="/orgs/${ORG}/packages/container/"]`)
+          );
+          if (anchors.length > 0) break;
         }
-        if (resp && (resp.status === 503 || resp.status === 429 || resp.status === 502)) {
-          log(`page ${page} got ${resp.status}, retry ${attempt}/5`);
-          await new Promise(r => setTimeout(r, 1000 * attempt));
-          continue;
-        }
-        log(`page ${page} status ${resp && resp.status}, stopping`);
-        break;
+        await new Promise(r => setTimeout(r, 250));
       }
-      if (!html) break;
-
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-      // Match either '/orgs/<org>/packages/container/<encoded>' (listing
-      // card link) or just '/<encoded>' tail; collect the unique tail.
-      const anchors = Array.from(
-        doc.querySelectorAll(`a[href*="/orgs/${ORG}/packages/container/"]`)
-      );
-      const pageItems = [];
+      const items = [];
+      const seenThisPage = new Set();
       for (const a of anchors) {
         const m = a.getAttribute('href').match(
-          new RegExp(`/orgs/${ORG}/packages/container/([^/?#]+)`)
+          new RegExp(`/orgs/${ORG}/packages/container/(?:package/)?([^/?#]+)`)
         );
         if (!m) continue;
         const encoded = m[1];
         let name;
         try { name = decodeURIComponent(encoded); } catch { name = encoded; }
-        if (seen.has(name)) continue;
-        seen.add(name);
-        // Visibility: look at the closest ancestor that contains the
-        // package row, then check for a 'Private' badge. GitHub renders
-        // visibility as a small Label component near the package name.
+        if (seenThisPage.has(name)) continue;
+        seenThisPage.add(name);
         const card = a.closest('li, article, div');
         const txt = (card ? card.textContent : '').toLowerCase();
         const isPrivate = /\bprivate\b/.test(txt);
-        const isInternal = /\binternal\b/.test(txt);
+        const isInternal = !isPrivate && /\binternal\b/.test(txt);
         const visibility = isPrivate ? 'private' : (isInternal ? 'internal' : 'public');
-        pageItems.push({ name, visibility });
+        items.push({ name, visibility });
       }
-      if (pageItems.length === 0) {
-        log(`page ${page}: no packages found; stopping`);
+      return items;
+    } finally {
+      iframe.remove();
+    }
+  }
+
+  // Walk pages until one returns no items.
+  async function listAllPackages() {
+    const out = [];
+    const seen = new Set();
+    for (let page = 1; page <= 200; page++) {
+      let items = [];
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          items = await scrapeListingPage(page);
+          break;
+        } catch (e) {
+          log(`page ${page} attempt ${attempt}/3 failed: ${e.message}`);
+          await new Promise(r => setTimeout(r, 1000 * attempt));
+        }
+      }
+      if (items.length === 0) {
+        log(`page ${page}: empty (end of listing)`);
         break;
       }
-      out.push(...pageItems);
-      log(`listed page ${page}: +${pageItems.length} (running total ${out.length})`);
-      // Throttle between pages so we don't get back to 503-land.
-      await new Promise(r => setTimeout(r, 300));
+      let added = 0;
+      for (const it of items) {
+        if (seen.has(it.name)) continue;
+        seen.add(it.name);
+        out.push(it);
+        added++;
+      }
+      log(`listed page ${page}: +${added} new (running total ${out.length})`);
+      // If a page returned only duplicates of earlier pages, the listing
+      // has wrapped and we should stop.
+      if (added === 0) break;
+      // Light throttle.
+      await new Promise(r => setTimeout(r, 200));
     }
     return out;
   }
