@@ -97,42 +97,45 @@
   }
 
   // Flip one package to public. Returns 'flipped', 'already-public',
-  // 'error: <reason>'. Uses the per-package settings page to discover
-  // the form action + CSRF token, since the URL isn't documented.
+  // 'error: <reason>'. Confirmed via inspection of the settings page
+  // HTML (the visibility-change form is the one whose action ends in
+  // /settings/change_visibility).
   async function flipPackagePublic(name) {
     const encoded = encodeURIComponent(name);
     const settingsUrl = `/orgs/${ORG}/packages/${PACKAGE_TYPE}/${encoded}/settings`;
     const r = await fetch(settingsUrl, { credentials: 'include' });
     if (!r.ok) return `error: settings GET ${r.status}`;
     const html = await r.text();
-    // The visibility-change form lives under a section that posts to
-    // /orgs/.../packages/.../visibility (the suffix varies by GitHub
-    // release). Locate any form whose action contains "visibility".
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    const formEls = Array.from(doc.querySelectorAll('form'));
-    const form = formEls.find(f => /visibility/i.test(f.getAttribute('action') || ''));
-    if (!form) return 'error: no visibility form on settings page';
-    const action = form.getAttribute('action');
+    const action = `/orgs/${ORG}/packages/${PACKAGE_TYPE}/${encoded}/settings/change_visibility`;
+    // Find the form whose action exactly matches the change_visibility
+    // route so we pick up its CSRF token.
+    const form = Array.from(doc.querySelectorAll('form'))
+      .find(f => (f.getAttribute('action') || '').endsWith('/settings/change_visibility'));
+    if (!form) {
+      return 'error: settings page lacks change_visibility form (already-public?)';
+    }
     const csrf = form.querySelector('input[name="authenticity_token"]');
     if (!csrf) return 'error: no CSRF token in form';
-    // The form may declare its body fields differently depending on the
-    // GitHub release; we send a superset of plausible field names. Extra
-    // fields are ignored by Rails strong-params.
+    // Three fields the modal submits, confirmed via the rendered HTML:
+    //   visibility=public
+    //   verify=<full package name like "images/zoxide">
+    //   authenticity_token=<csrf>
     const fd = new FormData();
-    fd.append('_method', 'patch');
     fd.append('authenticity_token', csrf.value);
     fd.append('visibility', 'public');
-    fd.append('package[visibility]', 'public');
-    fd.append('confirm_string', name);
-    fd.append('confirm', name);
+    fd.append('verify', name);
     const submit = await fetch(action, {
       method: 'POST',
       credentials: 'include',
       body: fd,
+      // GitHub returns 302 on success — capture rather than auto-follow
+      // so we can detect the outcome cleanly.
+      redirect: 'manual',
       headers: { 'Accept': 'text/html' },
     });
-    if (submit.ok || submit.status === 302 || submit.status === 303) {
+    if (submit.ok || submit.status === 0 || submit.status === 302 || submit.status === 303) {
       return 'flipped';
     }
     return `error: submit ${submit.status}`;
