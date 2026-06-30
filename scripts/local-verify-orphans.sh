@@ -133,6 +133,11 @@ while IFS= read -r image; do
   total_ok=$((total_ok + 1))
   batch_count=$((batch_count + 1))
 
+  # Reclaim disk: each load can add 50-300MB to the local docker daemon.
+  # At ~1000 images that adds up to >100GB if we never prune. We don't
+  # need the loaded image after the smoke check, so drop it.
+  docker rmi -f "$image:latest" >/dev/null 2>&1 || true
+
   if [ "$batch_count" -ge "$BATCH_SIZE" ]; then
     git commit -m "test: add smoke-test stubs for $batch_count images (local verify batch)" >/dev/null 2>&1 \
       && echo "==> committed batch of $batch_count (total ok: $total_ok)"
