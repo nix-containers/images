@@ -67,31 +67,51 @@
   }
 
   // List every container package the session can see, paged 100/page.
+  // Same-origin /_private API on github.com carries the session cookie.
+  // 503s have been observed when paging too fast — retry per page with
+  // backoff and throttle between pages so we don't trip the same limit.
   async function listAllPackages() {
     const out = [];
     for (let page = 1; ; page++) {
-      const resp = await fetch(
-        `/api/v3/orgs/${ORG}/packages?package_type=${PACKAGE_TYPE}&per_page=100&page=${page}`,
-        { credentials: 'include', headers: { Accept: 'application/vnd.github+json' } }
-      ).catch(() => null);
-      // /api/v3 is the GHES path; on github.com the same routes also live
-      // at /api/v3 but may redirect to api.github.com under an Accept
-      // header. Try the api.github.com host as a fallback when /api/v3
-      // returns 404.
       let json = null;
-      if (resp && resp.ok) {
-        json = await resp.json().catch(() => null);
+      for (let attempt = 1; attempt <= 5; attempt++) {
+        const resp = await fetch(
+          `/api/v3/orgs/${ORG}/packages?package_type=${PACKAGE_TYPE}&per_page=100&page=${page}`,
+          { credentials: 'include', headers: { Accept: 'application/vnd.github+json' } }
+        ).catch(() => null);
+        if (resp && resp.ok) {
+          json = await resp.json().catch(() => null);
+          if (Array.isArray(json)) break;
+        } else if (resp && (resp.status === 503 || resp.status === 429 || resp.status === 502)) {
+          log(`page ${page} got ${resp.status}, retrying (attempt ${attempt}/5)`);
+          await new Promise(r => setTimeout(r, 1000 * attempt));
+          continue;
+        } else if (!resp || resp.status === 404) {
+          // /api/v3 not present (rare), fall through to api.github.com
+          break;
+        } else {
+          // Other status — log and stop trying this page.
+          log(`page ${page} got status ${resp.status}, stopping`);
+          break;
+        }
       }
-      if (!json) {
+      if (!Array.isArray(json)) {
+        // Last-ditch api.github.com (cross-origin; cookies usually don't
+        // travel, but worth one try for public-only org packages).
         const r2 = await fetch(
           `https://api.github.com/orgs/${ORG}/packages?package_type=${PACKAGE_TYPE}&per_page=100&page=${page}`,
           { credentials: 'include', headers: { Accept: 'application/vnd.github+json' } }
         ).catch(() => null);
         if (r2 && r2.ok) json = await r2.json().catch(() => null);
       }
-      if (!Array.isArray(json) || json.length === 0) break;
+      if (!Array.isArray(json) || json.length === 0) {
+        log(`page ${page} returned no data; stopping listing`);
+        break;
+      }
       out.push(...json);
       if (json.length < 100) break;
+      // Light throttle between pages to keep github.com happy.
+      await new Promise(r => setTimeout(r, 200));
     }
     return out;
   }
