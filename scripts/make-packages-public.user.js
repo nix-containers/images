@@ -66,52 +66,74 @@
     el.scrollTop = el.scrollHeight;
   }
 
-  // List every container package the session can see, paged 100/page.
-  // Same-origin /_private API on github.com carries the session cookie.
-  // 503s have been observed when paging too fast — retry per page with
-  // backoff and throttle between pages so we don't trip the same limit.
+  // List every container package the session can see by scraping the
+  // org packages HTML listing pages (`/orgs/<org>/packages?page=N`).
+  // Why not REST? api.github.com is cross-origin and CORS-blocks
+  // credentialed requests; /api/v3 (GHES path) 404s on dotcom.
+  //
+  // Each listing page contains a link per package whose href matches
+  // /orgs/<org>/packages/container/<encoded-name>; we extract the
+  // name and look for a 'Private' label in the same package card to
+  // mark visibility.
   async function listAllPackages() {
     const out = [];
-    for (let page = 1; ; page++) {
-      let json = null;
+    const seen = new Set();
+    for (let page = 1; page <= 200; page++) {
+      let html = null;
       for (let attempt = 1; attempt <= 5; attempt++) {
         const resp = await fetch(
-          `/api/v3/orgs/${ORG}/packages?package_type=${PACKAGE_TYPE}&per_page=100&page=${page}`,
-          { credentials: 'include', headers: { Accept: 'application/vnd.github+json' } }
+          `/orgs/${ORG}/packages?page=${page}`,
+          { credentials: 'include' }
         ).catch(() => null);
         if (resp && resp.ok) {
-          json = await resp.json().catch(() => null);
-          if (Array.isArray(json)) break;
-        } else if (resp && (resp.status === 503 || resp.status === 429 || resp.status === 502)) {
-          log(`page ${page} got ${resp.status}, retrying (attempt ${attempt}/5)`);
-          await new Promise(r => setTimeout(r, 1000 * attempt));
-          continue;
-        } else if (!resp || resp.status === 404) {
-          // /api/v3 not present (rare), fall through to api.github.com
-          break;
-        } else {
-          // Other status — log and stop trying this page.
-          log(`page ${page} got status ${resp.status}, stopping`);
+          html = await resp.text().catch(() => null);
           break;
         }
-      }
-      if (!Array.isArray(json)) {
-        // Last-ditch api.github.com (cross-origin; cookies usually don't
-        // travel, but worth one try for public-only org packages).
-        const r2 = await fetch(
-          `https://api.github.com/orgs/${ORG}/packages?package_type=${PACKAGE_TYPE}&per_page=100&page=${page}`,
-          { credentials: 'include', headers: { Accept: 'application/vnd.github+json' } }
-        ).catch(() => null);
-        if (r2 && r2.ok) json = await r2.json().catch(() => null);
-      }
-      if (!Array.isArray(json) || json.length === 0) {
-        log(`page ${page} returned no data; stopping listing`);
+        if (resp && (resp.status === 503 || resp.status === 429 || resp.status === 502)) {
+          log(`page ${page} got ${resp.status}, retry ${attempt}/5`);
+          await new Promise(r => setTimeout(r, 1000 * attempt));
+          continue;
+        }
+        log(`page ${page} status ${resp && resp.status}, stopping`);
         break;
       }
-      out.push(...json);
-      if (json.length < 100) break;
-      // Light throttle between pages to keep github.com happy.
-      await new Promise(r => setTimeout(r, 200));
+      if (!html) break;
+
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      // Match either '/orgs/<org>/packages/container/<encoded>' (listing
+      // card link) or just '/<encoded>' tail; collect the unique tail.
+      const anchors = Array.from(
+        doc.querySelectorAll(`a[href*="/orgs/${ORG}/packages/container/"]`)
+      );
+      const pageItems = [];
+      for (const a of anchors) {
+        const m = a.getAttribute('href').match(
+          new RegExp(`/orgs/${ORG}/packages/container/([^/?#]+)`)
+        );
+        if (!m) continue;
+        const encoded = m[1];
+        let name;
+        try { name = decodeURIComponent(encoded); } catch { name = encoded; }
+        if (seen.has(name)) continue;
+        seen.add(name);
+        // Visibility: look at the closest ancestor that contains the
+        // package row, then check for a 'Private' badge. GitHub renders
+        // visibility as a small Label component near the package name.
+        const card = a.closest('li, article, div');
+        const txt = (card ? card.textContent : '').toLowerCase();
+        const isPrivate = /\bprivate\b/.test(txt);
+        const isInternal = /\binternal\b/.test(txt);
+        const visibility = isPrivate ? 'private' : (isInternal ? 'internal' : 'public');
+        pageItems.push({ name, visibility });
+      }
+      if (pageItems.length === 0) {
+        log(`page ${page}: no packages found; stopping`);
+        break;
+      }
+      out.push(...pageItems);
+      log(`listed page ${page}: +${pageItems.length} (running total ${out.length})`);
+      // Throttle between pages so we don't get back to 503-land.
+      await new Promise(r => setTimeout(r, 300));
     }
     return out;
   }
