@@ -91,6 +91,21 @@ total_fail_build=0
 total_fail_load=0
 total_fail_smoke=0
 total_skipped=0
+# Periodically prune the nix store + docker daemon so a 1000-image run
+# doesn't fill the disk. /nix on this host is on a 931G volume; one full
+# verify sweep can balloon /nix/store past 100G if we never GC.
+gc_after=50
+since_gc=0
+maybe_gc() {
+  since_gc=$((since_gc + 1))
+  if [ "$since_gc" -ge "$gc_after" ]; then
+    echo "==> periodic gc (every $gc_after images)"
+    nix-collect-garbage 2>&1 | tail -2 || true
+    docker image prune -f >/dev/null 2>&1 || true
+    since_gc=0
+  fi
+}
+
 
 while IFS= read -r image; do
   [ -z "$image" ] && continue
@@ -176,6 +191,9 @@ while IFS= read -r image; do
   # At ~1000 images that adds up to >100GB if we never prune. We don't
   # need the loaded image after the smoke check, so drop it.
   docker rmi -f "$image:latest" >/dev/null 2>&1 || true
+  # Also GC the nix store every 50 images so the build cache doesn't
+  # balloon past 100G. (We hit a "No space left on device" mid-run once.)
+  maybe_gc
 
   if [ "$batch_count" -ge "$BATCH_SIZE" ]; then
     assert_branch
