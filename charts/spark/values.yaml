@@ -94,8 +94,8 @@ diagnosticMode:
 ## @section Spark parameters
 ##
 
-## Bitnami Spark image version
-## ref: https://hub.docker.com/r/bitnami/spark/tags/
+## nix-containers Spark image version
+## ref: https://hub.docker.com/r/nix-containers/spark/tags/
 ## @param image.registry [default: REGISTRY_NAME] Spark image registry
 ## @param image.repository [default: REPOSITORY_NAME/spark] Spark image repository
 ## @skip image.tag Spark image tag (immutable tags are recommended)
@@ -105,8 +105,8 @@ diagnosticMode:
 ## @param image.debug Enable image debug mode
 ##
 image:
-  registry: docker.io
-  repository: bitnami/spark
+  registry: ghcr.io
+  repository: nix-containers/spark-nixchart
   tag: 4.0.0-debian-12-r20
   digest: ""
   ## Specify a imagePullPolicy
@@ -320,7 +320,7 @@ master:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param master.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if master.resources is set (master.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param master.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -689,7 +689,7 @@ worker:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param worker.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if worker.resources is set (worker.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param worker.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -917,7 +917,7 @@ security:
     ## resources, such as Minikube. If you do want to specify resources, uncomment the following
     ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     ## @param security.ssl.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if security.ssl.resources is set (security.ssl.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "small"
     ## @param security.ssl.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

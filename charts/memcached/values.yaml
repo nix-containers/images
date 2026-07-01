@@ -71,8 +71,8 @@ diagnosticMode:
     - infinity
 ## @section Memcached parameters
 
-## Bitnami Memcached image version
-## ref: https://hub.docker.com/r/bitnami/memcached/tags/
+## nix-containers Memcached image version
+## ref: https://hub.docker.com/r/nix-containers/memcached/tags/
 ## @param image.registry [default: REGISTRY_NAME] Memcached image registry
 ## @param image.repository [default: REPOSITORY_NAME/memcached] Memcached image repository
 ## @skip image.tag Memcached image tag (immutable tags are recommended)
@@ -82,8 +82,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: docker.io
-  repository: bitnami/memcached
+  registry: ghcr.io
+  repository: nix-containers/memcached-nixchart
   tag: 1.6.39-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
@@ -105,7 +105,7 @@ image:
 ##
 architecture: standalone
 ## Authentication parameters
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/memcached#creating-the-memcached-admin-user
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/memcached#creating-the-memcached-admin-user
 ##
 auth:
   ## @param auth.enabled Enable Memcached authentication
@@ -216,7 +216,7 @@ lifecycleHooks: {}
 ## Memcached resource requests and limits
 ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "nano"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -631,8 +631,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Init container volume-permissions image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r50
     digest: ""
     pullPolicy: IfNotPresent
@@ -647,7 +647,7 @@ volumePermissions:
   ## Init container resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -676,8 +676,8 @@ metrics:
   ## @param metrics.enabled Start a side-car prometheus exporter
   ##
   enabled: false
-  ## Bitnami Memcached Prometheus Exporter image
-  ## ref: https://hub.docker.com/r/bitnami/memcached-exporter/tags/
+  ## nix-containers Memcached Prometheus Exporter image
+  ## ref: https://hub.docker.com/r/nix-containers/memcached-exporter/tags/
   ## @param metrics.image.registry [default: REGISTRY_NAME] Memcached exporter image registry
   ## @param metrics.image.repository [default: REPOSITORY_NAME/memcached-exporter] Memcached exporter image repository
   ## @skip metrics.image.tag Memcached exporter image tag (immutable tags are recommended)
@@ -686,8 +686,8 @@ metrics:
   ## @param metrics.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnami/memcached-exporter
+    registry: ghcr.io
+    repository: nix-containers/memcached-exporter-nixchart
     tag: 0.15.3-debian-12-r5
     digest: ""
     pullPolicy: IfNotPresent
@@ -706,7 +706,7 @@ metrics:
   ## Memcached Prometheus exporter container resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param metrics.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.resources is set (metrics.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param metrics.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -849,7 +849,7 @@ metrics:
     ## @param metrics.serviceMonitor.podTargetLabels Labels from the Kubernetes pod to be transferred to the created metrics
     podTargetLabels: []
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     selector: {}
     ## @param metrics.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping

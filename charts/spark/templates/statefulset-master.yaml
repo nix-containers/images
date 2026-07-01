@@ -95,10 +95,10 @@ spec:
                   -srcstoretype PKCS12 \
                   -srcstorepass "${SPARK_SSL_KEYSTORE_PASSWORD}" \
                   -deststorepass "${SPARK_SSL_KEYSTORE_PASSWORD}" \
-                  -destkeystore "/opt/bitnami/spark/conf/certs/spark-keystore.jks"
+                  -destkeystore "/opt/nix-containers/spark/conf/certs/spark-keystore.jks"
               rm "/tmp/keystore.p12"
               keytool -import -file "/certs/ca.crt" \
-                      -keystore "/opt/bitnami/spark/conf/certs/spark-truststore.jks" \
+                      -keystore "/opt/nix-containers/spark/conf/certs/spark-truststore.jks" \
                       -storepass "${SPARK_SSL_TRUSTSTORE_PASSWORD}" \
                       -noprompt
             else
@@ -107,8 +107,8 @@ spec:
             fi
             {{- else }}
             if [[ -f "/certs/spark-truststore.jks" ]] && [[ -f "/certs/spark-keystore.jks" ]]; then
-                cp "/certs/spark-truststore.jks" "/opt/bitnami/spark/conf/certs/spark-truststore.jks"
-                cp "/certs/spark-keystore.jks" "/opt/bitnami/spark/conf/certs/spark-keystore.jks"
+                cp "/certs/spark-truststore.jks" "/opt/nix-containers/spark/conf/certs/spark-truststore.jks"
+                cp "/certs/spark-keystore.jks" "/opt/nix-containers/spark/conf/certs/spark-keystore.jks"
             else
                 echo "Couldn't find the expected Java Key Stores (JKS) files! They are mandatory when encryption via TLS is enabled."
                 exit 1
@@ -142,7 +142,7 @@ spec:
             - name: certs
               mountPath: /certs
             - name: shared-certs
-              mountPath: /opt/bitnami/spark/conf/certs
+              mountPath: /opt/nix-containers/spark/conf/certs
         {{- end }}
       {{- end }}
       containers:
@@ -182,24 +182,24 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/spark/conf
+              mountPath: /opt/nix-containers/spark/conf
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/spark/tmp
+              mountPath: /opt/nix-containers/spark/tmp
               subPath: app-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/spark/logs
+              mountPath: /opt/nix-containers/spark/logs
               subPath: app-logs-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/spark/work
+              mountPath: /opt/nix-containers/spark/work
               subPath: app-work-dir
             {{- if .Values.master.existingConfigmap }}
             - name: config
-              mountPath: /bitnami/spark/conf/
+              mountPath: /nix-containers/spark/conf/
             {{- end }}
             {{- if .Values.security.ssl.enabled }}
             - name: shared-certs
-              mountPath: /opt/bitnami/spark/conf/certs
+              mountPath: /opt/nix-containers/spark/conf/certs
               readOnly: true
             {{- end }}
             {{- if .Values.master.extraVolumeMounts }}

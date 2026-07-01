@@ -49,7 +49,7 @@ Return the proper etcdctl authentication options
 {{- define "etcd.authOptions" -}}
 {{- $rbacOption := "--user root:$ROOT_PASSWORD" -}}
 {{- $certsOption := " --cert $ETCD_CERT_FILE --key $ETCD_KEY_FILE" -}}
-{{- $autoCertsOption := " --cert /bitnami/etcd/data/fixtures/client/cert.pem --key /bitnami/etcd/data/fixtures/client/key.pem --insecure-skip-tls-verify" -}}
+{{- $autoCertsOption := " --cert /nix-containers/etcd/data/fixtures/client/cert.pem --key /nix-containers/etcd/data/fixtures/client/key.pem --insecure-skip-tls-verify" -}}
 {{- $caOption := " --cacert $ETCD_TRUSTED_CA_FILE" -}}
 {{- $insecureTlsOption := " --insecure-skip-tls-verify" -}}
 {{- if or .Values.auth.rbac.create .Values.auth.rbac.enabled -}}

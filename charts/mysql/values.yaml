@@ -82,8 +82,8 @@ diagnosticMode:
 ## @section MySQL common parameters
 ##
 
-## Bitnami MySQL image
-## ref: https://hub.docker.com/r/bitnami/mysql/tags/
+## nix-containers MySQL image
+## ref: https://hub.docker.com/r/nix-containers/mysql/tags/
 ## @param image.registry [default: REGISTRY_NAME] MySQL image registry
 ## @param image.repository [default: REPOSITORY_NAME/mysql] MySQL image repository
 ## @skip image.tag MySQL image tag (immutable tags are recommended)
@@ -93,8 +93,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug logs should be enabled
 ##
 image:
-  registry: docker.io
-  repository: bitnami/mysql
+  registry: ghcr.io
+  repository: nix-containers/mysql-nixchart
   tag: 9.4.0-debian-12-r1
   digest: ""
   ## Specify a imagePullPolicy
@@ -119,26 +119,26 @@ architecture: standalone
 ##
 auth:
   ## @param auth.rootPassword Password for the `root` user. Ignored if existing secret is provided
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mysql#setting-the-root-password-on-first-run
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mysql#setting-the-root-password-on-first-run
   ##
   rootPassword: ""
   ## @param auth.createDatabase Whether to create the .Values.auth.database or not
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mysql#creating-a-database-on-first-run
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mysql#creating-a-database-on-first-run
   ##
   createDatabase: true
   ## @param auth.database Name for a custom database to create
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mysql#creating-a-database-on-first-run
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mysql#creating-a-database-on-first-run
   ##
   database: "my_database"
   ## @param auth.username Name for a custom user to create
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mysql#creating-a-database-user-on-first-run
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mysql#creating-a-database-user-on-first-run
   ##
   username: ""
   ## @param auth.password Password for the new user. Ignored if existing secret is provided
   ##
   password: ""
   ## @param auth.replicationUser MySQL replication user
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mysql#setting-up-a-replication-cluster
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mysql#setting-up-a-replication-cluster
   ##
   replicationUser: replicator
   ## @param auth.replicationPassword MySQL replication user password. Ignored if existing secret is provided
@@ -260,24 +260,24 @@ primary:
     authentication_policy='{{- .Values.auth.authenticationPolicy | default "* ,," }}'
     skip-name-resolve
     explicit_defaults_for_timestamp
-    basedir=/opt/bitnami/mysql
-    plugin_dir=/opt/bitnami/mysql/lib/plugin
+    basedir=/opt/nix-containers/mysql
+    plugin_dir=/opt/nix-containers/mysql/lib/plugin
     port={{ .Values.primary.containerPorts.mysql }}
     mysqlx={{ ternary 1 0 .Values.primary.enableMySQLX }}
     mysqlx_port={{ .Values.primary.containerPorts.mysqlx }}
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    datadir=/bitnami/mysql/data
-    tmpdir=/opt/bitnami/mysql/tmp
+    socket=/opt/nix-containers/mysql/tmp/mysql.sock
+    datadir=/nix-containers/mysql/data
+    tmpdir=/opt/nix-containers/mysql/tmp
     max_allowed_packet=16M
     bind-address=*
-    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-    log-error=/opt/bitnami/mysql/logs/mysqld.log
+    pid-file=/opt/nix-containers/mysql/tmp/mysqld.pid
+    log-error=/opt/nix-containers/mysql/logs/mysqld.log
     character-set-server=UTF8
     slow_query_log=0
     long_query_time=10.0
     {{- if .Values.tls.enabled }}
-    ssl_cert=/opt/bitnami/mysql/certs/{{ .Values.tls.certFilename }}
-    ssl_key=/opt/bitnami/mysql/certs/{{ .Values.tls.certKeyFilename }}
+    ssl_cert=/opt/nix-containers/mysql/certs/{{ .Values.tls.certFilename }}
+    ssl_key=/opt/nix-containers/mysql/certs/{{ .Values.tls.certKeyFilename }}
     {{- if (include "mysql.tlsCACert" .) }}
     ssl_ca={{ include "mysql.tlsCACert" . }}
     {{- end }}
@@ -285,14 +285,14 @@ primary:
 
     [client]
     port={{ .Values.primary.containerPorts.mysql }}
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
+    socket=/opt/nix-containers/mysql/tmp/mysql.sock
     default-character-set=UTF8
-    plugin_dir=/opt/bitnami/mysql/lib/plugin
+    plugin_dir=/opt/nix-containers/mysql/lib/plugin
 
     [manager]
     port={{ .Values.primary.containerPorts.mysql }}
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
+    socket=/opt/nix-containers/mysql/tmp/mysql.sock
+    pid-file=/opt/nix-containers/mysql/tmp/mysqld.pid
   ## @param primary.existingConfigmap Name of existing ConfigMap with MySQL Primary configuration.
   ## NOTE: When it's set the 'configuration' parameter is ignored
   ##
@@ -421,7 +421,7 @@ primary:
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param primary.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if primary.resources is set (primary.resources is recommended for production).
   ## NOTE: The "nano" and "micro" presets allocate extremely low CPU/memory. These values may cause MySQL to fail during startup (e.g., OOMKilled, readiness/liveness probe failures)
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param primary.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -703,24 +703,24 @@ secondary:
     authentication_policy='{{- .Values.auth.authenticationPolicy | default "* ,," }}'
     skip-name-resolve
     explicit_defaults_for_timestamp
-    basedir=/opt/bitnami/mysql
-    plugin_dir=/opt/bitnami/mysql/lib/plugin
+    basedir=/opt/nix-containers/mysql
+    plugin_dir=/opt/nix-containers/mysql/lib/plugin
     port={{ .Values.secondary.containerPorts.mysql }}
     mysqlx={{ ternary 1 0 .Values.secondary.enableMySQLX }}
     mysqlx_port={{ .Values.secondary.containerPorts.mysqlx }}
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    datadir=/bitnami/mysql/data
-    tmpdir=/opt/bitnami/mysql/tmp
+    socket=/opt/nix-containers/mysql/tmp/mysql.sock
+    datadir=/nix-containers/mysql/data
+    tmpdir=/opt/nix-containers/mysql/tmp
     max_allowed_packet=16M
     bind-address=*
-    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-    log-error=/opt/bitnami/mysql/logs/mysqld.log
+    pid-file=/opt/nix-containers/mysql/tmp/mysqld.pid
+    log-error=/opt/nix-containers/mysql/logs/mysqld.log
     character-set-server=UTF8
     slow_query_log=0
     long_query_time=10.0
     {{- if .Values.tls.enabled }}
-    ssl_cert=/opt/bitnami/mysql/certs/{{ .Values.tls.certFilename }}
-    ssl_key=/opt/bitnami/mysql/certs/{{ .Values.tls.certKeyFilename }}
+    ssl_cert=/opt/nix-containers/mysql/certs/{{ .Values.tls.certFilename }}
+    ssl_key=/opt/nix-containers/mysql/certs/{{ .Values.tls.certKeyFilename }}
     {{- if (include "mysql.tlsCACert" .) }}
     ssl_ca={{ include "mysql.tlsCACert" . }}
     {{- end }}
@@ -728,14 +728,14 @@ secondary:
 
     [client]
     port={{ .Values.secondary.containerPorts.mysql }}
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
+    socket=/opt/nix-containers/mysql/tmp/mysql.sock
     default-character-set=UTF8
-    plugin_dir=/opt/bitnami/mysql/lib/plugin
+    plugin_dir=/opt/nix-containers/mysql/lib/plugin
 
     [manager]
     port={{ .Values.secondary.containerPorts.mysql }}
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
+    socket=/opt/nix-containers/mysql/tmp/mysql.sock
+    pid-file=/opt/nix-containers/mysql/tmp/mysqld.pid
   ## @param secondary.existingConfigmap Name of existing ConfigMap with MySQL Secondary configuration.
   ## NOTE: When it's set the 'configuration' parameter is ignored
   ##
@@ -864,7 +864,7 @@ secondary:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param secondary.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if secondary.resources is set (secondary.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param secondary.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1298,7 +1298,7 @@ passwordUpdateJob:
   ## Container resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param passwordUpdateJob.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if passwordUpdateJob.resources is set (passwordUpdateJob.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "micro"
   ## @param passwordUpdateJob.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1358,8 +1358,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r50
     digest: ""
     pullPolicy: IfNotPresent
@@ -1372,7 +1372,7 @@ volumePermissions:
     ##
     pullSecrets: []
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1403,8 +1403,8 @@ metrics:
   ## @param metrics.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnami/mysqld-exporter
+    registry: ghcr.io
+    repository: nix-containers/prometheus-mysqld-exporter-nixchart
     tag: 0.17.2-debian-12-r16
     digest: ""
     pullPolicy: IfNotPresent
@@ -1508,7 +1508,7 @@ metrics:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param metrics.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.resources is set (metrics.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param metrics.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1584,7 +1584,7 @@ metrics:
     ##
     metricRelabelings: []
     ## @param metrics.serviceMonitor.selector ServiceMonitor selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     ## selector:
     ##   prometheus: my-prometheus

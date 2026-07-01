@@ -1,22 +1,22 @@
 <!--- app-name: OAuth2 Proxy -->
 
-# Bitnami Secure Images Helm chart for OAuth2 Proxy
+# nix-containers Secure Images Helm chart for OAuth2 Proxy
 
 A reverse proxy and static file server that provides authentication using Providers (Google, GitHub, and others) to validate accounts by email, domain or group.
 
 [Overview of OAuth2 Proxy](https://github.com/oauth2-proxy/oauth2-proxy)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by nix-containers. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/oauth2-proxy
+helm install my-release oci://registry-1.docker.io/nix-containerscharts/oauth2-proxy
 ```
 
-## Why use Bitnami Secure Images?
+## Why use nix-containers Secure Images?
 
-Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
+Those are hardened, minimal CVE images built and maintained by nix-containers. nix-containers Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
 
 - Hardened secure images of popular open source software with Near-Zero Vulnerabilities
 - Vulnerability Triage & Prioritization with VEX Statements, KEV and EPSS Scores
@@ -24,12 +24,12 @@ Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami 
 - Software supply chain provenance attestation through in-toto
 - First class support for the internet’s favorite Helm charts
 
-Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/bitnami/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://bitnami.com/).
+Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/nix-containers/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://nix-containers.com/).
 
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
 
-If you are looking for our previous generation of images based on Debian Linux, please see the [Bitnami Legacy registry](https://hub.docker.com/u/bitnamilegacy).
+If you are looking for our previous generation of images based on Debian Linux, please see the [nix-containers Legacy registry](https://hub.docker.com/u/nix-containerslegacy).
 
 ## Introduction
 
@@ -52,7 +52,7 @@ To install the chart with the release name `my-release`:
 helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/oauth2-proxy
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The command deploys OAuth2 Proxy on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -64,17 +64,17 @@ The command deploys OAuth2 Proxy on the Kubernetes cluster in the default config
 
 these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
-To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the nix-containers/common chart](https://github.com/nix-containers/images However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
 ### [Rolling VS Immutable tags](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-understand-rolling-tags-containers-index.html)
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+nix-containers will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### Ingress
 
-This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/bitnami/charts/tree/main/bitnami/nginx-ingress-controller) or [contour](https://github.com/bitnami/charts/tree/main/bitnami/contour) you can utilize the ingress controller to serve your application.
+This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/nix-containers/images or [contour](https://github.com/nix-containers/images you can utilize the ingress controller to serve your application.
 
 To enable Ingress integration, set `ingress.enabled` to `true`. The `ingress.hostname` property can be used to set the host name. The `ingress.tls` parameter can be used to add the TLS configuration for this host. It is also possible to have more than one host, with a separate TLS configuration for each host.
 
@@ -138,7 +138,7 @@ Learn more about [sidecar containers](https://kubernetes.io/docs/concepts/worklo
 
 This chart allows you to set your custom affinity using the `affinity` parameter. Find more information about Pod affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-As an alternative, use one of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/main/bitnami/common#affinities) chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
+As an alternative, use one of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [nix-containers/common](https://github.com/nix-containers/images chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
 
 ### Backup and restore
 
@@ -146,7 +146,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 
 ## Persistence
 
-The [Bitnami OAuth2 Proxy](https://github.com/bitnami/containers/tree/main/bitnami/oauth2-proxy) image stores the OAuth2 Proxy data and configurations at the `/bitnami` path of the container. Persistent Volume Claims are used to keep the data across deployments.
+The [nix-containers OAuth2 Proxy](https://github.com/nix-containers/containers/tree/main/nix-containers/oauth2-proxy) image stores the OAuth2 Proxy data and configurations at the `/nix-containers` path of the container. Persistent Volume Claims are used to keep the data across deployments.
 
 ## Parameters
 
@@ -360,9 +360,9 @@ The [Bitnami OAuth2 Proxy](https://github.com/bitnami/containers/tree/main/bitna
 | `redis.sentinel.service.port`          | Redis&reg; (with Sentinel) service port                    | `6379`       |
 | `redis.sentinel.service.sentinelPort`  | Redis&reg; (with Sentinel) sentinel service port           | `26379`      |
 
-See <https://github.com/bitnami/readme-generator-for-helm> to create the table
+See <https://github.com/nix-containers/readme-generator-for-helm> to create the table
 
-The above parameters map to the env variables defined in [bitnami/oauth2-proxy](https://github.com/bitnami/containers/tree/main/bitnami/oauth2-proxy). For more information please refer to the [bitnami/oauth2-proxy](https://github.com/bitnami/containers/tree/main/bitnami/oauth2-proxy) image documentation.
+The above parameters map to the env variables defined in [nix-containers/oauth2-proxy](https://github.com/nix-containers/containers/tree/main/nix-containers/oauth2-proxy). For more information please refer to the [nix-containers/oauth2-proxy](https://github.com/nix-containers/containers/tree/main/nix-containers/oauth2-proxy) image documentation.
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
@@ -372,7 +372,7 @@ helm install my-release \
     oci://REGISTRY_NAME/REPOSITORY_NAME/oauth2-proxy
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The above command increase the default number of replicas.
 
@@ -384,12 +384,12 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 helm install my-release -f values.yaml oci://REGISTRY_NAME/REPOSITORY_NAME/oauth2-proxy
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
-> **Tip**: You can use the default [values.yaml](https://github.com/bitnami/charts/tree/main/bitnami/oauth2-proxy/values.yaml)
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
+> **Tip**: You can use the default [values.yaml](https://github.com/nix-containers/images
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to nix-containers's Helm charts in [this troubleshooting guide](https://docs.nix-containers.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
@@ -403,11 +403,11 @@ This major updates the Redis&reg; subchart to its newest major, 21.0.0, which up
 
 ### To 6.2.0
 
-This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/bitnami/charts/issues/30850).
+This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/nix-containers/images
 
 ### To 6.0.0
 
-This major updates the Redis&reg; subchart to its newest major, 20.0.0. [Here](https://github.com/bitnami/charts/tree/main/bitnami/redis#to-2000) you can find more information about the changes introduced in that version.
+This major updates the Redis&reg; subchart to its newest major, 20.0.0. [Here](https://github.com/nix-containers/images you can find more information about the changes introduced in that version.
 
 ### To 5.0.0
 
@@ -422,7 +422,7 @@ This could potentially break any customization or init scripts used in your depl
 
 ### To 4.0.0
 
-This major updates the Redis&reg; subchart to its newest major, 18.0.0. [Here](https://github.com/bitnami/charts/tree/main/bitnami/redis#to-1800) you can find more information about the changes introduced in that version.
+This major updates the Redis&reg; subchart to its newest major, 18.0.0. [Here](https://github.com/nix-containers/images you can find more information about the changes introduced in that version.
 
 NOTE: Due to an error in our release process, Redis&reg;' chart versions higher or equal than 17.15.4 already use Redis&reg; 7.2 by default.
 
@@ -432,13 +432,13 @@ This major update the Redis&reg; subchart to its newest major, 17.0.0, which upd
 
 ### To 2.0.0
 
-This major update the Redis&reg; subchart to its newest major, 16.0.0. [Here](https://github.com/bitnami/charts/tree/main/bitnami/redis#to-1600) you can find more info about the specific changes.
+This major update the Redis&reg; subchart to its newest major, 16.0.0. [Here](https://github.com/nix-containers/images you can find more info about the specific changes.
 
 Additionally, this chart has been standardised adding features from other charts.
 
 ### To 1.0.0
 
-This major update the Redis&reg; subchart to its newest major, 15.0.0. [Here](https://github.com/bitnami/charts/tree/main/bitnami/redis#to-1500) you can find more info about the specific changes.
+This major update the Redis&reg; subchart to its newest major, 15.0.0. [Here](https://github.com/nix-containers/images you can find more info about the specific changes.
 
 ## License
 

@@ -1,22 +1,22 @@
 <!--- app-name: Keycloak -->
 
-# Bitnami Secure Images Helm chart for Keycloak
+# nix-containers Secure Images Helm chart for Keycloak
 
 Keycloak is a high performance Java-based identity and access management solution. It lets developers add an authentication layer to their applications with minimum effort.
 
 [Overview of Keycloak](https://www.keycloak.org/)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by nix-containers. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/keycloak
+helm install my-release oci://registry-1.docker.io/nix-containerscharts/keycloak
 ```
 
-## Why use Bitnami Secure Images?
+## Why use nix-containers Secure Images?
 
-Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
+Those are hardened, minimal CVE images built and maintained by nix-containers. nix-containers Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
 
 - Hardened secure images of popular open source software with Near-Zero Vulnerabilities
 - Vulnerability Triage & Prioritization with VEX Statements, KEV and EPSS Scores
@@ -24,12 +24,12 @@ Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami 
 - Software supply chain provenance attestation through in-toto
 - First class support for the internet’s favorite Helm charts
 
-Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/bitnami/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://bitnami.com/).
+Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/nix-containers/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://nix-containers.com/).
 
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
 
-If you are looking for our previous generation of images based on Debian Linux, please see the [Bitnami Legacy registry](https://hub.docker.com/u/bitnamilegacy).
+If you are looking for our previous generation of images based on Debian Linux, please see the [nix-containers Legacy registry](https://hub.docker.com/u/nix-containerslegacy).
 
 ## Introduction
 
@@ -50,7 +50,7 @@ To install the chart with the release name `my-release`:
 helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/keycloak
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 These commands deploy a Keycloak application on the Kubernetes cluster in the default configuration.
 
@@ -64,7 +64,7 @@ This chart can be integrated with Prometheus by setting `metrics.enabled` to `tr
 
 #### Prometheus requirements
 
-It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [Bitnami Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/prometheus) or the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) to easily have a working Prometheus in your cluster.
+It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [nix-containers Prometheus helm chart](https://github.com/nix-containers/images or the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images to easily have a working Prometheus in your cluster.
 
 #### Integration with Prometheus Operator
 
@@ -74,13 +74,13 @@ The chart can deploy `ServiceMonitor` objects for integration with Prometheus Op
 no matches for kind "ServiceMonitor" in version "monitoring.coreos.com/v1"
 ```
 
-Install the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) for having the necessary CRDs and the Prometheus Operator.
+Install the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images for having the necessary CRDs and the Prometheus Operator.
 
 ### [Rolling vs Immutable tags](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-understand-rolling-tags-containers-index.html)
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+nix-containers will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### Use an external database
 
@@ -120,13 +120,13 @@ extraEnvVars:
 
 You can import a realm by setting the `KEYCLOAK_EXTRA_ARGS` to contain the `--import-realm` argument.
 
-This will import all `*.json` under `/opt/bitnami/keycloak/data/import` files as a realm into keycloak as per the official documentation [here](https://www.keycloak.org/server/importExport#_importing_a_realm_from_a_directory). You can supply the files by mounting a volume e.g. with docker compose as follows:
+This will import all `*.json` under `/opt/nix-containers/keycloak/data/import` files as a realm into keycloak as per the official documentation [here](https://www.keycloak.org/server/importExport#_importing_a_realm_from_a_directory). You can supply the files by mounting a volume e.g. with docker compose as follows:
 
 ```yaml
 keycloak:
-  image: bitnami/keycloak:latest
+  image: nix-containers/keycloak:latest
   volumes:
-    - /local/path/to/realms/folder:/opt/bitnami/keycloak/data/import
+    - /local/path/to/realms/folder:/opt/nix-containers/keycloak/data/import
 ```
 
 #### Exporting a realm
@@ -137,7 +137,7 @@ By using the `kc.sh` script you can export a realm with users. Be sure to mount 
 
 ```yaml
 keycloak:
-  image: bitnami/keycloak:latest
+  image: nix-containers/keycloak:latest
   volumes:
     - /local/path/to/export/folder:/export
 ```
@@ -152,7 +152,7 @@ This will export the all the realms with users to the `/export` folder.
 
 ### Configure Ingress
 
-This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/bitnami/charts/tree/main/bitnami/nginx-ingress-controller) or [contour](https://github.com/bitnami/charts/tree/main/bitnami/contour) you can utilize the ingress controller to serve your application. To enable Ingress integration, set `ingress.enabled` to `true`.
+This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/nix-containers/images or [contour](https://github.com/nix-containers/images you can utilize the ingress controller to serve your application. To enable Ingress integration, set `ingress.enabled` to `true`.
 
 The most common scenario is to have one host name mapped to the deployment. In this case, the `ingress.hostname` property can be used to set the host name. The `ingress.tls` parameter can be used to add the TLS configuration for this host.
 
@@ -272,13 +272,13 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 
 these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
-To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the nix-containers/common chart](https://github.com/nix-containers/images However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
 ### Set Pod affinity
 
 This chart allows you to set your custom affinity using the `affinity` parameter. Find more information about Pod's affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/main/bitnami/common#affinities) chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
+As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [nix-containers/common](https://github.com/nix-containers/images chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
 
 ### Add extra environment variables
 
@@ -332,7 +332,7 @@ Learn more about [sidecar containers](https://kubernetes.io/docs/concepts/worklo
 
 ### Initialize a fresh instance
 
-The [Bitnami Keycloak](https://github.com/bitnami/containers/tree/main/bitnami/keycloak) image allows you to use your custom scripts to initialize a fresh instance. In order to execute the scripts, you can specify custom scripts using the `initdbScripts` parameter as dict.
+The [nix-containers Keycloak](https://github.com/nix-containers/containers/tree/main/nix-containers/keycloak) image allows you to use your custom scripts to initialize a fresh instance. In order to execute the scripts, you can specify custom scripts using the `initdbScripts` parameter as dict.
 
 In addition to this option, you can also set an external ConfigMap with all the initialization scripts. This is done by setting the `initdbScriptsConfigMap` parameter. Note that this will override the previous option.
 
@@ -713,7 +713,7 @@ There are cases where you may want to deploy extra objects, such a ConfigMap con
 | `postgresql.auth.postgresPassword`           | Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided | `""`               |
 | `postgresql.auth.username`                   | Name for a custom user to create                                                                                  | `bn_keycloak`      |
 | `postgresql.auth.password`                   | Password for the custom user to create                                                                            | `""`               |
-| `postgresql.auth.database`                   | Name for a custom database to create                                                                              | `bitnami_keycloak` |
+| `postgresql.auth.database`                   | Name for a custom database to create                                                                              | `nix-containers_keycloak` |
 | `postgresql.auth.existingSecret`             | Name of existing secret to use for PostgreSQL credentials                                                         | `""`               |
 | `postgresql.auth.secretKeys.userPasswordKey` | Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.    | `password`         |
 | `postgresql.architecture`                    | PostgreSQL architecture (`standalone` or `replication`)                                                           | `standalone`       |
@@ -721,7 +721,7 @@ There are cases where you may want to deploy extra objects, such a ConfigMap con
 | `externalDatabase.port`                      | Database port number                                                                                              | `5432`             |
 | `externalDatabase.user`                      | Non-root username for Keycloak                                                                                    | `bn_keycloak`      |
 | `externalDatabase.password`                  | Password for the non-root username for Keycloak                                                                   | `""`               |
-| `externalDatabase.database`                  | Keycloak database name                                                                                            | `bitnami_keycloak` |
+| `externalDatabase.database`                  | Keycloak database name                                                                                            | `nix-containers_keycloak` |
 | `externalDatabase.schema`                    | Keycloak database schema                                                                                          | `public`           |
 | `externalDatabase.existingSecret`            | Name of an existing secret resource containing the database credentials                                           | `""`               |
 | `externalDatabase.existingSecretUserKey`     | Name of an existing secret key containing the database user                                                       | `""`               |
@@ -735,7 +735,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 helm install my-release --set auth.adminPassword=secretpassword oci://REGISTRY_NAME/REPOSITORY_NAME/keycloak
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The above command sets the Keycloak administrator password to `secretpassword`.
 
@@ -747,14 +747,14 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 helm install my-release -f values.yaml oci://REGISTRY_NAME/REPOSITORY_NAME/keycloak
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
-> **Tip**: You can use the default [values.yaml](https://github.com/bitnami/charts/tree/main/bitnami/keycloak/values.yaml)
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
+> **Tip**: You can use the default [values.yaml](https://github.com/nix-containers/images
 
 Keycloak realms, users and clients can be created from the Keycloak administration panel.
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to nix-containers's Helm charts in [this troubleshooting guide](https://docs.nix-containers.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
@@ -767,7 +767,7 @@ This version includes some important refactoring to remove technical debt. As a 
 
 ### To 24.3.0
 
-This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/bitnami/charts/issues/30850).
+This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/nix-containers/images
 
 ### To 24.1.0
 
@@ -795,11 +795,11 @@ This could potentially break any customization or init scripts used in your depl
 
 ### To 19.0.0
 
-This major release bumps the PostgreSQL chart version to [14.x.x](https://github.com/bitnami/charts/pull/22750); no major issues are expected during the upgrade.
+This major release bumps the PostgreSQL chart version to [14.x.x](https://github.com/nix-containers/images no major issues are expected during the upgrade.
 
 ### To 17.0.0
 
-This major updates the PostgreSQL subchart to its newest major, 13.0.0. [Here](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#to-1300) you can find more information about the changes introduced in that version.
+This major updates the PostgreSQL subchart to its newest major, 13.0.0. [Here](https://github.com/nix-containers/images you can find more information about the changes introduced in that version.
 
 ### To 15.0.0
 
@@ -807,7 +807,7 @@ This major updates the default serviceType from `LoadBalancer` to `ClusterIP` to
 
 ### To 12.0.0
 
-This major updates the PostgreSQL subchart to its newest major, 12.0.0. [Here](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#to-1200) you can find more information about the changes introduced in that version.
+This major updates the PostgreSQL subchart to its newest major, 12.0.0. [Here](https://github.com/nix-containers/images you can find more information about the changes introduced in that version.
 
 ### To 10.0.0
 
@@ -829,7 +829,7 @@ Please, refer to the official [Keycloak migration documentation](https://www.key
 
 ### To 7.0.0
 
-This major release updates the PostgreSQL subchart to its newest major *11.x.x*, which contain several changes in the supported values (check the [upgrade notes](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#to-1100) to obtain more information).
+This major release updates the PostgreSQL subchart to its newest major *11.x.x*, which contain several changes in the supported values (check the [upgrade notes](https://github.com/nix-containers/images to obtain more information).
 
 #### Upgrading Instructions
 
@@ -854,7 +854,7 @@ kubectl delete secret keycloak-postgresql --namespace default
 
 ```console
 CURRENT_PG_VERSION=$(kubectl exec keycloak-postgresql-0 -- bash -c 'echo $BITNAMI_IMAGE_VERSION')
-helm upgrade keycloak bitnami/keycloak \
+helm upgrade keycloak nix-containers/keycloak \
   --set auth.adminPassword=$KEYCLOAK_PASSWORD \
   --set postgresql.image.tag=$CURRENT_PG_VERSION \
   --set postgresql.auth.password=$POSTGRESQL_PASSWORD \
@@ -885,7 +885,7 @@ kubectl delete pod keycloak-postgresql-0
 
 #### Useful links
 
-- [Bitnami Tutorial](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-resolve-helm2-helm3-post-migration-issues-index.html)
+- [nix-containers Tutorial](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-resolve-helm2-helm3-post-migration-issues-index.html)
 - [Helm docs](https://helm.sh/docs/topics/v2_v3_migration)
 - [Helm Blog](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3)
 

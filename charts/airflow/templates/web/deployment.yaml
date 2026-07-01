@@ -110,7 +110,7 @@ spec:
               value: {{ .Values.auth.username }}
             {{- if .Values.usePasswordFiles }}
             - name: AIRFLOW_PASSWORD_FILE
-              value: "/opt/bitnami/airflow/secrets/airflow-password"
+              value: "/opt/nix-containers/airflow/secrets/airflow-password"
             {{- else }}
             - name: AIRFLOW_PASSWORD
               valueFrom:
@@ -120,7 +120,7 @@ spec:
             {{- end }}
             {{- end }}
             - name: PYTHONPYCACHEPREFIX
-              value: "/opt/bitnami/airflow/venv/tmp"
+              value: "/opt/nix-containers/airflow/venv/tmp"
             {{- if (include "airflow.isImageMajorVersion2" .) }}
             - name: AIRFLOW_COMPONENT_TYPE
               value: "webserver"
@@ -227,32 +227,32 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/nss-wrapper
+              mountPath: /opt/nix-containers/airflow/nss-wrapper
               subPath: app-nss-wrapper-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/logs
+              mountPath: /opt/nix-containers/airflow/logs
               subPath: app-logs-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/tmp
+              mountPath: /opt/nix-containers/airflow/tmp
               subPath: app-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/airflow.db
+              mountPath: /opt/nix-containers/airflow/airflow.db
               subPath: app-base-dir/airflow.db
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/airflow.cfg
+              mountPath: /opt/nix-containers/airflow/airflow.cfg
               subPath: app-base-dir/airflow.cfg
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/config/airflow_local_settings.py
+              mountPath: /opt/nix-containers/airflow/config/airflow_local_settings.py
               subPath: app-conf-dir/airflow_local_settings.py
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/webserver_config.py
+              mountPath: /opt/nix-containers/airflow/webserver_config.py
               subPath: app-base-dir/webserver_config.py
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/venv
+              mountPath: /opt/nix-containers/airflow/venv
               subPath: venv-base-dir
             {{- if  .Values.usePasswordFiles }}
             - name: airflow-secrets
-              mountPath: /opt/bitnami/airflow/secrets
+              mountPath: /opt/nix-containers/airflow/secrets
             {{- end }}
             {{- if and .Values.ldap.enabled .Values.ldap.tls.enabled }}
             - name: airflow-ldap-ca-certificate
@@ -261,7 +261,7 @@ spec:
             {{- end }}
             {{- if .Values.web.tls.enabled }}
             - name: tls-certificates
-              mountPath: /opt/bitnami/airflow/certs
+              mountPath: /opt/nix-containers/airflow/certs
               readOnly: true
             {{- end }}
             {{- if .Values.dags.enabled }}

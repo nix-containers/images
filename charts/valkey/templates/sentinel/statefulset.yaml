@@ -148,7 +148,7 @@ spec:
                 command:
                   - /bin/bash
                   - -c
-                  - /opt/bitnami/scripts/start-scripts/prestop-valkey.sh
+                  - /opt/nix-containers/scripts/start-scripts/prestop-valkey.sh
           {{- end }}
           {{- end }}
           {{- if .Values.replica.containerSecurityContext.enabled }}
@@ -169,7 +169,7 @@ spec:
           {{- else }}
           args:
             - -c
-            - /opt/bitnami/scripts/start-scripts/start-node.sh
+            - /opt/nix-containers/scripts/start-scripts/start-node.sh
           {{- end }}
           env:
             - name: BITNAMI_DEBUG
@@ -181,9 +181,9 @@ spec:
             {{- if .Values.auth.enabled }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: VALKEY_PASSWORD_FILE
-              value: "/opt/bitnami/valkey/secrets/valkey-password"
+              value: "/opt/nix-containers/valkey/secrets/valkey-password"
             - name: VALKEY_PRIMARY_PASSWORD_FILE
-              value: "/opt/bitnami/valkey/secrets/valkey-password"
+              value: "/opt/nix-containers/valkey/secrets/valkey-password"
             {{- else }}
             - name: VALKEY_PASSWORD
               valueFrom:
@@ -313,14 +313,14 @@ spec:
           {{- end }}
           volumeMounts:
             - name: start-scripts
-              mountPath: /opt/bitnami/scripts/start-scripts
+              mountPath: /opt/nix-containers/scripts/start-scripts
             - name: health
               mountPath: /health
             - name: sentinel-data
-              mountPath: /opt/bitnami/valkey-sentinel/etc
+              mountPath: /opt/nix-containers/valkey-sentinel/etc
             {{- if and .Values.auth.enabled .Values.auth.usePasswordFiles }}
             - name: valkey-password
-              mountPath: /opt/bitnami/valkey/secrets/
+              mountPath: /opt/nix-containers/valkey/secrets/
             {{- end }}
             - name: valkey-data
               mountPath: {{ .Values.replica.persistence.path }}
@@ -330,16 +330,16 @@ spec:
               subPathExpr: {{ .Values.replica.persistence.subPathExpr }}
               {{- end }}
             - name: config
-              mountPath: /opt/bitnami/valkey/mounted-etc
+              mountPath: /opt/nix-containers/valkey/mounted-etc
             - name: empty-dir
-              mountPath: /opt/bitnami/valkey/etc
+              mountPath: /opt/nix-containers/valkey/etc
               subPath: app-conf-dir
             - name: empty-dir
               mountPath: /tmp
               subPath: tmp-dir
             {{- if .Values.tls.enabled }}
             - name: valkey-certificates
-              mountPath: /opt/bitnami/valkey/certs
+              mountPath: /opt/nix-containers/valkey/certs
               readOnly: true
             {{- end }}
             {{- if .Values.replica.extraVolumeMounts }}
@@ -358,7 +358,7 @@ spec:
                 command:
                   - /bin/bash
                   - -c
-                  - /opt/bitnami/scripts/start-scripts/prestop-sentinel.sh
+                  - /opt/nix-containers/scripts/start-scripts/prestop-sentinel.sh
           {{- end }}
           {{- end }}
           {{- if .Values.sentinel.containerSecurityContext.enabled }}
@@ -379,7 +379,7 @@ spec:
           {{- else }}
           args:
             - -c
-            - /opt/bitnami/scripts/start-scripts/start-sentinel.sh
+            - /opt/nix-containers/scripts/start-scripts/start-sentinel.sh
           {{- end }}
           env:
             - name: BITNAMI_DEBUG
@@ -387,7 +387,7 @@ spec:
             {{- if .Values.auth.enabled }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: VALKEY_PASSWORD_FILE
-              value: "/opt/bitnami/valkey/secrets/valkey-password"
+              value: "/opt/nix-containers/valkey/secrets/valkey-password"
             {{- else }}
             - name: VALKEY_PASSWORD
               valueFrom:
@@ -497,7 +497,7 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: start-scripts
-              mountPath: /opt/bitnami/scripts/start-scripts
+              mountPath: /opt/nix-containers/scripts/start-scripts
             - name: health
               mountPath: /health
             {{- if .Values.sentinel.service.createPrimary}}
@@ -505,10 +505,10 @@ spec:
               mountPath: /etc/shared
             {{- end }}
             - name: sentinel-data
-              mountPath: /opt/bitnami/valkey-sentinel/etc
+              mountPath: /opt/nix-containers/valkey-sentinel/etc
             {{- if and .Values.auth.enabled .Values.auth.usePasswordFiles }}
             - name: valkey-password
-              mountPath: /opt/bitnami/valkey/secrets/
+              mountPath: /opt/nix-containers/valkey/secrets/
             {{- end }}
             - name: valkey-data
               mountPath: {{ .Values.replica.persistence.path }}
@@ -518,10 +518,10 @@ spec:
               subPathExpr: {{ .Values.replica.persistence.subPathExpr }}
               {{- end }}
             - name: config
-              mountPath: /opt/bitnami/valkey-sentinel/mounted-etc
+              mountPath: /opt/nix-containers/valkey-sentinel/mounted-etc
             {{- if .Values.tls.enabled }}
             - name: valkey-certificates
-              mountPath: /opt/bitnami/valkey/certs
+              mountPath: /opt/nix-containers/valkey/certs
               readOnly: true
             {{- end }}
             {{- if .Values.sentinel.extraVolumeMounts }}
@@ -625,7 +625,7 @@ spec:
             {{- end }}
             {{- if .Values.tls.enabled }}
             - name: valkey-certificates
-              mountPath: /opt/bitnami/valkey/certs
+              mountPath: /opt/nix-containers/valkey/certs
               readOnly: true
             {{- end }}
             {{- if .Values.metrics.extraVolumeMounts }}
@@ -644,7 +644,7 @@ spec:
             - name: kubectl-shared
               mountPath: /etc/shared
             - name: kubectl-scripts
-              mountPath: /opt/bitnami/scripts/kubectl-scripts
+              mountPath: /opt/nix-containers/scripts/kubectl-scripts
           {{- if .Values.kubectl.resources }}
           resources: {{- toYaml .Values.kubectl.resources | nindent 12 }}
           {{- end }}

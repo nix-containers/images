@@ -119,8 +119,8 @@ spec:
           args: {{- include "common.tplvalues.render" (dict "value" .Values.alertmanager.args "context" $) | nindent 12 }}
           {{- else }}
           args:
-            - "--config.file=/opt/bitnami/alertmanager/conf/{{ include "prometheus.alertmanager.configmapKey" . }}"
-            - "--storage.path=/opt/bitnami/alertmanager/data"
+            - "--config.file=/opt/nix-containers/alertmanager/conf/{{ include "prometheus.alertmanager.configmapKey" . }}"
+            - "--storage.path=/opt/nix-containers/alertmanager/data"
             - "--web.listen-address=0.0.0.0:{{ .Values.alertmanager.containerPorts.http }}"
             {{- if gt (int .Values.alertmanager.replicaCount) 1 }}
             - "--cluster.advertise-address=[$(POD_IP)]:{{ $clusterPort }}"
@@ -199,7 +199,7 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: config
-              mountPath: /opt/bitnami/alertmanager/conf
+              mountPath: /opt/nix-containers/alertmanager/conf
               readOnly: true
             - name: data
               mountPath: {{ .Values.alertmanager.persistence.mountPath }}

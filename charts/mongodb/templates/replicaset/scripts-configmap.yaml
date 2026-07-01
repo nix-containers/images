@@ -57,10 +57,10 @@ data:
   setup.sh: |-
     #!/bin/bash
 
-    . /opt/bitnami/scripts/mongodb-env.sh
-    . /opt/bitnami/scripts/libfs.sh
-    . /opt/bitnami/scripts/liblog.sh
-    . /opt/bitnami/scripts/libvalidations.sh
+    . /opt/nix-containers/scripts/mongodb-env.sh
+    . /opt/nix-containers/scripts/libfs.sh
+    . /opt/nix-containers/scripts/liblog.sh
+    . /opt/nix-containers/scripts/libvalidations.sh
 
     {{- if .Values.externalAccess.enabled }}
     {{- if eq .Values.externalAccess.service.type "LoadBalancer" }}
@@ -154,11 +154,11 @@ data:
         export MONGODB_EXTRA_DATABASES_FILE=""
         export MONGODB_EXTRA_PASSWORDS_FILE=""
     fi
-    exec /opt/bitnami/scripts/mongodb/entrypoint.sh /opt/bitnami/scripts/mongodb/run.sh
+    exec /opt/nix-containers/scripts/mongodb/entrypoint.sh /opt/nix-containers/scripts/mongodb/run.sh
   setup-hidden.sh: |-
     #!/bin/bash
 
-    . /opt/bitnami/scripts/mongodb-env.sh
+    . /opt/nix-containers/scripts/mongodb-env.sh
 
     {{- if .Values.externalAccess.hidden.enabled }}
     {{- if eq .Values.externalAccess.hidden.service.type "LoadBalancer" }}
@@ -203,7 +203,7 @@ data:
     export MONGODB_EXTRA_USERNAMES_FILE=""
     export MONGODB_EXTRA_DATABASES_FILE=""
     export MONGODB_EXTRA_PASSWORDS_FILE=""
-    exec /opt/bitnami/scripts/mongodb/entrypoint.sh /opt/bitnami/scripts/mongodb/run.sh
+    exec /opt/nix-containers/scripts/mongodb/entrypoint.sh /opt/nix-containers/scripts/mongodb/run.sh
   {{- if .Values.replicaSetConfigurationSettings.enabled }}
   replicaSetConfigurationSettings.sh: |-
     #!/bin/bash

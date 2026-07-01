@@ -163,7 +163,7 @@ spec:
           {{- else }}
           args:
             - -c
-            - /opt/bitnami/scripts/start-scripts/start-replica.sh
+            - /opt/nix-containers/scripts/start-scripts/start-replica.sh
           {{- end }}
           env:
             - name: BITNAMI_DEBUG
@@ -189,9 +189,9 @@ spec:
             {{- if .Values.auth.enabled }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: VALKEY_PASSWORD_FILE
-              value: "/opt/bitnami/valkey/secrets/valkey-password"
+              value: "/opt/nix-containers/valkey/secrets/valkey-password"
             - name: VALKEY_PRIMARY_PASSWORD_FILE
-              value: "/opt/bitnami/valkey/secrets/valkey-password"
+              value: "/opt/nix-containers/valkey/secrets/valkey-password"
             {{- else }}
             - name: VALKEY_PASSWORD
               valueFrom:
@@ -289,12 +289,12 @@ spec:
           {{- end }}
           volumeMounts:
             - name: start-scripts
-              mountPath: /opt/bitnami/scripts/start-scripts
+              mountPath: /opt/nix-containers/scripts/start-scripts
             - name: health
               mountPath: /health
             {{- if and .Values.auth.enabled .Values.auth.usePasswordFiles }}
             - name: valkey-password
-              mountPath: /opt/bitnami/valkey/secrets/
+              mountPath: /opt/nix-containers/valkey/secrets/
             {{- end }}
             - name: valkey-data
               mountPath: /data
@@ -304,16 +304,16 @@ spec:
               subPathExpr: {{ .Values.replica.persistence.subPathExpr }}
               {{- end }}
             - name: config
-              mountPath: /opt/bitnami/valkey/mounted-etc
+              mountPath: /opt/nix-containers/valkey/mounted-etc
             - name: empty-dir
-              mountPath: /opt/bitnami/valkey/etc
+              mountPath: /opt/nix-containers/valkey/etc
               subPath: app-conf-dir
             - name: empty-dir
               mountPath: /tmp
               subPath: tmp-dir
             {{- if .Values.tls.enabled }}
             - name: valkey-certificates
-              mountPath: /opt/bitnami/valkey/certs
+              mountPath: /opt/nix-containers/valkey/certs
               readOnly: true
             {{- end }}
             {{- if .Values.replica.extraVolumeMounts }}
@@ -419,7 +419,7 @@ spec:
             {{- end }}
             {{- if .Values.tls.enabled }}
             - name: valkey-certificates
-              mountPath: /opt/bitnami/valkey/certs
+              mountPath: /opt/nix-containers/valkey/certs
               readOnly: true
             {{- end }}
             {{- if .Values.metrics.extraVolumeMounts }}

@@ -121,8 +121,8 @@ spec:
             - |
               #!/bin/bash
 
-              . /opt/bitnami/scripts/libfs.sh
-              . /opt/bitnami/scripts/elasticsearch-env.sh
+              . /opt/nix-containers/scripts/libfs.sh
+              . /opt/nix-containers/scripts/elasticsearch-env.sh
 
               if ! is_dir_empty "$DB_DEFAULT_PLUGINS_DIR"; then
                   cp -nr "$DB_DEFAULT_PLUGINS_DIR"/* /plugins
@@ -252,7 +252,7 @@ spec:
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.coordinating.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
-                - /opt/bitnami/scripts/elasticsearch/healthcheck.sh
+                - /opt/nix-containers/scripts/elasticsearch/healthcheck.sh
           {{- end }}
           {{- end }}
           {{- if .Values.coordinating.resources }}
@@ -265,39 +265,39 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/elasticsearch/config
+              mountPath: /opt/nix-containers/elasticsearch/config
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/elasticsearch/tmp
+              mountPath: /opt/nix-containers/elasticsearch/tmp
               subPath: app-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/elasticsearch/logs
+              mountPath: /opt/nix-containers/elasticsearch/logs
               subPath: app-logs-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/elasticsearch/plugins
+              mountPath: /opt/nix-containers/elasticsearch/plugins
               subPath: app-plugins-dir
             - name: empty-dir
-              mountPath: /bitnami/elasticsearch
+              mountPath: /nix-containers/elasticsearch
               subPath: app-volume-dir
             - name: data
-              mountPath: /bitnami/elasticsearch/data
+              mountPath: /nix-containers/elasticsearch/data
             {{- if and .Values.usePasswordFiles .Values.security.enabled }}
             - name: elasticsearch-secrets
-              mountPath: /opt/bitnami/elasticsearch/secrets
+              mountPath: /opt/nix-containers/elasticsearch/secrets
             {{- end }}
             {{- if .Values.config }}
-            - mountPath: /opt/bitnami/elasticsearch/config/elasticsearch.yml
+            - mountPath: /opt/nix-containers/elasticsearch/config/elasticsearch.yml
               name: config
               subPath: elasticsearch.yml
             {{- end }}
             {{- if .Values.extraConfig }}
-            - mountPath: /opt/bitnami/elasticsearch/config/my_elasticsearch.yml
+            - mountPath: /opt/nix-containers/elasticsearch/config/my_elasticsearch.yml
               name: config
               subPath: my_elasticsearch.yml
             {{- end }}
             {{- if .Values.security.enabled }}
             - name: elasticsearch-certificates
-              mountPath: /opt/bitnami/elasticsearch/config/certs
+              mountPath: /opt/nix-containers/elasticsearch/config/certs
               readOnly: true
             {{- end }}
             {{- if .Values.initScripts }}

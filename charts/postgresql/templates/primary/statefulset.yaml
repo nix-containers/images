@@ -35,7 +35,7 @@ spec:
         checksum/extended-configuration: {{ pick (include (print $.Template.BasePath "/primary/extended-configmap.yaml") . | fromYaml) "data" | toYaml | sha256sum }}
         {{- end }}
         {{- if .Values.passwordUpdateJob.enabled }}
-        charts.bitnami.com/password-last-update: {{ now | date "20060102150405" | quote }}
+        charts.nix-containers.com/password-last-update: {{ now | date "20060102150405" | quote }}
         {{- end }}
         {{- if .Values.primary.podAnnotations }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.primary.podAnnotations "context" $ ) | nindent 8 }}
@@ -101,7 +101,7 @@ spec:
             - /bin/sh
             - -ec
             - |
-              cp /tmp/certs/* /opt/bitnami/postgresql/certs/
+              cp /tmp/certs/* /opt/nix-containers/postgresql/certs/
               chmod 600 {{ include "postgresql.v1.tlsCertKey" . }}
           volumeMounts:
             - name: empty-dir
@@ -110,7 +110,7 @@ spec:
             - name: raw-certificates
               mountPath: /tmp/certs
             - name: postgresql-certificates
-              mountPath: /opt/bitnami/postgresql/certs
+              mountPath: /opt/nix-containers/postgresql/certs
         {{- else if and .Values.volumePermissions.enabled (or .Values.primary.persistence.enabled .Values.shmVolume.enabled) }}
         - name: init-chmod-data
           image: {{ include "postgresql.v1.volumePermissions.image" . }}
@@ -143,11 +143,11 @@ spec:
               chmod -R 777 /dev/shm
               {{- end }}
               {{- if .Values.tls.enabled }}
-              cp /tmp/certs/* /opt/bitnami/postgresql/certs/
+              cp /tmp/certs/* /opt/nix-containers/postgresql/certs/
               {{- if eq ( toString ( .Values.volumePermissions.containerSecurityContext.runAsUser )) "auto" }}
-              chown -R `id -u`:`id -G | cut -d " " -f2` /opt/bitnami/postgresql/certs/
+              chown -R `id -u`:`id -G | cut -d " " -f2` /opt/nix-containers/postgresql/certs/
               {{- else }}
-              chown -R {{ .Values.primary.containerSecurityContext.runAsUser }}:{{ .Values.primary.podSecurityContext.fsGroup }} /opt/bitnami/postgresql/certs/
+              chown -R {{ .Values.primary.containerSecurityContext.runAsUser }}:{{ .Values.primary.podSecurityContext.fsGroup }} /opt/nix-containers/postgresql/certs/
               {{- end }}
               chmod 600 {{ include "postgresql.v1.tlsCertKey" . }}
               {{- end }}
@@ -173,7 +173,7 @@ spec:
             - name: raw-certificates
               mountPath: /tmp/certs
             - name: postgresql-certificates
-              mountPath: /opt/bitnami/postgresql/certs
+              mountPath: /opt/nix-containers/postgresql/certs
             {{- end }}
         {{- end }}
         {{- if .Values.primary.initContainers }}
@@ -213,7 +213,7 @@ spec:
             {{- if .Values.auth.enablePostgresUser }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: POSTGRES_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/postgresql/secrets/%s" (include "postgresql.v1.adminPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/postgresql/secrets/%s" (include "postgresql.v1.adminPasswordKey" .) }}
             {{- else }}
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -230,7 +230,7 @@ spec:
               value: {{ $customUser | quote }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: POSTGRES_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/postgresql/secrets/%s" (include "postgresql.v1.userPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/postgresql/secrets/%s" (include "postgresql.v1.userPasswordKey" .) }}
             {{- else }}
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -241,7 +241,7 @@ spec:
             {{- if .Values.auth.enablePostgresUser }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: POSTGRES_POSTGRES_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/postgresql/secrets/%s" (include "postgresql.v1.adminPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/postgresql/secrets/%s" (include "postgresql.v1.adminPasswordKey" .) }}
             {{- else }}
             - name: POSTGRES_POSTGRES_PASSWORD
               valueFrom:
@@ -263,7 +263,7 @@ spec:
               value: {{ .Values.auth.replicationUsername | quote }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: POSTGRES_REPLICATION_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/postgresql/secrets/%s" (include "postgresql.v1.replicationPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/postgresql/secrets/%s" (include "postgresql.v1.replicationPasswordKey" .) }}
             {{- else }}
             - name: POSTGRES_REPLICATION_PASSWORD
               valueFrom:
@@ -459,10 +459,10 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/postgresql/conf
+              mountPath: /opt/nix-containers/postgresql/conf
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/postgresql/tmp
+              mountPath: /opt/nix-containers/postgresql/tmp
               subPath: app-tmp-dir
             {{- if or .Values.primary.preInitDb.scriptsConfigMap .Values.primary.preInitDb.scripts }}
             - name: custom-preinit-scripts
@@ -486,11 +486,11 @@ spec:
             {{- end }}
             {{- if and .Values.auth.usePasswordFiles (or .Values.auth.enablePostgresUser $customUser) }}
             - name: postgresql-password
-              mountPath: /opt/bitnami/postgresql/secrets/
+              mountPath: /opt/nix-containers/postgresql/secrets/
             {{- end }}
             {{- if .Values.tls.enabled }}
             - name: postgresql-certificates
-              mountPath: /opt/bitnami/postgresql/certs
+              mountPath: /opt/nix-containers/postgresql/certs
               readOnly: true
             {{- end }}
             {{- if .Values.shmVolume.enabled }}
@@ -535,9 +535,9 @@ spec:
             {{- if .Values.auth.usePasswordFiles }}
             - name: DATA_SOURCE_PASS_FILE
               {{- if and (not (empty .Values.auth.metricsUsername)) (ne .Values.auth.metricsUsername "postgres")}}
-              value: {{ printf "/opt/bitnami/postgresql/secrets/%s" (include "postgresql.v1.metricsPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/postgresql/secrets/%s" (include "postgresql.v1.metricsPasswordKey" .) }}
               {{- else }}
-              value: {{ printf "/opt/bitnami/postgresql/secrets/%s" (include "postgresql.v1.adminPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/postgresql/secrets/%s" (include "postgresql.v1.adminPasswordKey" .) }}
               {{- end }}
             {{- else }}
             - name: DATA_SOURCE_PASS
@@ -589,7 +589,7 @@ spec:
               subPath: tmp-dir
             {{- if and .Values.auth.usePasswordFiles (or .Values.auth.enablePostgresUser $customUser) }}
             - name: postgresql-password
-              mountPath: /opt/bitnami/postgresql/secrets/
+              mountPath: /opt/nix-containers/postgresql/secrets/
             {{- end }}
             {{- if .Values.metrics.customMetrics }}
             - name: custom-metrics

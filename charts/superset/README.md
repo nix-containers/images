@@ -1,24 +1,24 @@
 <!--- app-name: Apache Superset -->
 
-# Bitnami Secure Images Helm chart for Apache Superset
+# nix-containers Secure Images Helm chart for Apache Superset
 
 Superset is a modern data exploration and data visualization platform.
 
 [Overview of Apache Superset](https://superset.apache.org/)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by nix-containers. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/superset
+helm install my-release oci://registry-1.docker.io/nix-containerscharts/superset
 ```
 
-Looking to use Superset in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the enterprise edition of Bitnami Application Catalog.
+Looking to use Superset in production? Try [VMware Tanzu Application Catalog](https://nix-containers.com/enterprise), the enterprise edition of nix-containers Application Catalog.
 
-## Why use Bitnami Secure Images?
+## Why use nix-containers Secure Images?
 
-Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
+Those are hardened, minimal CVE images built and maintained by nix-containers. nix-containers Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
 
 - Hardened secure images of popular open source software with Near-Zero Vulnerabilities
 - Vulnerability Triage & Prioritization with VEX Statements, KEV and EPSS Scores
@@ -26,12 +26,12 @@ Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami 
 - Software supply chain provenance attestation through in-toto
 - First class support for the internet’s favorite Helm charts
 
-Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/bitnami/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://bitnami.com/).
+Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/nix-containers/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://nix-containers.com/).
 
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
 
-If you are looking for our previous generation of images based on Debian Linux, please see the [Bitnami Legacy registry](https://hub.docker.com/u/bitnamilegacy).
+If you are looking for our previous generation of images based on Debian Linux, please see the [nix-containers Legacy registry](https://hub.docker.com/u/nix-containerslegacy).
 
 ## Introduction
 
@@ -53,7 +53,7 @@ To install the chart with the release name `my-release`:
 helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/superset
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The command deploys Superset on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -65,7 +65,7 @@ The command deploys Superset on the Kubernetes cluster in the default configurat
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+nix-containers will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### External database support
 
@@ -91,7 +91,7 @@ externalRedis.port=5432
 
 ### Ingress
 
-This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/bitnami/charts/tree/main/bitnami/nginx-ingress-controller) or [contour](https://github.com/bitnami/charts/tree/main/bitnami/contour) you can utilize the ingress controller to serve your application.To enable Ingress integration, set `ingress.enabled` to `true`.
+This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/nix-containers/images or [contour](https://github.com/nix-containers/images you can utilize the ingress controller to serve your application.To enable Ingress integration, set `ingress.enabled` to `true`.
 
 The most common scenario is to have one host name mapped to the deployment. In this case, the `ingress.hostname` property can be used to set the host name. The `ingress.tls` parameter can be used to add the TLS configuration for this host.
 
@@ -161,7 +161,7 @@ Learn more about [sidecar containers](https://kubernetes.io/docs/concepts/worklo
 
 This chart allows you to set your custom affinity using the `affinity` parameter. Find more information about Pod affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-As an alternative, use one of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/main/bitnami/common#affinities) chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
+As an alternative, use one of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [nix-containers/common](https://github.com/nix-containers/images chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
 
 ## Parameters
 
@@ -696,7 +696,7 @@ As an alternative, use one of the preset configurations for pod affinity, pod an
 | `postgresql.auth.enablePostgresUser`          | Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user                                                                                                                     | `true`             |
 | `postgresql.auth.username`                    | Name for a custom user to create                                                                                                                                                                                           | `bn_superset`      |
 | `postgresql.auth.password`                    | Password for the custom user to create                                                                                                                                                                                     | `""`               |
-| `postgresql.auth.database`                    | Name for a custom database to create                                                                                                                                                                                       | `bitnami_superset` |
+| `postgresql.auth.database`                    | Name for a custom database to create                                                                                                                                                                                       | `nix-containers_superset` |
 | `postgresql.auth.existingSecret`              | Name of existing secret to use for PostgreSQL credentials                                                                                                                                                                  | `""`               |
 | `postgresql.architecture`                     | PostgreSQL architecture (`standalone` or `replication`)                                                                                                                                                                    | `standalone`       |
 | `postgresql.primary.service.ports.postgresql` | PostgreSQL service port                                                                                                                                                                                                    | `5432`             |
@@ -706,7 +706,7 @@ As an alternative, use one of the preset configurations for pod affinity, pod an
 | `externalDatabase.port`                       | Database port number                                                                                                                                                                                                       | `5432`             |
 | `externalDatabase.user`                       | Non-root username for Superset                                                                                                                                                                                             | `bn_superset`      |
 | `externalDatabase.password`                   | Password for the non-root username for Superset                                                                                                                                                                            | `""`               |
-| `externalDatabase.database`                   | Superset database name                                                                                                                                                                                                     | `bitnami_superset` |
+| `externalDatabase.database`                   | Superset database name                                                                                                                                                                                                     | `nix-containers_superset` |
 | `externalDatabase.existingSecret`             | Name of an existing secret resource containing the database credentials                                                                                                                                                    | `""`               |
 | `externalDatabase.existingSecretPasswordKey`  | Name of an existing secret key containing the database credentials                                                                                                                                                         | `db-password`      |
 | `redis.enabled`                               | Switch to enable or disable the Redis&reg; helm                                                                                                                                                                            | `true`             |
@@ -724,7 +724,7 @@ As an alternative, use one of the preset configurations for pod affinity, pod an
 | `externalRedis.existingSecret`                | Name of an existing secret resource containing the Redis&trade credentials                                                                                                                                                 | `""`               |
 | `externalRedis.existingSecretPasswordKey`     | Name of an existing secret key containing the Redis&trade credentials                                                                                                                                                      | `redis-password`   |
 
-The above parameters map to the env variables defined in [bitnami/superset](https://github.com/bitnami/containers/tree/main/bitnami/superset). For more information please refer to the [bitnami/superset](https://github.com/bitnami/containers/tree/main/bitnami/superset) image documentation.
+The above parameters map to the env variables defined in [nix-containers/superset](https://github.com/nix-containers/containers/tree/main/nix-containers/superset). For more information please refer to the [nix-containers/superset](https://github.com/nix-containers/containers/tree/main/nix-containers/superset) image documentation.
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
@@ -736,7 +736,7 @@ helm install my-release \
     oci://REGISTRY_NAME/REPOSITORY_NAME/superset
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The above command sets the Superset administrator account username and password to `admin` and `password` respectively. Additionally, it sets the PostgreSQL user password to `secretpassword`.
 
@@ -748,12 +748,12 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 helm install my-release -f values.yaml oci://REGISTRY_NAME/REPOSITORY_NAME/superset
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
-> **Tip**: You can use the default [values.yaml](https://github.com/bitnami/charts/blob/main/template/superset/values.yaml)
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
+> **Tip**: You can use the default [values.yaml](https://github.com/nix-containers/images
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to nix-containers's Helm charts in [this troubleshooting guide](https://docs.nix-containers.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 

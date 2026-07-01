@@ -77,8 +77,8 @@ diagnosticMode:
 ## @section MongoDB(&reg;) Sharded parameters
 ##
 
-## Bitnami MongoDB(&reg;) Sharded image version
-## ref: https://hub.docker.com/r/bitnami/mongodb-sharded/tags/
+## nix-containers MongoDB(&reg;) Sharded image version
+## ref: https://hub.docker.com/r/nix-containers/mongodb-sharded/tags/
 ## @param image.registry [default: REGISTRY_NAME] MongoDB(&reg;) Sharded image registry
 ## @param image.repository [default: REPOSITORY_NAME/mongodb-sharded] MongoDB(&reg;) Sharded Image name
 ## @skip image.tag MongoDB(&reg;) Sharded image tag (immutable tags are recommended)
@@ -88,8 +88,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug logs should be enabled
 ##
 image:
-  registry: docker.io
-  repository: bitnami/mongodb-sharded
+  registry: ghcr.io
+  repository: nix-containers/mongodb-sharded-nixchart
   tag: 8.0.13-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
@@ -118,7 +118,7 @@ auth:
   ##
   rootUser: root
   ## @param auth.rootPassword MongoDB(&reg;) root password
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#setting-the-root-user-and-password-on-first-run
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mongodb#setting-the-root-user-and-password-on-first-run
   ##
   rootPassword: ""
   ## @param auth.replicaSetKey Key used for authentication in the replicaset
@@ -146,11 +146,11 @@ common:
   ##
   useHostnames: true
   ## @param common.mongodbEnableIPv6 Switch to enable/disable IPv6 on MongoDB&reg;
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#enablingdisabling-ipv6
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mongodb#enablingdisabling-ipv6
   ##
   mongodbEnableIPv6: false
   ## @param common.mongodbDirectoryPerDB Switch to enable/disable DirectoryPerDB on MongoDB&reg;
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#enablingdisabling-directoryperdb
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mongodb#enablingdisabling-directoryperdb
   ##
   mongodbDirectoryPerDB: false
   ## @param common.mongodbSystemLogVerbosity MongoDB&reg; system log verbosity level
@@ -158,7 +158,7 @@ common:
   ##
   mongodbSystemLogVerbosity: 0
   ## @param common.mongodbDisableSystemLog Whether to disable MongoDB&reg; system log or not
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#configuring-system-log-verbosity-level
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mongodb#configuring-system-log-verbosity-level
   ##
   mongodbDisableSystemLog: false
   ## @param common.mongodbInitRetryAttempts Maximum retries for checking the MongoDB&reg; initialization status
@@ -255,8 +255,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Init container volume-permissions image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r51
     digest: ""
     pullPolicy: IfNotPresent
@@ -269,7 +269,7 @@ volumePermissions:
     ##
     pullSecrets: []
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -417,7 +417,7 @@ configsvr:
   ##
   replicaCount: 1
   ## @param configsvr.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if configsvr.resources is set (configsvr.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param configsvr.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -582,7 +582,7 @@ configsvr:
     ## @param configsvr.persistence.mountPath Path to mount the volume at
     ## MongoDB&reg; images.
     ##
-    mountPath: /bitnami/mongodb
+    mountPath: /nix-containers/mongodb
     ## @param configsvr.persistence.subPath Subdirectory of the volume to mount at (evaluated as a template)
     ## Useful in dev environments and one PV for multiple services.
     ##
@@ -778,7 +778,7 @@ mongos:
   ##
   replicaCount: 1
   ## @param mongos.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if mongos.resources is set (mongos.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param mongos.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1135,7 +1135,7 @@ shardsvr:
     ##
     replicaCount: 1
     ## @param shardsvr.dataNode.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if shardsvr.dataNode.resources is set (shardsvr.dataNode.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "medium"
     ## @param shardsvr.dataNode.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1444,7 +1444,7 @@ shardsvr:
     enabled: true
     ## @param shardsvr.persistence.mountPath The path the volume will be mounted at, useful when using different MongoDB&reg; images.
     ##
-    mountPath: /bitnami/mongodb
+    mountPath: /nix-containers/mongodb
     ## @param shardsvr.persistence.subPath Subdirectory of the volume to mount at (evaluated as a template)
     ## Useful in development environments and one PV for multiple services.
     ##
@@ -1511,7 +1511,7 @@ shardsvr:
     ##
     hostAliases: []
     ## @param shardsvr.arbiter.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if shardsvr.arbiter.resources is set (shardsvr.arbiter.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "small"
     ## @param shardsvr.arbiter.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1794,8 +1794,8 @@ metrics:
   ## @param metrics.image.pullSecrets MongoDB&reg; exporter image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/mongodb-exporter
+    registry: ghcr.io
+    repository: nix-containers/prometheus-mongodb-exporter-nixchart
     tag: 0.47.0-debian-12-r1
     digest: ""
     pullPolicy: Always
@@ -1815,7 +1815,7 @@ metrics:
   ##
   extraArgs: ""
   ## @param metrics.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.resources is set (metrics.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param metrics.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

@@ -81,8 +81,8 @@ spec:
           args:
             - -ec
             - |
-              . /opt/bitnami/scripts/influxdb-env.sh
-              . /opt/bitnami/scripts/libinfluxdb.sh
+              . /opt/nix-containers/scripts/influxdb-env.sh
+              . /opt/nix-containers/scripts/libinfluxdb.sh
 
               {{- if eq .Values.objectStore "s3" }}
               check_s3() {
@@ -131,9 +131,9 @@ spec:
             {{- end }}
             {{- if .Values.usePasswordFiles }}
             - name: AWS_ACCESS_KEY_ID_FILE
-              value: "/opt/bitnami/influxdb/secrets/s3-access-key-id"
+              value: "/opt/nix-containers/influxdb/secrets/s3-access-key-id"
             - name: AWS_SECRET_ACCESS_KEY_FILE
-              value: "/opt/bitnami/influxdb/secrets/s3-secret-access-key"
+              value: "/opt/nix-containers/influxdb/secrets/s3-secret-access-key"
             {{- else }}
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
@@ -149,7 +149,7 @@ spec:
             {{- else if eq .Values.objectStore "google" }}
             {{- if .Values.usePasswordFiles }}
             - name: GOOGLE_SERVICE_ACCOUNT_FILE
-              value: "/opt/bitnami/influxdb/secrets/google-service-account-key"
+              value: "/opt/nix-containers/influxdb/secrets/google-service-account-key"
             {{- else }}
             - name: GOOGLE_SERVICE_ACCOUNT
               valueFrom:
@@ -162,7 +162,7 @@ spec:
               value: {{ .Values.azure.account | quote }}
             {{- if .Values.usePasswordFiles }}
             - name: AZURE_STORAGE_ACCESS_KEY_FILE
-              value: "/opt/bitnami/influxdb/secrets/azure-storage-access-key"
+              value: "/opt/nix-containers/influxdb/secrets/azure-storage-access-key"
             {{- else }}
             - name: AZURE_STORAGE_ACCESS_KEY
               valueFrom:
@@ -182,7 +182,7 @@ spec:
               mountPath: {{ .Values.persistence.mountPath }}
             {{- if and (or (eq .Values.objectStore "s3") (eq .Values.objectStore "google") (eq .Values.objectStore "azure")) .Values.usePasswordFiles }}
             - name: store-secret
-              mountPath: /opt/bitnami/influxdb/secrets
+              mountPath: /opt/nix-containers/influxdb/secrets
               readOnly: true
             {{- end }}
       containers:

@@ -121,15 +121,15 @@ spec:
           args: {{- include "common.tplvalues.render" (dict "value" .Values.server.args "context" $) | nindent 12 }}
           {{- else }}
           args:
-            - "--config.file=/opt/bitnami/prometheus/conf/{{ include "prometheus.server.configmapKey" . }}"
+            - "--config.file=/opt/nix-containers/prometheus/conf/{{ include "prometheus.server.configmapKey" . }}"
             - "--storage.tsdb.path={{ .Values.server.persistence.mountPath }}"
             - "--storage.tsdb.retention.time={{ .Values.server.retention }}"
             - "--storage.tsdb.retention.size={{ .Values.server.retentionSize }}"
             - "--log.level={{ .Values.server.logLevel }}"
             - "--log.format={{ .Values.server.logFormat }}"
             - "--web.listen-address=:{{ .Values.server.containerPorts.http }}"
-            - "--web.console.libraries=/opt/bitnami/prometheus/conf/console_libraries"
-            - "--web.console.templates=/opt/bitnami/prometheus/conf/consoles"
+            - "--web.console.libraries=/opt/nix-containers/prometheus/conf/console_libraries"
+            - "--web.console.templates=/opt/nix-containers/prometheus/conf/consoles"
             {{- if .Values.server.enableAdminAPI}}
             - "--web.enable-admin-api"
             {{- end }}
@@ -200,7 +200,7 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: config
-              mountPath: /opt/bitnami/prometheus/conf
+              mountPath: /opt/nix-containers/prometheus/conf
               readOnly: true
             - name: data
               mountPath: {{ .Values.server.persistence.mountPath }}

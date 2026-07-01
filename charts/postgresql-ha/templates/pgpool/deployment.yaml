@@ -82,11 +82,11 @@ spec:
             - /bin/sh
             - -cx
             - |
-              cp /tmp/certs/* /opt/bitnami/pgpool/certs/
+              cp /tmp/certs/* /opt/nix-containers/pgpool/certs/
               {{- if eq ( toString ( .Values.volumePermissions.podSecurityContext.runAsUser )) "auto" }}
-              chown -R `id -u`:`id -G | cut -d " " -f2` /opt/bitnami/pgpool/certs/
+              chown -R `id -u`:`id -G | cut -d " " -f2` /opt/nix-containers/pgpool/certs/
               {{- else }}
-              chown -R {{ .Values.pgpool.containerSecurityContext.runAsUser }}:{{ .Values.pgpool.podSecurityContext.fsGroup }} /opt/bitnami/pgpool/certs/
+              chown -R {{ .Values.pgpool.containerSecurityContext.runAsUser }}:{{ .Values.pgpool.podSecurityContext.fsGroup }} /opt/nix-containers/pgpool/certs/
               {{- end }}
               chmod 600 {{ template "postgresql-ha.pgpool.tlsCertKey" . }}
           {{- if eq ( toString ( .Values.volumePermissions.podSecurityContext.runAsUser )) "auto" }}
@@ -103,7 +103,7 @@ spec:
             - name: raw-certificates
               mountPath: /tmp/certs
             - name: pgpool-certificates
-              mountPath: /opt/bitnami/pgpool/certs
+              mountPath: /opt/nix-containers/pgpool/certs
             - name: empty-dir
               mountPath: /tmp
               subPath: tmp-dir
@@ -165,7 +165,7 @@ spec:
               value: {{ (include "postgresql-ha.pgoolSrCheckUsername" .) | quote }}
             {{- if .Values.pgpool.usePasswordFiles }}
             - name: PGPOOL_SR_CHECK_PASSWORD_FILE
-              value: "/opt/bitnami/pgpool/secrets/sr-check-password"
+              value: "/opt/nix-containers/pgpool/secrets/sr-check-password"
             {{- else }}
             - name: PGPOOL_SR_CHECK_PASSWORD
               valueFrom:
@@ -216,7 +216,7 @@ spec:
               value: {{ (include "postgresql-ha.postgresqlUsername" .) | quote }}
             {{- if .Values.pgpool.usePasswordFiles }}
             - name: PGPOOL_POSTGRES_PASSWORD_FILE
-              value: "/opt/bitnami/pgpool/secrets/pgpool-password"
+              value: "/opt/nix-containers/pgpool/secrets/pgpool-password"
             {{- else }}
             - name: PGPOOL_POSTGRES_PASSWORD
               valueFrom:
@@ -232,7 +232,7 @@ spec:
               value: {{ (include "postgresql-ha.pgpoolAdminUsername" .) | quote }}
             {{- if .Values.pgpool.usePasswordFiles }}
             - name: PGPOOL_ADMIN_PASSWORD_FILE
-              value: "/opt/bitnami/pgpool/secrets/admin-password"
+              value: "/opt/nix-containers/pgpool/secrets/admin-password"
             {{- else }}
             - name: PGPOOL_ADMIN_PASSWORD
               valueFrom:
@@ -293,11 +293,11 @@ spec:
             {{- end }}
             {{- if or .Values.pgpool.configuration .Values.pgpool.configurationCM }}
             - name: PGPOOL_USER_CONF_FILE
-              value: "/opt/bitnami/pgpool/user_config/pgpool.conf"
+              value: "/opt/nix-containers/pgpool/user_config/pgpool.conf"
             {{- end }}
             {{- if or .Values.pgpool.poolHbaConfiguration .Values.pgpool.configurationCM }}
             - name: PGPOOL_USER_HBA_FILE
-              value: "/opt/bitnami/pgpool/user_config/pool_hba.conf"
+              value: "/opt/nix-containers/pgpool/user_config/pool_hba.conf"
             {{- end }}
             - name: PGPOOL_ENABLE_TLS
               value: {{ ternary "yes" "no" .Values.pgpool.tls.enabled | quote }}
@@ -342,7 +342,7 @@ spec:
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.pgpool.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
-                - /opt/bitnami/scripts/pgpool/healthcheck.sh
+                - /opt/nix-containers/scripts/pgpool/healthcheck.sh
           {{- end }}
           {{- if .Values.pgpool.customReadinessProbe }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.pgpool.customReadinessProbe "context" $) | nindent 12 }}
@@ -352,7 +352,7 @@ spec:
               command:
                 - bash
                 - -ec
-                - '{{ include "postgresql-ha.pgpoolPostgresPassword" . }} psql -U {{ (include "postgresql-ha.postgresqlUsername" .) | quote }} {{- if not (empty (include "postgresql-ha.postgresqlDatabase" .)) }} -d {{ (include "postgresql-ha.postgresqlDatabase" .) | quote }}{{- end }} -h /opt/bitnami/pgpool/tmp -tA -c "SELECT 1" >/dev/null'
+                - '{{ include "postgresql-ha.pgpoolPostgresPassword" . }} psql -U {{ (include "postgresql-ha.postgresqlUsername" .) | quote }} {{- if not (empty (include "postgresql-ha.postgresqlDatabase" .)) }} -d {{ (include "postgresql-ha.postgresqlDatabase" .) | quote }}{{- end }} -h /opt/nix-containers/pgpool/tmp -tA -c "SELECT 1" >/dev/null'
           {{- end }}
           {{- if .Values.pgpool.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.pgpool.customStartupProbe "context" $) | nindent 12 }}
@@ -360,7 +360,7 @@ spec:
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.pgpool.startupProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
-                - /opt/bitnami/scripts/pgpool/healthcheck.sh
+                - /opt/nix-containers/scripts/pgpool/healthcheck.sh
           {{- end }}
           {{- end }}
           {{- if .Values.pgpool.resources }}
@@ -373,20 +373,20 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/pgpool/etc
+              mountPath: /opt/nix-containers/pgpool/etc
               subPath: app-etc-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/pgpool/conf
+              mountPath: /opt/nix-containers/pgpool/conf
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/pgpool/tmp
+              mountPath: /opt/nix-containers/pgpool/tmp
               subPath: app-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/pgpool/logs
+              mountPath: /opt/nix-containers/pgpool/logs
               subPath: app-logs-dir
             {{- if or .Values.pgpool.configuration .Values.pgpool.poolHbaConfiguration .Values.pgpool.configurationCM }}
             - name: pgpool-config
-              mountPath: /opt/bitnami/pgpool/user_config
+              mountPath: /opt/nix-containers/pgpool/user_config
             {{- end }}
             {{- if or .Values.pgpool.initdbScripts .Values.pgpool.initdbScriptsCM  }}
             - name: custom-init-scripts
@@ -399,17 +399,17 @@ spec:
             {{- if .Values.pgpool.usePasswordFiles }}
             - name: postgresql-creds
               subPath: pgpool-password
-              mountPath: /opt/bitnami/pgpool/secrets/pgpool-password
+              mountPath: /opt/nix-containers/pgpool/secrets/pgpool-password
             - name: pgpool-creds
               subPath: admin-password
-              mountPath: /opt/bitnami/pgpool/secrets/admin-password
+              mountPath: /opt/nix-containers/pgpool/secrets/admin-password
             - name: pgpool-creds
               subPath: sr-check-password
-              mountPath: /opt/bitnami/pgpool/secrets/sr-check-password
+              mountPath: /opt/nix-containers/pgpool/secrets/sr-check-password
             {{- end }}
             {{- if .Values.pgpool.tls.enabled }}
             - name: pgpool-certificates
-              mountPath: /opt/bitnami/pgpool/certs
+              mountPath: /opt/nix-containers/pgpool/certs
             {{- end }}
             {{- if .Values.pgpool.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.pgpool.extraVolumeMounts "context" $) | nindent 12 }}

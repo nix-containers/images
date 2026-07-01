@@ -3,8 +3,8 @@ CHART VERSION: {{ .Chart.Version }}
 APP VERSION: {{ .Chart.AppVersion }}
 
 ⚠ WARNING: Since August 28th, 2025, only a limited subset of images/charts are available for free.
-    Subscribe to Bitnami Secure Images to receive continued support and security updates.
-    More info at https://bitnami.com and https://github.com/bitnami/containers/issues/83267
+    Subscribe to nix-containers Secure Images to receive continued support and security updates.
+    More info at https://nix-containers.com and https://github.com/nix-containers/containers/issues/83267
 
 {{- if .Values.diagnosticMode.enabled }}
 The chart has been deployed in diagnostic mode. All probes have been disabled and the command has been overwritten with:
@@ -22,7 +22,7 @@ Access the pod you want to debug by executing
 
 In order to replicate the container startup scripts execute this command:
 
-    /opt/bitnami/scripts/kafka/entrypoint.sh /opt/bitnami/scripts/kafka/run.sh
+    /opt/nix-containers/scripts/kafka/entrypoint.sh /opt/nix-containers/scripts/kafka/run.sh
 
 {{- else }}
 
@@ -189,7 +189,7 @@ To connect to your Kafka controller+broker nodes from outside the cluster, follo
 
         2. Obtain pod configuration:
 
-        kubectl exec -it KAFKA_POD -- cat /opt/bitnami/kafka/config/server.properties | grep advertised.listeners
+        kubectl exec -it KAFKA_POD -- cat /opt/nix-containers/kafka/config/server.properties | grep advertised.listeners
 
     {{- end }}
     Kafka brokers port: You will have a different node port for each Kafka broker. You can get the list of configured node ports using the command below:
@@ -232,7 +232,7 @@ To connect to your Kafka broker nodes from outside the cluster, follow these ins
 
         2. Obtain pod configuration:
 
-        kubectl exec -it KAFKA_POD -- cat /opt/bitnami/kafka/config/server.properties | grep advertised.listeners
+        kubectl exec -it KAFKA_POD -- cat /opt/nix-containers/kafka/config/server.properties | grep advertised.listeners
 
     {{- end }}
     Kafka brokers port: You will have a different node port for each Kafka broker. You can get the list of configured node ports using the command below:

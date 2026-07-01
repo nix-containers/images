@@ -1,22 +1,22 @@
 <!--- app-name: Kibana -->
 
-# Bitnami Secure Images Helm chart for Kibana
+# nix-containers Secure Images Helm chart for Kibana
 
 Kibana is an open source, browser based analytics and search dashboard for Elasticsearch. Kibana strives to be easy to get started with, while also being flexible and powerful.
 
 [Overview of Kibana](https://www.elastic.co/products/kibana)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by nix-containers. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/kibana --set elasticsearch.hosts[0]=<Hostname of your ES instance> --set elasticsearch.port=<port of your ES instance>
+helm install my-release oci://registry-1.docker.io/nix-containerscharts/kibana --set elasticsearch.hosts[0]=<Hostname of your ES instance> --set elasticsearch.port=<port of your ES instance>
 ```
 
-## Why use Bitnami Secure Images?
+## Why use nix-containers Secure Images?
 
-Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
+Those are hardened, minimal CVE images built and maintained by nix-containers. nix-containers Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
 
 - Hardened secure images of popular open source software with Near-Zero Vulnerabilities
 - Vulnerability Triage & Prioritization with VEX Statements, KEV and EPSS Scores
@@ -24,16 +24,16 @@ Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami 
 - Software supply chain provenance attestation through in-toto
 - First class support for the internet’s favorite Helm charts
 
-Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/bitnami/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://bitnami.com/).
+Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/nix-containers/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://nix-containers.com/).
 
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
 
-If you are looking for our previous generation of images based on Debian Linux, please see the [Bitnami Legacy registry](https://hub.docker.com/u/bitnamilegacy).
+If you are looking for our previous generation of images based on Debian Linux, please see the [nix-containers Legacy registry](https://hub.docker.com/u/nix-containerslegacy).
 
 ## Introduction
 
-This chart bootstraps a [Kibana](https://github.com/bitnami/containers/tree/main/bitnami/kibana) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [Kibana](https://github.com/nix-containers/containers/tree/main/nix-containers/kibana) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
@@ -52,7 +52,7 @@ helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/kibana \
   --set elasticsearch.port=<port of your ES instance> \
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 This chart requires an Elasticsearch instance to work. You can use an already existing Elasticsearch instance. These commands deploy Kibana on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -64,13 +64,13 @@ This chart requires an Elasticsearch instance to work. You can use an already ex
 
 these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
-To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the nix-containers/common chart](https://github.com/nix-containers/images However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
 ### [Rolling vs Immutable tags](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-understand-rolling-tags-containers-index.html)
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+nix-containers will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### Update credentials
 
@@ -91,7 +91,7 @@ This chart can be integrated with Prometheus by setting `metrics.enabled` to `tr
 
 #### Prometheus requirements
 
-It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [Bitnami Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/prometheus) or the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) to easily have a working Prometheus in your cluster.
+It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [nix-containers Prometheus helm chart](https://github.com/nix-containers/images or the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images to easily have a working Prometheus in your cluster.
 
 #### Integration with Prometheus Operator
 
@@ -101,7 +101,7 @@ The chart can deploy `ServiceMonitor` objects for integration with Prometheus Op
 no matches for kind "ServiceMonitor" in version "monitoring.coreos.com/v1"
 ```
 
-Install the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) for having the necessary CRDs and the Prometheus Operator.
+Install the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images for having the necessary CRDs and the Prometheus Operator.
 
 ### Change Kibana version
 
@@ -109,7 +109,7 @@ To modify the application version used in this chart, specify a different versio
 
 ### Use custom configuration
 
-The Bitnami Kibana chart supports using custom configuration settings. For example, to mount a custom `kibana.yml` you can create a ConfigMap like the following:
+The nix-containers Kibana chart supports using custom configuration settings. For example, to mount a custom `kibana.yml` you can create a ConfigMap like the following:
 
 ```yaml
 apiVersion: v1
@@ -163,7 +163,7 @@ initScriptsSecret=special-scripts-sensitive
 
 ### Install plugins
 
-The Bitnami Kibana chart allows you to install a set of plugins at deployment time using the `plugins` chart parameter, as shown in the example below:
+The nix-containers Kibana chart allows you to install a set of plugins at deployment time using the `plugins` chart parameter, as shown in the example below:
 
 ```text
 elasticsearch.hosts[0]=elasticsearch-host
@@ -229,7 +229,7 @@ Learn more about [sidecar containers](https://kubernetes.io/docs/concepts/worklo
 
 #### Add a sample Elasticsearch container as sidecar
 
-This chart requires an Elasticsearch instance to work. For production, the options are to use an already existing Elasticsearch instance or deploy the [Elasticsearch chart](https://github.com/bitnami/charts/tree/main/bitnami/elasticsearch) with the [`global.kibanaEnabled=true` parameter](https://github.com/bitnami/charts/tree/main/bitnami/elasticsearch#enable-bundled-kibana).
+This chart requires an Elasticsearch instance to work. For production, the options are to use an already existing Elasticsearch instance or deploy the [Elasticsearch chart](https://github.com/nix-containers/images with the [`global.kibanaEnabled=true` parameter](https://github.com/nix-containers/images
 
 For testing purposes, use a sidecar Elasticsearch container setting the following parameters during the Kibana chart installation:
 
@@ -237,7 +237,7 @@ For testing purposes, use a sidecar Elasticsearch container setting the followin
 elasticsearch.hosts[0]=localhost
 elasticsearch.port=9200
 sidecars[0].name=elasticsearch
-sidecars[0].image=bitnami/elasticsearch:latest
+sidecars[0].image=nix-containers/elasticsearch:latest
 sidecars[0].imagePullPolicy=IfNotPresent
 sidecars[0].ports[0].name=http
 sidecars[0].ports[0].containerPort=9200
@@ -247,7 +247,7 @@ sidecars[0].ports[0].containerPort=9200
 
 This chart allows you to set custom Pod affinity using the `affinity` parameter. Find more information about Pod affinity in the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-As an alternative, you can use one of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/main/bitnami/common#affinities) chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
+As an alternative, you can use one of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [nix-containers/common](https://github.com/nix-containers/images chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
 
 ### Backup and restore
 
@@ -255,13 +255,13 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 
 ## Persistence
 
-The [Bitnami Kibana](https://github.com/bitnami/containers/tree/main/bitnami/kibana) image can persist data. If enabled, the persisted path is `/bitnami/kibana` by default.
+The [nix-containers Kibana](https://github.com/nix-containers/containers/tree/main/nix-containers/kibana) image can persist data. If enabled, the persisted path is `/nix-containers/kibana` by default.
 
 The chart mounts a [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) at this location. The volume is created using dynamic volume provisioning.
 
 ### Add extra volumes
 
-The Bitnami Kibana chart supports mounting extra volumes (either PVCs, secrets or configmaps) by using the `extraVolumes` and `extraVolumeMounts` property. This can be combined with advanced operations like adding extra init containers and sidecars.
+The nix-containers Kibana chart supports mounting extra volumes (either PVCs, secrets or configmaps) by using the `extraVolumes` and `extraVolumeMounts` property. This can be combined with advanced operations like adding extra init containers and sidecars.
 
 ### Adjust permissions of persistent volume mountpoint
 
@@ -496,7 +496,7 @@ helm install my-release \
   --set admin.user=admin-user oci://REGISTRY_NAME/REPOSITORY_NAME/kibana
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The above command sets the Kibana admin user to `admin-user`.
 
@@ -508,18 +508,18 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 helm install my-release -f values.yaml oci://REGISTRY_NAME/REPOSITORY_NAME/kibana
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
-> **Tip**: You can use the default [values.yaml](https://github.com/bitnami/charts/tree/main/bitnami/kibana/values.yaml)
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
+> **Tip**: You can use the default [values.yaml](https://github.com/nix-containers/images
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to nix-containers's Helm charts in [this troubleshooting guide](https://docs.nix-containers.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
 ### To 11.4.0
 
-This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/bitnami/charts/issues/30850).
+This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/nix-containers/images
 
 ### To 11.0.0
 
@@ -570,7 +570,7 @@ Regular upgrade is compatible from previous versions.
 
 ### To 6.2.0
 
-This version introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/main/bitnami/common#common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
+This version introduces `nix-containers/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/nix-containers/images Please, make sure that you have updated the chart dependencies before executing any upgrade.
 
 ### To 6.0.0
 
@@ -584,7 +584,7 @@ This version does not include Elasticsearch as a bundled dependency. From now on
 
 Helm performs a lookup for the object based on its group (apps), version (v1), and kind (Deployment). Also known as its GroupVersionKind, or GVK. Changing the GVK is considered a compatibility breaker from Kubernetes' point of view, so you cannot "upgrade" those objects to the new GVK in-place. Earlier versions of Helm 3 did not perform the lookup correctly which has since been fixed to match the spec.
 
-In [4dfac075aacf74405e31ae5b27df4369e84eb0b0](https://github.com/bitnami/charts/commit/4dfac075aacf74405e31ae5b27df4369e84eb0b0) the `apiVersion` of the deployment resources was updated to `apps/v1` in tune with the api's deprecated, resulting in compatibility breakage.
+In [4dfac075aacf74405e31ae5b27df4369e84eb0b0](https://github.com/nix-containers/images the `apiVersion` of the deployment resources was updated to `apps/v1` in tune with the api's deprecated, resulting in compatibility breakage.
 
 This major version signifies this change.
 

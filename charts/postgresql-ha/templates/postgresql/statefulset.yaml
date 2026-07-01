@@ -83,11 +83,11 @@ spec:
             - /bin/sh
             - -cx
             - |
-              cp /tmp/certs/* /opt/bitnami/postgresql/certs/
+              cp /tmp/certs/* /opt/nix-containers/postgresql/certs/
               {{- if eq ( toString ( .Values.volumePermissions.podSecurityContext.runAsUser )) "auto" }}
-              chown -R `id -u`:`id -G | cut -d " " -f2` /opt/bitnami/postgresql/certs/
+              chown -R `id -u`:`id -G | cut -d " " -f2` /opt/nix-containers/postgresql/certs/
               {{- else }}
-              chown -R {{ .Values.postgresql.containerSecurityContext.runAsUser }}:{{ .Values.postgresql.podSecurityContext.fsGroup }} /opt/bitnami/postgresql/certs/
+              chown -R {{ .Values.postgresql.containerSecurityContext.runAsUser }}:{{ .Values.postgresql.podSecurityContext.fsGroup }} /opt/nix-containers/postgresql/certs/
               {{- end }}
               chmod 600 {{ template "postgresql-ha.postgresql.tlsCertKey" . }}
           {{- if eq ( toString ( .Values.volumePermissions.podSecurityContext.runAsUser )) "auto" }}
@@ -104,7 +104,7 @@ spec:
             - name: raw-certificates
               mountPath: /tmp/certs
             - name: postgresql-certificates
-              mountPath: /opt/bitnami/postgresql/certs
+              mountPath: /opt/nix-containers/postgresql/certs
             - name: empty-dir
               mountPath: /tmp
               subPath: tmp-dir
@@ -186,7 +186,7 @@ spec:
             {{- if not (eq (include "postgresql-ha.postgresqlUsername" .) "postgres") }}
             {{- if .Values.postgresql.usePasswordFiles }}
             - name: POSTGRES_POSTGRES_PASSWORD_FILE
-              value: "/opt/bitnami/postgresql/secrets/postgres-password"
+              value: "/opt/nix-containers/postgresql/secrets/postgres-password"
             {{- else }}
             - name: POSTGRES_POSTGRES_PASSWORD
               valueFrom:
@@ -199,7 +199,7 @@ spec:
               value: {{ (include "postgresql-ha.postgresqlUsername" .) | quote }}
             {{- if .Values.postgresql.usePasswordFiles }}
             - name: POSTGRES_PASSWORD_FILE
-              value: "/opt/bitnami/postgresql/secrets/password"
+              value: "/opt/nix-containers/postgresql/secrets/password"
             {{- else }}
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -305,7 +305,7 @@ spec:
             - name: REPMGR_PGHBA_TRUST_ALL
               value: {{ ternary "yes" "no" .Values.postgresql.pgHbaTrustAll | quote }}
             - name: REPMGR_MOUNTED_CONF_DIR
-              value: "/bitnami/repmgr/conf"
+              value: "/nix-containers/repmgr/conf"
             - name: REPMGR_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -332,7 +332,7 @@ spec:
               value: {{ (include "postgresql-ha.postgresqlRepmgrUsername" .) | quote }}
             {{- if .Values.postgresql.usePasswordFiles }}
             - name: REPMGR_PASSWORD_FILE
-              value: "/opt/bitnami/postgresql/secrets/repmgr-password"
+              value: "/opt/nix-containers/postgresql/secrets/repmgr-password"
             {{- else }}
             - name: REPMGR_PASSWORD
               valueFrom:
@@ -344,7 +344,7 @@ spec:
             - name: REPMGR_USE_PASSFILE
               value: {{ ternary "true" "false" .Values.postgresql.repmgrUsePassfile | quote }}
             - name: REPMGR_PASSFILE_PATH
-              value: {{ default "/opt/bitnami/repmgr/conf/.pgpass" .Values.postgresql.repmgrPassfilePath }}
+              value: {{ default "/opt/nix-containers/repmgr/conf/.pgpass" .Values.postgresql.repmgrPassfilePath }}
             {{- end }}
             {{- if (include "postgresql-ha.repmgrDatabase" .) }}
             - name: REPMGR_DATABASE
@@ -380,7 +380,7 @@ spec:
               value: {{ .Values.pgpool.srCheckDatabase | quote  }}
             {{- if .Values.postgresql.usePasswordFiles }}
             - name: POSTGRESQL_SR_CHECK_PASSWORD_FILE
-              value: "/opt/bitnami/postgresql/secrets/sr-check-password"
+              value: "/opt/nix-containers/postgresql/secrets/sr-check-password"
             {{- else }}
             - name: POSTGRESQL_SR_CHECK_PASSWORD
               valueFrom:
@@ -442,27 +442,27 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/postgresql/conf
+              mountPath: /opt/nix-containers/postgresql/conf
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/postgresql/tmp
+              mountPath: /opt/nix-containers/postgresql/tmp
               subPath: app-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/repmgr/conf
+              mountPath: /opt/nix-containers/repmgr/conf
               subPath: repmgr-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/repmgr/tmp
+              mountPath: /opt/nix-containers/repmgr/tmp
               subPath: repmgr-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/repmgr/logs
+              mountPath: /opt/nix-containers/repmgr/logs
               subPath: repmgr-logs-dir
             {{- if or .Values.postgresql.repmgrConfiguration .Values.postgresql.configuration .Values.postgresql.pgHbaConfiguration .Values.postgresql.configurationCM }}
             - name: postgresql-config
-              mountPath: /bitnami/repmgr/conf
+              mountPath: /nix-containers/repmgr/conf
             {{- end }}
             {{- if or .Values.postgresql.extendedConf .Values.postgresql.extendedConfCM }}
             - name: postgresql-extended-config
-              mountPath: /bitnami/postgresql/conf/conf.d/
+              mountPath: /nix-containers/postgresql/conf/conf.d/
             {{- end }}
             {{- if or .Values.postgresql.initdbScriptsCM .Values.postgresql.initdbScripts }}
             - name: custom-init-scripts
@@ -475,22 +475,22 @@ spec:
             {{- if .Values.postgresql.usePasswordFiles }}
             {{- if not (eq (include "postgresql-ha.postgresqlUsername" .) "postgres") }}
             - name: postgresql-creds
-              mountPath: /opt/bitnami/postgresql/secrets/postgres-password
+              mountPath: /opt/nix-containers/postgresql/secrets/postgres-password
               subPath: postgres-password
             {{- end }}
             - name: postgresql-creds
               subPath: password
-              mountPath: /opt/bitnami/postgresql/secrets/password
+              mountPath: /opt/nix-containers/postgresql/secrets/password
             - name: postgresql-creds
               subPath: repmgr-password
-              mountPath: /opt/bitnami/postgresql/secrets/repmgr-password
+              mountPath: /opt/nix-containers/postgresql/secrets/repmgr-password
             - name: pgpool-creds
               subPath: sr-check-password
-              mountPath: /opt/bitnami/postgresql/secrets/sr-check-password
+              mountPath: /opt/nix-containers/postgresql/secrets/sr-check-password
             {{- end }}
             {{- if .Values.postgresql.tls.enabled }}
             - name: postgresql-certificates
-              mountPath: /opt/bitnami/postgresql/certs
+              mountPath: /opt/nix-containers/postgresql/certs
             {{- end }}
             - name: data
               mountPath: {{ .Values.persistence.mountPath }}
@@ -520,7 +520,7 @@ spec:
               value: {{ printf "127.0.0.1:%d/%s?sslmode=disable" (.Values.postgresql.containerPorts.postgresql | int64) (include "postgresql-ha.postgresqlDatabase" .) | quote }}
             {{- if .Values.postgresql.usePasswordFiles }}
             - name: DATA_SOURCE_PASS_FILE
-              value: "/opt/bitnami/postgresql/secrets/password"
+              value: "/opt/nix-containers/postgresql/secrets/password"
             {{- else }}
             - name: DATA_SOURCE_PASS
               valueFrom:
@@ -583,7 +583,7 @@ spec:
           {{- if or .Values.postgresql.usePasswordFiles .Values.metrics.customMetrics }}
             {{- if .Values.postgresql.usePasswordFiles }}
             - name: postgresql-creds
-              mountPath: /opt/bitnami/postgresql/secrets/
+              mountPath: /opt/nix-containers/postgresql/secrets/
             {{- end }}
             {{- if .Values.metrics.customMetrics }}
             - name: custom-metrics

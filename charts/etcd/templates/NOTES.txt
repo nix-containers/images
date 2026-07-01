@@ -3,8 +3,8 @@ CHART VERSION: {{ .Chart.Version }}
 APP VERSION: {{ .Chart.AppVersion }}
 
 ⚠ WARNING: Since August 28th, 2025, only a limited subset of images/charts are available for free.
-    Subscribe to Bitnami Secure Images to receive continued support and security updates.
-    More info at https://bitnami.com and https://github.com/bitnami/containers/issues/83267
+    Subscribe to nix-containers Secure Images to receive continued support and security updates.
+    More info at https://nix-containers.com and https://github.com/nix-containers/containers/issues/83267
 
 {{- if and (eq .Values.service.type "LoadBalancer") .Values.auth.rbac.allowNoneAuthentication }}
 -------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ Access the pod you want to debug by executing
 
 In order to replicate the container startup scripts execute this command:
 
-    /opt/bitnami/scripts/etcd/entrypoint.sh /opt/bitnami/scripts/etcd/run.sh
+    /opt/nix-containers/scripts/etcd/entrypoint.sh /opt/nix-containers/scripts/etcd/run.sh
 
 {{- else }}
 
@@ -90,11 +90,11 @@ To connect to your etcd server from outside the cluster execute the following co
 {{- if .Values.auth.client.secureTransport }}
 {{- if .Values.auth.client.useAutoTLS }}
 
- * As TLS is enabled you should add the flag `--cert-file /bitnami/etcd/data/fixtures/client/cert.pem --key-file /bitnami/etcd/data/fixtures/client/key.pem --insecure-skip-tls-verify` to the etcdctl commands.
+ * As TLS is enabled you should add the flag `--cert-file /nix-containers/etcd/data/fixtures/client/cert.pem --key-file /nix-containers/etcd/data/fixtures/client/key.pem --insecure-skip-tls-verify` to the etcdctl commands.
 
 {{- else }}
 
- * As TLS is enabled you should add the flag `--cert-file /opt/bitnami/etcd/certs/client/{{ .Values.auth.client.certFilename }} --key-file /opt/bitnami/etcd/certs/client/{{ .Values.auth.client.certKeyFilename }}` to the etcdctl commands.
+ * As TLS is enabled you should add the flag `--cert-file /opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.certFilename }} --key-file /opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.certKeyFilename }}` to the etcdctl commands.
 
 {{- end }}
 
@@ -105,7 +105,7 @@ To connect to your etcd server from outside the cluster execute the following co
 {{- end }}
 {{- if .Values.auth.client.enableAuthentication }}
 
- * As TLS host authentication is enabled you should add the flag `--ca-file /opt/bitnami/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}` to the etcdctl commands.
+ * As TLS host authentication is enabled you should add the flag `--ca-file /opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}` to the etcdctl commands.
 
 {{- end }}
 {{- $autoCompactionValue := (regexReplaceAll "[^0-9]" .Values.autoCompactionRetention "" | int) }}

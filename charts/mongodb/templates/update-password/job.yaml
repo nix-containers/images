@@ -55,16 +55,16 @@ spec:
             - |
               {{- if .Values.usePasswordFiles }}
               # We need to load all the secret env vars to the system
-              for file in $(find /bitnami/mongodb/secrets -type f); do
+              for file in $(find /nix-containers/mongodb/secrets -type f); do
                   env_var_name="$(basename $file)"
                   echo "Exporting $env_var_name"
                   export $env_var_name="$(< $file)"
               done
               {{- end }}
 
-              . /opt/bitnami/scripts/mongodb-env.sh
-              . /opt/bitnami/scripts/libmongodb.sh
-              . /opt/bitnami/scripts/liblog.sh
+              . /opt/nix-containers/scripts/mongodb-env.sh
+              . /opt/nix-containers/scripts/libmongodb.sh
+              . /opt/nix-containers/scripts/liblog.sh
 
               protocol=mongodb
               {{- if eq .Values.architecture "replicaset" }}
@@ -197,9 +197,9 @@ spec:
               subPath: job-dir
             {{- if .Values.usePasswordFiles }}
             - name: mongodb-previous-credentials
-              mountPath: /bitnami/mongodb/secrets/previous
+              mountPath: /nix-containers/mongodb/secrets/previous
             - name: mongodb-new-credentials
-              mountPath: /bitnami/mongodb/secrets/new
+              mountPath: /nix-containers/mongodb/secrets/new
             {{- end }}
           {{- if .Values.passwordUpdateJob.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.passwordUpdateJob.extraVolumeMounts "context" $) | nindent 12 }}

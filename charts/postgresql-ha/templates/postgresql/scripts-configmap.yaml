@@ -24,11 +24,11 @@ data:
     MIN_DELAY_AFTER_PG_STOP_SECONDS=$1
 
     # Load Libraries
-    . /opt/bitnami/scripts/libpostgresql.sh
-    . /opt/bitnami/scripts/librepmgr.sh
+    . /opt/nix-containers/scripts/libpostgresql.sh
+    . /opt/nix-containers/scripts/librepmgr.sh
 
     # Load PostgreSQL & repmgr environment variables
-    . /opt/bitnami/scripts/postgresql-env.sh
+    . /opt/nix-containers/scripts/postgresql-env.sh
 
     # Auxiliary functions
     is_new_primary_ready() {
@@ -84,11 +84,11 @@ data:
     set -o nounset
 
     # Load Libraries
-    . /opt/bitnami/scripts/libpostgresql.sh
-    . /opt/bitnami/scripts/librepmgr.sh
+    . /opt/nix-containers/scripts/libpostgresql.sh
+    . /opt/nix-containers/scripts/librepmgr.sh
 
     # Load PostgreSQL & repmgr environment variables
-    . /opt/bitnami/scripts/postgresql-env.sh
+    . /opt/nix-containers/scripts/postgresql-env.sh
 
     # Check if PG is ready
     pg_isready_args=("-U" "postgres" "-p" "$POSTGRESQL_PORT_NUMBER" "-h" "127.0.0.1")
@@ -106,11 +106,11 @@ data:
     set -o nounset
 
     # Load Libraries
-    . /opt/bitnami/scripts/libpostgresql.sh
-    . /opt/bitnami/scripts/librepmgr.sh
+    . /opt/nix-containers/scripts/libpostgresql.sh
+    . /opt/nix-containers/scripts/librepmgr.sh
 
     # Load PostgreSQL & repmgr environment variables
-    . /opt/bitnami/scripts/postgresql-env.sh
+    . /opt/nix-containers/scripts/postgresql-env.sh
 
     # We should not proceed if a standby clone is in progress
     if ps waux | grep "data standby clone" | grep -qv grep; then

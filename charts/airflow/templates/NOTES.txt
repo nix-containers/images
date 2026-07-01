@@ -3,8 +3,8 @@ CHART VERSION: {{ .Chart.Version }}
 APP VERSION: {{ .Chart.AppVersion }}
 
 ⚠ WARNING: Since August 28th, 2025, only a limited subset of images/charts are available for free.
-    Subscribe to Bitnami Secure Images to receive continued support and security updates.
-    More info at https://bitnami.com and https://github.com/bitnami/containers/issues/83267
+    Subscribe to nix-containers Secure Images to receive continued support and security updates.
+    More info at https://nix-containers.com and https://github.com/nix-containers/containers/issues/83267
 
 {{- $releaseNamespace := include "common.names.namespace" . }}
 {{- $clusterDomain := .Values.clusterDomain }}
@@ -31,7 +31,7 @@ Access the pod you want to debug by executing
 
 In order to replicate the container startup scripts execute this command:
 
-    /opt/bitnami/scripts/airflow/entrypoint.sh /opt/bitnami/scripts/airflow/run.sh
+    /opt/nix-containers/scripts/airflow/entrypoint.sh /opt/nix-containers/scripts/airflow/run.sh
 
 {{- else }}
 
@@ -65,7 +65,7 @@ host. To configure Airflow with the URL of your service:
     {{ include "common.utils.secret.getvalue" (dict "secret" $airflowSecretName "field" "airflow-password" "context" $) }}
     {{ include "common.utils.secret.getvalue" (dict "secret" $airflowSecretName "field" "airflow-fernet-key" "context" $) }}
     {{ include "common.utils.secret.getvalue" (dict "secret" $airflowSecretName "field" "airflow-secret-key" "context" $) }}
-    helm upgrade --namespace {{ $releaseNamespace }} {{ .Release.Name }} oci://registry-1.docker.io/bitnamicharts/{{ .Chart.Name }} \
+    helm upgrade --namespace {{ $releaseNamespace }} {{ .Release.Name }} oci://registry-1.docker.io/nix-containerscharts/{{ .Chart.Name }} \
       --set service.type={{ .Values.service.type }} \
       --set web.baseUrl=http://$AIRFLOW_HOST:$AIRFLOW_PORT \
       --set auth.password=$AIRFLOW_PASSWORD \

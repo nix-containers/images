@@ -85,8 +85,8 @@ spec:
           args:
             - -ec
             - |
-              . /opt/bitnami/scripts/airflow-env.sh
-              . /opt/bitnami/scripts/libairflow.sh
+              . /opt/nix-containers/scripts/airflow-env.sh
+              . /opt/nix-containers/scripts/libairflow.sh
 
               info "Trying to connect to the database server"
               airflow_wait_for_db_connection
@@ -120,7 +120,7 @@ spec:
               value: {{ .Values.auth.username }}
             {{- if .Values.usePasswordFiles }}
             - name: AIRFLOW_PASSWORD_FILE
-              value: "/opt/bitnami/airflow/secrets/airflow-password"
+              value: "/opt/nix-containers/airflow/secrets/airflow-password"
             {{- else }}
             - name: AIRFLOW_PASSWORD
               valueFrom:
@@ -147,20 +147,20 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/logs
+              mountPath: /opt/nix-containers/airflow/logs
               subPath: app-logs-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/airflow.db
+              mountPath: /opt/nix-containers/airflow/airflow.db
               subPath: app-base-dir/airflow.db
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/airflow.cfg
+              mountPath: /opt/nix-containers/airflow/airflow.cfg
               subPath: app-base-dir/airflow.cfg
             - name: empty-dir
-              mountPath: /opt/bitnami/airflow/config/airflow_local_settings.py
+              mountPath: /opt/nix-containers/airflow/config/airflow_local_settings.py
               subPath: app-conf-dir/airflow_local_settings.py
             {{- if  .Values.usePasswordFiles }}
             - name: airflow-secrets
-              mountPath: /opt/bitnami/airflow/secrets
+              mountPath: /opt/nix-containers/airflow/secrets
             {{- end }}
             {{- if .Values.setupDBJob.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.setupDBJob.extraVolumeMounts "context" $) | nindent 12 }}

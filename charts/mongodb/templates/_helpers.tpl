@@ -324,7 +324,7 @@ Init container definition to recover log dir.
   args:
     - -ec
     - |
-      ln -sf /dev/stdout "/opt/bitnami/mongodb/logs/mongodb.log"
+      ln -sf /dev/stdout "/opt/nix-containers/mongodb/logs/mongodb.log"
   {{- if .Values.containerSecurityContext.enabled }}
   securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.containerSecurityContext "context" $) | nindent 12 }}
   {{- end }}
@@ -335,7 +335,7 @@ Init container definition to recover log dir.
   {{- end }}
   volumeMounts:
     - name: empty-dir
-      mountPath: /opt/bitnami/mongodb/logs
+      mountPath: /opt/nix-containers/mongodb/logs
       subPath: app-logs-dir
 {{- end -}}
 

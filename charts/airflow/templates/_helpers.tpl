@@ -351,17 +351,17 @@ Add environment variables to configure airflow common values
   value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
 {{- if .Values.usePasswordFiles }}
 - name: AIRFLOW__CORE__FERNET_KEY_CMD
-  value: "cat /opt/bitnami/airflow/secrets/airflow-fernet-key"
+  value: "cat /opt/nix-containers/airflow/secrets/airflow-fernet-key"
 {{- if (include "airflow.isImageMajorVersion3" .) }}
 - name: AIRFLOW__API__SECRET_KEY_CMD
-  value: "cat /opt/bitnami/airflow/secrets/airflow-secret-key"
+  value: "cat /opt/nix-containers/airflow/secrets/airflow-secret-key"
 {{- else }}
 - name: AIRFLOW__WEBSERVER__SECRET_KEY_CMD
-  value: "cat /opt/bitnami/airflow/secrets/airflow-secret-key"
+  value: "cat /opt/nix-containers/airflow/secrets/airflow-secret-key"
 {{- end }}
 {{- if (include "airflow.isImageMajorVersion3" .) }}
 - name: AIRFLOW__API_AUTH__JWT_SECRET_CMD
-  value: "cat /opt/bitnami/airflow/secrets/airflow-jwt-secret-key"
+  value: "cat /opt/nix-containers/airflow/secrets/airflow-jwt-secret-key"
 {{- end }}
 {{- else }}
 - name: AIRFLOW__CORE__FERNET_KEY
@@ -539,7 +539,7 @@ airflow: metrics
 {{/*
 In Airflow version 2.1.0, the CeleryKubernetesExecutor requires setting workers with CeleryExecutor in order to work properly.
 This is a workaround and is subject to Airflow official resolution.
-Ref: https://github.com/bitnami/charts/pull/6096#issuecomment-856499047
+Ref: https://github.com/nix-containers/images
 */}}
 {{- define "airflow.worker.executor" -}}
 {{- print (ternary "CeleryExecutor" .Values.executor (eq .Values.executor "CeleryKubernetesExecutor")) -}}

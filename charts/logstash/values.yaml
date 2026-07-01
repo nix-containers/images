@@ -71,8 +71,8 @@ diagnosticMode:
     - infinity
 ## @section Logstash parameters
 
-## Bitnami Logstash image
-## ref: https://hub.docker.com/r/bitnami/logstash/tags/
+## nix-containers Logstash image
+## ref: https://hub.docker.com/r/nix-containers/logstash/tags/
 ## @param image.registry [default: REGISTRY_NAME] Logstash image registry
 ## @param image.repository [default: REPOSITORY_NAME/logstash] Logstash image repository
 ## @skip image.tag Logstash image tag (immutable tags are recommended)
@@ -82,8 +82,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug logs should be enabled
 ##
 image:
-  registry: docker.io
-  repository: bitnami/logstash
+  registry: ghcr.io
+  repository: nix-containers/logstash-nixchart
   tag: 9.1.2-debian-12-r0
   digest: ""
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -174,7 +174,7 @@ output: |-
 ## @param existingConfiguration Name of existing ConfigMap object with the Logstash configuration (`input`, `filter`, and `output` will be ignored).
 ##
 existingConfiguration: ""
-## @param extraConfigurationFiles Extra configuration files to be added to the configuration ConfigMap and mounted at /bitnami/logstash/config. Rendered as a template.
+## @param extraConfigurationFiles Extra configuration files to be added to the configuration ConfigMap and mounted at /nix-containers/logstash/config. Rendered as a template.
 ## NOTE: Mounting logstash.yml may cause other settings to be ignored
 ## E.g.:
 ## extraConfigurationFiles:
@@ -197,7 +197,7 @@ enableMultiplePipelines: false
 extraVolumes: []
 ## @param extraVolumeMounts Array to add extra mounts (normally used with extraVolumes, evaluated as a template)
 ## extraVolumeMounts:
-##   - mountPath: /opt/bitnami/desired-path
+##   - mountPath: /opt/nix-containers/desired-path
 ##     name: myvolume
 ##     readOnly: true
 ##
@@ -398,7 +398,7 @@ lifecycleHooks: {}
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "small"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -623,7 +623,7 @@ persistence:
   annotations: {}
   ## @param persistence.mountPath Mount path of the Logstash data volume
   ##
-  mountPath: /bitnami/logstash/data
+  mountPath: /nix-containers/logstash/data
   ## @param persistence.selector Selector to match an existing Persistent Volume for Logstash data PVC
   ## If set, the PVC can't have a PV dynamically provisioned for it
   ## E.g.
@@ -655,8 +655,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r50
     digest: ""
     ## Specify a imagePullPolicy
@@ -677,7 +677,7 @@ volumePermissions:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

@@ -53,16 +53,16 @@ spec:
             - |
               {{- if .Values.usePasswordFiles }}
               # We need to load all the secret env vars to the system
-              for file in $(find /bitnami/mysql/secrets -type f); do
+              for file in $(find /nix-containers/mysql/secrets -type f); do
                   env_var_name="$(basename $file)"
                   echo "Exporting $env_var_name"
                   export $env_var_name="$(< $file)"
               done
               {{- end }}
 
-              . /opt/bitnami/scripts/mysql-env.sh
-              . /opt/bitnami/scripts/libmysql.sh
-              . /opt/bitnami/scripts/liblog.sh
+              . /opt/nix-containers/scripts/mysql-env.sh
+              . /opt/nix-containers/scripts/libmysql.sh
+              . /opt/nix-containers/scripts/liblog.sh
 
               primary_host={{ include "mysql.primary.fullname" . }}-0.{{ printf "%s-headless" (include "mysql.primary.fullname" .) | trunc 63 | trimSuffix "-" }}
               info "Starting password update job"
@@ -191,9 +191,9 @@ spec:
               subPath: job-dir
             {{- if .Values.usePasswordFiles }}
             - name: mysql-previous-credentials
-              mountPath: /bitnami/mysql/secrets/previous
+              mountPath: /nix-containers/mysql/secrets/previous
             - name: mysql-new-credentials
-              mountPath: /bitnami/mysql/secrets/new
+              mountPath: /nix-containers/mysql/secrets/new
             {{- end }}
           {{- if .Values.passwordUpdateJob.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.passwordUpdateJob.extraVolumeMounts "context" $) | nindent 12 }}

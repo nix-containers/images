@@ -89,8 +89,8 @@ image:
   ## @param image.pullPolicy Container image pull policy
   ## @param image.pullSecrets Specify docker-registry secret names as an array
   ##
-  registry: docker.io
-  repository: bitnami/kubernetes-event-exporter
+  registry: ghcr.io
+  repository: nix-containers/kubernetes-event-exporter-nixchart
   tag: 1.7.0-debian-12-r46
   digest: ""
   ## Specify a imagePullPolicy
@@ -237,7 +237,7 @@ lifecycleHooks: {}
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "nano"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -516,7 +516,7 @@ metrics:
     ##
     labels: {}
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     selector: {}
     ## @param metrics.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping

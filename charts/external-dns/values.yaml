@@ -61,8 +61,8 @@ kubeVersion: ""
 ## @section external-dns parameters
 ##
 
-## Bitnami external-dns image version
-## ref: https://hub.docker.com/r/bitnami/external-dns/tags/
+## nix-containers external-dns image version
+## ref: https://hub.docker.com/r/nix-containers/external-dns/tags/
 ## @param image.registry [default: REGISTRY_NAME] ExternalDNS image registry
 ## @param image.repository [default: REPOSITORY_NAME/external-dns] ExternalDNS image repository
 ## @skip image.tag ExternalDNS Image tag (immutable tags are recommended)
@@ -71,8 +71,8 @@ kubeVersion: ""
 ## @param image.pullSecrets ExternalDNS image pull secrets
 ##
 image:
-  registry: docker.io
-  repository: bitnami/external-dns
+  registry: ghcr.io
+  repository: nix-containers/external-dns-nixchart
   tag: 0.18.0-debian-12-r4
   digest: ""
   ## Specify a imagePullPolicy
@@ -395,7 +395,7 @@ coredns:
     ## @param coredns.etcdTLS.secretName When using the CoreDNS provider, specify a name of existing Secret with etcd certs and keys
     ## ref: https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/security.md
     ## ref (secret creation):
-    ##  https://github.com/bitnami/charts/tree/main/bitnami/etcd#configure-certificates-for-client-communication
+    ##  https://github.com/nix-containers/images
     ##
     secretName: "etcd-client-certs"
     ## @param coredns.etcdTLS.mountPath When using the CoreDNS provider, set destination dir to mount data from `coredns.etcdTLS.secretName` to
@@ -717,9 +717,9 @@ txtNewFormatOnly: false
 txtOwnerId: ""
 ## @param forceTxtOwnerId (backward compatibility) When using the non-TXT registry, it will pass the value defined by `txtOwnerId` down to the application (optional)
 ## This setting added for backward compatibility for
-## customers who already used bitnami/external-dns helm chart
+## customers who already used nix-containers/external-dns helm chart
 ## to privision 'aws-sd' registry type.
-## Previously bitnami/external-dns helm chart did not pass
+## Previously nix-containers/external-dns helm chart did not pass
 ## txtOwnerId value down to the external-dns application
 ## so the app itself sets that value to be a string 'default'.
 ## If existing customers force the actual txtOwnerId value to be
@@ -1042,7 +1042,7 @@ podSecurityContext:
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "nano"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1154,7 +1154,7 @@ metrics:
     ##
     scrapeTimeout: ""
     ## @param metrics.serviceMonitor.selector Additional labels for ServiceMonitor object
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ## e.g:
     ## selector:
     ##   prometheus: my-prometheus

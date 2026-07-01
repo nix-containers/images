@@ -63,7 +63,7 @@ spec:
             {{- include "common.tplvalues.render" (dict "value" .Values.keycloakConfigCli.args "context" .) | nindent 12 }}
           {{- else }}
             - -jar
-            - /opt/bitnami/keycloak-config-cli/keycloak-config-cli.jar
+            - /opt/nix-containers/keycloak-config-cli/keycloak-config-cli.jar
           {{- end }}
           {{- if .Values.keycloakConfigCli.containerSecurityContext.enabled }}
           securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.keycloakConfigCli.containerSecurityContext "context" .) | nindent 12 }}

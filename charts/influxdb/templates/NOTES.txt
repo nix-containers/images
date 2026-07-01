@@ -3,8 +3,8 @@ CHART VERSION: {{ .Chart.Version }}
 APP VERSION: {{ .Chart.AppVersion }}
 
 ⚠ WARNING: Since August 28th, 2025, only a limited subset of images/charts are available for free.
-    Subscribe to Bitnami Secure Images to receive continued support and security updates.
-    More info at https://bitnami.com and https://github.com/bitnami/containers/issues/83267
+    Subscribe to nix-containers Secure Images to receive continued support and security updates.
+    More info at https://nix-containers.com and https://github.com/nix-containers/containers/issues/83267
 
 {{- if and (not .Values.auth.enabled) (or (contains .Values.service.type "NodePort") (contains .Values.service.type "LoadBalancer")) }}
 -------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ Access the pod you want to debug by executing
 
 In order to replicate the container startup scripts execute this command:
 
-    /opt/bitnami/scripts/influxdb/entrypoint.sh /opt/bitnami/scripts/influxdb/run.sh
+    /opt/nix-containers/scripts/influxdb/entrypoint.sh /opt/nix-containers/scripts/influxdb/run.sh
 
 {{- else }}
 
@@ -56,7 +56,7 @@ To get the admin token, run:
 
 No admin token was created, you can generate it running:
 
-    kubectl exec --namespace {{ include "common.names.namespace" . }} deploy/{{ include "common.names.fullname" . }} -- influxdb3 create token --admin --host http{{ if .Values.tls.enabled }}s{{ end }}://{{ include "common.names.fullname" . }}:{{ .Values.service.ports.http }} {{ if .Values.tls.enabled }}--tls-ca /opt/bitnami/influxdb/certs/ca/tls.crt{{ end }}
+    kubectl exec --namespace {{ include "common.names.namespace" . }} deploy/{{ include "common.names.fullname" . }} -- influxdb3 create token --admin --host http{{ if .Values.tls.enabled }}s{{ end }}://{{ include "common.names.fullname" . }}:{{ .Values.service.ports.http }} {{ if .Values.tls.enabled }}--tls-ca /opt/nix-containers/influxdb/certs/ca/tls.crt{{ end }}
 
 Please ensure you note it down!
 

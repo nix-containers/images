@@ -34,8 +34,8 @@ global:
       ##
       adaptSecurityContext: auto
 ## @section RabbitMQ Image parameters
-## Bitnami RabbitMQ image version
-## ref: https://hub.docker.com/r/bitnami/rabbitmq/tags/
+## nix-containers RabbitMQ image version
+## ref: https://hub.docker.com/r/nix-containers/rabbitmq/tags/
 ## @param image.registry [default: REGISTRY_NAME] RabbitMQ image registry
 ## @param image.repository [default: REPOSITORY_NAME/rabbitmq] RabbitMQ image repository
 ## @skip image.tag RabbitMQ image tag (immutable tags are recommended)
@@ -45,8 +45,8 @@ global:
 ## @param image.debug Set to true if you would like to see extra information on logs
 ##
 image:
-  registry: docker.io
-  repository: bitnami/rabbitmq
+  registry: ghcr.io
+  repository: nix-containers/rabbitmq-nixchart
   tag: 4.1.3-debian-12-r1
   digest: ""
   ## set to true if you would like to see extra information on logs
@@ -148,19 +148,19 @@ dnsConfig: {}
 ##
 auth:
   ## @param auth.username RabbitMQ application username
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/rabbitmq#environment-variables
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/rabbitmq#environment-variables
   ##
   username: user
   ## @param auth.password RabbitMQ application password
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/rabbitmq#environment-variables
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/rabbitmq#environment-variables
   ##
   password: ""
   ## @param auth.securePassword Whether to set the RabbitMQ password securely. This is incompatible with loading external RabbitMQ definitions and 'true' when not setting the auth.password parameter.
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/rabbitmq#environment-variables
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/rabbitmq#environment-variables
   ##
   securePassword: true
   ## @param auth.updatePassword Update RabbitMQ password on secret change
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/rabbitmq#environment-variables
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/rabbitmq#environment-variables
   ##
   updatePassword: false
   ## @param auth.existingPasswordSecret Existing secret with RabbitMQ credentials (existing secret must contain a value for `rabbitmq-password` key or override with setting auth.existingSecretPasswordKey)
@@ -176,7 +176,7 @@ auth:
   ##
   enableLoopbackUser: false
   ## @param auth.erlangCookie Erlang cookie to determine whether different nodes are allowed to communicate with each other
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/rabbitmq#environment-variables
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/rabbitmq#environment-variables
   ##
   erlangCookie: ""
   ## @param auth.existingErlangSecret Existing secret with RabbitMQ Erlang cookie (must contain a value for `rabbitmq-erlang-cookie` key or override with auth.existingSecretErlangKey)
@@ -226,13 +226,13 @@ auth:
 ##
 logs: "-"
 ## @param ulimitNofiles RabbitMQ Max File Descriptors
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/rabbitmq#environment-variables
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/rabbitmq#environment-variables
 ## ref: https://www.rabbitmq.com/install-debian.html#kernel-resource-limits
 ##
 ulimitNofiles: "65535"
 ## RabbitMQ maximum available scheduler threads and online scheduler threads. By default it will create a thread per CPU detected, with the following parameters you can tune it manually.
 ## ref: https://hamidreza-s.github.io/erlang/scheduling/real-time/preemptive/migration/2016/02/09/erlang-scheduler-details.html#scheduler-threads
-## ref: https://github.com/bitnami/charts/issues/2189
+## ref: https://github.com/nix-containers/images
 ## @param maxAvailableSchedulers RabbitMQ maximum available scheduler threads
 ## @param onlineSchedulers RabbitMQ online scheduler threads
 ##
@@ -462,9 +462,9 @@ configuration: |-
   ssl_options.verify = {{ .Values.auth.tls.sslOptionsVerify }}
   listeners.ssl.default = {{ .Values.service.ports.amqpTls }}
   ssl_options.fail_if_no_peer_cert = {{ .Values.auth.tls.failIfNoPeerCert }}
-  ssl_options.cacertfile = /opt/bitnami/rabbitmq/certs/ca_certificate.pem
-  ssl_options.certfile = /opt/bitnami/rabbitmq/certs/server_certificate.pem
-  ssl_options.keyfile = /opt/bitnami/rabbitmq/certs/server_key.pem
+  ssl_options.cacertfile = /opt/nix-containers/rabbitmq/certs/ca_certificate.pem
+  ssl_options.certfile = /opt/nix-containers/rabbitmq/certs/server_certificate.pem
+  ssl_options.keyfile = /opt/nix-containers/rabbitmq/certs/server_key.pem
   {{- if .Values.auth.tls.sslOptionsPassword.enabled }}
   ssl_options.password = {{ include "common.secrets.passwords.manage" (dict "secret" .Values.auth.tls.sslOptionsPassword.existingSecret "key" .Values.auth.tls.sslOptionsPassword.key "providedValues" (list "auth.tls.sslOptionsPassword.password") "skipB64enc" true "failOnNew" false "context" $) }}
   {{- end }}
@@ -639,7 +639,7 @@ ldap:
     startTls: false
     skipVerify: false
     verify: "verify_peer"
-    certificatesMountPath: /opt/bitnami/rabbitmq/ldap/certs
+    certificatesMountPath: /opt/nix-containers/rabbitmq/ldap/certs
     certificatesSecret: ""
     CAFilename: ""
     certFilename: ""
@@ -816,7 +816,7 @@ containerSecurityContext:
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "micro"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -996,7 +996,7 @@ persistence:
   ## @param persistence.mountPath The path the volume will be mounted at
   ## Note: useful when using custom RabbitMQ images
   ##
-  mountPath: /opt/bitnami/rabbitmq/.rabbitmq/mnesia
+  mountPath: /opt/nix-containers/rabbitmq/.rabbitmq/mnesia
   ## @param persistence.subPath The subdirectory of the volume to mount to
   ## Useful in dev environments and one PV for multiple services
   ##
@@ -1045,7 +1045,7 @@ service:
   ##
   distPortEnabled: true
   ## @param service.managerPortEnabled RabbitMQ Manager port
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/rabbitmq#environment-variables
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/rabbitmq#environment-variables
   ##
   managerPortEnabled: true
   ## @param service.epmdPortEnabled RabbitMQ EPMD Discovery service port
@@ -1384,7 +1384,7 @@ metrics:
     ##
     podTargetLabels: {}
     ## @param metrics.serviceMonitor.selector ServiceMonitor selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     ## selector:
     ##   prometheus: my-prometheus
@@ -1594,8 +1594,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r50
     digest: ""
     ## Specify a imagePullPolicy
@@ -1616,7 +1616,7 @@ volumePermissions:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

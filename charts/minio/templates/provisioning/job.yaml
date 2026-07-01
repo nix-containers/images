@@ -183,7 +183,7 @@ spec:
               {{- if gt (len .Values.provisioning.usersExistingSecrets) 0 }}
               while read -d '' configFile; do
                 addUsersFromFile "${configFile}";
-              done < <(find "/opt/bitnami/minio/users/" -type l -not -name '..data' -print0);
+              done < <(find "/opt/nix-containers/minio/users/" -type l -not -name '..data' -print0);
               {{- end }}
 
               {{- range $group := .Values.provisioning.groups }}
@@ -255,9 +255,9 @@ spec:
               value: {{ ternary "https" "http" .Values.tls.enabled | quote }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: MINIO_ROOT_USER_FILE
-              value: {{ printf "/opt/bitnami/minio/secrets/%s" (include "minio.rootUserKey" .) }}
+              value: {{ printf "/opt/nix-containers/minio/secrets/%s" (include "minio.rootUserKey" .) }}
             - name: MINIO_ROOT_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/minio/secrets/%s" (include "minio.rootPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/minio/secrets/%s" (include "minio.rootPasswordKey" .) }}
             {{- else }}
             - name: MINIO_ROOT_USER
               valueFrom:
@@ -293,7 +293,7 @@ spec:
               mountPath: /.mc
               subPath: app-mc-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/minio/tmp
+              mountPath: /opt/nix-containers/minio/tmp
               subPath: app-tmp-dir
             - name: empty-dir
               mountPath: /tmp
@@ -304,7 +304,7 @@ spec:
             {{- end }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: minio-credentials
-              mountPath: /opt/bitnami/minio/secrets/
+              mountPath: /opt/nix-containers/minio/secrets/
             {{- end }}
             {{- if .Values.tls.enabled }}
             - name: tls-certs
@@ -316,7 +316,7 @@ spec:
             {{- end }}
             {{- range $idx, $_ := .Values.provisioning.usersExistingSecrets }}
             - name: {{ printf "users-secret-%d" $idx }}
-              mountPath: /opt/bitnami/minio/users/{{ $idx }}/
+              mountPath: /opt/nix-containers/minio/users/{{ $idx }}/
             {{- end }}
             {{- if .Values.provisioning.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.provisioning.extraVolumeMounts "context" .) | nindent 12 }}

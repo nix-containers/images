@@ -2,25 +2,17 @@
 annotations:
   images: |
     - name: airflow
-      image: docker.io/bitnami/airflow:3.0.5-debian-12-r0
+      image: ghcr.io/nix-containers/airflow-nixchart:3.0.5-debian-12-r0
     - name: statsd-exporter
-      image: docker.io/bitnami/statsd-exporter:0.28.0-debian-12-r24
+      image: ghcr.io/nix-containers/prometheus-statsd-exporter-nixchart:0.28.0-debian-12-r24
   licenses: Apache-2.0
   tanzuCategory: service
 apiVersion: v2
 appVersion: 3.0.5
-- condition: redis.enabled
-  name: redis
-  repository: oci://registry-1.docker.io/bitnamicharts
-  version: 22.x.x
-- condition: postgresql.enabled
-  name: postgresql
-  repository: oci://registry-1.docker.io/bitnamicharts
-  version: 16.x.x
 description: Apache Airflow is a tool to express and execute workflows as directed
   acyclic graphs (DAGs). It includes utilities to schedule tasks, monitor task progress
   and handle task dependencies.
-home: https://bitnami.com
+home: https://nix-containers.com
 icon: https://dyltqmyl993wv.cloudfront.net/assets/stacks/airflow/img/airflow-stack-220x234.png
 keywords:
 - apache
@@ -28,9 +20,7 @@ keywords:
 - workflow
 - dag
 maintainers:
-- name: Broadcom, Inc. All Rights Reserved.
-  url: https://github.com/bitnami/charts
 name: airflow
 sources:
-- https://github.com/bitnami/charts/tree/main/bitnami/airflow
+- https://github.com/nix-containers/images
 version: 25.1.0

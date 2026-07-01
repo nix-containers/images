@@ -1,22 +1,22 @@
 <!--- app-name: Fluentd -->
 
-# Bitnami Secure Images Helm chart for Fluentd
+# nix-containers Secure Images Helm chart for Fluentd
 
 Fluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on.
 
 [Overview of Fluentd](https://www.fluentd.org)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by nix-containers. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/fluentd
+helm install my-release oci://registry-1.docker.io/nix-containerscharts/fluentd
 ```
 
-## Why use Bitnami Secure Images?
+## Why use nix-containers Secure Images?
 
-Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
+Those are hardened, minimal CVE images built and maintained by nix-containers. nix-containers Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
 
 - Hardened secure images of popular open source software with Near-Zero Vulnerabilities
 - Vulnerability Triage & Prioritization with VEX Statements, KEV and EPSS Scores
@@ -24,16 +24,16 @@ Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami 
 - Software supply chain provenance attestation through in-toto
 - First class support for the internet’s favorite Helm charts
 
-Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/bitnami/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://bitnami.com/).
+Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/nix-containers/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://nix-containers.com/).
 
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
 
-If you are looking for our previous generation of images based on Debian Linux, please see the [Bitnami Legacy registry](https://hub.docker.com/u/bitnamilegacy).
+If you are looking for our previous generation of images based on Debian Linux, please see the [nix-containers Legacy registry](https://hub.docker.com/u/nix-containerslegacy).
 
 ## Introduction
 
-This chart bootstraps a [Fluentd](https://github.com/bitnami/containers/tree/main/bitnami/fluentd) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [Fluentd](https://github.com/nix-containers/containers/tree/main/nix-containers/fluentd) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
@@ -51,7 +51,7 @@ To install the chart with the release name `my-release`:
 helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/fluentd
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 These commands deploy Fluentd on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -63,13 +63,13 @@ These commands deploy Fluentd on the Kubernetes cluster in the default configura
 
 these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
-To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the nix-containers/common chart](https://github.com/nix-containers/images However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
 ### [Rolling VS Immutable tags](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-understand-rolling-tags-containers-index.html)
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+nix-containers will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### Forwarding the logs to another service
 
@@ -139,7 +139,7 @@ data:
 
       <buffer>
         @type file
-        path /opt/bitnami/fluentd/logs/buffers/logs.buffer
+        path /opt/nix-containers/fluentd/logs/buffers/logs.buffer
         flush_thread_count 2
         flush_interval 5s
       </buffer>
@@ -162,7 +162,7 @@ This chart can be integrated with Prometheus by setting `metrics.enabled` to `tr
 
 #### Prometheus requirements
 
-It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [Bitnami Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/prometheus) or the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) to easily have a working Prometheus in your cluster.
+It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [nix-containers Prometheus helm chart](https://github.com/nix-containers/images or the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images to easily have a working Prometheus in your cluster.
 
 #### Integration with Prometheus Operator
 
@@ -172,7 +172,7 @@ The chart can deploy `ServiceMonitor` objects for integration with Prometheus Op
 no matches for kind "ServiceMonitor" in version "monitoring.coreos.com/v1"
 ```
 
-Install the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) for having the necessary CRDs and the Prometheus Operator.
+Install the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images for having the necessary CRDs and the Prometheus Operator.
 
 ### Backup and restore
 
@@ -189,7 +189,7 @@ initScriptsSecret=special-scripts-sensitive
 
 ### Forwarder Security Context & Policy
 
-By default, the **forwarder** `DaemonSet` from this chart **runs as the `root` user**, within the `root` group, assigning `root` file system permissions. This is different to the default behaviour of most Bitnami Helm charts where we [prefer to work with non-root containers](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-work-with-non-root-containers-index.html).
+By default, the **forwarder** `DaemonSet` from this chart **runs as the `root` user**, within the `root` group, assigning `root` file system permissions. This is different to the default behaviour of most nix-containers Helm charts where we [prefer to work with non-root containers](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-work-with-non-root-containers-index.html).
 
 The default behaviour is to run as `root` because:
 
@@ -197,9 +197,9 @@ The default behaviour is to run as `root` because:
 - in many Kubernetes node distributions, these log files are not readable by anyone other than `root`
 - `fsGroup` doesn't work with `hostPath` volumes to allow the process to run non-root with alternate file system permissions
 
-Since we would like the chart to work out-of-the-box for as many users as possible, the `forwarder` thus runs as root by default. You can read more about the motivation for this at [#1905](https://github.com/bitnami/charts/issues/1905) and [#2323](https://github.com/bitnami/charts/pull/2323), however you should be aware of this, and the risks of running root containers in general.
+Since we would like the chart to work out-of-the-box for as many users as possible, the `forwarder` thus runs as root by default. You can read more about the motivation for this at [#1905](https://github.com/nix-containers/images and [#2323](https://github.com/nix-containers/images however you should be aware of this, and the risks of running root containers in general.
 
-If you enable the forwarder's [bundled PodSecurityPolicy](https://github.com/bitnami/charts/tree/main/bitnami/fluentd/templates/forwarder-psp.yaml) with `forwarder.rbac.pspEnabled=true` it will allow the pod to run as `root` by default, while ensuring as many other privileges as possible are dropped.
+If you enable the forwarder's [bundled PodSecurityPolicy](https://github.com/nix-containers/images with `forwarder.rbac.pspEnabled=true` it will allow the pod to run as `root` by default, while ensuring as many other privileges as possible are dropped.
 
 #### Running as non-root
 
@@ -208,7 +208,7 @@ You can run as the `fluentd` user/group (non-root) with the below overrides if:
 - you have control of the `hostPath` filesystem permissions on your nodes sufficient to allow the fluentd user to read from them
 - don't need to write to the `hostPath`s
 
-Note that if you have enabled the [bundled PodSecurityPolicy](https://github.com/bitnami/charts/tree/main/bitnami/fluentd/templates/forwarder-psp.yaml), it will adapt to the Chart values overrides.
+Note that if you have enabled the [bundled PodSecurityPolicy](https://github.com/nix-containers/images it will adapt to the Chart values overrides.
 
 ```yaml
 forwarder:
@@ -223,13 +223,13 @@ forwarder:
 
 #### Pod Security Policy & Custom `hostPath`s
 
-Mounting additional `hostPath`s is sometimes required to deal with `/var/lib` being symlinked on some Kubernetes environments. If you need to do so, the [bundled PodSecurityPolicy](https://github.com/bitnami/charts/tree/main/bitnami/fluentd/templates/forwarder-psp.yaml) will likely not meet your needs, as it whitelists only the standard `hostPath`s.
+Mounting additional `hostPath`s is sometimes required to deal with `/var/lib` being symlinked on some Kubernetes environments. If you need to do so, the [bundled PodSecurityPolicy](https://github.com/nix-containers/images will likely not meet your needs, as it whitelists only the standard `hostPath`s.
 
 ### Setting Pod's affinity
 
 This chart allows you to set your custom affinity using the `XXX.affinity` parameter(s). Find more information about Pod's affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/main/bitnami/common#affinities) chart. To do so, set the `XXX.podAffinityPreset`, `XXX.podAntiAffinityPreset`, or `XXX.nodeAffinityPreset` parameters.
+As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [nix-containers/common](https://github.com/nix-containers/images chart. To do so, set the `XXX.podAffinityPreset`, `XXX.podAntiAffinityPreset`, or `XXX.nodeAffinityPreset` parameters.
 
 ### Securing traffic using TLS
 
@@ -299,7 +299,7 @@ TLS for the Fluentd can be enabled by setting `tls.enabled=true`. The chart allo
 | `forwarder.dnsPolicy`                                          | Pod-specific DNS policy                                                                                                                                                                                                                 | `""`                                                       |
 | `forwarder.terminationGracePeriodSeconds`                      | Duration in seconds the pod needs to terminate gracefully                                                                                                                                                                               | `30`                                                       |
 | `forwarder.extraGems`                                          | List of extra gems to be installed. Can be used to install additional fluentd plugins.                                                                                                                                                  | `[]`                                                       |
-| `forwarder.configFile`                                         | Name of the config file that will be used by Fluentd at launch under the `/opt/bitnami/fluentd/conf` directory                                                                                                                          | `fluentd.conf`                                             |
+| `forwarder.configFile`                                         | Name of the config file that will be used by Fluentd at launch under the `/opt/nix-containers/fluentd/conf` directory                                                                                                                          | `fluentd.conf`                                             |
 | `forwarder.configMap`                                          | Name of the config map that contains the Fluentd configuration files                                                                                                                                                                    | `""`                                                       |
 | `forwarder.configMapFiles`                                     | Files to be added to be config map. Ignored if `forwarder.configMap` is set                                                                                                                                                             | `{}`                                                       |
 | `forwarder.extraArgs`                                          | Extra arguments for the Fluentd command line                                                                                                                                                                                            | `""`                                                       |
@@ -375,7 +375,7 @@ TLS for the Fluentd can be enabled by setting `tls.enabled=true`. The chart allo
 | `forwarder.rbac.create`                                        | Specify whether RBAC resources should be created and used, allowing the get, watch and list of pods/namespaces                                                                                                                          | `true`                                                     |
 | `forwarder.rbac.pspEnabled`                                    | Whether to create a PodSecurityPolicy and bound it with RBAC. WARNING: PodSecurityPolicy is deprecated in Kubernetes v1.21 or later, unavailable in v1.25 or later                                                                      | `false`                                                    |
 | `forwarder.persistence.enabled`                                | Enable persistence volume for the forwarder                                                                                                                                                                                             | `false`                                                    |
-| `forwarder.persistence.hostPath.path`                          | Directory from the host node's filesystem to mount as hostPath volume for persistence.                                                                                                                                                  | `/opt/bitnami/fluentd/logs/buffers`                        |
+| `forwarder.persistence.hostPath.path`                          | Directory from the host node's filesystem to mount as hostPath volume for persistence.                                                                                                                                                  | `/opt/nix-containers/fluentd/logs/buffers`                        |
 | `forwarder.command`                                            | Override default container command (useful when using custom images)                                                                                                                                                                    | `[]`                                                       |
 | `forwarder.args`                                               | Override default container args (useful when using custom images)                                                                                                                                                                       | `[]`                                                       |
 | `forwarder.lifecycleHooks`                                     | Additional lifecycles to add to the pods                                                                                                                                                                                                | `{}`                                                       |
@@ -408,7 +408,7 @@ TLS for the Fluentd can be enabled by setting `tls.enabled=true`. The chart allo
 | `aggregator.containerSecurityContext.seccompProfile.type`      | Set container's Security Context seccomp profile                                                                                                                                                                                        | `RuntimeDefault`                                           |
 | `aggregator.terminationGracePeriodSeconds`                     | Duration in seconds the pod needs to terminate gracefully                                                                                                                                                                               | `30`                                                       |
 | `aggregator.extraGems`                                         | List of extra gems to be installed. Can be used to install additional fluentd plugins.                                                                                                                                                  | `[]`                                                       |
-| `aggregator.configFile`                                        | Name of the config file that will be used by Fluentd at launch under the `/opt/bitnami/fluentd/conf` directory                                                                                                                          | `fluentd.conf`                                             |
+| `aggregator.configFile`                                        | Name of the config file that will be used by Fluentd at launch under the `/opt/nix-containers/fluentd/conf` directory                                                                                                                          | `fluentd.conf`                                             |
 | `aggregator.configMap`                                         | Name of the config map that contains the Fluentd configuration files                                                                                                                                                                    | `""`                                                       |
 | `aggregator.configMapFiles`                                    | Files to be added to be config map. Ignored if `aggregator.configMap` is set                                                                                                                                                            | `{}`                                                       |
 | `aggregator.port`                                              | Port the Aggregator container will listen for logs. Leave it blank to ignore.                                                                                                                                                           | `24224`                                                    |
@@ -558,7 +558,7 @@ helm install my-release \
   --set aggregator.port=24444 oci://REGISTRY_NAME/REPOSITORY_NAME/fluentd
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The above command sets the aggregators to listen on port 24444.
 
@@ -568,18 +568,18 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 helm install my-release -f values.yaml oci://REGISTRY_NAME/REPOSITORY_NAME/fluentd
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
-> **Tip**: You can use the default [values.yaml](https://github.com/bitnami/charts/tree/main/bitnami/fluentd/values.yaml)
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
+> **Tip**: You can use the default [values.yaml](https://github.com/nix-containers/images
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to nix-containers's Helm charts in [this troubleshooting guide](https://docs.nix-containers.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
 ### To 7.1.0
 
-This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/bitnami/charts/issues/30850).
+This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/nix-containers/images
 
 ### To 7.0.0
 
@@ -619,7 +619,7 @@ The new `tls.*` settings will now configure SSL/TLS certificates for the out_for
 
 ### To 3.1.0
 
-This version also introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/main/bitnami/common#common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
+This version also introduces `nix-containers/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/nix-containers/images Please, make sure that you have updated the chart dependencies before executing any upgrade.
 
 ### To 3.0.0
 
@@ -674,7 +674,7 @@ forwarder:
 
 ### To 1.0.0
 
-In this version of the chart the Fluentd forwarder daemon system user will be root by default. This is done to ensure that mounted host paths are readable by the forwarder. For more context, check this [support case](https://github.com/bitnami/charts/issues/1905).
+In this version of the chart the Fluentd forwarder daemon system user will be root by default. This is done to ensure that mounted host paths are readable by the forwarder. For more context, check this [support case](https://github.com/nix-containers/images
 
 No issues are expected in the upgrade process. However, please ensure that you add extra security measures in your cluster as you will be running root containers. If you want the daemon to be run as a user different from root, you can change the `forwarder.daemonUser` and `forwarder.daemonGroup` values. In this case make sure that the user you choose has sufficient permissions to read log files under `/var/lib/docker/containers` directory.
 

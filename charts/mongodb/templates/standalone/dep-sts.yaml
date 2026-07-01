@@ -38,7 +38,7 @@ spec:
         checksum/configuration: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end }}
         {{- if .Values.passwordUpdateJob.enabled }}
-        charts.bitnami.com/password-last-update: {{ now | date "20060102150405" | quote }}
+        charts.nix-containers.com/password-last-update: {{ now | date "20060102150405" | quote }}
         {{- end }}
         {{- if .Values.podAnnotations }}
         {{- include "common.tplvalues.render" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
@@ -116,9 +116,9 @@ spec:
             - name: certs
               mountPath: /certs
             - name: common-scripts
-              mountPath: /bitnami/scripts
+              mountPath: /nix-containers/scripts
           command:
-            - /bitnami/scripts/generate-certs.sh
+            - /nix-containers/scripts/generate-certs.sh
           args:
             - -s {{ include "mongodb.service.nameOverride" . }}
             {{- if .Values.externalAccess.service.loadBalancerIPs }}
@@ -173,7 +173,7 @@ spec:
             {{- if and (not (empty $customUsers)) (not (empty $customDatabases)) }}
             {{- if .Values.usePasswordFiles }}
             - name: MONGODB_EXTRA_PASSWORDS_FILE
-              value: "/opt/bitnami/mongodb/secrets/mongodb-passwords"
+              value: "/opt/nix-containers/mongodb/secrets/mongodb-passwords"
             {{- else }}
             - name: MONGODB_EXTRA_PASSWORDS
               valueFrom:
@@ -186,7 +186,7 @@ spec:
               value: {{ .Values.auth.rootUser | quote }}
             {{- if .Values.usePasswordFiles }}
             - name: MONGODB_ROOT_PASSWORD_FILE
-              value: "/opt/bitnami/mongodb/secrets/mongodb-root-password"
+              value: "/opt/nix-containers/mongodb/secrets/mongodb-root-password"
             {{- else }}
             - name: MONGODB_ROOT_PASSWORD
               valueFrom:
@@ -201,7 +201,7 @@ spec:
             {{- if .Values.auth.enabled }}
             {{- if .Values.usePasswordFiles }}
             - name: MONGODB_METRICS_PASSWORD_FILE
-              value: "/opt/bitnami/mongodb/secrets/mongodb-metrics-password"
+              value: "/opt/nix-containers/mongodb/secrets/mongodb-metrics-password"
             {{- else }}
             - name: MONGODB_METRICS_PASSWORD
               valueFrom:
@@ -266,7 +266,7 @@ spec:
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
-                - /bitnami/scripts/ping-mongodb.sh
+                - /nix-containers/scripts/ping-mongodb.sh
           {{- end }}
           {{- end }}
           {{- if not .Values.diagnosticMode.enabled }}
@@ -276,7 +276,7 @@ spec:
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
-                - /bitnami/scripts/readiness-probe.sh
+                - /nix-containers/scripts/readiness-probe.sh
           {{- end }}
           {{- end }}
           {{- if not .Values.diagnosticMode.enabled }}
@@ -286,7 +286,7 @@ spec:
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.startupProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
-                - /bitnami/scripts/startup-probe.sh
+                - /nix-containers/scripts/startup-probe.sh
           {{- end }}
           {{- end }}
           {{- if .Values.resources }}
@@ -299,13 +299,13 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/mongodb/conf
+              mountPath: /opt/nix-containers/mongodb/conf
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/mongodb/tmp
+              mountPath: /opt/nix-containers/mongodb/tmp
               subPath: app-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/mongodb/logs
+              mountPath: /opt/nix-containers/mongodb/logs
               subPath: app-logs-dir
             - name: empty-dir
               mountPath: /.mongodb
@@ -314,10 +314,10 @@ spec:
               mountPath: {{ .Values.persistence.mountPath }}
               subPath: {{ .Values.persistence.subPath }}
             - name: common-scripts
-              mountPath: /bitnami/scripts
+              mountPath: /nix-containers/scripts
             {{- if and .Values.usePasswordFiles .Values.auth.enabled }}
             - name: mongodb-secrets
-              mountPath: /opt/bitnami/mongodb/secrets
+              mountPath: /opt/nix-containers/mongodb/secrets
             {{- end }}
             {{- if or .Values.initdbScriptsConfigMap .Values.initdbScripts }}
             - name: custom-init-scripts
@@ -325,7 +325,7 @@ spec:
             {{- end }}
             {{- if or .Values.configuration .Values.existingConfigmap }}
             - name: config
-              mountPath: /opt/bitnami/mongodb/conf/mongodb.conf
+              mountPath: /opt/nix-containers/mongodb/conf/mongodb.conf
               subPath: mongodb.conf
             {{- end }}
             {{- if .Values.tls.enabled }}
@@ -374,7 +374,7 @@ spec:
               value: {{ .Values.auth.rootUser | quote }}
             {{- if .Values.usePasswordFiles }}
             - name: MONGODB_ROOT_PASSWORD_FILE
-              value: "/opt/bitnami/mongodb/secrets/mongodb-root-password"
+              value: "/opt/nix-containers/mongodb/secrets/mongodb-root-password"
             {{- else }}
             - name: MONGODB_ROOT_PASSWORD
               valueFrom:
@@ -387,7 +387,7 @@ spec:
               value: {{ .Values.metrics.username | quote }}
             {{- if .Values.usePasswordFiles }}
             - name: MONGODB_METRICS_PASSWORD_FILE
-              value: "/opt/bitnami/mongodb/secrets/mongodb-metrics-password"
+              value: "/opt/nix-containers/mongodb/secrets/mongodb-metrics-password"
             {{- else }}
             - name: MONGODB_METRICS_PASSWORD
               valueFrom:
@@ -403,7 +403,7 @@ spec:
               subPath: tmp-dir
             {{- if and .Values.usePasswordFiles .Values.auth.enabled }}
             - name: mongodb-secrets
-              mountPath: /opt/bitnami/mongodb/secrets
+              mountPath: /opt/nix-containers/mongodb/secrets
             {{- end }}
             {{- if .Values.tls.enabled }}
             - name: certs

@@ -70,8 +70,8 @@ diagnosticMode:
     - infinity
 ## @section Metrics Server parameters
 
-## Bitnami Metrics Server image version
-## ref: https://hub.docker.com/r/bitnami/metrics-server/tags/
+## nix-containers Metrics Server image version
+## ref: https://hub.docker.com/r/nix-containers/metrics-server/tags/
 ## @param image.registry [default: REGISTRY_NAME] Metrics Server image registry
 ## @param image.repository [default: REPOSITORY_NAME/metrics-server] Metrics Server image repository
 ## @skip image.tag Metrics Server image tag (immutable tags are recommended)
@@ -80,8 +80,8 @@ diagnosticMode:
 ## @param image.pullSecrets Metrics Server image pull secrets
 ##
 image:
-  registry: docker.io
-  repository: bitnami/metrics-server
+  registry: ghcr.io
+  repository: nix-containers/metrics-server-nixchart
   tag: 0.8.0-debian-12-r4
   digest: ""
   ## Specify a imagePullPolicy
@@ -419,7 +419,7 @@ networkPolicy:
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "nano"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

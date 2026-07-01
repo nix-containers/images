@@ -128,9 +128,9 @@ spec:
               value: {{ ternary "yes" "no" .Values.auth.forceNewKeys | quote }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: MINIO_ROOT_USER_FILE
-              value: {{ printf "/opt/bitnami/minio/secrets/%s" (include "minio.rootUserKey" .) }}
+              value: {{ printf "/opt/nix-containers/minio/secrets/%s" (include "minio.rootUserKey" .) }}
             - name: MINIO_ROOT_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/minio/secrets/%s" (include "minio.rootPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/minio/secrets/%s" (include "minio.rootPasswordKey" .) }}
             {{- else }}
             - name: MINIO_ROOT_USER
               valueFrom:
@@ -225,14 +225,14 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/minio/tmp
+              mountPath: /opt/nix-containers/minio/tmp
               subPath: app-tmp-dir
             - name: empty-dir
               mountPath: /.mc
               subPath: app-mc-dir
             {{- if and .Values.auth.useSecret .Values.auth.usePasswordFiles }}
             - name: minio-credentials
-              mountPath: /opt/bitnami/minio/secrets/
+              mountPath: /opt/nix-containers/minio/secrets/
             {{- end }}
             {{- if .Values.tls.enabled }}
             - name: tls-certs

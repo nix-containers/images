@@ -71,8 +71,8 @@ diagnosticMode:
     - infinity
 ## @section NGINX parameters
 
-## Bitnami NGINX image version
-## ref: https://hub.docker.com/r/bitnami/nginx/tags/
+## nix-containers NGINX image version
+## ref: https://hub.docker.com/r/nix-containers/nginx/tags/
 ## @param image.registry [default: REGISTRY_NAME] NGINX image registry
 ## @param image.repository [default: REPOSITORY_NAME/nginx] NGINX image repository
 ## @skip image.tag NGINX image tag (immutable tags are recommended)
@@ -82,8 +82,8 @@ diagnosticMode:
 ## @param image.debug Set to true if you would like to see extra information on logs
 ##
 image:
-  registry: docker.io
-  repository: bitnami/nginx
+  registry: ghcr.io
+  repository: nix-containers/nginx-nixchart
   tag: 1.29.1-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
@@ -334,7 +334,7 @@ extraContainerPorts: []
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "nano"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -502,8 +502,8 @@ cloneStaticSiteFromGit:
   ## @param cloneStaticSiteFromGit.enabled Get the server static content from a Git repository
   ##
   enabled: false
-  ## Bitnami Git image version
-  ## ref: https://hub.docker.com/r/bitnami/git/tags/
+  ## nix-containers Git image version
+  ## ref: https://hub.docker.com/r/nix-containers/git/tags/
   ## @param cloneStaticSiteFromGit.image.registry [default: REGISTRY_NAME] Git image registry
   ## @param cloneStaticSiteFromGit.image.repository [default: REPOSITORY_NAME/git] Git image repository
   ## @skip cloneStaticSiteFromGit.image.tag Git image tag (immutable tags are recommended)
@@ -512,8 +512,8 @@ cloneStaticSiteFromGit:
   ## @param cloneStaticSiteFromGit.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnami/git
+    registry: ghcr.io
+    repository: nix-containers/git-nixchart
     tag: 2.51.0-debian-12-r0
     digest: ""
     ## Specify a imagePullPolicy
@@ -558,7 +558,7 @@ cloneStaticSiteFromGit:
     ## git-repo-syncer resource requests and limits
     ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param cloneStaticSiteFromGit.gitSync.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if cloneStaticSiteFromGit.gitSync.resources is set (cloneStaticSiteFromGit.gitSync.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param cloneStaticSiteFromGit.gitSync.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -627,7 +627,7 @@ existingStreamServerBlockConfigmap: ""
 ## e.g:
 ## contextIncludes:
 ##   main: |
-##     load_module /opt/bitnami/nginx/modules/ngx_http_dav_module.so;
+##     load_module /opt/nix-containers/nginx/modules/ngx_http_dav_module.so;
 ##
 contextIncludes:
   ## @param contextIncludes.main Custom configuration for the main context
@@ -975,8 +975,8 @@ metrics:
   ## @param metrics.enabled Start a Prometheus exporter sidecar container
   ##
   enabled: false
-  ## Bitnami NGINX Prometheus Exporter image
-  ## ref: https://hub.docker.com/r/bitnami/nginx-exporter/tags/
+  ## nix-containers NGINX Prometheus Exporter image
+  ## ref: https://hub.docker.com/r/nix-containers/nginx-exporter/tags/
   ## @param metrics.image.registry [default: REGISTRY_NAME] NGINX Prometheus exporter image registry
   ## @param metrics.image.repository [default: REPOSITORY_NAME/nginx-exporter] NGINX Prometheus exporter image repository
   ## @skip metrics.image.tag NGINX Prometheus exporter image tag (immutable tags are recommended)
@@ -985,8 +985,8 @@ metrics:
   ## @param metrics.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnami/nginx-exporter
+    registry: ghcr.io
+    repository: nix-containers/nginx-prometheus-exporter-nixchart
     tag: 1.4.2-debian-12-r9
     digest: ""
     pullPolicy: IfNotPresent
@@ -1045,7 +1045,7 @@ metrics:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param metrics.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.resources is set (metrics.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param metrics.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1087,7 +1087,7 @@ metrics:
     ##
     scrapeTimeout: ""
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     ## selector:
     ##   prometheus: my-prometheus

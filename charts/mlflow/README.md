@@ -1,22 +1,22 @@
 <!--- app-name: MLflow -->
 
-# Bitnami Secure Images Helm chart for MLflow
+# nix-containers Secure Images Helm chart for MLflow
 
 MLflow is an open-source platform designed to manage the end-to-end machine learning lifecycle. It allows you to track experiments, package code into reproducible runs, and share and deploy models.
 
 [Overview of MLflow](https://mlflow.org/)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by nix-containers. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/mlflow
+helm install my-release oci://registry-1.docker.io/nix-containerscharts/mlflow
 ```
 
-## Why use Bitnami Secure Images?
+## Why use nix-containers Secure Images?
 
-Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
+Those are hardened, minimal CVE images built and maintained by nix-containers. nix-containers Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
 
 - Hardened secure images of popular open source software with Near-Zero Vulnerabilities
 - Vulnerability Triage & Prioritization with VEX Statements, KEV and EPSS Scores
@@ -24,16 +24,16 @@ Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami 
 - Software supply chain provenance attestation through in-toto
 - First class support for the internet’s favorite Helm charts
 
-Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/bitnami/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://bitnami.com/).
+Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/nix-containers/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://nix-containers.com/).
 
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
 
-If you are looking for our previous generation of images based on Debian Linux, please see the [Bitnami Legacy registry](https://hub.docker.com/u/bitnamilegacy).
+If you are looking for our previous generation of images based on Debian Linux, please see the [nix-containers Legacy registry](https://hub.docker.com/u/nix-containerslegacy).
 
 ## Introduction
 
-This chart bootstraps a [MLflow](https://github.com/bitnami/containers/tree/main/bitnami/mlflow) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [MLflow](https://github.com/nix-containers/containers/tree/main/nix-containers/mlflow) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 Python is built for full integration into Python that enables you to use it with its libraries and main packages.
 
@@ -52,7 +52,7 @@ To install the chart with the release name `my-release`:
 helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/mlflow
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The command deploys mlflow on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -64,7 +64,7 @@ The command deploys mlflow on the Kubernetes cluster in the default configuratio
 
 these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
-To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the nix-containers/common chart](https://github.com/nix-containers/images However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
 ### Prometheus metrics
 
@@ -72,7 +72,7 @@ This chart can be integrated with Prometheus by setting `tracking.metrics.enable
 
 #### Prometheus requirements
 
-It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [Bitnami Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/prometheus) or the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) to easily have a working Prometheus in your cluster.
+It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [nix-containers Prometheus helm chart](https://github.com/nix-containers/images or the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images to easily have a working Prometheus in your cluster.
 
 #### Integration with Prometheus Operator
 
@@ -82,7 +82,7 @@ The chart can deploy `ServiceMonitor` objects for integration with Prometheus Op
 no matches for kind "ServiceMonitor" in version "monitoring.coreos.com/v1"
 ```
 
-Install the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) for having the necessary CRDs and the Prometheus Operator.
+Install the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images for having the necessary CRDs and the Prometheus Operator.
 
 ### Securing traffic using TLS
 
@@ -298,7 +298,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 | Name                                               | Description                                                                                             | Value               |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------- |
 | `tracking.persistence.enabled`                     | Enable persistence using Persistent Volume Claims                                                       | `true`              |
-| `tracking.persistence.mountPath`                   | Path to mount the volume at.                                                                            | `/bitnami/mlflow`   |
+| `tracking.persistence.mountPath`                   | Path to mount the volume at.                                                                            | `/nix-containers/mlflow`   |
 | `tracking.persistence.subPath`                     | The subdirectory of the volume to mount to, useful in dev environments and one PV for multiple services | `""`                |
 | `tracking.persistence.storageClass`                | Storage class of backing PVC                                                                            | `""`                |
 | `tracking.persistence.labels`                      | Persistent Volume labels                                                                                | `{}`                |
@@ -424,7 +424,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 | `run.persistence.enabled`       | Use a PVC to persist data                                            | `false`                |
 | `run.persistence.storageClass`  | discourse & sidekiq data Persistent Volume Storage Class             | `""`                   |
 | `run.persistence.existingClaim` | Use a existing PVC which must be created manually before bound       | `""`                   |
-| `run.persistence.mountPath`     | Path to mount the volume at                                          | `/bitnami/mlflow/data` |
+| `run.persistence.mountPath`     | Path to mount the volume at                                          | `/nix-containers/mlflow/data` |
 | `run.persistence.subPath`       | subPath to use for mounting the volume                               | `""`                   |
 | `run.persistence.accessModes`   | Persistent Volume Access Mode                                        | `["ReadWriteOnce"]`    |
 | `run.persistence.dataSource`    | Custom PVC data source                                               | `{}`                   |
@@ -470,7 +470,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 | `postgresql.enabled`                          | Switch to enable or disable the PostgreSQL helm chart     | `true`           |
 | `postgresql.auth.username`                    | Name for a custom user to create                          | `bn_mlflow`      |
 | `postgresql.auth.password`                    | Password for the custom user to create                    | `""`             |
-| `postgresql.auth.database`                    | Name for a custom database to create                      | `bitnami_mlflow` |
+| `postgresql.auth.database`                    | Name for a custom database to create                      | `nix-containers_mlflow` |
 | `postgresql.auth.existingSecret`              | Name of existing secret to use for PostgreSQL credentials | `""`             |
 | `postgresql.architecture`                     | PostgreSQL architecture (`standalone` or `replication`)   | `standalone`     |
 | `postgresql.primary.service.ports.postgresql` | PostgreSQL service port                                   | `5432`           |
@@ -494,7 +494,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 
 | Name                               | Description                                                                                                                       | Value                                               |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `minio`                            | For full list of MinIO&reg; values configurations please refere [here](https://github.com/bitnami/charts/tree/main/bitnami/minio) |                                                     |
+| `minio`                            | For full list of MinIO&reg; values configurations please refere [here](https://github.com/nix-containers/images |                                                     |
 | `minio.enabled`                    | Enable/disable MinIO&reg; chart installation                                                                                      | `true`                                              |
 | `minio.auth.rootUser`              | MinIO&reg; root username                                                                                                          | `admin`                                             |
 | `minio.auth.rootPassword`          | Password for MinIO&reg; root user                                                                                                 | `""`                                                |
@@ -575,21 +575,21 @@ run.source.git.revision=master
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to nix-containers's Helm charts in [this troubleshooting guide](https://docs.nix-containers.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
 ### To 4.0.0
 
-This major updates the `minio` subchart to its newest major, 17.0.0. For more information on this subchart's major, please refer to [minio upgrade notes](https://github.com/bitnami/charts/tree/main/bitnami/minio#to-1700).
+This major updates the `minio` subchart to its newest major, 17.0.0. For more information on this subchart's major, please refer to [minio upgrade notes](https://github.com/nix-containers/images
 
 ### To 3.0.0
 
-This major updates the `minio` subchart to its newest major, 16.0.0. For more information on this subchart's major, please refer to [minio upgrade notes](https://github.com/bitnami/charts/tree/main/bitnami/minio#to-1600).
+This major updates the `minio` subchart to its newest major, 16.0.0. For more information on this subchart's major, please refer to [minio upgrade notes](https://github.com/nix-containers/images
 
 ### To 2.3.0
 
-This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/bitnami/charts/issues/30850).
+This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/nix-containers/images
 
 ### To 2.0.0
 

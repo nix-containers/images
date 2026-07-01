@@ -87,17 +87,17 @@ spec:
           args:
             - --http-address=0.0.0.0:{{ .Values.containerPort }}
             {{- if or .Values.configuration.existingConfigmap .Values.configuration.content }}
-            - --config=/bitnami/oauth2-proxy/conf/oauth2_proxy.cfg
+            - --config=/nix-containers/oauth2-proxy/conf/oauth2_proxy.cfg
             {{- end }}
             {{- if .Values.configuration.authenticatedEmailsFile.enabled }}
-            - --authenticated-emails-file=/bitnami/oauth2-proxy/conf/authenticated-emails/authenticated-emails-list
+            - --authenticated-emails-file=/nix-containers/oauth2-proxy/conf/authenticated-emails/authenticated-emails-list
             {{- end }}
             {{- if .Values.configuration.google.enabled }}
             - --google-admin-email={{ .Values.configuration.google.adminEmail }}
             {{- if .Values.configuration.google.useApplicationDefaultCredentials }}
             - --google-use-application-default-credentials=true
             {{- else }}
-            - --google-service-account-json=/bitnami/oauth2-proxy/conf/google/service-account.json
+            - --google-service-account-json=/nix-containers/oauth2-proxy/conf/google/service-account.json
             {{- end }}
             {{- if .Values.configuration.google.groups }}
             {{- range $group := .Values.configuration.google.groups }}
@@ -106,7 +106,7 @@ spec:
             {{- end }}
             {{- end }}
             {{- if .Values.configuration.htpasswdFile.enabled }}
-            - --htpasswd-file=/bitnami/oauth2-proxy/conf/htpasswd/users.txt
+            - --htpasswd-file=/nix-containers/oauth2-proxy/conf/htpasswd/users.txt
             {{- end }}
             {{- if .Values.configuration.redirectUrl }}
             - --redirect-url={{.Values.configuration.redirectUrl}}
@@ -240,21 +240,21 @@ spec:
               subPath: tmp-dir
           {{- if .Values.configuration.google.enabled }}
             - name: google-secret
-              mountPath: /bitnami/oauth2-proxy/conf/google
+              mountPath: /nix-containers/oauth2-proxy/conf/google
               readOnly: true
           {{- end }}
           {{- if or .Values.configuration.existingConfigmap .Values.configuration.content }}
             - name: main-configuration
-              mountPath: /bitnami/oauth2-proxy/conf
+              mountPath: /nix-containers/oauth2-proxy/conf
           {{- end }}
           {{- if .Values.configuration.authenticatedEmailsFile.enabled }}
             - name: authenticated-emails
-              mountPath: /bitnami/oauth2-proxy/conf/authenticated-emails
+              mountPath: /nix-containers/oauth2-proxy/conf/authenticated-emails
               readOnly: true
           {{- end }}
           {{- if .Values.configuration.htpasswdFile.enabled }}
             - name: htpasswd-file
-              mountPath: /bitnami/oauth2-proxy/conf/htpasswd
+              mountPath: /nix-containers/oauth2-proxy/conf/htpasswd
               readOnly: true
           {{- end }}
           {{- if .Values.extraVolumeMounts }}

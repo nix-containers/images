@@ -1,35 +1,35 @@
 <!--- app-name: Apache Airflow -->
 
-# Bitnami Secure Images Helm chart for Apache Airflow
+# nix-containers Secure Images Helm chart for Apache Airflow
 
 Apache Airflow is a tool to express and execute workflows as directed acyclic graphs (DAGs). It includes utilities to schedule tasks, monitor task progress and handle task dependencies.
 
 [Overview of Apache Airflow](https://airflow.apache.org/)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by nix-containers. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/airflow
+helm install my-release oci://registry-1.docker.io/nix-containerscharts/airflow
 ```
 
-Looking to use Apache Airflow in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the commercial edition of the catalog.
+Looking to use Apache Airflow in production? Try [VMware Tanzu Application Catalog](https://nix-containers.com/enterprise), the commercial edition of the catalog.
 
 ## ⚠️ Important Notice: Upcoming changes to the Catalog
 
-Beginning August 28th, 2025, Bitnami will evolve its public catalog to offer a curated set of hardened, security-focused images under the new [Bitnami Secure Images initiative](https://news.broadcom.com/app-dev/broadcom-introduces-bitnami-secure-images-for-production-ready-containerized-applications). As part of this transition:
+Beginning August 28th, 2025, nix-containers will evolve its public catalog to offer a curated set of hardened, security-focused images under the new [nix-containers Secure Images initiative](https://news.broadcom.com/app-dev/broadcom-introduces-nix-containers-secure-images-for-production-ready-containerized-applications). As part of this transition:
 
 - Granting community users access for the first time to security-optimized versions of popular container images.
-- Bitnami will begin deprecating support for non-hardened, Debian-based software images in its free tier and will gradually remove non-latest tags from the public catalog. As a result, community users will have access to a reduced number of hardened images. These images are published only under the “latest” tag and are intended for development purposes
-- Starting August 28th, over two weeks, all existing container images, including older or versioned tags (e.g., 2.50.0, 10.6), will be migrated from the public catalog (docker.io/bitnami) to the “Bitnami Legacy” repository (docker.io/bitnamilegacy), where they will no longer receive updates.
-- For production workloads and long-term support, users are encouraged to adopt Bitnami Secure Images, which include hardened containers, smaller attack surfaces, CVE transparency (via VEX/KEV), SBOMs, and enterprise support.
+- nix-containers will begin deprecating support for non-hardened, Debian-based software images in its free tier and will gradually remove non-latest tags from the public catalog. As a result, community users will have access to a reduced number of hardened images. These images are published only under the “latest” tag and are intended for development purposes
+- Starting August 28th, over two weeks, all existing container images, including older or versioned tags (e.g., 2.50.0, 10.6), will be migrated from the public catalog (docker.io/nix-containers) to the “nix-containers Legacy” repository (docker.io/nix-containerslegacy), where they will no longer receive updates.
+- For production workloads and long-term support, users are encouraged to adopt nix-containers Secure Images, which include hardened containers, smaller attack surfaces, CVE transparency (via VEX/KEV), SBOMs, and enterprise support.
 
-These changes aim to improve the security posture of all Bitnami users by promoting best practices for software supply chain integrity and up-to-date deployments. For more details, visit the [Bitnami Secure Images announcement](https://github.com/bitnami/containers/issues/83267).
+These changes aim to improve the security posture of all nix-containers users by promoting best practices for software supply chain integrity and up-to-date deployments. For more details, visit the [nix-containers Secure Images announcement](https://github.com/nix-containers/containers/issues/83267).
 
 ## Introduction
 
-This chart bootstraps an [Apache Airflow](https://github.com/bitnami/containers/tree/main/bitnami/airflow) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps an [Apache Airflow](https://github.com/nix-containers/containers/tree/main/nix-containers/airflow) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ To install the chart with the release name `my-release`:
 helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/airflow
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The command deploys Apache Airflow on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -63,7 +63,7 @@ The Celery executor (default one) uses a message queue system (Redis&reg; in thi
 
 #### KubernetesExecutor
 
-The Kubernetes executor creates a new worker pod for every task instance using the `pod_template.yaml` that you can find at [templates/config/configmap.yaml](https://github.com/bitnami/charts/blob/main/bitnami/airflow/templates/config/configmap.yaml). This template can be overwritten using `worker.podTemplate`. To enable `KubernetesExecutor` you can set the following parameters:
+The Kubernetes executor creates a new worker pod for every task instance using the `pod_template.yaml` that you can find at [templates/config/configmap.yaml](https://github.com/nix-containers/images This template can be overwritten using `worker.podTemplate`. To enable `KubernetesExecutor` you can set the following parameters:
 
 ```console
 executor=KubernetesExecutor
@@ -126,14 +126,14 @@ You can also provider your own configuration by setting the `configuration` para
 ```yaml
 configuration:
   core:
-    dags_folder: "/opt/bitnami/airflow/dags"
+    dags_folder: "/opt/nix-containers/airflow/dags"
 ```
 
 ... the chart will translate it to the following configuration file:
 
 ```ini
 [core]
-dags_folder = "/opt/bitnami/airflow/dags"
+dags_folder = "/opt/nix-containers/airflow/dags"
 ```
 
 As an alternative to providing the whole configuration, you can also extend the default configuration using the `overrideConfiguration` parameter. The values set in this parameter, which also expects YAML format, will be merged with the default configuration or those set in the `configuration` parameter taking precedence.
@@ -206,7 +206,7 @@ plugins.repositories[0].path=plugins
 
 ### Install extra python packages
 
-This chart allows you to mount volumes using `extraVolumes` and `extraVolumeMounts` in every component (web, scheduler, worker). Mounting a `requirements.txt` using these options to `/bitnami/python/requirements.txt` will execute `pip install -r /bitnami/python/requirements.txt` on container start.
+This chart allows you to mount volumes using `extraVolumes` and `extraVolumeMounts` in every component (web, scheduler, worker). Mounting a `requirements.txt` using these options to `/nix-containers/python/requirements.txt` will execute `pip install -r /nix-containers/python/requirements.txt` on container start.
 
 ### Existing Secrets
 
@@ -216,7 +216,7 @@ You can use an existing secret to configure your Airflow auth, external Postgres
 postgresql.enabled=false
 externalDatabase.host=my.external.postgres.host
 externalDatabase.user=bn_airflow
-externalDatabase.database=bitnami_airflow
+externalDatabase.database=nix-containers_airflow
 externalDatabase.existingSecret=all-my-secrets
 externalDatabase.existingSecretPasswordKey=postgresql-password
 
@@ -244,7 +244,7 @@ data:
   redis-password: "cmVkaXMK"
 ```
 
-This is useful if you plan on using [Bitnami's sealed secrets](https://github.com/bitnami-labs/sealed-secrets) to manage your passwords.
+This is useful if you plan on using [nix-containers's sealed secrets](https://github.com/nix-containers-labs/sealed-secrets) to manage your passwords.
 
 Alternatively, you can also use a SQL connection string to connect to an external database. This can be done by:
 
@@ -273,7 +273,7 @@ Alternatively, you can disable this behavior by setting the `setupDBJob.enabled`
 
 these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
-To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the nix-containers/common chart](https://github.com/nix-containers/images However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
 ### Prometheus metrics
 
@@ -281,7 +281,7 @@ This chart can be integrated with Prometheus by setting `metrics.enabled` to `tr
 
 #### Prometheus requirements
 
-It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [Bitnami Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/prometheus) or the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) to easily have a working Prometheus in your cluster.
+It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [nix-containers Prometheus helm chart](https://github.com/nix-containers/images or the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images to easily have a working Prometheus in your cluster.
 
 #### Integration with Prometheus Operator
 
@@ -291,17 +291,17 @@ The chart can deploy `ServiceMonitor` objects for integration with Prometheus Op
 no matches for kind "ServiceMonitor" in version "monitoring.coreos.com/v1"
 ```
 
-Install the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) for having the necessary CRDs and the Prometheus Operator.
+Install the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images for having the necessary CRDs and the Prometheus Operator.
 
 ### [Rolling VS Immutable tags](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-understand-rolling-tags-containers-index.html)
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+nix-containers will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### Ingress
 
-This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/bitnami/charts/tree/main/bitnami/nginx-ingress-controller) or [contour](https://github.com/bitnami/charts/tree/main/bitnami/contour) you can utilize the ingress controller to serve your application.
+This chart provides support for Ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress-controller](https://github.com/nix-containers/images or [contour](https://github.com/nix-containers/images you can utilize the ingress controller to serve your application.
 
 To enable Ingress integration, set `ingress.enabled` to `true`.
 
@@ -370,7 +370,7 @@ Learn more about [sidecar containers](https://kubernetes.io/docs/concepts/worklo
 
 This chart allows you to set your custom affinity using the `affinity` parameter. Find more information about Pod's affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/main/bitnami/common#affinities) chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
+As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [nix-containers/common](https://github.com/nix-containers/images chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
 
 ### Backup and restore
 
@@ -378,7 +378,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 
 ## Persistence
 
-The Bitnami Airflow chart relies on the PostgreSQL chart persistence. This means that Airflow does not persist anything.
+The nix-containers Airflow chart relies on the PostgreSQL chart persistence. This means that Airflow does not persist anything.
 
 ## Parameters
 
@@ -1167,7 +1167,7 @@ The Bitnami Airflow chart relies on the PostgreSQL chart persistence. This means
 | `ldap.tls.enabled`               | Enabled TLS/SSL for LDAP, you must include the CA file.                                                                            | `false`                                                                                                   |
 | `ldap.tls.allowSelfSigned`       | Allow to use self signed certificates                                                                                              | `true`                                                                                                    |
 | `ldap.tls.certificatesSecret`    | Name of the existing secret containing the certificate CA file that will be used by ldap client                                    | `""`                                                                                                      |
-| `ldap.tls.certificatesMountPath` | Where LDAP certifcates are mounted.                                                                                                | `/opt/bitnami/airflow/conf/certs`                                                                         |
+| `ldap.tls.certificatesMountPath` | Where LDAP certifcates are mounted.                                                                                                | `/opt/nix-containers/airflow/conf/certs`                                                                         |
 | `ldap.tls.CAFilename`            | LDAP CA cert filename                                                                                                              | `""`                                                                                                      |
 
 ### Traffic Exposure Parameters
@@ -1320,7 +1320,7 @@ The Bitnami Airflow chart relies on the PostgreSQL chart persistence. This means
 | `postgresql.auth.enablePostgresUser`              | Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user                                                                                                                            | `true`            |
 | `postgresql.auth.username`                        | Name for a custom user to create                                                                                                                                                                                                  | `bn_airflow`      |
 | `postgresql.auth.password`                        | Password for the custom user to create                                                                                                                                                                                            | `""`              |
-| `postgresql.auth.database`                        | Name for a custom database to create                                                                                                                                                                                              | `bitnami_airflow` |
+| `postgresql.auth.database`                        | Name for a custom database to create                                                                                                                                                                                              | `nix-containers_airflow` |
 | `postgresql.auth.existingSecret`                  | Name of existing secret to use for PostgreSQL credentials                                                                                                                                                                         | `""`              |
 | `postgresql.architecture`                         | PostgreSQL architecture (`standalone` or `replication`)                                                                                                                                                                           | `standalone`      |
 | `postgresql.primary.resourcesPreset`              | Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if primary.resources is set (primary.resources is recommended for production). | `nano`            |
@@ -1329,7 +1329,7 @@ The Bitnami Airflow chart relies on the PostgreSQL chart persistence. This means
 | `externalDatabase.port`                           | Database port number (ignored if externalDatabase.sqlConnection is set)                                                                                                                                                           | `5432`            |
 | `externalDatabase.user`                           | Non-root username for Airflow (ignored if externalDatabase.sqlConnection is set)                                                                                                                                                  | `bn_airflow`      |
 | `externalDatabase.password`                       | Password for the non-root username for Airflow (ignored if externalDatabase.sqlConnection or externalDatabase.existingSecret are set)                                                                                             | `""`              |
-| `externalDatabase.database`                       | Airflow database name (ignored if externalDatabase.sqlConnection is set)                                                                                                                                                          | `bitnami_airflow` |
+| `externalDatabase.database`                       | Airflow database name (ignored if externalDatabase.sqlConnection is set)                                                                                                                                                          | `nix-containers_airflow` |
 | `externalDatabase.sqlConnection`                  | SQL connection string                                                                                                                                                                                                             | `""`              |
 | `externalDatabase.existingSecret`                 | Name of an existing secret resource containing the database credentials                                                                                                                                                           | `""`              |
 | `externalDatabase.existingSecretPasswordKey`      | Name of an existing secret key containing the database credentials (ignored if externalDatabase.existingSecretSqlConnectionKey is set)                                                                                            | `""`              |
@@ -1360,7 +1360,7 @@ helm install my-release \
                oci://REGISTRY_NAME/REPOSITORY_NAME/airflow
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The above command sets the credentials to access the Airflow web UI.
 
@@ -1372,12 +1372,12 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 helm install my-release -f values.yaml oci://REGISTRY_NAME/REPOSITORY_NAME/airflow
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
-> **Tip**: You can use the default [values.yaml](https://github.com/bitnami/charts/tree/main/bitnami/airflow/values.yaml)
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
+> **Tip**: You can use the default [values.yaml](https://github.com/nix-containers/images
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to nix-containers's Helm charts in [this troubleshooting guide](https://docs.nix-containers.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
@@ -1411,7 +1411,7 @@ helm upgrade airflow oci://REGISTRY_NAME/REPOSITORY_NAME/airflow
 
 ### To 22.4.0
 
-This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/bitnami/charts/issues/30850).
+This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/nix-containers/images
 
 ### To 22.2.0
 
@@ -1425,7 +1425,7 @@ No upgrades issues are expected when upgrading from `21.x.x` but existing dashbo
 
 ### To 21.0.0
 
-This major version uses a single container image ([`bitnami/airflow`](https://github.com/bitnami/containers/tree/main/bitnami/airflow) by default) to run every Airflow component (Webserver, Scheduler and Worker) so `bitnami/airflow-scheduler` and `bitnami/airflow-worker` images are no longer necessary. Also, operations to load custom DAGs and plugins via init containers also use this same image so `bitnami/git` and `bitnami/os-shell` are no longer necessary either. These changes implies several simplifications in the chart values:
+This major version uses a single container image ([`nix-containers/airflow`](https://github.com/nix-containers/containers/tree/main/nix-containers/airflow) by default) to run every Airflow component (Webserver, Scheduler and Worker) so `nix-containers/airflow-scheduler` and `nix-containers/airflow-worker` images are no longer necessary. Also, operations to load custom DAGs and plugins via init containers also use this same image so `nix-containers/git` and `nix-containers/os-shell` are no longer necessary either. These changes implies several simplifications in the chart values:
 
 - New `image.*` parameters are introduced to configure the container image used to run the Airflow components.
 - `web.image.*`, `scheduler.image.*` and `worker.image.*` parameters are removed.
@@ -1445,7 +1445,7 @@ This major updates the PostgreSQL subchart to its newest major, 16.0.0, which us
 
 ### To 19.0.0
 
-This major updates the Redis&reg; subchart to its newest major, 20.0.0. [Here](https://github.com/bitnami/charts/tree/main/bitnami/redis#to-2000) you can find more information about the changes introduced in that version.
+This major updates the Redis&reg; subchart to its newest major, 20.0.0. [Here](https://github.com/nix-containers/images you can find more information about the changes introduced in that version.
 
 ### To 18.0.0
 
@@ -1460,21 +1460,21 @@ This could potentially break any customization or init scripts used in your depl
 
 ### To 17.0.0
 
-This major release bumps the PostgreSQL chart version to [14.x.x](https://github.com/bitnami/charts/pull/22750); no major issues are expected during the upgrade.
+This major release bumps the PostgreSQL chart version to [14.x.x](https://github.com/nix-containers/images no major issues are expected during the upgrade.
 
 ### To 16.0.0
 
-This major updates the PostgreSQL subchart to its newest major, 13.0.0. [Here](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#to-1300) you can find more information about the changes introduced in that version.
+This major updates the PostgreSQL subchart to its newest major, 13.0.0. [Here](https://github.com/nix-containers/images you can find more information about the changes introduced in that version.
 
 ### To 15.0.0
 
-This major updates the Redis&reg; subchart to its newest major, 18.0.0. [Here](https://github.com/bitnami/charts/tree/main/bitnami/redis#to-1800) you can find more information about the changes introduced in that version.
+This major updates the Redis&reg; subchart to its newest major, 18.0.0. [Here](https://github.com/nix-containers/images you can find more information about the changes introduced in that version.
 
 NOTE: Due to an error in our release process, Redis&reg;' chart versions higher or equal than 17.15.4 already use Redis&reg; 7.2 by default.
 
 ### To 14.0.0
 
-This major updates the PostgreSQL subchart to its newest major, 12.0.0. [Here](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#to-1200) you can find more information about the changes introduced in that version.
+This major updates the PostgreSQL subchart to its newest major, 12.0.0. [Here](https://github.com/nix-containers/images you can find more information about the changes introduced in that version.
 
 ### To 13.0.0
 
@@ -1526,7 +1526,7 @@ To upgrade to *12.0.0* from *11.x*, it should be done reusing the PVC(s) used to
 
 ```console
         CURRENT_PG_VERSION=$(kubectl exec airflow-postgresql-0 -- bash -c 'echo $BITNAMI_IMAGE_VERSION')
-        helm upgrade airflow bitnami/airflow \
+        helm upgrade airflow nix-containers/airflow \
           --set loadExamples=true \
           --set web.baseUrl=http://127.0.0.1:8080 \
           --set auth.password=$AIRFLOW_PASSWORD \
@@ -1548,11 +1548,11 @@ To upgrade to *12.0.0* from *11.x*, it should be done reusing the PVC(s) used to
 
 ### To 11.0.0
 
-This major update the Redis&reg; subchart to its newest major, 15.0.0. [Here](https://github.com/bitnami/charts/tree/main/bitnami/redis#to-1500) you can find more info about the specific changes.
+This major update the Redis&reg; subchart to its newest major, 15.0.0. [Here](https://github.com/nix-containers/images you can find more info about the specific changes.
 
 ### To 10.0.0
 
-This major updates the Redis&reg; subchart to it newest major, 14.0.0, which contains breaking changes. For more information on this subchart's major and the steps needed to migrate your data from your previous release, please refer to [Redis&reg; upgrade notes.](https://github.com/bitnami/charts/tree/main/bitnami/redis#to-1400).
+This major updates the Redis&reg; subchart to it newest major, 14.0.0, which contains breaking changes. For more information on this subchart's major and the steps needed to migrate your data from your previous release, please refer to [Redis&reg; upgrade notes.](https://github.com/nix-containers/images
 
 ### To 7.0.0
 
@@ -1571,7 +1571,7 @@ This major updates the Redis&reg; subchart to it newest major, 14.0.0, which con
     - *airflow.clonePluginsFromGit* no longer exists, instead you must use *git.plugins*. *airflow.clonePluginsFromGit.repository*, *airflow.clonePluginsFromGit.branch* and *airflow.clonePluginsFromGit.path* have been removed in favour of *git.dags.repositories*.
   - Liveness and readiness probe have been separated by components *airflow.livenessProbe.** and *airflow.readinessProbe* have been removed in favour of *web.livenessProbe*, *worker.livenessProbe*, *web.readinessProbe* and *worker.readinessProbe*.
   - *airflow.baseUrl* has been moved to *web.baseUrl*.
-  - Security context has been migrated to the bitnami standard way so that *securityContext* has been divided into *podSecurityContext* that will define the **fsGroup** for all the containers in the pod and *containerSecurityContext* that will define the user id that will run the main containers.
+  - Security context has been migrated to the nix-containers standard way so that *securityContext* has been divided into *podSecurityContext* that will define the **fsGroup** for all the containers in the pod and *containerSecurityContext* that will define the user id that will run the main containers.
   - *./files/dags/*.py* will not be include in the deployment any more.
 - Additionally updates the PostgreSQL & Redis subcharts to their newest major 10.x.x and 11.x.x, respectively, which contain similar changes.
 
@@ -1582,7 +1582,7 @@ This major updates the Redis&reg; subchart to it newest major, 14.0.0, which con
 
 #### Useful links
 
-- [Bitnami Tutorial](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-resolve-helm2-helm3-post-migration-issues-index.html)
+- [nix-containers Tutorial](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-resolve-helm2-helm3-post-migration-issues-index.html)
 - [Helm docs](https://helm.sh/docs/topics/v2_v3_migration)
 - [Helm Blog](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3)
 
@@ -1615,7 +1615,7 @@ To upgrade to *7.0.0* from *6.x*, it should be done reusing the PVC(s) used to h
 > NOTE: Please remember to migrate all the values to its new path following the above notes, e.g: `airflow.loadExamples` -> `loadExamples` or `airflow.baseUrl=http://127.0.0.1:8080` -> `web.baseUrl=http://127.0.0.1:8080`.
 
 ```console
-        helm upgrade airflow bitnami/airflow \
+        helm upgrade airflow nix-containers/airflow \
           --set loadExamples=true \
           --set web.baseUrl=http://127.0.0.1:8080 \
           --set auth.password=$AIRFLOW_PASSWORD \

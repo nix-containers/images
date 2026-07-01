@@ -206,7 +206,7 @@ Add environment variables to configure database values
 {{- if or (not .Values.postgresql.enabled) .Values.postgresql.auth.enablePostgresUser }}
 {{- if .Values.usePasswordFiles }}
 - name: SUPERSET_DATABASE_PASSWORD_FILE
-  value: {{ printf "/opt/bitnami/superset/secrets/%s" (include "superset.database.secretKey" .) }}
+  value: {{ printf "/opt/nix-containers/superset/secrets/%s" (include "superset.database.secretKey" .) }}
 {{- else }}
 - name: SUPERSET_DATABASE_PASSWORD
   valueFrom:
@@ -232,7 +232,7 @@ Add environment variables to configure redis values
   value: {{ ternary "default" .Values.externalRedis.username .Values.redis.enabled  | quote }}
 {{- if .Values.usePasswordFiles }}
 - name: REDIS_PASSWORD_FILE
-  value: {{ printf "/opt/bitnami/superset/secrets/%s" (include "superset.redis.secretKey" .) }}
+  value: {{ printf "/opt/nix-containers/superset/secrets/%s" (include "superset.redis.secretKey" .) }}
 {{- else }}
 - name: REDIS_PASSWORD
   valueFrom:
@@ -248,7 +248,7 @@ Add environment variables to configure superset common values
 {{- define "superset.configure.common" -}}
 {{- if .Values.usePasswordFiles }}
 - name: SUPERSET_SECRET_KEY_FILE
-  value: "/opt/bitnami/superset/secrets/superset-secret-key"
+  value: "/opt/nix-containers/superset/secrets/superset-secret-key"
 {{- else }}
 - name: SUPERSET_SECRET_KEY
   valueFrom:
@@ -258,7 +258,7 @@ Add environment variables to configure superset common values
 {{- end }}
 {{- if or .Values.existingConfigmap .Values.config }}
 - name: SUPERSET_CONF_FILE
-  value: "/bitnami/superset/conf/superset_config.py"
+  value: "/nix-containers/superset/conf/superset_config.py"
 {{- end }}
 - name: BITNAMI_DEBUG
   value: {{ ternary "true" "false" .Values.image.debug | quote }}
@@ -290,9 +290,9 @@ Init container definition to wait for PostgreSQL
         set -o nounset
         set -o pipefail
 
-        . /opt/bitnami/scripts/libos.sh
-        . /opt/bitnami/scripts/liblog.sh
-        . /opt/bitnami/scripts/libpostgresql.sh
+        . /opt/nix-containers/scripts/libos.sh
+        . /opt/nix-containers/scripts/liblog.sh
+        . /opt/nix-containers/scripts/libpostgresql.sh
 
         {{- if .Values.usePasswordFiles }}
         export SUPERSET_DATABASE_PASSWORD="$(< $SUPERSET_DATABASE_PASSWORD_FILE)"
@@ -314,7 +314,7 @@ Init container definition to wait for PostgreSQL
   {{- if .Values.usePasswordFiles }}
   volumeMounts:
     - name: superset-secrets
-      mountPath: /opt/bitnami/superset/secrets
+      mountPath: /opt/nix-containers/superset/secrets
       readOnly: true
   {{- end }}
 {{- end -}}
@@ -345,8 +345,8 @@ Init container definition to wait for Redis
         set -o nounset
         set -o pipefail
 
-        . /opt/bitnami/scripts/libos.sh
-        . /opt/bitnami/scripts/liblog.sh
+        . /opt/nix-containers/scripts/libos.sh
+        . /opt/nix-containers/scripts/liblog.sh
 
         {{- if .Values.usePasswordFiles }}
         export REDIS_PASSWORD="$(< $REDIS_PASSWORD_FILE)"
@@ -371,7 +371,7 @@ Init container definition to wait for Redis
   {{- if .Values.usePasswordFiles }}
   volumeMounts:
     - name: superset-secrets
-      mountPath: /opt/bitnami/superset/secrets
+      mountPath: /opt/nix-containers/superset/secrets
       readOnly: true
   {{- end }}
 {{- end }}
@@ -399,9 +399,9 @@ Init container definition to wait for Redis
         set -o nounset
         set -o pipefail
 
-        . /opt/bitnami/scripts/libos.sh
-        . /opt/bitnami/scripts/liblog.sh
-        . /opt/bitnami/scripts/libpostgresql.sh
+        . /opt/nix-containers/scripts/libos.sh
+        . /opt/nix-containers/scripts/liblog.sh
+        . /opt/nix-containers/scripts/libpostgresql.sh
 
         {{- if .Values.usePasswordFiles }}
         export SUPERSET_DATABASE_PASSWORD="$(< $SUPERSET_DATABASE_PASSWORD_FILE)"
@@ -425,7 +425,7 @@ Init container definition to wait for Redis
   {{- if .Values.usePasswordFiles }}
   volumeMounts:
     - name: superset-secrets
-      mountPath: /opt/bitnami/superset/secrets
+      mountPath: /opt/nix-containers/superset/secrets
       readOnly: true
   {{- end }}
 {{- end }}

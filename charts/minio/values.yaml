@@ -63,8 +63,8 @@ extraDeploy: []
 
 ## @section MinIO&reg; parameters
 
-## Bitnami MinIO&reg; image version
-## ref: https://hub.docker.com/r/bitnami/minio/tags/
+## nix-containers MinIO&reg; image version
+## ref: https://hub.docker.com/r/nix-containers/minio/tags/
 ## @param image.registry [default: REGISTRY_NAME] MinIO&reg; image registry
 ## @param image.repository [default: REPOSITORY_NAME/minio] MinIO&reg; image repository
 ## @skip image.tag MinIO&reg; image tag (immutable tags are recommended)
@@ -74,8 +74,8 @@ extraDeploy: []
 ## @param image.debug Specify if debug logs should be enabled
 ##
 image:
-  registry: docker.io
-  repository: bitnami/minio
+  registry: ghcr.io
+  repository: nix-containers/minio-nixchart
   tag: 2025.7.23-debian-12-r3
   digest: ""
   ## Specify a imagePullPolicy
@@ -93,16 +93,16 @@ image:
   ## Set to true if you would like to see extra information on logs
   ##
   debug: false
-## Bitnami MinIO&reg; Client image version
-## ref: https://hub.docker.com/r/bitnami/minio-client/tags/
+## nix-containers MinIO&reg; Client image version
+## ref: https://hub.docker.com/r/nix-containers/minio-client/tags/
 ## @param clientImage.registry [default: REGISTRY_NAME] MinIO&reg; Client image registry
 ## @param clientImage.repository [default: REPOSITORY_NAME/minio-client] MinIO&reg; Client image repository
 ## @skip clientImage.tag MinIO&reg; Client image tag (immutable tags are recommended)
 ## @param clientImage.digest MinIO&reg; Client image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
 ##
 clientImage:
-  registry: docker.io
-  repository: bitnami/minio-client
+  registry: ghcr.io
+  repository: nix-containers/minio-client-nixchart
   tag: 2025.7.21-debian-12-r2
   digest: ""
 ## MinIO&reg; authentication parameters
@@ -352,7 +352,7 @@ runtimeClassName: ""
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "micro"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -507,8 +507,8 @@ defaultInitContainers:
     ## @param defaultInitContainers.volumePermissions.image.pullSecrets "volume-permissions" init-containers' image pull secrets
     ##
     image:
-      registry: docker.io
-      repository: bitnami/os-shell
+      registry: ghcr.io
+      repository: nix-containers/os-shell-nixchart
       tag: 12-debian-12-r50
       digest: ""
       pullPolicy: IfNotPresent
@@ -545,7 +545,7 @@ defaultInitContainers:
     ## MinIO&reg; "volume-permissions" init container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.volumePermissions.resourcesPreset Set MinIO&reg; "volume-permissions" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.volumePermissions.resources is set (defaultInitContainers.volumePermissions.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultInitContainers.volumePermissions.resources Set MinIO&reg; "volume-permissions" init container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -801,7 +801,7 @@ persistence:
   storageClass: ""
   ## @param persistence.mountPath Data volume mount path
   ##
-  mountPath: /bitnami/minio/data
+  mountPath: /nix-containers/minio/data
   ## @param persistence.accessModes PVC Access Modes for MinIO&reg; data volume
   ##
   accessModes:
@@ -893,7 +893,7 @@ metrics:
     ##
     honorLabels: false
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     selector: {}
     ## @param metrics.serviceMonitor.apiVersion ApiVersion for the serviceMonitor Resource (defaults to "monitoring.coreos.com/v1")
@@ -932,8 +932,8 @@ console:
   ## @param console.enabled Enable MinIO&reg; Console
   ##
   enabled: true
-  ## Bitnami MinIO&reg; Console image
-  ## ref: https://hub.docker.com/r/bitnami/minio-object-browser/tags/
+  ## nix-containers MinIO&reg; Console image
+  ## ref: https://hub.docker.com/r/nix-containers/minio-object-browser/tags/
   ## @param console.image.registry [default: REGISTRY_NAME] MinIO&reg; Console image registry
   ## @param console.image.repository [default: REPOSITORY_NAME/minio-object-browser] MinIO&reg; Console image repository
   ## @skip console.image.tag MinIO&reg; Console image tag (immutable tags are recommended)
@@ -942,8 +942,8 @@ console:
   ## @param console.image.pullSecrets MinIO&reg; Console image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/minio-object-browser
+    registry: ghcr.io
+    repository: nix-containers/minio-object-browser-nixchart
     tag: 2.0.2-debian-12-r3
     digest: ""
     ## Specify a imagePullPolicy
@@ -1029,7 +1029,7 @@ console:
   ## MinIO&reg; Console resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param console.resourcesPreset Set MinIO&reg; Console container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if console.resources is set (console.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param console.resources Set MinIO&reg; Console container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1513,7 +1513,7 @@ provisioning:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param provisioning.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if provisioning.resources is set (provisioning.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param provisioning.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

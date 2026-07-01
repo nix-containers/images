@@ -124,8 +124,8 @@ diagnosticMode:
 ## @section MongoDB(&reg;) parameters
 ##
 
-## Bitnami MongoDB(&reg;) image
-## ref: https://hub.docker.com/r/bitnami/mongodb/tags/
+## nix-containers MongoDB(&reg;) image
+## ref: https://hub.docker.com/r/nix-containers/mongodb/tags/
 ## @param image.registry [default: REGISTRY_NAME] MongoDB(&reg;) image registry
 ## @param image.repository [default: REPOSITORY_NAME/mongodb] MongoDB(&reg;) image registry
 ## @skip image.tag MongoDB(&reg;) image tag (immutable tags are recommended)
@@ -135,8 +135,8 @@ diagnosticMode:
 ## @param image.debug Set to true if you would like to see extra information on logs
 ##
 image:
-  registry: docker.io
-  repository: bitnami/mongodb
+  registry: ghcr.io
+  repository: nix-containers/mongodb-nixchart
   tag: 8.0.13-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
@@ -175,11 +175,11 @@ auth:
   ##
   rootUser: root
   ## @param auth.rootPassword MongoDB(&reg;) root password
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#setting-the-root-user-and-password-on-first-run
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mongodb#setting-the-root-user-and-password-on-first-run
   ##
   rootPassword: ""
   ## MongoDB(&reg;) custom users and databases
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#creating-a-user-and-database-on-first-run
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mongodb#creating-a-user-and-database-on-first-run
   ## @param auth.usernames List of custom users to be created during the initialization
   ## @param auth.passwords List of passwords for the custom users set at `auth.usernames`
   ## @param auth.databases List of custom databases to be created during the initialization
@@ -251,7 +251,7 @@ tls:
     ## NOTE: When it's set it will disable certificate self-generation from existing CA.
     ##
     existingSecret: ""
-  ## Bitnami Nginx image
+  ## nix-containers Nginx image
   ## @param tls.image.registry [default: REGISTRY_NAME] Init container TLS certs setup image registry
   ## @param tls.image.repository [default: REPOSITORY_NAME/nginx] Init container TLS certs setup image repository
   ## @skip tls.image.tag Init container TLS certs setup image tag (immutable tags are recommended)
@@ -261,8 +261,8 @@ tls:
   ## @param tls.extraDnsNames Add extra dns names to the CA, can solve x509 auth issue for pod clients
   ##
   image:
-    registry: docker.io
-    repository: bitnami/nginx
+    registry: ghcr.io
+    repository: nix-containers/nginx-nixchart
     tag: 1.29.1-debian-12-r0
     digest: ""
     pullPolicy: IfNotPresent
@@ -290,7 +290,7 @@ tls:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param tls.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if tls.resources is set (tls.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param tls.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -331,15 +331,15 @@ replicaSetName: rs0
 ##
 replicaSetHostnames: true
 ## @param enableIPv6 Switch to enable/disable IPv6 on MongoDB(&reg;)
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#enablingdisabling-ipv6
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mongodb#enablingdisabling-ipv6
 ##
 enableIPv6: false
 ## @param directoryPerDB Switch to enable/disable DirectoryPerDB on MongoDB(&reg;)
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#enablingdisabling-directoryperdb
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mongodb#enablingdisabling-directoryperdb
 ##
 directoryPerDB: false
 ## MongoDB(&reg;) System Log configuration
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/mongodb#configuring-system-log-verbosity-level
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/mongodb#configuring-system-log-verbosity-level
 ## @param systemLogVerbosity MongoDB(&reg;) system log verbosity level
 ## @param disableSystemLog Switch to enable/disable MongoDB(&reg;) system log
 ##
@@ -359,7 +359,7 @@ enableJournal: true
 ## configuration: |-
 ##   # where and how to store data.
 ##   storage:
-##     dbPath: /bitnami/mongodb/data/db
+##     dbPath: /nix-containers/mongodb/data/db
 ##     journal:
 ##       enabled: true
 ##     directoryPerDB: false
@@ -369,14 +369,14 @@ enableJournal: true
 ##     quiet: false
 ##     logAppend: true
 ##     logRotate: reopen
-##     path: /opt/bitnami/mongodb/logs/mongodb.log
+##     path: /opt/nix-containers/mongodb/logs/mongodb.log
 ##     verbosity: 0
 ##   # network interfaces
 ##   net:
 ##     port: 27017
 ##     unixDomainSocket:
 ##       enabled: true
-##       pathPrefix: /opt/bitnami/mongodb/tmp
+##       pathPrefix: /opt/nix-containers/mongodb/tmp
 ##     ipv6: false
 ##     bindIpAll: true
 ##   # replica set options
@@ -386,14 +386,14 @@ enableJournal: true
 ##   # process management options
 ##   processManagement:
 ##      fork: false
-##      pidFilePath: /opt/bitnami/mongodb/tmp/mongodb.pid
+##      pidFilePath: /opt/nix-containers/mongodb/tmp/mongodb.pid
 ##   # set parameter options
 ##   setParameter:
 ##      enableLocalhostAuthBypass: true
 ##   # security options
 ##   security:
 ##     authorization: disabled
-##     #keyFile: /opt/bitnami/mongodb/conf/keyfile
+##     #keyFile: /opt/nix-containers/mongodb/conf/keyfile
 ##
 configuration: ""
 ## @section replicaSetConfigurationSettings settings applied during runtime (not via configuration file)
@@ -606,7 +606,7 @@ containerSecurityContext:
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "small"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -843,8 +843,8 @@ externalAccess:
     ## @param externalAccess.autoDiscovery.enabled Enable using an init container to auto-detect external IPs by querying the K8s API
     ##
     enabled: false
-    ## Bitnami Kubectl image
-    ## ref: https://hub.docker.com/r/bitnami/kubectl/tags/
+    ## nix-containers Kubectl image
+    ## ref: https://hub.docker.com/r/nix-containers/kubectl/tags/
     ## @param externalAccess.autoDiscovery.image.registry [default: REGISTRY_NAME] Init container auto-discovery image registry
     ## @param externalAccess.autoDiscovery.image.repository [default: REPOSITORY_NAME/kubectl] Init container auto-discovery image repository
     ## @skip externalAccess.autoDiscovery.image.tag Init container auto-discovery image tag (immutable tags are recommended)
@@ -853,8 +853,8 @@ externalAccess:
     ## @param externalAccess.autoDiscovery.image.pullSecrets Init container auto-discovery image pull secrets
     ##
     image:
-      registry: docker.io
-      repository: bitnami/kubectl
+      registry: ghcr.io
+      repository: nix-containers/kubectl-nixchart
       tag: 1.33.4-debian-12-r0
       digest: ""
       ## Specify a imagePullPolicy
@@ -875,7 +875,7 @@ externalAccess:
     ## resources, such as Minikube. If you do want to specify resources, uncomment the following
     ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     ## @param externalAccess.autoDiscovery.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if externalAccess.autoDiscovery.resources is set (externalAccess.autoDiscovery.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param externalAccess.autoDiscovery.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -892,8 +892,8 @@ externalAccess:
   ## Init container what mission is ensure public names can be resolved.
   ##
   dnsCheck:
-    ## Bitnami os-shell image
-    ## ref: https://hub.docker.com/r/bitnami/os-shell/tags/
+    ## nix-containers os-shell image
+    ## ref: https://hub.docker.com/r/nix-containers/os-shell/tags/
     ## @param externalAccess.dnsCheck.image.registry [default: REGISTRY_NAME] Init container dns-check image registry
     ## @param externalAccess.dnsCheck.image.repository [default: REPOSITORY_NAME/kubectl] Init container dns-check image repository
     ## @skip externalAccess.dnsCheck.image.tag Init container dns-check image tag (immutable tags are recommended)
@@ -902,8 +902,8 @@ externalAccess:
     ## @param externalAccess.dnsCheck.image.pullSecrets Init container dns-check image pull secrets
     ##
     image:
-      registry: docker.io
-      repository: bitnami/os-shell
+      registry: ghcr.io
+      repository: nix-containers/os-shell-nixchart
       tag: 12-debian-12-r51
       digest: ""
       ## Specify a imagePullPolicy
@@ -924,7 +924,7 @@ externalAccess:
     ## resources, such as Minikube. If you do want to specify resources, uncomment the following
     ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     ## @param externalAccess.dnsCheck.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if externalAccess.autoDiscovery.resources is set (externalAccess.autoDiscovery.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param externalAccess.dnsCheck.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1189,7 +1189,7 @@ passwordUpdateJob:
   ## Container resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param passwordUpdateJob.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if passwordUpdateJob.resources is set (passwordUpdateJob.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "micro"
   ## @param passwordUpdateJob.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1342,7 +1342,7 @@ persistence:
   ## @param persistence.mountPath Path to mount the volume at
   ## MongoDB(&reg;) images.
   ##
-  mountPath: /bitnami/mongodb
+  mountPath: /nix-containers/mongodb
   ## @param persistence.subPath Subdirectory of the volume to mount at
   ## and one PV for multiple services.
   ##
@@ -1451,7 +1451,7 @@ backup:
     ## resources, such as Minikube. If you do want to specify resources, uncomment the following
     ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     ## @param backup.cronjob.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "none"
     ## @param backup.cronjob.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1579,8 +1579,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r51
     digest: ""
     ## Specify a imagePullPolicy
@@ -1601,7 +1601,7 @@ volumePermissions:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1819,7 +1819,7 @@ arbiter:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param arbiter.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if arbiter.resources is set (arbiter.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param arbiter.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2162,7 +2162,7 @@ hidden:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param hidden.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if hidden.resources is set (hidden.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "micro"
   ## @param hidden.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2320,7 +2320,7 @@ hidden:
     annotations: {}
     ## @param hidden.persistence.mountPath The path the volume will be mounted at, useful when using different MongoDB(&reg;) images.
     ##
-    mountPath: /bitnami/mongodb
+    mountPath: /nix-containers/mongodb
     ## @param hidden.persistence.subPath The subdirectory of the volume to mount to, useful in dev environments
     ## and one PV for multiple services.
     ##
@@ -2369,8 +2369,8 @@ metrics:
   ## @param metrics.enabled Enable using a sidecar Prometheus exporter
   ##
   enabled: false
-  ## Bitnami MongoDB(&reg;) Promtheus Exporter image
-  ## ref: https://hub.docker.com/r/bitnami/mongodb-exporter/tags/
+  ## nix-containers MongoDB(&reg;) Promtheus Exporter image
+  ## ref: https://hub.docker.com/r/nix-containers/mongodb-exporter/tags/
   ## @param metrics.image.registry [default: REGISTRY_NAME] MongoDB(&reg;) Prometheus exporter image registry
   ## @param metrics.image.repository [default: REPOSITORY_NAME/mongodb-exporter] MongoDB(&reg;) Prometheus exporter image repository
   ## @skip metrics.image.tag MongoDB(&reg;) Prometheus exporter image tag (immutable tags are recommended)
@@ -2379,8 +2379,8 @@ metrics:
   ## @param metrics.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: bitnami/mongodb-exporter
+    registry: ghcr.io
+    repository: nix-containers/prometheus-mongodb-exporter-nixchart
     tag: 0.47.0-debian-12-r1
     digest: ""
     pullPolicy: IfNotPresent
@@ -2441,7 +2441,7 @@ metrics:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param metrics.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.resources is set (metrics.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param metrics.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2577,7 +2577,7 @@ metrics:
     ##
     labels: {}
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     selector: {}
     ## @param metrics.serviceMonitor.honorLabels Specify honorLabels parameter to add the scrape endpoint

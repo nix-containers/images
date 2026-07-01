@@ -80,8 +80,8 @@ diagnosticMode:
     - infinity
 ## @section ZooKeeper chart parameters
 
-## Bitnami ZooKeeper image version
-## ref: https://hub.docker.com/r/bitnami/zookeeper/tags/
+## nix-containers ZooKeeper image version
+## ref: https://hub.docker.com/r/nix-containers/zookeeper/tags/
 ## @param image.registry [default: REGISTRY_NAME] ZooKeeper image registry
 ## @param image.repository [default: REPOSITORY_NAME/zookeeper] ZooKeeper image repository
 ## @skip image.tag ZooKeeper image tag (immutable tags are recommended)
@@ -91,8 +91,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: docker.io
-  repository: bitnami/zookeeper
+  registry: ghcr.io
+  repository: nix-containers/zookeeper-nixchart
   tag: 3.9.3-debian-12-r21
   digest: ""
   ## Specify a imagePullPolicy
@@ -216,13 +216,13 @@ jvmFlags: ""
 ## @param dataLogDir Dedicated data log directory
 ## This allows a dedicated log device to be used, and helps avoid competition between logging and snapshots.
 ## E.g.
-## dataLogDir: /bitnami/zookeeper/dataLog
+## dataLogDir: /nix-containers/zookeeper/dataLog
 ##
 dataLogDir: ""
 ## @param configuration Configure ZooKeeper with a custom zoo.cfg file
 ## e.g:
 ## configuration: |-
-##   deploy-working-dir=/bitnami/zookeeper/data
+##   deploy-working-dir=/nix-containers/zookeeper/data
 ##   log-level=info
 ##   ...
 ##
@@ -336,7 +336,7 @@ lifecycleHooks: {}
 ## ZooKeeper resource requests and limits
 ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "micro"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -775,8 +775,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Init container volume-permissions image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r50
     digest: ""
     pullPolicy: IfNotPresent
@@ -791,7 +791,7 @@ volumePermissions:
   ## Init container resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -861,7 +861,7 @@ metrics:
     ##
     additionalLabels: {}
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     selector: {}
     ## @param metrics.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
@@ -945,10 +945,10 @@ tls:
     existingSecretTruststoreKey: ""
     ## @param tls.client.keystorePath Location of the KeyStore file used for Client connections
     ##
-    keystorePath: /opt/bitnami/zookeeper/config/certs/client/zookeeper.keystore.jks
+    keystorePath: /opt/nix-containers/zookeeper/config/certs/client/zookeeper.keystore.jks
     ## @param tls.client.truststorePath Location of the TrustStore file used for Client connections
     ##
-    truststorePath: /opt/bitnami/zookeeper/config/certs/client/zookeeper.truststore.jks
+    truststorePath: /opt/nix-containers/zookeeper/config/certs/client/zookeeper.truststore.jks
     ## @param tls.client.passwordsSecretName Existing secret containing Keystore and truststore passwords
     ##
     passwordsSecretName: ""
@@ -985,10 +985,10 @@ tls:
     existingSecretTruststoreKey: ""
     ## @param tls.quorum.keystorePath Location of the KeyStore file used for Quorum protocol
     ##
-    keystorePath: /opt/bitnami/zookeeper/config/certs/quorum/zookeeper.keystore.jks
+    keystorePath: /opt/nix-containers/zookeeper/config/certs/quorum/zookeeper.keystore.jks
     ## @param tls.quorum.truststorePath Location of the TrustStore file used for Quorum protocol
     ##
-    truststorePath: /opt/bitnami/zookeeper/config/certs/quorum/zookeeper.truststore.jks
+    truststorePath: /opt/nix-containers/zookeeper/config/certs/quorum/zookeeper.truststore.jks
     ## @param tls.quorum.passwordsSecretName Existing secret containing Keystore and truststore passwords
     ##
     passwordsSecretName: ""
@@ -1007,7 +1007,7 @@ tls:
   ## Init container resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param tls.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if tls.resources is set (tls.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param tls.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

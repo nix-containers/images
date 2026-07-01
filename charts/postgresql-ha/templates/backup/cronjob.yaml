@@ -59,9 +59,9 @@ spec:
               {{- if .Values.postgresql.usePasswordFiles }}
               - name: PGPASSWORD_FILE
                 {{- if (include "postgresql-ha.postgresqlSeparatePostgresPassword" .) }}
-                value: "/opt/bitnami/postgresql/secrets/postgres-password"
+                value: "/opt/nix-containers/postgresql/secrets/postgres-password"
                 {{- else }}
-                value: "/opt/bitnami/postgresql/secrets/password"
+                value: "/opt/nix-containers/postgresql/secrets/password"
                 {{- end }}
               {{- else }}
               - name: PGPASSWORD
@@ -110,7 +110,7 @@ spec:
                 subPath: {{ .Values.backup.cronjob.storage.subPath }}
               {{- if .Values.postgresql.usePasswordFiles }}
               - name: password
-                mountPath: /opt/bitnami/postgresql/secrets/
+                mountPath: /opt/nix-containers/postgresql/secrets/
               {{- end }}
               {{- if .Values.backup.cronjob.extraVolumeMounts }}
               {{- include "common.tplvalues.render" (dict "value" .Values.backup.cronjob.extraVolumeMounts "context" $) | nindent 14 }}

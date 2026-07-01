@@ -138,7 +138,7 @@ spec:
               value: {{ .Values.auth.username | quote }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: MEMCACHED_PASSWORD_FILE
-              value: "/opt/bitnami/memcached/secrets/memcached-password"
+              value: "/opt/nix-containers/memcached/secrets/memcached-password"
             {{- else }}
             - name: MEMCACHED_PASSWORD
               valueFrom:
@@ -213,14 +213,14 @@ spec:
               mountPath: /cache-state
             {{- end }}
             - name: empty-dir
-              mountPath: /opt/bitnami/memcached/conf
+              mountPath: /opt/nix-containers/memcached/conf
               subPath: app-conf-dir
             - name: empty-dir
               mountPath: /tmp
               subPath: tmp-dir
             {{- if and .Values.auth.enabled .Values.auth.usePasswordFiles }}
             - name: memcached-secrets
-              mountPath: /opt/bitnami/memcached/secrets
+              mountPath: /opt/nix-containers/memcached/secrets
             {{- end }}
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.extraVolumeMounts "context" $ ) | nindent 12 }}

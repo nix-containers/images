@@ -80,8 +80,8 @@ diagnosticMode:
 
 ## @section Airflow common parameters
 
-## Bitnami Airflow image version
-## ref: https://hub.docker.com/r/bitnami/airflow/tags
+## nix-containers Airflow image version
+## ref: https://hub.docker.com/r/nix-containers/airflow/tags
 ## @param image.registry [default: REGISTRY_NAME] Airflow image registry
 ## @param image.repository [default: REPOSITORY_NAME/airflow] Airflow image repository
 ## @skip image.tag Airflow image tag (immutable tags are recommended)
@@ -90,8 +90,8 @@ diagnosticMode:
 ## @param image.pullSecrets Airflow image pull secrets
 ## @param image.debug Enable image debug mode
 image:
-  registry: docker.io
-  repository: bitnami/airflow
+  registry: ghcr.io
+  repository: nix-containers/airflow-nixchart
   tag: 3.0.5-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
@@ -112,7 +112,7 @@ image:
   debug: false
 
 ## Authentication parameters
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/airflow#environment-variables
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/airflow#environment-variables
 ##
 auth:
   ## @param auth.username Username to access web UI
@@ -152,10 +152,10 @@ loadExamples: false
 ## Use YAML format, then it's transformed to .cfg format by the chart. e.g:
 ##    configuration:
 ##      core:
-##        dags_folder: "/opt/bitnami/airflow/dags"
+##        dags_folder: "/opt/nix-containers/airflow/dags"
 ## ... will be transformed to:
 ##    [core]
-##    dags_folder = "/opt/bitnami/airflow/dags"
+##    dags_folder = "/opt/nix-containers/airflow/dags"
 ##
 configuration: {}
 ## @param overrideConfiguration Airflow common configuration override. Values defined here takes precedence over the ones defined at `configuration`
@@ -257,7 +257,7 @@ defaultInitContainers:
     ## Airflow "prepare-config" init container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.prepareConfig.resourcesPreset Set Airflow "prepare-config" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.prepareConfig.resources is set (defaultInitContainers.prepareConfig.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultInitContainers.prepareConfig.resources Set Airflow "prepare-config" init container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -306,7 +306,7 @@ defaultInitContainers:
     ## Airflow "wait-for-db-migrations" init container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.waitForDBMigrations.resourcesPreset Set Airflow "wait-for-db-migrations" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.waitForDBMigrations.resources is set (defaultInitContainers.waitForDBMigrations.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "micro"
     ## @param defaultInitContainers.waitForDBMigrations.resources Set Airflow "wait-for-db-migrations" init container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -352,7 +352,7 @@ defaultInitContainers:
     ## Airflow "prepare-venv" init container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.prepareVenv.resourcesPreset Set Airflow "prepare-venv" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.prepareVenv.resources is set (defaultInitContainers.prepareVenv.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultInitContainers.prepareVenv.resources Set Airflow "prepare-venv" init container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -413,7 +413,7 @@ defaultInitContainers:
     ## Airflow "load-dags-plugins" init container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.loadDAGsPlugins.resourcesPreset Set Airflow "load-dags-plugins" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.loadDAGsPlugins.resources is set (defaultInitContainers.loadDAGsPlugins.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultInitContainers.loadDAGsPlugins.resources Set Airflow "load-dags-plugins" init container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -479,7 +479,7 @@ defaultSidecars:
     ## Airflow "sync-dags-plugins" sidecar resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultSidecars.syncDAGsPlugins.resourcesPreset Set Airflow "sync-dags-plugins" sidecar resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultSidecars.syncDAGsPlugins.resources is set (defaultSidecars.syncDAGsPlugins.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultSidecars.syncDAGsPlugins.resources Set Airflow "sync-dags-plugins" sidecar requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -666,7 +666,7 @@ web:
   ## Airflow webserver resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param web.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if web.resources is set (web.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "medium"
   ## @param web.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1044,7 +1044,7 @@ scheduler:
   ## Airflow scheduler resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param scheduler.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if scheduler.resources is set (scheduler.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param scheduler.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1423,7 +1423,7 @@ dagProcessor:
   ## Airflow Dag Processor resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param dagProcessor.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if dagProcessor.resources is set (dagProcessor.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param dagProcessor.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1809,7 +1809,7 @@ triggerer:
   ## Airflow Triggerer resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param triggerer.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if triggerer.resources is set (triggerer.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param triggerer.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2297,7 +2297,7 @@ worker:
   ## Airflow worker resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param worker.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if worker.resources is set (worker.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "large"
   ## @param worker.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2671,7 +2671,7 @@ setupDBJob:
   ## Airflow "setup-db" job's container resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param setupDBJob.resourcesPreset Set Airflow "setup-db" job's container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if setupDBJob.resources is set (setupDBJob.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param setupDBJob.resources Set Airflow "setup-db" job's container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2855,7 +2855,7 @@ ldap:
     enabled: false
     allowSelfSigned: true
     certificatesSecret: ""
-    certificatesMountPath: /opt/bitnami/airflow/conf/certs
+    certificatesMountPath: /opt/nix-containers/airflow/conf/certs
     CAFilename: ""
 ## @section Traffic Exposure Parameters
 
@@ -3062,8 +3062,8 @@ metrics:
   ## @param metrics.enabled Enable a StatsD exporter that collects StatsD metrics from Airflow components and expose them as Prometheus metrics
   ##
   enabled: false
-  ## Bitnami StatsD exporter image
-  ## ref: https://hub.docker.com/r/bitnami/statsd-exporter/tags/
+  ## nix-containers StatsD exporter image
+  ## ref: https://hub.docker.com/r/nix-containers/statsd-exporter/tags/
   ## @param metrics.image.registry [default: REGISTRY_NAME] StatsD exporter image registry
   ## @param metrics.image.repository [default: REPOSITORY_NAME/statsd-exporter] StatsD exporter image repository
   ## @skip metrics.image.tag StatsD exporter image tag (immutable tags are recommended)
@@ -3072,8 +3072,8 @@ metrics:
   ## @param metrics.image.pullSecrets StatsD exporter image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/statsd-exporter
+    registry: ghcr.io
+    repository: nix-containers/prometheus-statsd-exporter-nixchart
     tag: 0.28.0-debian-12-r24
     digest: ""
     pullPolicy: IfNotPresent
@@ -3100,7 +3100,7 @@ metrics:
   ## StatsD exporter resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param metrics.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.resources is set (metrics.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param metrics.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -3371,7 +3371,7 @@ metrics:
     ##
     labels: {}
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     selector: {}
     ## @param metrics.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
@@ -3445,7 +3445,7 @@ metrics:
 ## @section Airflow database parameters
 
 ## PostgreSQL chart configuration
-## ref: https://github.com/bitnami/charts/blob/main/bitnami/postgresql/values.yaml
+## ref: https://github.com/nix-containers/images
 ## @param postgresql.enabled Switch to enable or disable the PostgreSQL helm chart
 ## @param postgresql.auth.enablePostgresUser Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user
 ## @param postgresql.auth.username Name for a custom user to create
@@ -3460,14 +3460,14 @@ postgresql:
     enablePostgresUser: true
     username: bn_airflow
     password: ""
-    database: bitnami_airflow
+    database: nix-containers_airflow
     existingSecret: ""
   architecture: standalone
   primary:
     ## PostgreSQL Primary resource requests and limits
     ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param postgresql.primary.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if primary.resources is set (primary.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param postgresql.primary.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -3497,14 +3497,14 @@ externalDatabase:
   host: localhost
   port: 5432
   user: bn_airflow
-  database: bitnami_airflow
+  database: nix-containers_airflow
   password: ""
   sqlConnection: ""
   existingSecret: ""
   existingSecretPasswordKey: ""
   existingSecretSqlConnectionKey: ""
 ## Redis&reg; chart configuration
-## ref: https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
+## ref: https://github.com/nix-containers/images
 ## @param redis.enabled Switch to enable or disable the Redis&reg; helm
 ## @param redis.auth.enabled Enable password authentication
 ## @param redis.auth.password Redis&reg; password
@@ -3531,7 +3531,7 @@ redis:
     ## Redis&reg; master resource requests and limits
     ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param redis.master.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if master.resources is set (master.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param redis.master.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

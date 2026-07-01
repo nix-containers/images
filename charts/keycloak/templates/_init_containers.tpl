@@ -18,15 +18,15 @@ Returns an init-container that copies writable directories to an empty dir volum
   args:
     - -ec
     - |
-      . /opt/bitnami/scripts/liblog.sh
+      . /opt/nix-containers/scripts/liblog.sh
 
       info "Copying writable dirs to empty dir"
       # In order to not break the application functionality we need to make some
       # directories writable, so we need to copy it to an empty dir volume
-      cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/lib/quarkus /emptydir/app-quarkus-dir
-      cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/data /emptydir/app-data-dir
-      cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/providers /emptydir/app-providers-dir
-      cp -r --preserve=mode,timestamps /opt/bitnami/keycloak/themes /emptydir/app-themes-dir
+      cp -r --preserve=mode,timestamps /opt/nix-containers/keycloak/lib/quarkus /emptydir/app-quarkus-dir
+      cp -r --preserve=mode,timestamps /opt/nix-containers/keycloak/data /emptydir/app-data-dir
+      cp -r --preserve=mode,timestamps /opt/nix-containers/keycloak/providers /emptydir/app-providers-dir
+      cp -r --preserve=mode,timestamps /opt/nix-containers/keycloak/themes /emptydir/app-themes-dir
       info "Copy operation completed"
   volumeMounts:
    - name: empty-dir

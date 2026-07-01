@@ -3,8 +3,8 @@ CHART VERSION: {{ .Chart.Version }}
 APP VERSION: {{ .Chart.AppVersion }}
 
 ⚠ WARNING: Since August 28th, 2025, only a limited subset of images/charts are available for free.
-    Subscribe to Bitnami Secure Images to receive continued support and security updates.
-    More info at https://bitnami.com and https://github.com/bitnami/containers/issues/83267
+    Subscribe to nix-containers Secure Images to receive continued support and security updates.
+    More info at https://nix-containers.com and https://github.com/nix-containers/containers/issues/83267
 
 ** Please be patient while the chart is being deployed **
 
@@ -26,13 +26,13 @@ In order to replicate the container startup scripts execute this command:
 
 For Redis:
 
-    /opt/bitnami/scripts/redis/entrypoint.sh /opt/bitnami/scripts/redis/run.sh
+    /opt/nix-containers/scripts/redis/entrypoint.sh /opt/nix-containers/scripts/redis/run.sh
 
 {{- if .Values.sentinel.enabled }}
 
 For Redis Sentinel:
 
-    /opt/bitnami/scripts/redis-sentinel/entrypoint.sh /opt/bitnami/scripts/redis-sentinel/run.sh
+    /opt/nix-containers/scripts/redis-sentinel/entrypoint.sh /opt/nix-containers/scripts/redis-sentinel/run.sh
 
 {{- end }}
 {{- else }}
@@ -64,7 +64,7 @@ For Redis Sentinel:
 
     By specifying ".Values.auth.usePasswordFiles=true" and ".Values.auth.usePasswordFileFromSecret=false"
     Redis is expecting that the password is mounted as a file in each pod
-    (by default in /opt/bitnami/redis/secrets/redis-password)
+    (by default in /opt/nix-containers/redis/secrets/redis-password)
 
     Ensure that you specify the respective initContainers in
     both .Values.master.initContainers and .Values.replica.initContainers

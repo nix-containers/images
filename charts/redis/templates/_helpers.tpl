@@ -75,9 +75,9 @@ Return the path to the cert file.
 */}}
 {{- define "redis.tlsCert" -}}
 {{- if (include "redis.createTlsSecret" . ) -}}
-    {{- printf "/opt/bitnami/redis/certs/%s" "tls.crt" -}}
+    {{- printf "/opt/nix-containers/redis/certs/%s" "tls.crt" -}}
 {{- else -}}
-    {{- required "Certificate filename is required when TLS in enabled" .Values.tls.certFilename | printf "/opt/bitnami/redis/certs/%s" -}}
+    {{- required "Certificate filename is required when TLS in enabled" .Values.tls.certFilename | printf "/opt/nix-containers/redis/certs/%s" -}}
 {{- end -}}
 {{- end -}}
 
@@ -86,9 +86,9 @@ Return the path to the cert key file.
 */}}
 {{- define "redis.tlsCertKey" -}}
 {{- if (include "redis.createTlsSecret" . ) -}}
-    {{- printf "/opt/bitnami/redis/certs/%s" "tls.key" -}}
+    {{- printf "/opt/nix-containers/redis/certs/%s" "tls.key" -}}
 {{- else -}}
-    {{- required "Certificate Key filename is required when TLS in enabled" .Values.tls.certKeyFilename | printf "/opt/bitnami/redis/certs/%s" -}}
+    {{- required "Certificate Key filename is required when TLS in enabled" .Values.tls.certKeyFilename | printf "/opt/nix-containers/redis/certs/%s" -}}
 {{- end -}}
 {{- end -}}
 
@@ -97,9 +97,9 @@ Return the path to the CA cert file.
 */}}
 {{- define "redis.tlsCACert" -}}
 {{- if (include "redis.createTlsSecret" . ) -}}
-    {{- printf "/opt/bitnami/redis/certs/%s" "ca.crt" -}}
+    {{- printf "/opt/nix-containers/redis/certs/%s" "ca.crt" -}}
 {{- else }}
-    {{- ternary "" (printf "/opt/bitnami/redis/certs/%s" .Values.tls.certCAFilename) (empty .Values.tls.certCAFilename) }}
+    {{- ternary "" (printf "/opt/nix-containers/redis/certs/%s" .Values.tls.certCAFilename) (empty .Values.tls.certCAFilename) }}
 {{- end -}}
 {{- end -}}
 
@@ -108,7 +108,7 @@ Return the path to the DH params file.
 */}}
 {{- define "redis.tlsDHParams" -}}
 {{- if .Values.tls.dhParamsFilename -}}
-{{- printf "/opt/bitnami/redis/certs/%s" .Values.tls.dhParamsFilename -}}
+{{- printf "/opt/nix-containers/redis/certs/%s" .Values.tls.dhParamsFilename -}}
 {{- end -}}
 {{- end -}}
 

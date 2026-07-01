@@ -58,7 +58,7 @@ spec:
                 {{- if and .Values.auth.rbac.create .Values.auth.token.enabled }}
                 {{- if .Values.usePasswordFiles }}
                 - name: ETCD_ROOT_PASSWORD_FILE
-                  value: {{ printf "/opt/bitnami/etcd/secrets/%s" (include "etcd.secretPasswordKey" .) }}
+                  value: {{ printf "/opt/nix-containers/etcd/secrets/%s" (include "etcd.secretPasswordKey" .) }}
                 {{- else }}
                 - name: ETCD_ROOT_PASSWORD
                   valueFrom:
@@ -69,11 +69,11 @@ spec:
                 {{- end }}
                 {{- if or .Values.auth.client.enableAuthentication (and .Values.auth.client.secureTransport (not .Values.auth.client.useAutoTLS )) }}
                 - name: ETCDCTL_CACERT
-                  value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}"
+                  value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}"
                 - name: ETCDCTL_KEY
-                  value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.certKeyFilename }}"
+                  value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.certKeyFilename }}"
                 - name: ETCDCTL_CERT
-                  value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.certFilename }}"
+                  value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.certFilename }}"
                 {{- end }}
                 {{- if .Values.defrag.cronjob.extraEnvVars }}
                 {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
@@ -100,10 +100,10 @@ spec:
                   set -eo pipefail
 
                   # Include library
-                  . /opt/bitnami/scripts/libetcd.sh
+                  . /opt/nix-containers/scripts/libetcd.sh
 
                   # Load etcd environment settings
-                  . /opt/bitnami/scripts/etcd-env.sh
+                  . /opt/nix-containers/scripts/etcd-env.sh
 
                   # Common flags
                   read -r -a flags <<<"$(etcdctl_auth_flags)"
@@ -137,12 +137,12 @@ spec:
               volumeMounts:
               {{- if or .Values.auth.client.enableAuthentication (and .Values.auth.client.secureTransport (not .Values.auth.client.useAutoTLS )) }}
                 - name: etcd-client-certs
-                  mountPath: /opt/bitnami/etcd/certs/client/
+                  mountPath: /opt/nix-containers/etcd/certs/client/
                   readOnly: true
               {{- end }}
               {{- if and .Values.usePasswordFiles (or .Values.auth.rbac.create .Values.auth.rbac.enabled) }}
                 - name: etcd-secrets
-                  mountPath: /opt/bitnami/etcd/secrets/
+                  mountPath: /opt/nix-containers/etcd/secrets/
                   readOnly: true
               {{- end }}
           {{- if or .Values.auth.client.enableAuthentication (and .Values.auth.client.secureTransport (not .Values.auth.client.useAutoTLS )) (and .Values.usePasswordFiles (or .Values.auth.rbac.create .Values.auth.rbac.enabled)) }}

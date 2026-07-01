@@ -89,7 +89,7 @@ spec:
             - /bin/bash
             - -ec
             - |
-              chown -R {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }} /bitnami/etcd
+              chown -R {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }} /nix-containers/etcd
           securityContext:
             runAsUser: 0
           {{- if .Values.volumePermissions.resources }}
@@ -99,7 +99,7 @@ spec:
           {{- end }}
           volumeMounts:
             - name: data
-              mountPath: /bitnami/etcd
+              mountPath: /nix-containers/etcd
             - name: empty-dir
               mountPath: /tmp
               subPath: tmp-dir
@@ -152,7 +152,7 @@ spec:
             - name: ETCD_NAME
               value: "$(MY_POD_NAME)"
             - name: ETCD_DATA_DIR
-              value: "/bitnami/etcd/data"
+              value: "/nix-containers/etcd/data"
             - name: ETCD_LOG_LEVEL
               value: {{ ternary "debug" .Values.logLevel .Values.image.debug | quote }}
             - name: ALLOW_NONE_AUTHENTICATION
@@ -160,7 +160,7 @@ spec:
             {{- if or .Values.auth.rbac.create .Values.auth.rbac.enabled }}
             {{- if .Values.usePasswordFiles }}
             - name: ETCD_ROOT_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/etcd/secrets/%s" (include "etcd.secretPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/etcd/secrets/%s" (include "etcd.secretPasswordKey" .) }}
             {{- else }}
             - name: ETCD_ROOT_PASSWORD
               valueFrom:
@@ -172,7 +172,7 @@ spec:
             {{- if .Values.auth.token.enabled }}
             - name: ETCD_AUTH_TOKEN
               {{- if eq .Values.auth.token.type "jwt" }}
-              value: {{ printf "jwt,priv-key=/opt/bitnami/etcd/certs/token/%s,sign-method=%s,ttl=%s" .Values.auth.token.privateKey.filename .Values.auth.token.signMethod .Values.auth.token.ttl | quote }}
+              value: {{ printf "jwt,priv-key=/opt/nix-containers/etcd/certs/token/%s,sign-method=%s,ttl=%s" .Values.auth.token.privateKey.filename .Values.auth.token.signMethod .Values.auth.token.ttl | quote }}
               {{- else if eq .Values.auth.token.type "simple" }}
               value: "simple"
               {{- end }}
@@ -216,17 +216,17 @@ spec:
               value: "true"
             {{- else if .Values.auth.client.secureTransport }}
             - name: ETCD_CERT_FILE
-              value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.certFilename }}"
+              value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.certFilename }}"
             - name: ETCD_KEY_FILE
-              value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.certKeyFilename }}"
+              value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.certKeyFilename }}"
             {{- if .Values.auth.client.enableAuthentication }}
             - name: ETCD_CLIENT_CERT_AUTH
               value: "true"
             - name: ETCD_TRUSTED_CA_FILE
-              value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}"
+              value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}"
             {{- else if .Values.auth.client.caFilename }}
             - name: ETCD_TRUSTED_CA_FILE
-              value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}"
+              value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}"
             {{- end }}
             {{- end }}
             {{- if and .Values.auth.peer.secureTransport .Values.auth.peer.useAutoTLS }}
@@ -234,17 +234,17 @@ spec:
               value: "true"
             {{- else if .Values.auth.peer.secureTransport }}
             - name: ETCD_PEER_CERT_FILE
-              value: "/opt/bitnami/etcd/certs/peer/{{ .Values.auth.peer.certFilename }}"
+              value: "/opt/nix-containers/etcd/certs/peer/{{ .Values.auth.peer.certFilename }}"
             - name: ETCD_PEER_KEY_FILE
-              value: "/opt/bitnami/etcd/certs/peer/{{ .Values.auth.peer.certKeyFilename }}"
+              value: "/opt/nix-containers/etcd/certs/peer/{{ .Values.auth.peer.certKeyFilename }}"
             {{- if .Values.auth.peer.enableAuthentication }}
             - name: ETCD_PEER_CLIENT_CERT_AUTH
               value: "true"
             - name: ETCD_PEER_TRUSTED_CA_FILE
-              value: "/opt/bitnami/etcd/certs/peer/{{ .Values.auth.peer.caFilename | default "ca.crt" }}"
+              value: "/opt/nix-containers/etcd/certs/peer/{{ .Values.auth.peer.caFilename | default "ca.crt" }}"
             {{- else if .Values.auth.peer.caFilename }}
             - name: ETCD_PEER_TRUSTED_CA_FILE
-              value: "/opt/bitnami/etcd/certs/peer/{{ .Values.auth.peer.caFilename | default "ca.crt" }}"
+              value: "/opt/nix-containers/etcd/certs/peer/{{ .Values.auth.peer.caFilename | default "ca.crt" }}"
             {{- end }}
             {{- end }}
             {{- if .Values.startFromSnapshot.enabled }}
@@ -285,7 +285,7 @@ spec:
             {{- if .Values.auth.client.secureTransport }}
             exec:
               command:
-                - /opt/bitnami/scripts/etcd/healthcheck.sh
+                - /opt/nix-containers/scripts/etcd/healthcheck.sh
             {{- else }}
             httpGet:
               port: {{ .Values.metrics.useSeparateEndpoint | ternary .Values.containerPorts.metrics .Values.containerPorts.client }}
@@ -304,7 +304,7 @@ spec:
           readinessProbe:
             exec:
               command:
-                - /opt/bitnami/scripts/etcd/healthcheck.sh
+                - /opt/nix-containers/scripts/etcd/healthcheck.sh
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -317,7 +317,7 @@ spec:
           startupProbe:
             exec:
               command:
-                - /opt/bitnami/scripts/etcd/healthcheck.sh
+                - /opt/nix-containers/scripts/etcd/healthcheck.sh
             initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.startupProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
@@ -336,20 +336,20 @@ spec:
           volumeMounts:
             {{- if or .Values.configuration .Values.existingConfigmap }}
             - name: configuration
-              mountPath: /opt/bitnami/etcd/conf/
+              mountPath: /opt/nix-containers/etcd/conf/
             {{- else }}
             - name: empty-dir
-              mountPath: /opt/bitnami/etcd/conf/
+              mountPath: /opt/nix-containers/etcd/conf/
               subPath: app-conf-dir
             {{- end }}
             - name: empty-dir
               mountPath: /tmp
               subPath: tmp-dir
             - name: data
-              mountPath: /bitnami/etcd
+              mountPath: /nix-containers/etcd
             {{- if and (eq .Values.auth.token.enabled true) (eq .Values.auth.token.type "jwt") }}
             - name: etcd-jwt-token
-              mountPath: /opt/bitnami/etcd/certs/token/
+              mountPath: /opt/nix-containers/etcd/certs/token/
               readOnly: true
             {{- end }}
             {{- if or (and .Values.startFromSnapshot.enabled (not .Values.disasterRecovery.enabled)) (and .Values.disasterRecovery.enabled .Values.startFromSnapshot.enabled .Values.disasterRecovery.pvc.existingClaim) }}
@@ -365,17 +365,17 @@ spec:
             {{- end }}
             {{- if or .Values.auth.client.enableAuthentication (and .Values.auth.client.secureTransport (not .Values.auth.client.useAutoTLS )) }}
             - name: etcd-client-certs
-              mountPath: /opt/bitnami/etcd/certs/client/
+              mountPath: /opt/nix-containers/etcd/certs/client/
               readOnly: true
             {{- end }}
             {{- if or .Values.auth.peer.enableAuthentication (and .Values.auth.peer.secureTransport (not .Values.auth.peer.useAutoTLS )) }}
             - name: etcd-peer-certs
-              mountPath: /opt/bitnami/etcd/certs/peer/
+              mountPath: /opt/nix-containers/etcd/certs/peer/
               readOnly: true
             {{- end }}
             {{- if and .Values.usePasswordFiles (or .Values.auth.rbac.create .Values.auth.rbac.enabled) }}
             - name: etcd-secrets
-              mountPath: /opt/bitnami/etcd/secrets
+              mountPath: /opt/nix-containers/etcd/secrets
             {{- end }}
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}

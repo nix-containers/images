@@ -6,7 +6,7 @@ Usage:
 */}}
 {{- define "common.warnings.rollingTag" -}}
 
-{{- if and (contains "bitnami/" .repository) (not (.tag | toString | regexFind "-r\\d+$|sha256:")) }}
+{{- if and (contains "nix-containers/" .repository) (not (.tag | toString | regexFind "-r\\d+$|sha256:")) }}
 WARNING: Rolling tag detected ({{ .repository }}:{{ .tag }}), please note that it is strongly recommended to avoid using rolling tags in a production environment.
 +info https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-understand-rolling-tags-containers-index.html
 {{- end }}
@@ -30,7 +30,7 @@ Usage:
 {{- end -}}
 {{- if $printMessage }}
 
-⚠ SECURITY WARNING: Original containers have been substituted. This Helm chart was designed, tested, and validated on multiple platforms using a specific set of Bitnami and Tanzu Application Catalog containers. Substituting other containers is likely to cause degraded security and performance, broken chart features, and missing environment variables.
+⚠ SECURITY WARNING: Original containers have been substituted. This Helm chart was designed, tested, and validated on multiple platforms using a specific set of the reference containers. Substituting other containers is likely to cause degraded security and performance, broken chart features, and missing environment variables.
 
 Substituted images detected:
 {{- range $affectedImages }}

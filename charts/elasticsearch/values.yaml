@@ -98,11 +98,11 @@ containerPorts:
   restAPI: 9200
   transport: 9300
 ## @param plugins Comma, semi-colon or space separated list of plugins to install at initialization
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/elasticsearch#environment-variables
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/elasticsearch#environment-variables
 ##
 plugins: ""
 ## @param snapshotRepoPath File System snapshot repository path
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/elasticsearch#environment-variables
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/elasticsearch#environment-variables
 ##
 snapshotRepoPath: ""
 ## @param config Override elasticsearch configuration
@@ -195,7 +195,7 @@ enableDefaultInitContainers: true
 ## @param useIstioLabels Use this variable to add Istio labels to all pods
 ##
 useIstioLabels: true
-## Bitnami Elasticsearch image
+## nix-containers Elasticsearch image
 ## @param image.registry [default: REGISTRY_NAME] Elasticsearch image registry
 ## @param image.repository [default: REPOSITORY_NAME/elasticsearch] Elasticsearch image repository
 ## @skip image.tag Elasticsearch image tag (immutable tags are recommended)
@@ -205,8 +205,8 @@ useIstioLabels: true
 ## @param image.debug Enable Elasticsearch image debug mode
 ##
 image:
-  registry: docker.io
-  repository: bitnami/elasticsearch
+  registry: ghcr.io
+  repository: nix-containers/elasticsearch-nixchart
   tag: 9.1.2-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
@@ -232,7 +232,7 @@ security:
   ##
   enabled: false
   ## @param security.elasticPassword Password for 'elastic' user
-  ## Ref: https://github.com/bitnami/containers/tree/main/bitnami/elasticsearch#security
+  ## Ref: https://github.com/nix-containers/containers/tree/main/nix-containers/elasticsearch#security
   ##
   elasticPassword: ""
   ## @param security.existingSecret Name of the existing secret containing the Elasticsearch password (expected key: `elasticsearch-password`)
@@ -515,7 +515,7 @@ master:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param master.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if master.resources is set (master.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param master.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -925,7 +925,7 @@ data:
   ## Elasticsearch resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param data.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if data.resources is set (data.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "medium"
   ## @param data.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1338,7 +1338,7 @@ coordinating:
   ## Elasticsearch resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param coordinating.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if coordinating.resources is set (coordinating.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param coordinating.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1705,7 +1705,7 @@ ingest:
   ## Elasticsearch resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param ingest.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if ingest.resources is set (ingest.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param ingest.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2194,7 +2194,7 @@ ingest:
 ## @section Metrics parameters
 
 ## Elasticsearch Prometheus exporter configuration
-## ref: https://hub.docker.com/r/bitnami/elasticsearch-exporter/tags/
+## ref: https://hub.docker.com/r/nix-containers/elasticsearch-exporter/tags/
 ##
 metrics:
   ## @param metrics.enabled Enable prometheus exporter
@@ -2214,8 +2214,8 @@ metrics:
   ## @param metrics.image.pullSecrets Metrics exporter image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/elasticsearch-exporter
+    registry: ghcr.io
+    repository: nix-containers/prometheus-elasticsearch-exporter-nixchart
     tag: 1.9.0-debian-12-r16
     digest: ""
     pullPolicy: IfNotPresent
@@ -2381,7 +2381,7 @@ metrics:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param metrics.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.resources is set (metrics.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param metrics.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2590,7 +2590,7 @@ metrics:
     ##
     metricRelabelings: []
     ## @param metrics.serviceMonitor.selector ServiceMonitor selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     ## selector:
     ##   prometheus: my-prometheus
@@ -2644,8 +2644,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Init container volume-permissions image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r50
     digest: ""
     pullPolicy: IfNotPresent
@@ -2664,7 +2664,7 @@ volumePermissions:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2691,8 +2691,8 @@ sysctlImage:
   ## @param sysctlImage.pullPolicy Kernel settings modifier image pull policy
   ## @param sysctlImage.pullSecrets Kernel settings modifier image pull secrets
   ##
-  registry: docker.io
-  repository: bitnami/os-shell
+  registry: ghcr.io
+  repository: nix-containers/os-shell-nixchart
   tag: 12-debian-12-r50
   digest: ""
   ## Specify a imagePullPolicy
@@ -2714,7 +2714,7 @@ sysctlImage:
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   ## @param sysctlImage.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if sysctlImage.resources is set (sysctlImage.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param sysctlImage.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

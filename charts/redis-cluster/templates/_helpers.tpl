@@ -61,9 +61,9 @@ Return the path to the cert file.
 */}}
 {{- define "redis-cluster.tlsCert" -}}
 {{- if (include "redis-cluster.createTlsSecret" . ) -}}
-    {{- printf "/opt/bitnami/redis/certs/%s" "tls.crt" -}}
+    {{- printf "/opt/nix-containers/redis/certs/%s" "tls.crt" -}}
 {{- else -}}
-    {{- required "Certificate filename is required when TLS in enabled" .Values.tls.certFilename | printf "/opt/bitnami/redis/certs/%s" -}}
+    {{- required "Certificate filename is required when TLS in enabled" .Values.tls.certFilename | printf "/opt/nix-containers/redis/certs/%s" -}}
 {{- end -}}
 {{- end -}}
 
@@ -72,9 +72,9 @@ Return the path to the cert key file.
 */}}
 {{- define "redis-cluster.tlsCertKey" -}}
 {{- if (include "redis-cluster.createTlsSecret" . ) -}}
-    {{- printf "/opt/bitnami/redis/certs/%s" "tls.key" -}}
+    {{- printf "/opt/nix-containers/redis/certs/%s" "tls.key" -}}
 {{- else -}}
-    {{- required "Certificate Key filename is required when TLS in enabled" .Values.tls.certKeyFilename | printf "/opt/bitnami/redis/certs/%s" -}}
+    {{- required "Certificate Key filename is required when TLS in enabled" .Values.tls.certKeyFilename | printf "/opt/nix-containers/redis/certs/%s" -}}
 {{- end -}}
 {{- end -}}
 
@@ -83,9 +83,9 @@ Return the path to the CA cert file.
 */}}
 {{- define "redis-cluster.tlsCACert" -}}
 {{- if (include "redis-cluster.createTlsSecret" . ) -}}
-    {{- printf "/opt/bitnami/redis/certs/%s" "ca.crt" -}}
+    {{- printf "/opt/nix-containers/redis/certs/%s" "ca.crt" -}}
 {{- else -}}
-    {{- required "Certificate CA filename is required when TLS in enabled" .Values.tls.certCAFilename | printf "/opt/bitnami/redis/certs/%s" -}}
+    {{- required "Certificate CA filename is required when TLS in enabled" .Values.tls.certCAFilename | printf "/opt/nix-containers/redis/certs/%s" -}}
 {{- end -}}
 {{- end -}}
 
@@ -94,7 +94,7 @@ Return the path to the DH params file.
 */}}
 {{- define "redis-cluster.tlsDHParams" -}}
 {{- if .Values.tls.dhParamsFilename -}}
-{{- printf "/opt/bitnami/redis/certs/%s" .Values.tls.dhParamsFilename -}}
+{{- printf "/opt/nix-containers/redis/certs/%s" .Values.tls.dhParamsFilename -}}
 {{- end -}}
 {{- end -}}
 

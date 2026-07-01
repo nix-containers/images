@@ -82,8 +82,8 @@ serviceBindings:
 
 ## @section Kafka common parameters
 
-## Bitnami Kafka image version
-## ref: https://hub.docker.com/r/bitnami/kafka/tags/
+## nix-containers Kafka image version
+## ref: https://hub.docker.com/r/nix-containers/kafka/tags/
 ## @param image.registry [default: REGISTRY_NAME] Kafka image registry
 ## @param image.repository [default: REPOSITORY_NAME/kafka] Kafka image repository
 ## @skip image.tag Kafka image tag (immutable tags are recommended)
@@ -93,8 +93,8 @@ serviceBindings:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: docker.io
-  repository: bitnami/kafka
+  registry: ghcr.io
+  repository: nix-containers/kafka-nixchart
   tag: 4.0.0-debian-12-r10
   digest: ""
   ## Specify a imagePullPolicy
@@ -116,7 +116,7 @@ image:
 ## @param clusterId Kafka Kraft cluster ID (ignored if existingKraftSecret is set). A random cluster ID will be generated the 1st time Kraft is initialized if not set.
 ## NOTE: Already initialized Kafka nodes will use cluster ID stored in their persisted storage.
 ## If reusing existing PVCs, make sure the cluster ID is set matching the stored cluster ID, otherwise new nodes will fail to join the cluster.
-## In case the cluster ID stored in the secret does not match the value stored in /bitnami/kafka/data/meta.properties, remove the secret and upgrade the chart setting the correct value.
+## In case the cluster ID stored in the secret does not match the value stored in /nix-containers/kafka/data/meta.properties, remove the secret and upgrade the chart setting the correct value.
 ##
 clusterId: ""
 ## @param existingKraftSecret Name of the secret containing the Kafka KRaft Cluster ID and one directory ID per controller replica
@@ -393,7 +393,7 @@ tls:
   ##
   sslClientAuth: "required"
 ## @param extraEnvVars Extra environment variables to add to Kafka pods
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/kafka#configuration
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/kafka#configuration
 ## e.g:
 ## extraEnvVars:
 ##   - name: KAFKA_CFG_BACKGROUND_THREADS
@@ -417,7 +417,7 @@ extraVolumes: []
 ## @param extraVolumeMounts Optionally specify extra list of additional volumeMounts for the Kafka container(s)
 ## extraVolumeMounts:
 ##   - name: kafka-jaas
-##     mountPath: /bitnami/kafka/config/kafka_jaas.conf
+##     mountPath: /nix-containers/kafka/config/kafka_jaas.conf
 ##     subPath: kafka_jaas.conf
 ##
 extraVolumeMounts: []
@@ -484,8 +484,8 @@ defaultInitContainers:
     ## @param defaultInitContainers.volumePermissions.image.pullSecrets "volume-permissions" init-containers' image pull secrets
     ##
     image:
-      registry: docker.io
-      repository: bitnami/os-shell
+      registry: ghcr.io
+      repository: nix-containers/os-shell-nixchart
       tag: 12-debian-12-r51
       digest: ""
       pullPolicy: IfNotPresent
@@ -522,7 +522,7 @@ defaultInitContainers:
     ## Kafka "volume-permissions" init container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.volumePermissions.resourcesPreset Set Kafka "volume-permissions" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.volumePermissions.resources is set (defaultInitContainers.volumePermissions.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultInitContainers.volumePermissions.resources Set Kafka "volume-permissions" init container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -571,7 +571,7 @@ defaultInitContainers:
     ## Kafka "prepare-config" init container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.prepareConfig.resourcesPreset Set Kafka "prepare-config" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.prepareConfig.resources is set (defaultInitContainers.prepareConfig.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultInitContainers.prepareConfig.resources Set Kafka "prepare-config" init container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -596,7 +596,7 @@ defaultInitContainers:
     ## @param defaultInitContainers.autoDiscovery.enabled Enable init container that auto-detects external IPs/ports by querying the K8s API
     ##
     enabled: false
-    ## Bitnami Kubectl image
+    ## nix-containers Kubectl image
     ## @param defaultInitContainers.autoDiscovery.image.registry [default: REGISTRY_NAME] "auto-discovery" init-containers' image registry
     ## @param defaultInitContainers.autoDiscovery.image.repository [default: REPOSITORY_NAME/os-shell] "auto-discovery" init-containers' image repository
     ## @skip defaultInitContainers.autoDiscovery.image.tag "auto-discovery" init-containers' image tag (immutable tags are recommended)
@@ -605,8 +605,8 @@ defaultInitContainers:
     ## @param defaultInitContainers.autoDiscovery.image.pullSecrets "auto-discovery" init-containers' image pull secrets
     ##
     image:
-      registry: docker.io
-      repository: bitnami/kubectl
+      registry: ghcr.io
+      repository: nix-containers/kubectl-nixchart
       tag: 1.33.4-debian-12-r0
       digest: ""
       ## Specify a imagePullPolicy
@@ -651,7 +651,7 @@ defaultInitContainers:
     ## Kafka "auto-discovery" init container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.autoDiscovery.resourcesPreset Set Kafka "auto-discovery" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.autoDiscovery.resources is set (defaultInitContainers.autoDiscovery.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultInitContainers.autoDiscovery.resources Set Kafka "auto-discovery" init container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -715,7 +715,7 @@ controller:
   ##
   args: []
   ## @param controller.extraEnvVars Extra environment variables to add to Kafka pods
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/kafka#configuration
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/kafka#configuration
   ## e.g:
   ## extraEnvVars:
   ##   - name: KAFKA_CFG_BACKGROUND_THREADS
@@ -790,7 +790,7 @@ controller:
   ## Kafka resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param controller.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if controller.resources is set (controller.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param controller.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -962,7 +962,7 @@ controller:
   ## @param controller.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the Kafka container(s)
   ## extraVolumeMounts:
   ##   - name: kafka-jaas
-  ##     mountPath: /bitnami/kafka/config/kafka_jaas.conf
+  ##     mountPath: /nix-containers/kafka/config/kafka_jaas.conf
   ##     subPath: kafka_jaas.conf
   ##
   extraVolumeMounts: []
@@ -1094,7 +1094,7 @@ controller:
     selector: {}
     ## @param controller.persistence.mountPath Mount path of the Kafka data volume
     ##
-    mountPath: /bitnami/kafka
+    mountPath: /nix-containers/kafka
   ## Log Persistence parameters
   ##
   logPersistence:
@@ -1131,7 +1131,7 @@ controller:
     selector: {}
     ## @param controller.logPersistence.mountPath Mount path of the Kafka logs volume
     ##
-    mountPath: /opt/bitnami/kafka/logs
+    mountPath: /opt/nix-containers/kafka/logs
 ## @section Broker-only statefulset parameters
 ##
 broker:
@@ -1176,7 +1176,7 @@ broker:
   ##
   args: []
   ## @param broker.extraEnvVars Extra environment variables to add to Kafka pods
-  ## ref: https://github.com/bitnami/containers/tree/main/bitnami/kafka#configuration
+  ## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/kafka#configuration
   ## e.g:
   ## extraEnvVars:
   ##   - name: KAFKA_CFG_BACKGROUND_THREADS
@@ -1251,7 +1251,7 @@ broker:
   ## Kafka resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param broker.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if broker.resources is set (broker.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param broker.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1422,7 +1422,7 @@ broker:
   ## @param broker.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the Kafka container(s)
   ## extraVolumeMounts:
   ##   - name: kafka-jaas
-  ##     mountPath: /bitnami/kafka/config/kafka_jaas.conf
+  ##     mountPath: /nix-containers/kafka/config/kafka_jaas.conf
   ##     subPath: kafka_jaas.conf
   ##
   extraVolumeMounts: []
@@ -1554,7 +1554,7 @@ broker:
     selector: {}
     ## @param broker.persistence.mountPath Mount path of the Kafka data volume
     ##
-    mountPath: /bitnami/kafka
+    mountPath: /nix-containers/kafka
   ## Log Persistence parameters
   ##
   logPersistence:
@@ -1591,7 +1591,7 @@ broker:
     selector: {}
     ## @param broker.logPersistence.mountPath Mount path of the Kafka logs volume
     ##
-    mountPath: /opt/bitnami/kafka/logs
+    mountPath: /opt/nix-containers/kafka/logs
 ## @section Traffic Exposure parameters
 ##
 
@@ -1987,8 +1987,8 @@ metrics:
     ## @param metrics.jmx.kafkaJmxPort JMX port where the exporter will collect metrics, exposed in the Kafka container.
     ##
     kafkaJmxPort: 5555
-    ## Bitnami JMX exporter image
-    ## ref: https://hub.docker.com/r/bitnami/jmx-exporter/tags/
+    ## nix-containers JMX exporter image
+    ## ref: https://hub.docker.com/r/nix-containers/jmx-exporter/tags/
     ## @param metrics.jmx.image.registry [default: REGISTRY_NAME] JMX exporter image registry
     ## @param metrics.jmx.image.repository [default: REPOSITORY_NAME/jmx-exporter] JMX exporter image repository
     ## @skip metrics.jmx.image.tag JMX exporter image tag (immutable tags are recommended)
@@ -1997,8 +1997,8 @@ metrics:
     ## @param metrics.jmx.image.pullSecrets Specify docker-registry secret names as an array
     ##
     image:
-      registry: docker.io
-      repository: bitnami/jmx-exporter
+      registry: ghcr.io
+      repository: nix-containers/jmx-exporter-nixchart
       tag: 1.4.0-debian-12-r0
       digest: ""
       ## Specify a imagePullPolicy
@@ -2046,7 +2046,7 @@ metrics:
     ## Prometheus JMX exporter resource requests and limits
     ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param metrics.jmx.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.jmx.resources is set (metrics.jmx.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "micro"
     ## @param metrics.jmx.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2182,7 +2182,7 @@ metrics:
     ##
     labels: {}
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ##
     selector: {}
     ## @param metrics.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
@@ -2256,13 +2256,13 @@ provisioning:
   ## @param provisioning.extraProvisioningCommands Extra commands to run to provision cluster resources
   ## - echo "Allow user to consume from any topic"
   ## - >-
-  ##   /opt/bitnami/kafka/bin/kafka-acls.sh
+  ##   /opt/nix-containers/kafka/bin/kafka-acls.sh
   ##   --bootstrap-server $KAFKA_SERVICE
   ##   --command-config /shared/client.properties
   ##   --add
   ##   --allow-principal User:user
   ##   --consumer --topic *
-  ## - "/opt/bitnami/kafka/bin/kafka-acls.sh
+  ## - "/opt/nix-containers/kafka/bin/kafka-acls.sh
   ##      --bootstrap-server $KAFKA_SERVICE
   ##      --command-config /shared/client.properties
   ##      --list"
@@ -2379,7 +2379,7 @@ provisioning:
   ## Kafka provisioning resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param provisioning.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if provisioning.resources is set (provisioning.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "micro"
   ## @param provisioning.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2457,7 +2457,7 @@ provisioning:
   ## @param provisioning.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the Kafka provisioning container(s)
   ## extraVolumeMounts:
   ##   - name: kafka-jaas
-  ##     mountPath: /bitnami/kafka/config/kafka_jaas.conf
+  ##     mountPath: /nix-containers/kafka/config/kafka_jaas.conf
   ##     subPath: kafka_jaas.conf
   ##
   extraVolumeMounts: []

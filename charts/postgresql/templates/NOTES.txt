@@ -4,8 +4,8 @@ CHART VERSION: {{ .Chart.Version }}
 APP VERSION: {{ .Chart.AppVersion }}
 
 ⚠ WARNING: Since August 28th, 2025, only a limited subset of images/charts are available for free.
-    Subscribe to Bitnami Secure Images to receive continued support and security updates.
-    More info at https://bitnami.com and https://github.com/bitnami/containers/issues/83267
+    Subscribe to nix-containers Secure Images to receive continued support and security updates.
+    More info at https://nix-containers.com and https://github.com/nix-containers/containers/issues/83267
 
 ** Please be patient while the chart is being deployed **
 
@@ -21,11 +21,11 @@ Get the list of pods by executing:
 
 Access the pod you want to debug by executing
 
-  kubectl exec --namespace {{ $releaseNamespace }} -ti <NAME OF THE POD> -- /opt/bitnami/scripts/postgresql/entrypoint.sh /bin/bash
+  kubectl exec --namespace {{ $releaseNamespace }} -ti <NAME OF THE POD> -- /opt/nix-containers/scripts/postgresql/entrypoint.sh /bin/bash
 
 In order to replicate the container startup scripts execute this command:
 
-    /opt/bitnami/scripts/postgresql/entrypoint.sh /opt/bitnami/scripts/postgresql/run.sh
+    /opt/nix-containers/scripts/postgresql/entrypoint.sh /opt/nix-containers/scripts/postgresql/run.sh
 
 {{- else }}
 
@@ -78,7 +78,7 @@ To connect to your database run the following command:
       --command -- psql --host {{ include "postgresql.v1.primary.fullname" . }} -d {{- if include "postgresql.v1.database" . }} {{ include "postgresql.v1.database" . }}{{- else }} postgres{{- end }} -p {{ include "postgresql.v1.service.port" . }}
     {{- end }}
 
-    > NOTE: If you access the container using bash, make sure that you execute "/opt/bitnami/scripts/postgresql/entrypoint.sh /bin/bash" in order to avoid the error "psql: local user with ID {{ .Values.primary.containerSecurityContext.runAsUser }}} does not exist"
+    > NOTE: If you access the container using bash, make sure that you execute "/opt/nix-containers/scripts/postgresql/entrypoint.sh /bin/bash" in order to avoid the error "psql: local user with ID {{ .Values.primary.containerSecurityContext.runAsUser }}} does not exist"
 
 To connect to your database from outside the cluster execute the following commands:
 

@@ -88,9 +88,9 @@ spec:
           args:
             - -ec
             - |
-              mkdir -p /bitnami/zookeeper
-              chown -R {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }} /bitnami/zookeeper
-              find /bitnami/zookeeper -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }}
+              mkdir -p /nix-containers/zookeeper
+              chown -R {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }} /nix-containers/zookeeper
+              find /nix-containers/zookeeper -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }}
               {{- if .Values.dataLogDir }}
               mkdir -p {{ .Values.dataLogDir }}
               chown -R {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }} {{ .Values.dataLogDir }}
@@ -109,7 +109,7 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: data
-              mountPath: /bitnami/zookeeper
+              mountPath: /nix-containers/zookeeper
             {{- if .Values.dataLogDir }}
             - name: data-log
               mountPath: {{ .Values.dataLogDir }}
@@ -133,9 +133,9 @@ spec:
             {{- if or .Values.tls.client.passwordsSecretName (include "zookeeper.client.createTlsPasswordsSecret" .) }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_TLS_CLIENT_KEYSTORE_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/zookeeper/secrets/%s" (include "zookeeper.client.tlsPasswordKeystoreKey" .) }}
+              value: {{ printf "/opt/nix-containers/zookeeper/secrets/%s" (include "zookeeper.client.tlsPasswordKeystoreKey" .) }}
             - name: ZOO_TLS_CLIENT_TRUSTSTORE_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/zookeeper/secrets/%s" (include "zookeeper.client.tlsPasswordTruststoreKey" .) }}
+              value: {{ printf "/opt/nix-containers/zookeeper/secrets/%s" (include "zookeeper.client.tlsPasswordTruststoreKey" .) }}
             {{- else }}
             - name: ZOO_TLS_CLIENT_KEYSTORE_PASSWORD
               valueFrom:
@@ -152,9 +152,9 @@ spec:
             {{- if or .Values.tls.quorum.passwordsSecretName (include "zookeeper.quorum.createTlsPasswordsSecret" .) }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_TLS_QUORUM_KEYSTORE_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/zookeeper/secrets/%s" (include "zookeeper.quorum.tlsPasswordKeystoreKey" .) }}
+              value: {{ printf "/opt/nix-containers/zookeeper/secrets/%s" (include "zookeeper.quorum.tlsPasswordKeystoreKey" .) }}
             - name: ZOO_TLS_QUORUM_TRUSTSTORE_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/zookeeper/secrets/%s" (include "zookeeper.quorum.tlsPasswordTruststoreKey" .) }}
+              value: {{ printf "/opt/nix-containers/zookeeper/secrets/%s" (include "zookeeper.quorum.tlsPasswordTruststoreKey" .) }}
             {{- else }}
             - name: ZOO_TLS_QUORUM_KEYSTORE_PASSWORD
               valueFrom:
@@ -182,19 +182,19 @@ spec:
               subPath: init-certs.sh
             {{- if and .Values.usePasswordFiles (or .Values.tls.quorum.passwordsSecretName .Values.tls.client.passwordsSecretName (include "zookeeper.quorum.createTlsPasswordsSecret" .) (include "zookeeper.client.createTlsPasswordsSecret" .) )}}
             - name: zookeeper-secrets
-              mountPath: /opt/bitnami/zookeeper/secrets
+              mountPath: /opt/nix-containers/zookeeper/secrets
             {{- end }}
             {{- if or .Values.tls.client.enabled }}
             - name: client-certificates
               mountPath: /certs/client
             - name: client-shared-certs
-              mountPath: /opt/bitnami/zookeeper/config/certs/client
+              mountPath: /opt/nix-containers/zookeeper/config/certs/client
             {{- end }}
             {{- if or .Values.tls.quorum.enabled }}
             - name: quorum-certificates
               mountPath: /certs/quorum
             - name: quorum-shared-certs
-              mountPath: /opt/bitnami/zookeeper/config/certs/quorum
+              mountPath: /opt/nix-containers/zookeeper/config/certs/quorum
             {{- end }}
         {{- end }}
         {{- if .Values.initContainers }}
@@ -272,7 +272,7 @@ spec:
               value: {{ .Values.auth.client.clientUser | quote }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_CLIENT_PASSWORD_FILE
-              value: "/opt/bitnami/zookeeper/secrets/client-password"
+              value: "/opt/nix-containers/zookeeper/secrets/client-password"
             {{- else }}
             - name: ZOO_CLIENT_PASSWORD
               valueFrom:
@@ -284,7 +284,7 @@ spec:
               value: {{ .Values.auth.client.serverUsers | quote }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_SERVER_PASSWORDS_FILE
-              value: "/opt/bitnami/zookeeper/secrets/server-password"
+              value: "/opt/nix-containers/zookeeper/secrets/server-password"
             {{- else }}
             - name: ZOO_SERVER_PASSWORDS
               valueFrom:
@@ -300,7 +300,7 @@ spec:
               value: {{ .Values.auth.quorum.learnerUser | quote }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_QUORUM_LEARNER_PASSWORD_FILE
-              value: "/opt/bitnami/zookeeper/secrets/quorum-learner-password"
+              value: "/opt/nix-containers/zookeeper/secrets/quorum-learner-password"
             {{- else }}
             - name: ZOO_QUORUM_LEARNER_PASSWORD
               valueFrom:
@@ -312,7 +312,7 @@ spec:
               value: {{ .Values.auth.quorum.serverUsers | quote }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_QUORUM_SERVER_PASSWORDS_FILE
-              value: "/opt/bitnami/zookeeper/secrets/quorum-server-password"
+              value: "/opt/nix-containers/zookeeper/secrets/quorum-server-password"
             {{- else }}
             - name: ZOO_QUORUM_SERVER_PASSWORDS
               valueFrom:
@@ -351,7 +351,7 @@ spec:
             {{- if or .Values.tls.client.keystorePassword .Values.tls.client.passwordsSecretName .Values.tls.client.autoGenerated }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_TLS_CLIENT_KEYSTORE_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/zookeeper/secrets/%s" (include "zookeeper.client.tlsPasswordKeystoreKey" .) }}
+              value: {{ printf "/opt/nix-containers/zookeeper/secrets/%s" (include "zookeeper.client.tlsPasswordKeystoreKey" .) }}
             {{- else }}
             - name: ZOO_TLS_CLIENT_KEYSTORE_PASSWORD
               valueFrom:
@@ -363,7 +363,7 @@ spec:
             {{- if or .Values.tls.client.truststorePassword .Values.tls.client.passwordsSecretName .Values.tls.client.autoGenerated }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_TLS_CLIENT_TRUSTSTORE_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/zookeeper/secrets/%s" (include "zookeeper.client.tlsPasswordTruststoreKey" .) }}
+              value: {{ printf "/opt/nix-containers/zookeeper/secrets/%s" (include "zookeeper.client.tlsPasswordTruststoreKey" .) }}
             {{- else }}
             - name: ZOO_TLS_CLIENT_TRUSTSTORE_PASSWORD
               valueFrom:
@@ -385,7 +385,7 @@ spec:
             {{- if or .Values.tls.quorum.keystorePassword .Values.tls.quorum.passwordsSecretName .Values.tls.quorum.autoGenerated }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_TLS_QUORUM_KEYSTORE_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/zookeeper/secrets/%s" (include "zookeeper.quorum.tlsPasswordKeystoreKey" .) }}
+              value: {{ printf "/opt/nix-containers/zookeeper/secrets/%s" (include "zookeeper.quorum.tlsPasswordKeystoreKey" .) }}
             {{- else }}
             - name: ZOO_TLS_QUORUM_KEYSTORE_PASSWORD
               valueFrom:
@@ -397,7 +397,7 @@ spec:
             {{- if or .Values.tls.quorum.truststorePassword .Values.tls.quorum.passwordsSecretName .Values.tls.quorum.autoGenerated }}
             {{- if .Values.usePasswordFiles }}
             - name: ZOO_TLS_QUORUM_TRUSTSTORE_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/zookeeper/secrets/%s" (include "zookeeper.quorum.tlsPasswordTruststoreKey" .) }}
+              value: {{ printf "/opt/nix-containers/zookeeper/secrets/%s" (include "zookeeper.quorum.tlsPasswordTruststoreKey" .) }}
             {{- else }}
             - name: ZOO_TLS_QUORUM_TRUSTSTORE_PASSWORD
               valueFrom:
@@ -459,7 +459,7 @@ spec:
               command:
                 - /bin/bash
                 - -ec
-                - ZOO_HC_TIMEOUT={{ .Values.livenessProbe.probeCommandTimeout }} /opt/bitnami/scripts/zookeeper/healthcheck.sh
+                - ZOO_HC_TIMEOUT={{ .Values.livenessProbe.probeCommandTimeout }} /opt/nix-containers/scripts/zookeeper/healthcheck.sh
           {{- end }}
           {{- if .Values.customReadinessProbe }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customReadinessProbe "context" $) | nindent 12 }}
@@ -469,7 +469,7 @@ spec:
               command:
                 - /bin/bash
                 - -ec
-                - ZOO_HC_TIMEOUT={{ .Values.readinessProbe.probeCommandTimeout }} /opt/bitnami/scripts/zookeeper/healthcheck.sh
+                - ZOO_HC_TIMEOUT={{ .Values.readinessProbe.probeCommandTimeout }} /opt/nix-containers/scripts/zookeeper/healthcheck.sh
           {{- end }}
           {{- if .Values.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customStartupProbe "context" $) | nindent 12 }}
@@ -491,21 +491,21 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/zookeeper/conf
+              mountPath: /opt/nix-containers/zookeeper/conf
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/zookeeper/logs
+              mountPath: /opt/nix-containers/zookeeper/logs
               subPath: app-logs-dir
             - name: scripts
               mountPath: /scripts/setup.sh
               subPath: setup.sh
             - name: data
-              mountPath: /bitnami/zookeeper
+              mountPath: /nix-containers/zookeeper
             {{- if and .Values.usePasswordFiles (or .Values.auth.client.enabled .Values.auth.quorum.enabled
                   (and .Values.tls.client.enabled (or .Values.tls.quorum.keystorePassword .Values.tls.quorum.truststorePassword .Values.tls.quorum.passwordsSecretName .Values.tls.quorum.autoGenerated))
                   (and .Values.tls.quorum.enabled (or .Values.tls.client.keystorePassword .Values.tls.client.truststorePassword .Values.tls.client.passwordsSecretName .Values.tls.client.autoGenerated))) }}
             - name: zookeeper-secrets
-              mountPath: /opt/bitnami/zookeeper/secrets
+              mountPath: /opt/nix-containers/zookeeper/secrets
             {{- end }}
             {{- if .Values.dataLogDir }}
             - name: data-log
@@ -513,17 +513,17 @@ spec:
             {{- end }}
             {{- if or .Values.configuration .Values.existingConfigmap }}
             - name: config
-              mountPath: /opt/bitnami/zookeeper/conf/zoo.cfg
+              mountPath: /opt/nix-containers/zookeeper/conf/zoo.cfg
               subPath: zoo.cfg
             {{- end }}
             {{- if .Values.tls.client.enabled }}
             - name: client-shared-certs
-              mountPath: /opt/bitnami/zookeeper/config/certs/client
+              mountPath: /opt/nix-containers/zookeeper/config/certs/client
               readOnly: true
             {{- end }}
             {{- if .Values.tls.quorum.enabled }}
             - name: quorum-shared-certs
-              mountPath: /opt/bitnami/zookeeper/config/certs/quorum
+              mountPath: /opt/nix-containers/zookeeper/config/certs/quorum
               readOnly: true
             {{- end }}
             {{- if .Values.extraVolumeMounts }}

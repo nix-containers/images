@@ -1,22 +1,22 @@
 <!--- app-name: Apache Kafka -->
 
-# Bitnami Secure Images Helm chart for Apache Kafka
+# nix-containers Secure Images Helm chart for Apache Kafka
 
 Apache Kafka is a distributed streaming platform designed to build real-time pipelines and can be used as a message broker or as a replacement for a log aggregation solution for big data applications.
 
 [Overview of Apache Kafka](http://kafka.apache.org/)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by nix-containers. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/kafka
+helm install my-release oci://registry-1.docker.io/nix-containerscharts/kafka
 ```
 
-## Why use Bitnami Secure Images?
+## Why use nix-containers Secure Images?
 
-Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
+Those are hardened, minimal CVE images built and maintained by nix-containers. nix-containers Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
 
 - Hardened secure images of popular open source software with Near-Zero Vulnerabilities
 - Vulnerability Triage & Prioritization with VEX Statements, KEV and EPSS Scores
@@ -24,16 +24,16 @@ Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami 
 - Software supply chain provenance attestation through in-toto
 - First class support for the internet’s favorite Helm charts
 
-Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/bitnami/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://bitnami.com/).
+Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/nix-containers/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://nix-containers.com/).
 
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
 
-If you are looking for our previous generation of images based on Debian Linux, please see the [Bitnami Legacy registry](https://hub.docker.com/u/bitnamilegacy).
+If you are looking for our previous generation of images based on Debian Linux, please see the [nix-containers Legacy registry](https://hub.docker.com/u/nix-containerslegacy).
 
 ## Introduction
 
-This chart bootstraps a [Kafka](https://github.com/bitnami/containers/tree/main/bitnami/kafka) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [Kafka](https://github.com/nix-containers/containers/tree/main/nix-containers/kafka) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
@@ -49,7 +49,7 @@ To install the chart with the release name `my-release`:
 helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/kafka
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 These commands deploy Kafka on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
@@ -129,7 +129,7 @@ As result, we will be able to see in `kafka-authorizer.log` the events specific 
 
 ### Update credentials
 
-The Bitnami Kafka chart, when upgrading, reuses the secret previously rendered by the chart or the one specified in `sasl.existingSecret`. To update credentials, use one of the following:
+The nix-containers Kafka chart, when upgrading, reuses the secret previously rendered by the chart or the one specified in `sasl.existingSecret`. To update credentials, use one of the following:
 
 - Run `helm upgrade` specifying new credentials in the `sasl` section as explained in the [authentication section](#enable-security-for-kafka).
 - Run `helm upgrade` specifying a new secret in `sasl.existingSecret`
@@ -260,7 +260,7 @@ externalAccess:
 
 these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` values (check parameters table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
-To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the nix-containers/common chart](https://github.com/nix-containers/images However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
 ### Prometheus metrics
 
@@ -270,7 +270,7 @@ This chart can be integrated with Prometheus by setting `metrics.jmx.enabled` to
 
 #### Prometheus requirements
 
-It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [Bitnami Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/prometheus) or the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) to easily have a working Prometheus in your cluster.
+It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [nix-containers Prometheus helm chart](https://github.com/nix-containers/images or the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images to easily have a working Prometheus in your cluster.
 
 #### Integration with Prometheus Operator
 
@@ -280,13 +280,13 @@ The chart can deploy `ServiceMonitor` objects for integration with Prometheus Op
 no matches for kind "ServiceMonitor" in version "monitoring.coreos.com/v1"
 ```
 
-Install the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) for having the necessary CRDs and the Prometheus Operator.
+Install the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images for having the necessary CRDs and the Prometheus Operator.
 
 ### [Rolling VS Immutable tags](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-understand-rolling-tags-containers-index.html)
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+nix-containers will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### Sidecars
 
@@ -306,7 +306,7 @@ sidecars:
 
 This chart allows you to set your custom affinity using the `affinity` parameter. Find more information about Pod's affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/main/bitnami/common#affinities) chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
+As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [nix-containers/common](https://github.com/nix-containers/images chart. To do so, set the `podAffinityPreset`, `podAntiAffinityPreset`, or `nodeAffinityPreset` parameters.
 
 ### Deploying extra resources
 
@@ -340,7 +340,7 @@ extraDeploy:
                   containerPort: 8083
               volumeMounts:
                 - name: configuration
-                  mountPath: /bitnami/kafka/config
+                  mountPath: /nix-containers/kafka/config
           volumes:
             - name: configuration
               configMap:
@@ -378,17 +378,17 @@ extraDeploy:
 You can create the Kafka Connect image using the Dockerfile below:
 
 ```Dockerfile
-FROM bitnami/kafka:latest
+FROM nix-containers/kafka:latest
 # Download MongoDB&reg; Connector for Apache Kafka https://www.confluent.io/hub/mongodb/kafka-connect-mongodb
-RUN mkdir -p /opt/bitnami/kafka/plugins && \
-    cd /opt/bitnami/kafka/plugins && \
+RUN mkdir -p /opt/nix-containers/kafka/plugins && \
+    cd /opt/nix-containers/kafka/plugins && \
     curl --remote-name --location --silent https://search.maven.org/remotecontent?filepath=org/mongodb/kafka/mongo-kafka-connect/1.2.0/mongo-kafka-connect-1.2.0-all.jar
-CMD /opt/bitnami/kafka/bin/connect-standalone.sh /bitnami/kafka/config/connect-standalone.properties /bitnami/kafka/config/mongo.properties
+CMD /opt/nix-containers/kafka/bin/connect-standalone.sh /nix-containers/kafka/config/connect-standalone.properties /nix-containers/kafka/config/mongo.properties
 ```
 
 ### Persistence
 
-The [Bitnami Kafka](https://github.com/bitnami/containers/tree/main/bitnami/kafka) image stores the Kafka data at the `/bitnami/kafka` path of the container. Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and minikube.
+The [nix-containers Kafka](https://github.com/nix-containers/containers/tree/main/nix-containers/kafka) image stores the Kafka data at the `/nix-containers/kafka` path of the container. Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and minikube.
 
 #### Adjust permissions of persistent volume mountpoint
 
@@ -707,7 +707,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 | `controller.persistence.annotations`                          | Annotations for the PVC                                                                                                                                                | `{}`                      |
 | `controller.persistence.labels`                               | Labels for the PVC                                                                                                                                                     | `{}`                      |
 | `controller.persistence.selector`                             | Selector to match an existing Persistent Volume for Kafka data PVC. If set, the PVC can't have a PV dynamically provisioned for it                                     | `{}`                      |
-| `controller.persistence.mountPath`                            | Mount path of the Kafka data volume                                                                                                                                    | `/bitnami/kafka`          |
+| `controller.persistence.mountPath`                            | Mount path of the Kafka data volume                                                                                                                                    | `/nix-containers/kafka`          |
 | `controller.logPersistence.enabled`                           | Enable Kafka logs persistence using PVC                                                                                                                                | `false`                   |
 | `controller.logPersistence.existingClaim`                     | A manually managed Persistent Volume and Claim                                                                                                                         | `""`                      |
 | `controller.logPersistence.storageClass`                      | PVC Storage Class for Kafka logs volume                                                                                                                                | `""`                      |
@@ -715,7 +715,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 | `controller.logPersistence.size`                              | PVC Storage Request for Kafka logs volume                                                                                                                              | `8Gi`                     |
 | `controller.logPersistence.annotations`                       | Annotations for the PVC                                                                                                                                                | `{}`                      |
 | `controller.logPersistence.selector`                          | Selector to match an existing Persistent Volume for Kafka log data PVC. If set, the PVC can't have a PV dynamically provisioned for it                                 | `{}`                      |
-| `controller.logPersistence.mountPath`                         | Mount path of the Kafka logs volume                                                                                                                                    | `/opt/bitnami/kafka/logs` |
+| `controller.logPersistence.mountPath`                         | Mount path of the Kafka logs volume                                                                                                                                    | `/opt/nix-containers/kafka/logs` |
 
 ### Broker-only statefulset parameters
 
@@ -832,7 +832,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 | `broker.persistence.annotations`                          | Annotations for the PVC                                                                                                                                                | `{}`                      |
 | `broker.persistence.labels`                               | Labels for the PVC                                                                                                                                                     | `{}`                      |
 | `broker.persistence.selector`                             | Selector to match an existing Persistent Volume for Kafka data PVC. If set, the PVC can't have a PV dynamically provisioned for it                                     | `{}`                      |
-| `broker.persistence.mountPath`                            | Mount path of the Kafka data volume                                                                                                                                    | `/bitnami/kafka`          |
+| `broker.persistence.mountPath`                            | Mount path of the Kafka data volume                                                                                                                                    | `/nix-containers/kafka`          |
 | `broker.logPersistence.enabled`                           | Enable Kafka logs persistence using PVC                                                                                                                                | `false`                   |
 | `broker.logPersistence.existingClaim`                     | A manually managed Persistent Volume and Claim                                                                                                                         | `""`                      |
 | `broker.logPersistence.storageClass`                      | PVC Storage Class for Kafka logs volume                                                                                                                                | `""`                      |
@@ -840,7 +840,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 | `broker.logPersistence.size`                              | PVC Storage Request for Kafka logs volume                                                                                                                              | `8Gi`                     |
 | `broker.logPersistence.annotations`                       | Annotations for the PVC                                                                                                                                                | `{}`                      |
 | `broker.logPersistence.selector`                          | Selector to match an existing Persistent Volume for Kafka log data PVC. If set, the PVC can't have a PV dynamically provisioned for it                                 | `{}`                      |
-| `broker.logPersistence.mountPath`                         | Mount path of the Kafka logs volume                                                                                                                                    | `/opt/bitnami/kafka/logs` |
+| `broker.logPersistence.mountPath`                         | Mount path of the Kafka logs volume                                                                                                                                    | `/opt/nix-containers/kafka/logs` |
 
 ### Traffic Exposure parameters
 
@@ -1059,7 +1059,7 @@ helm install my-release \
   oci://REGISTRY_NAME/REPOSITORY_NAME/kafka
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The above command deploys Kafka with 3 Kafka controller-eligible nodes.
 
@@ -1069,12 +1069,12 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 helm install my-release -f values.yaml oci://REGISTRY_NAME/REPOSITORY_NAME/kafka
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
-> **Tip**: You can use the default [values.yaml](https://github.com/bitnami/charts/tree/main/bitnami/kafka/values.yaml)
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
+> **Tip**: You can use the default [values.yaml](https://github.com/nix-containers/images
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to nix-containers's Helm charts in [this troubleshooting guide](https://docs.nix-containers.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
@@ -1113,7 +1113,7 @@ Other notable changes:
 
 ### To 31.1.0
 
-This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/bitnami/charts/issues/30850).
+This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/nix-containers/images
 
 ### To 31.0.0
 
@@ -1145,7 +1145,7 @@ This major release bumps the Kafka version to 3.6 [kafka upgrade notes](https://
 
 ### To 25.0.0
 
-This major updates the Zookeeper subchart to it newest major, 12.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/bitnami/charts/tree/main/bitnami/zookeeper#to-1200).
+This major updates the Zookeeper subchart to it newest major, 12.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/nix-containers/images
 
 ### To 24.0.0
 
@@ -1233,7 +1233,7 @@ This guide is an adaptation from upstream documentation: [Migrate from ZooKeeper
 
     ```console
     $ kubectl exec -it <your-zookeeper-pod> -- zkCli.sh get /cluster/id
-    /opt/bitnami/java/bin/java
+    /opt/nix-containers/java/bin/java
     Connecting to localhost:2181
 
     WATCHER::
@@ -1363,7 +1363,7 @@ This major updates Kafka to its newest version, 3.4.x. For more information, ple
 
 ### To 20.0.0
 
-This major updates the Zookeeper subchart to it newest major, 11.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/bitnami/charts/tree/main/bitnami/zookeeper#to-1100).
+This major updates the Zookeeper subchart to it newest major, 11.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/nix-containers/images
 
 ### To 19.0.0
 
@@ -1371,11 +1371,11 @@ This major updates Kafka to its newest version, 3.3.x. For more information, ple
 
 ### To 18.0.0
 
-This major updates the Zookeeper subchart to it newest major, 10.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/bitnami/charts/tree/main/bitnami/zookeeper#to-1000).
+This major updates the Zookeeper subchart to it newest major, 10.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/nix-containers/images
 
 ### To 16.0.0
 
-This major updates the Zookeeper subchart to it newest major, 9.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/bitnami/charts/tree/main/bitnami/zookeeper#to-900).
+This major updates the Zookeeper subchart to it newest major, 9.0.0. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/nix-containers/images
 
 ### To 15.0.0
 
@@ -1397,7 +1397,7 @@ In this version, the `image` block is defined once and is used in the different 
 ```yaml
 image:
   registry: docker.io
-  repository: bitnami/kafka
+  repository: nix-containers/kafka
   tag: 2.8.0
 ```
 
@@ -1406,25 +1406,25 @@ VS
 ```yaml
 image:
   registry: docker.io
-  repository: bitnami/kafka
+  repository: nix-containers/kafka
   tag: 2.8.0
 ...
 provisioning:
   image:
     registry: docker.io
-    repository: bitnami/kafka
+    repository: nix-containers/kafka
     tag: 2.8.0
 ```
 
-See [PR#7114](https://github.com/bitnami/charts/pull/7114) for more info about the implemented changes
+See [PR#7114](https://github.com/nix-containers/images for more info about the implemented changes
 
 ### To 13.0.0
 
-This major updates the Zookeeper subchart to it newest major, 7.0.0, which renames all TLS-related settings. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/bitnami/charts/tree/main/bitnami/zookeeper#to-700).
+This major updates the Zookeeper subchart to it newest major, 7.0.0, which renames all TLS-related settings. For more information on this subchart's major, please refer to [zookeeper upgrade notes](https://github.com/nix-containers/images
 
 ### To 12.2.0
 
-This version also introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/main/bitnami/common#common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
+This version also introduces `nix-containers/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/nix-containers/images Please, make sure that you have updated the chart dependencies before executing any upgrade.
 
 ### To 12.0.0
 
@@ -1485,7 +1485,7 @@ Backwards compatibility is not guaranteed you adapt your values.yaml to the new 
 
 ### To 10.0.0
 
-If you are setting the `config` or `log4j` parameter, backwards compatibility is not guaranteed, because the `KAFKA_MOUNTED_CONFDIR` has moved from `/opt/bitnami/kafka/conf` to `/bitnami/kafka/config`. In order to continue using these parameters, you must also upgrade your image to `docker.io/bitnami/kafka:2.4.1-debian-10-r38` or later.
+If you are setting the `config` or `log4j` parameter, backwards compatibility is not guaranteed, because the `KAFKA_MOUNTED_CONFDIR` has moved from `/opt/nix-containers/kafka/conf` to `/nix-containers/kafka/config`. In order to continue using these parameters, you must also upgrade your image to `docker.io/nix-containers/kafka:2.4.1-debian-10-r38` or later.
 
 ### To 9.0.0
 
@@ -1511,7 +1511,7 @@ Ports names were prefixed with the protocol to comply with Istio (see <https://i
 
 ### To 8.0.0
 
-There is not backwards compatibility since the brokerID changes to the POD_NAME. For more information see [this PR](https://github.com/bitnami/charts/pull/2028).
+There is not backwards compatibility since the brokerID changes to the POD_NAME. For more information see [this PR](https://github.com/nix-containers/images
 
 ### To 7.0.0
 
@@ -1523,7 +1523,7 @@ helm upgrade kafka oci://REGISTRY_NAME/REPOSITORY_NAME/kafka --version 6.1.8 --s
 helm upgrade kafka oci://REGISTRY_NAME/REPOSITORY_NAME/kafka --version 7.0.0 --set metrics.kafka.enabled=true
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 ### To 2.0.0
 

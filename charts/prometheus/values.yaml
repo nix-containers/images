@@ -80,8 +80,8 @@ ingress:
   apiVersion: ""
 ## @section Alertmanager Parameters
 ##
-## Bitnami Alertmanager image
-## ref: https://hub.docker.com/r/bitnami/alertmanager/tags/
+## nix-containers Alertmanager image
+## ref: https://hub.docker.com/r/nix-containers/alertmanager/tags/
 ## @param alertmanager.enabled Alertmanager enabled
 ## @param alertmanager.image.registry [default: REGISTRY_NAME] Alertmanager image registry
 ## @param alertmanager.image.repository [default: REPOSITORY_NAME/alertmanager] Alertmanager image repository
@@ -93,8 +93,8 @@ ingress:
 alertmanager:
   enabled: true
   image:
-    registry: docker.io
-    repository: bitnami/alertmanager
+    registry: ghcr.io
+    repository: nix-containers/prometheus-alertmanager-nixchart
     tag: 0.28.1-debian-12-r15
     digest: ""
     ## Specify a imagePullPolicy
@@ -185,7 +185,7 @@ alertmanager:
   ## Alertmanager resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param alertmanager.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if alertmanager.resources is set (alertmanager.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param alertmanager.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -636,7 +636,7 @@ alertmanager:
     enabled: false
     ## @param alertmanager.persistence.mountPath Path to mount the volume at.
     ##
-    mountPath: /bitnami/alertmanager/data
+    mountPath: /nix-containers/alertmanager/data
     ## @param alertmanager.persistence.subPath The subdirectory of the volume to mount to, useful in dev environments and one PV for multiple services
     ##
     subPath: ""
@@ -666,8 +666,8 @@ alertmanager:
     selector: {}
 ## @section Prometheus server Parameters
 ##
-## Bitnami Prometheus image
-## ref: https://hub.docker.com/r/bitnami/prometheus/tags/
+## nix-containers Prometheus image
+## ref: https://hub.docker.com/r/nix-containers/prometheus/tags/
 ## @param server.image.registry [default: REGISTRY_NAME] Prometheus image registry
 ## @param server.image.repository [default: REPOSITORY_NAME/prometheus] Prometheus image repository
 ## @skip server.image.tag Prometheus image tag (immutable tags are recommended)
@@ -677,8 +677,8 @@ alertmanager:
 ##
 server:
   image:
-    registry: docker.io
-    repository: bitnami/prometheus
+    registry: ghcr.io
+    repository: nix-containers/prometheus-nixchart
     tag: 3.5.0-debian-12-r3
     digest: ""
     ## Specify a imagePullPolicy
@@ -828,7 +828,7 @@ server:
   ## Prometheus resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param server.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if server.resources is set (server.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param server.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1080,8 +1080,8 @@ server:
     ## @param server.thanos.create Create a Thanos sidecar container
     ##
     create: false
-    ## Bitnami Thanos image
-    ## ref: https://hub.docker.com/r/bitnami/thanos/tags/
+    ## nix-containers Thanos image
+    ## ref: https://hub.docker.com/r/nix-containers/thanos/tags/
     ## @param server.thanos.image.registry [default: REGISTRY_NAME] Thanos image registry
     ## @param server.thanos.image.repository [default: REPOSITORY_NAME/thanos] Thanos image name
     ## @skip server.thanos.image.tag Thanos image tag
@@ -1090,8 +1090,8 @@ server:
     ## @param server.thanos.image.pullSecrets Specify docker-registry secret names as an array
     ##
     image:
-      registry: docker.io
-      repository: bitnami/thanos
+      registry: ghcr.io
+      repository: nix-containers/thanos-nixchart
       tag: 0.39.2-debian-12-r2
       digest: ""
       ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -1177,7 +1177,7 @@ server:
     ## resources, such as Minikube. If you do want to specify resources, uncomment the following
     ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     ## @param server.thanos.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if server.thanos.resources is set (server.thanos.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param server.thanos.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1636,7 +1636,7 @@ server:
     enabled: false
     ## @param server.persistence.mountPath Path to mount the volume at.
     ##
-    mountPath: /bitnami/prometheus/data
+    mountPath: /nix-containers/prometheus/data
     ## @param server.persistence.subPath The subdirectory of the volume to mount to, useful in dev environments and one PV for multiple services
     ##
     subPath: ""
@@ -1706,7 +1706,7 @@ volumePermissions:
   ##
   enabled: false
   ## OS Shell + Utility image
-  ## ref: https://hub.docker.com/r/bitnami/os-shell/tags/
+  ## ref: https://hub.docker.com/r/nix-containers/os-shell/tags/
   ## @param volumePermissions.image.registry [default: REGISTRY_NAME] OS Shell + Utility image registry
   ## @param volumePermissions.image.repository [default: REPOSITORY_NAME/os-shell] OS Shell + Utility image repository
   ## @skip volumePermissions.image.tag OS Shell + Utility image tag (immutable tags are recommended)
@@ -1714,8 +1714,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets OS Shell + Utility image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r50
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
@@ -1729,7 +1729,7 @@ volumePermissions:
   ## Init container's resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)

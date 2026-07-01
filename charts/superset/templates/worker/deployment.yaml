@@ -129,7 +129,7 @@ spec:
                   {{- if .Values.usePasswordFiles }}
                   export SUPERSET_SECRET_KEY="$(< $SUPERSET_SECRET_KEY_FILE)"
                   {{- end }}
-                  . /opt/bitnami/scripts/superset-env.sh && celery -A superset.tasks.celery_app:app inspect ping -d celery@$HOSTNAME
+                  . /opt/nix-containers/scripts/superset-env.sh && celery -A superset.tasks.celery_app:app inspect ping -d celery@$HOSTNAME
           {{- end }}
           {{- if .Values.worker.customReadinessProbe }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.worker.customReadinessProbe "context" $) | nindent 12 }}
@@ -143,7 +143,7 @@ spec:
                   {{- if .Values.usePasswordFiles }}
                   export SUPERSET_SECRET_KEY="$(< $SUPERSET_SECRET_KEY_FILE)"
                   {{- end }}
-                  . /opt/bitnami/scripts/superset-env.sh && celery -A superset.tasks.celery_app:app inspect ping -d celery@$HOSTNAME
+                  . /opt/nix-containers/scripts/superset-env.sh && celery -A superset.tasks.celery_app:app inspect ping -d celery@$HOSTNAME
           {{- end }}
           {{- if .Values.worker.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.worker.customStartupProbe "context" $) | nindent 12 }}
@@ -157,7 +157,7 @@ spec:
                   {{- if .Values.usePasswordFiles }}
                   export SUPERSET_SECRET_KEY="$(< $SUPERSET_SECRET_KEY_FILE)"
                   {{- end }}
-                  . /opt/bitnami/scripts/superset-env.sh && celery -A superset.tasks.celery_app:app inspect ping -d celery@$HOSTNAME
+                  . /opt/nix-containers/scripts/superset-env.sh && celery -A superset.tasks.celery_app:app inspect ping -d celery@$HOSTNAME
           {{- end }}
           {{- end }}
           {{- if .Values.worker.lifecycleHooks }}
@@ -168,16 +168,16 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/superset/superset_home
+              mountPath: /opt/nix-containers/superset/superset_home
               subPath: superset-home
             {{- if .Values.usePasswordFiles }}
             - name: superset-secrets
-              mountPath: /opt/bitnami/superset/secrets
+              mountPath: /opt/nix-containers/superset/secrets
               readOnly: true
             {{- end }}
             {{- if or .Values.existingConfigmap .Values.config }}
             - name: superset-config
-              mountPath: /bitnami/superset/conf
+              mountPath: /nix-containers/superset/conf
             {{- end }}
           {{- if .Values.worker.extraVolumeMounts }}
           {{- include "common.tplvalues.render" (dict "value" .Values.worker.extraVolumeMounts "context" $) | nindent 12 }}

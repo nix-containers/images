@@ -180,7 +180,7 @@ Validate values of rabbitmq - LDAP support
 rabbitmq: LDAP
     Invalid LDAP configuration. When enabling LDAP support, the parameters "ldap.servers" or "ldap.uri" are mandatory
     to configure the connection and "ldap.userDnPattern" or "ldap.basedn" are necessary to lookup the users. Please provide them:
-    $ helm install {{ .Release.Name }} oci://registry-1.docker.io/bitnamicharts/rabbitmq \
+    $ helm install {{ .Release.Name }} oci://registry-1.docker.io/nix-containerscharts/rabbitmq \
       --set ldap.enabled=true \
       --set ldap.servers[0]=my-ldap-server" \
       --set ldap.port="389" \
@@ -203,14 +203,14 @@ rabbitmq: memoryHighWatermark
     no memory limits were defined at POD level. Define your POD limits as shown below:
 
     Using resourcesPreset (not recommended for production):
-    $ helm install {{ .Release.Name }} oci://registry-1.docker.io/bitnamicharts/rabbitmq \
+    $ helm install {{ .Release.Name }} oci://registry-1.docker.io/nix-containerscharts/rabbitmq \
       --set memoryHighWatermark.enabled=true \
       --set memoryHighWatermark.type="relative" \
       --set memoryHighWatermark.value="0.4" \
       --set resourcesPreset="micro"
 
     Using resources:
-    $ helm install {{ .Release.Name }} oci://registry-1.docker.io/bitnamicharts/rabbitmq \
+    $ helm install {{ .Release.Name }} oci://registry-1.docker.io/nix-containerscharts/rabbitmq \
       --set memoryHighWatermark.enabled=true \
       --set memoryHighWatermark.type="relative" \
       --set memoryHighWatermark.value="0.4" \
@@ -218,7 +218,7 @@ rabbitmq: memoryHighWatermark
 
     Altenatively, user an absolute value for the memory memory high watermark :
 
-    $ helm install {{ .Release.Name }} oci://registry-1.docker.io/bitnamicharts/rabbitmq \
+    $ helm install {{ .Release.Name }} oci://registry-1.docker.io/nix-containerscharts/rabbitmq \
       --set memoryHighWatermark.enabled=true \
       --set memoryHighWatermark.type="absolute" \
       --set memoryHighWatermark.value="512MB"

@@ -80,8 +80,8 @@ diagnosticMode:
 
 ## @section InfluxDB(TM) Core parameters
 
-## Bitnami InfluxDB(TM) Core image
-## ref: https://hub.docker.com/r/bitnami/influxdb/tags/
+## nix-containers InfluxDB(TM) Core image
+## ref: https://hub.docker.com/r/nix-containers/influxdb/tags/
 ## @param image.registry [default: REGISTRY_NAME] InfluxDB(TM) Core image registry
 ## @param image.repository [default: REPOSITORY_NAME/influxdb] InfluxDB(TM) Core image repository
 ## @skip image.tag InfluxDB(TM) Core image tag (immutable tags are recommended)
@@ -91,8 +91,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug logs should be enabled
 ##
 image:
-  registry: docker.io
-  repository: bitnami/influxdb
+  registry: ghcr.io
+  repository: nix-containers/influxdb-nixchart
   tag: 3.4.1-debian-12-r0
   digest: ""
   pullPolicy: IfNotPresent
@@ -252,7 +252,7 @@ extraContainerPorts: []
 ## InfluxDB(TM) Core pods' resource requests and limits
 ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "small"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -767,7 +767,7 @@ metrics:
     ##
     metricRelabelings: []
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ## e.g:
     ## selector:
     ##   prometheus: my-prometheus
@@ -819,7 +819,7 @@ persistence:
   selector: {}
   ## @param persistence.mountPath Mount path of the InfluxDB(TM) Core data volume
   ##
-  mountPath: /bitnami/influxdb
+  mountPath: /nix-containers/influxdb
 
 ## @section Default init-containers
 
@@ -839,8 +839,8 @@ defaultInitContainers:
     ## @param defaultInitContainers.volumePermissions.image.pullSecrets "volume-permissions" init-containers' image pull secrets
     ##
     image:
-      registry: docker.io
-      repository: bitnami/os-shell
+      registry: ghcr.io
+      repository: nix-containers/os-shell-nixchart
       tag: 12-debian-12-r51
       digest: ""
       pullPolicy: IfNotPresent
@@ -877,7 +877,7 @@ defaultInitContainers:
     ## InfluxDB(TM) Core "volume-permissions" init-container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.volumePermissions.resourcesPreset Set InfluxDB(TM) Core "volume-permissions" init-container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.volumePermissions.resources is set (defaultInitContainers.volumePermissions.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultInitContainers.volumePermissions.resources Set InfluxDB(TM) Core "volume-permissions" init-container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -922,7 +922,7 @@ createAdminTokenJob:
   ## @param createAdminTokenJob.cleanup Whether to create a K8s job to delete the admin token during Helm uninstall
   ##
   cleanup: true
-  ## Bitnami Kubectl image
+  ## nix-containers Kubectl image
   ## @param createAdminTokenJob.image.registry [default: REGISTRY_NAME] Kubectl image registry
   ## @param createAdminTokenJob.image.repository [default: REPOSITORY_NAME/os-shell] Kubectl image repository
   ## @skip createAdminTokenJob.image.tag Kubectl image tag (immutable tags are recommended)
@@ -931,8 +931,8 @@ createAdminTokenJob:
   ## @param createAdminTokenJob.image.pullSecrets Kubectl image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/kubectl
+    registry: ghcr.io
+    repository: nix-containers/kubectl-nixchart
     tag: 1.33.4-debian-12-r0
     digest: ""
     pullPolicy: IfNotPresent
@@ -982,7 +982,7 @@ createAdminTokenJob:
   ## InfluxDB(TM) Core "create-admin-token" job's container resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param createAdminTokenJob.resourcesPreset Set InfluxDB(TM) Core "create-admin-token" job's container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if createAdminTokenJob.resources is set (createAdminTokenJob.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param createAdminTokenJob.resources Set InfluxDB(TM) Core "create-admin-token" job's container requests and limits for different resources like CPU or memory (essential for production workloads)

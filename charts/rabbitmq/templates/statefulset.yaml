@@ -143,12 +143,12 @@ spec:
             - |
               #!/bin/bash
 
-              . /opt/bitnami/scripts/liblog.sh
+              . /opt/nix-containers/scripts/liblog.sh
 
               info "Copying plugins dir to empty dir"
               # In order to not break the possibility of installing custom plugins, we need
               # to make the plugins directory writable, so we need to copy it to an empty dir volume
-              cp -r --preserve=mode /opt/bitnami/rabbitmq/plugins/ /emptydir/app-plugins-dir
+              cp -r --preserve=mode /opt/nix-containers/rabbitmq/plugins/ /emptydir/app-plugins-dir
           volumeMounts:
             - name: empty-dir
               mountPath: /emptydir
@@ -182,8 +182,8 @@ spec:
                   - /bin/bash
                   - -ec
                   - |
-                    if [[ -f /opt/bitnami/scripts/rabbitmq/nodeshutdown.sh ]]; then
-                        /opt/bitnami/scripts/rabbitmq/nodeshutdown.sh -t {{ .Values.terminationGracePeriodSeconds | quote }} -d {{ ternary "true" "false" .Values.image.debug | quote }}
+                    if [[ -f /opt/nix-containers/scripts/rabbitmq/nodeshutdown.sh ]]; then
+                        /opt/nix-containers/scripts/rabbitmq/nodeshutdown.sh -t {{ .Values.terminationGracePeriodSeconds | quote }} -d {{ ternary "true" "false" .Values.image.debug | quote }}
                     else
                         rabbitmqctl stop_app
                     fi
@@ -247,7 +247,7 @@ spec:
               value: "true"
             {{- if .Values.usePasswordFiles }}
             - name: RABBITMQ_ERL_COOKIE_FILE
-              value: {{ printf "/opt/bitnami/rabbitmq/secrets/%s" (include "rabbitmq.secretErlangKey" .) }}
+              value: {{ printf "/opt/nix-containers/rabbitmq/secrets/%s" (include "rabbitmq.secretErlangKey" .) }}
             {{- else }}
             - name: RABBITMQ_ERL_COOKIE
               valueFrom:
@@ -269,7 +269,7 @@ spec:
               value: {{ .Values.auth.username | quote }}
             {{- if .Values.usePasswordFiles }}
             - name: RABBITMQ_PASSWORD_FILE
-              value: {{ printf "/opt/bitnami/rabbitmq/secrets/%s" (include "rabbitmq.secretPasswordKey" .) }}
+              value: {{ printf "/opt/nix-containers/rabbitmq/secrets/%s" (include "rabbitmq.secretPasswordKey" .) }}
             {{- else }}
             - name: RABBITMQ_PASSWORD
               valueFrom:
@@ -369,24 +369,24 @@ spec:
           {{- end }}
           volumeMounts:
             - name: configuration
-              mountPath: /bitnami/rabbitmq/conf
+              mountPath: /nix-containers/rabbitmq/conf
             - name: empty-dir
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/rabbitmq/etc/rabbitmq
+              mountPath: /opt/nix-containers/rabbitmq/etc/rabbitmq
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/rabbitmq/var/lib/rabbitmq
+              mountPath: /opt/nix-containers/rabbitmq/var/lib/rabbitmq
               subPath: app-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/rabbitmq/.rabbitmq/
+              mountPath: /opt/nix-containers/rabbitmq/.rabbitmq/
               subPath: app-erlang-cookie
             - name: empty-dir
-              mountPath: /opt/bitnami/rabbitmq/var/log/rabbitmq
+              mountPath: /opt/nix-containers/rabbitmq/var/log/rabbitmq
               subPath: app-logs-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/rabbitmq/plugins
+              mountPath: /opt/nix-containers/rabbitmq/plugins
               subPath: app-plugins-dir
             - name: data
               mountPath: {{ .Values.persistence.mountPath }}
@@ -395,11 +395,11 @@ spec:
               {{- end }}
             {{- if  .Values.usePasswordFiles }}
             - name: rabbitmq-secrets
-              mountPath: /opt/bitnami/rabbitmq/secrets
+              mountPath: /opt/nix-containers/rabbitmq/secrets
             {{- end }}
             {{- if .Values.auth.tls.enabled }}
             - name: certs
-              mountPath: /opt/bitnami/rabbitmq/certs
+              mountPath: /opt/nix-containers/rabbitmq/certs
             {{- end }}
             {{- if and .Values.ldap.tls.enabled .Values.ldap.tls.certificatesSecret }}
             - name: ldap-certs

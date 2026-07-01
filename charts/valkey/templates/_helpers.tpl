@@ -67,9 +67,9 @@ Return the path to the cert file.
 */}}
 {{- define "valkey.tlsCert" -}}
 {{- if (include "valkey.createTlsSecret" . ) -}}
-    {{- printf "/opt/bitnami/valkey/certs/%s" "tls.crt" -}}
+    {{- printf "/opt/nix-containers/valkey/certs/%s" "tls.crt" -}}
 {{- else -}}
-    {{- required "Certificate filename is required when TLS in enabled" .Values.tls.certFilename | printf "/opt/bitnami/valkey/certs/%s" -}}
+    {{- required "Certificate filename is required when TLS in enabled" .Values.tls.certFilename | printf "/opt/nix-containers/valkey/certs/%s" -}}
 {{- end -}}
 {{- end -}}
 
@@ -78,9 +78,9 @@ Return the path to the cert key file.
 */}}
 {{- define "valkey.tlsCertKey" -}}
 {{- if (include "valkey.createTlsSecret" . ) -}}
-    {{- printf "/opt/bitnami/valkey/certs/%s" "tls.key" -}}
+    {{- printf "/opt/nix-containers/valkey/certs/%s" "tls.key" -}}
 {{- else -}}
-    {{- required "Certificate Key filename is required when TLS in enabled" .Values.tls.certKeyFilename | printf "/opt/bitnami/valkey/certs/%s" -}}
+    {{- required "Certificate Key filename is required when TLS in enabled" .Values.tls.certKeyFilename | printf "/opt/nix-containers/valkey/certs/%s" -}}
 {{- end -}}
 {{- end -}}
 
@@ -89,9 +89,9 @@ Return the path to the CA cert file.
 */}}
 {{- define "valkey.tlsCACert" -}}
 {{- if (include "valkey.createTlsSecret" . ) -}}
-    {{- printf "/opt/bitnami/valkey/certs/%s" "ca.crt" -}}
+    {{- printf "/opt/nix-containers/valkey/certs/%s" "ca.crt" -}}
 {{- else -}}
-    {{- required "Certificate CA filename is required when TLS in enabled" .Values.tls.certCAFilename | printf "/opt/bitnami/valkey/certs/%s" -}}
+    {{- required "Certificate CA filename is required when TLS in enabled" .Values.tls.certCAFilename | printf "/opt/nix-containers/valkey/certs/%s" -}}
 {{- end -}}
 {{- end -}}
 
@@ -100,7 +100,7 @@ Return the path to the DH params file.
 */}}
 {{- define "valkey.tlsDHParams" -}}
 {{- if .Values.tls.dhParamsFilename -}}
-{{- printf "/opt/bitnami/valkey/certs/%s" .Values.tls.dhParamsFilename -}}
+{{- printf "/opt/nix-containers/valkey/certs/%s" .Values.tls.dhParamsFilename -}}
 {{- end -}}
 {{- end -}}
 

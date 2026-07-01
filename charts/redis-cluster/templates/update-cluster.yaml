@@ -72,15 +72,15 @@ spec:
           {{- else }}
           args:
             - |
-              . /opt/bitnami/scripts/libnet.sh
-              . /opt/bitnami/scripts/libos.sh
+              . /opt/nix-containers/scripts/libnet.sh
+              . /opt/nix-containers/scripts/libos.sh
 
               {{- if .Values.usePassword }}
               export REDISCLI_AUTH={{ ternary "`cat $REDIS_PASSWORD_FILE`" "$REDIS_PASSWORD" .Values.usePasswordFiles }}
               {{- end }}
               # Backwards compatibility change
-              if ! [[ -f /opt/bitnami/redis/etc/redis.conf ]]; then
-                  cp /opt/bitnami/redis/etc/redis-default.conf /opt/bitnami/redis/etc/redis.conf
+              if ! [[ -f /opt/nix-containers/redis/etc/redis.conf ]]; then
+                  cp /opt/nix-containers/redis/etc/redis-default.conf /opt/nix-containers/redis/etc/redis.conf
               fi
               firstNodeIP=$(wait_for_dns_lookup {{ template "common.names.fullname" . }}-0.{{ template "common.names.fullname" . }}-headless 120 5)
               {{- if .Values.cluster.externalAccess.enabled }}
@@ -210,7 +210,7 @@ spec:
             {{- if .Values.usePassword }}
             {{- if .Values.usePasswordFiles }}
             - name: REDIS_PASSWORD_FILE
-              value: "/opt/bitnami/redis/secrets/redis-password"
+              value: "/opt/nix-containers/redis/secrets/redis-password"
             {{- else }}
             - name: REDIS_PASSWORD
               valueFrom:
@@ -245,11 +245,11 @@ spec:
               subPath: tmp-dir
             {{- if and .Values.usePassword .Values.usePasswordFiles }}
             - name: redis-password
-              mountPath: /opt/bitnami/redis/secrets/
+              mountPath: /opt/nix-containers/redis/secrets/
             {{- end }}
             {{- if .Values.tls.enabled }}
             - name: redis-certificates
-              mountPath: /opt/bitnami/redis/certs
+              mountPath: /opt/nix-containers/redis/certs
               readOnly: true
             {{- end }}
             {{- if .Values.updateJob.extraVolumeMounts }}

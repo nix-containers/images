@@ -11,8 +11,8 @@ APP VERSION: {{ .Chart.AppVersion }}
 {{- $pgpoolSvcName := include "postgresql-ha.pgpool" . }}
 
 ⚠ WARNING: Since August 28th, 2025, only a limited subset of images/charts are available for free.
-    Subscribe to Bitnami Secure Images to receive continued support and security updates.
-    More info at https://bitnami.com and https://github.com/bitnami/containers/issues/83267
+    Subscribe to nix-containers Secure Images to receive continued support and security updates.
+    More info at https://nix-containers.com and https://github.com/nix-containers/containers/issues/83267
 
 ** Please be patient while the chart is being deployed **
 
@@ -30,15 +30,15 @@ Access the pod you want to debug by executing
 
   kubectl exec --namespace {{ $releaseNamespace }} -ti <NAME OF THE POD> -- bash
 
-In order to replicate the container startup scripts, check the /opt/bitnami/scripts folder.
+In order to replicate the container startup scripts, check the /opt/nix-containers/scripts folder.
 
   Default PostgreSQL startup command
 
-    /opt/bitnami/scripts/postgresql-repmgr/entrypoint.sh /opt/bitnami/scripts/postgresql-repmgr/run.sh
+    /opt/nix-containers/scripts/postgresql-repmgr/entrypoint.sh /opt/nix-containers/scripts/postgresql-repmgr/run.sh
 
   Default Pgpool-II startup command
 
-    /opt/bitnami/scripts/pgpool/entrypoint.sh /opt/bitnami/scripts/pgpool/run.sh
+    /opt/nix-containers/scripts/pgpool/entrypoint.sh /opt/nix-containers/scripts/pgpool/run.sh
 
 {{- else }}
 PostgreSQL can be accessed through Pgpool-II via port {{ .Values.service.ports.postgresql }} on the following DNS name from within your cluster:

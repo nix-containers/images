@@ -249,7 +249,7 @@ def render_cve_list(cves: list[dict]) -> str:
 # Applied in order; first match wins. Mirrors the methodology in
 # IMAGE-POPULARITY.md, where `-fips`, `-iamguarded`, `-nonroot` variants
 # share the popularity record of their base.
-_POPULARITY_VARIANT_SUFFIXES = ("-fips", "-iamguarded", "-nonroot")
+_POPULARITY_VARIANT_SUFFIXES = ("-fips", "-nixchart", "-nonroot")
 
 
 def next_cve_scan_utc() -> str:

@@ -115,10 +115,10 @@ spec:
             - -ec
             - |
               #!/bin/bash
-              . /opt/bitnami/scripts/libfs.sh
+              . /opt/nix-containers/scripts/libfs.sh
               # We copy the logs folder because it has symlinks to stdout and stderr
-              if ! is_dir_empty /opt/bitnami/nginx/logs; then
-                cp -r /opt/bitnami/nginx/logs /emptydir/app-logs-dir
+              if ! is_dir_empty /opt/nix-containers/nginx/logs; then
+                cp -r /opt/nix-containers/nginx/logs /emptydir/app-logs-dir
               fi
           volumeMounts:
             - name: empty-dir
@@ -138,7 +138,7 @@ spec:
             - /bin/bash
             - -ec
             - |
-              [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
+              [[ -f "/opt/nix-containers/scripts/git/entrypoint.sh" ]] && source "/opt/nix-containers/scripts/git/entrypoint.sh"
               git clone {{ .Values.cloneStaticSiteFromGit.repository }} --branch {{ .Values.cloneStaticSiteFromGit.branch }} /tmp/app
               [[ "$?" -eq 0 ]] && shopt -s dotglob && rm -rf /app/* && mv /tmp/app/* /app/
           {{- end }}
@@ -194,7 +194,7 @@ spec:
             - /bin/bash
             - -ec
             - |
-              [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
+              [[ -f "/opt/nix-containers/scripts/git/entrypoint.sh" ]] && source "/opt/nix-containers/scripts/git/entrypoint.sh"
               while true; do
                   cd /app && git -c safe.directory=/app pull origin {{ .Values.cloneStaticSiteFromGit.branch }}
                   sleep {{ .Values.cloneStaticSiteFromGit.interval }}
@@ -324,45 +324,45 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/nginx/conf
+              mountPath: /opt/nix-containers/nginx/conf
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/nginx/logs
+              mountPath: /opt/nix-containers/nginx/logs
               subPath: app-logs-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/nginx/tmp
+              mountPath: /opt/nix-containers/nginx/tmp
               subPath: app-tmp-dir
             {{- if or .Values.serverBlock .Values.existingServerBlockConfigmap }}
             - name: nginx-server-block
-              mountPath: /opt/bitnami/nginx/conf/server_blocks
+              mountPath: /opt/nix-containers/nginx/conf/server_blocks
             {{- end }}
             {{- if or .Values.streamServerBlock .Values.existingStreamServerBlockConfigmap }}
             - name: nginx-stream-server-block
-              mountPath: /opt/bitnami/nginx/conf/stream_server_blocks
+              mountPath: /opt/nix-containers/nginx/conf/stream_server_blocks
             {{- end }}
             {{- if .Values.contextIncludes.main }}
             - name: nginx-context-main
-              mountPath: /opt/bitnami/nginx/conf/context.d/main
+              mountPath: /opt/nix-containers/nginx/conf/context.d/main
             {{- end }}
             {{- range $index, $configMap := .Values.existingContextMainConfigmaps }}
             - name: nginx-context-main-{{ $index }}
-              mountPath: /opt/bitnami/nginx/conf/context.d/main
+              mountPath: /opt/nix-containers/nginx/conf/context.d/main
             {{- end }}
             {{- if .Values.contextIncludes.events }}
             - name: nginx-context-events
-              mountPath: /opt/bitnami/nginx/conf/context.d/events
+              mountPath: /opt/nix-containers/nginx/conf/context.d/events
             {{- end }}
             {{- range $index, $configMap := .Values.existingContextEventsConfigmaps }}
             - name: nginx-context-events-{{ $index }}
-              mountPath: /opt/bitnami/nginx/conf/context.d/events
+              mountPath: /opt/nix-containers/nginx/conf/context.d/events
             {{- end }}
             {{- if .Values.contextIncludes.http }}
             - name: nginx-context-http
-              mountPath: /opt/bitnami/nginx/conf/context.d/http
+              mountPath: /opt/nix-containers/nginx/conf/context.d/http
             {{- end }}
             {{- range $index, $configMap := .Values.existingContextHttpConfigmaps }}
             - name: nginx-context-http-{{ $index }}
-              mountPath: /opt/bitnami/nginx/conf/context.d/http
+              mountPath: /opt/nix-containers/nginx/conf/context.d/http
             {{- end }}
             {{- if (include "nginx.useStaticSite" .) }}
             - name: staticsite

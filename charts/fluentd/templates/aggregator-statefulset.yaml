@@ -89,9 +89,9 @@ spec:
               {{- end }}
 
               # copy installed gems to shared dir
-              cp -r /opt/bitnami/fluentd/extensions/* /extensions/
-              cp -r /opt/bitnami/fluentd/gems/* /gems/
-              cp -r /opt/bitnami/fluentd/specifications/* /specifications/
+              cp -r /opt/nix-containers/fluentd/extensions/* /extensions/
+              cp -r /opt/nix-containers/fluentd/gems/* /gems/
+              cp -r /opt/nix-containers/fluentd/specifications/* /specifications/
           {{- if .Values.aggregator.initResources }}
           resources: {{- toYaml .Values.aggregator.initResources | nindent 12 }}
           {{- else if ne .Values.aggregator.initResourcePresets "none" }}
@@ -242,28 +242,28 @@ spec:
           {{- end }}
           volumeMounts:
             - name: fluentd-config
-              mountPath: /opt/bitnami/fluentd/conf
+              mountPath: /opt/nix-containers/fluentd/conf
             {{- if .Values.aggregator.persistence.enabled }}
             - name: {{ printf "%s-buffer" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
-              mountPath: /opt/bitnami/fluentd/logs/buffers
+              mountPath: /opt/nix-containers/fluentd/logs/buffers
             {{- else }}
             - name: buffer
-              mountPath: /opt/bitnami/fluentd/logs/buffers
+              mountPath: /opt/nix-containers/fluentd/logs/buffers
             {{- end }}
             {{- if .Values.aggregator.extraGems }}
             - name: empty-dir
-              mountPath: /opt/bitnami/fluentd/extensions/
+              mountPath: /opt/nix-containers/fluentd/extensions/
               subPath: app-extensions-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/fluentd/gems/
+              mountPath: /opt/nix-containers/fluentd/gems/
               subPath: app-gems-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/fluentd/specifications/
+              mountPath: /opt/nix-containers/fluentd/specifications/
               subPath: app-specifications-dir
             {{- end }}
             {{- if .Values.tls.enabled }}
             - name: fluentd-aggregator-certificates
-              mountPath: /opt/bitnami/fluentd/certs/in_forward
+              mountPath: /opt/nix-containers/fluentd/certs/in_forward
               readOnly: true
             {{- end }}
             {{- if .Values.aggregator.initScripts }}

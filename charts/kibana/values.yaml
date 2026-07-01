@@ -74,8 +74,8 @@ diagnosticMode:
     - infinity
 ## @section Kibana parameters
 
-## Bitnami Kibana image version
-## ref: https://hub.docker.com/r/bitnami/kibana/tags/
+## nix-containers Kibana image version
+## ref: https://hub.docker.com/r/nix-containers/kibana/tags/
 ## @param image.registry [default: REGISTRY_NAME] Kibana image registry
 ## @param image.repository [default: REPOSITORY_NAME/kibana] Kibana image repository
 ## @skip image.tag Kibana image tag (immutable tags are recommended)
@@ -85,8 +85,8 @@ diagnosticMode:
 ## @param image.debug Enable %%MAIN_CONTAINER%% image debug mode
 ##
 image:
-  registry: docker.io
-  repository: bitnami/kibana
+  registry: ghcr.io
+  repository: nix-containers/kibana-nixchart
   tag: 9.1.2-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
@@ -215,8 +215,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets Init container volume-permissions image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r50
     digest: ""
     pullPolicy: IfNotPresent
@@ -229,7 +229,7 @@ volumePermissions:
     ##
     pullSecrets: []
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -621,7 +621,7 @@ containerSecurityContext:
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "small"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -767,7 +767,7 @@ metrics:
     ##
     metricRelabelings: []
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ## e.g:
     ## selector:
     ##   prometheus: my-prometheus

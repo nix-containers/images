@@ -28,7 +28,7 @@ spec:
         checksum/configuration: {{ include (print $.Template.BasePath "/primary/configmap.yaml") . | sha256sum }}
         {{- end }}
         {{- if .Values.passwordUpdateJob.enabled }}
-        charts.bitnami.com/password-last-update: {{ now | date "20060102150405" | quote }}
+        charts.nix-containers.com/password-last-update: {{ now | date "20060102150405" | quote }}
         {{- end }}
         {{- if .Values.primary.podAnnotations }}
         {{- include "common.tplvalues.render" (dict "value" .Values.primary.podAnnotations "context" $) | nindent 8 }}
@@ -99,10 +99,10 @@ spec:
             - |
               #!/bin/bash
 
-              . /opt/bitnami/scripts/libfs.sh
+              . /opt/nix-containers/scripts/libfs.sh
               # We copy the logs folder because it has symlinks to stdout and stderr
-              if ! is_dir_empty /opt/bitnami/mysql/logs; then
-                cp -r /opt/bitnami/mysql/logs /emptydir/app-logs-dir
+              if ! is_dir_empty /opt/nix-containers/mysql/logs; then
+                cp -r /opt/nix-containers/mysql/logs /emptydir/app-logs-dir
               fi
           volumeMounts:
             - name: empty-dir
@@ -115,9 +115,9 @@ spec:
             - /bin/bash
             - -ec
             - |
-              mkdir -p "/bitnami/mysql"
-              chown "{{ .Values.primary.containerSecurityContext.runAsUser }}:{{ .Values.primary.podSecurityContext.fsGroup }}" "/bitnami/mysql"
-              find "/bitnami/mysql" -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R "{{ .Values.primary.containerSecurityContext.runAsUser }}:{{ .Values.primary.podSecurityContext.fsGroup }}"
+              mkdir -p "/nix-containers/mysql"
+              chown "{{ .Values.primary.containerSecurityContext.runAsUser }}:{{ .Values.primary.podSecurityContext.fsGroup }}" "/nix-containers/mysql"
+              find "/nix-containers/mysql" -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R "{{ .Values.primary.containerSecurityContext.runAsUser }}:{{ .Values.primary.podSecurityContext.fsGroup }}"
           securityContext:
             runAsUser: 0
           {{- if .Values.volumePermissions.resources }}
@@ -127,7 +127,7 @@ spec:
           {{- end }}
           volumeMounts:
             - name: data
-              mountPath: /bitnami/mysql
+              mountPath: /nix-containers/mysql
               {{- if .Values.primary.persistence.subPath }}
               subPath: {{ .Values.primary.persistence.subPath }}
               {{- end }}
@@ -165,7 +165,7 @@ spec:
               value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: MYSQL_ROOT_PASSWORD_FILE
-              value: {{ default "/opt/bitnami/mysql/secrets/mysql-root-password" .Values.auth.customPasswordFiles.root }}
+              value: {{ default "/opt/nix-containers/mysql/secrets/mysql-root-password" .Values.auth.customPasswordFiles.root }}
             {{- else }}
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -184,7 +184,7 @@ spec:
               value: {{ .Values.auth.username | quote }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: MYSQL_PASSWORD_FILE
-              value: {{ default "/opt/bitnami/mysql/secrets/mysql-password" .Values.auth.customPasswordFiles.user }}
+              value: {{ default "/opt/nix-containers/mysql/secrets/mysql-password" .Values.auth.customPasswordFiles.user }}
             {{- else }}
             - name: MYSQL_PASSWORD
               valueFrom:
@@ -206,7 +206,7 @@ spec:
               value: {{ .Values.auth.replicationUser | quote }}
             {{- if .Values.auth.usePasswordFiles }}
             - name: MYSQL_REPLICATION_PASSWORD_FILE
-              value: {{ default "/opt/bitnami/mysql/secrets/mysql-replication-password" .Values.auth.customPasswordFiles.replicator }}
+              value: {{ default "/opt/nix-containers/mysql/secrets/mysql-replication-password" .Values.auth.customPasswordFiles.replicator }}
             {{- else }}
             - name: MYSQL_REPLICATION_PASSWORD
               valueFrom:
@@ -295,7 +295,7 @@ spec:
           {{- end }}
           volumeMounts:
             - name: data
-              mountPath: /bitnami/mysql
+              mountPath: /nix-containers/mysql
               {{- if .Values.primary.persistence.subPath }}
               subPath: {{ .Values.primary.persistence.subPath }}
               {{- end }}
@@ -303,17 +303,17 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/mysql/conf
+              mountPath: /opt/nix-containers/mysql/conf
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/mysql/tmp
+              mountPath: /opt/nix-containers/mysql/tmp
               subPath: app-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/mysql/logs
+              mountPath: /opt/nix-containers/mysql/logs
               subPath: app-logs-dir
             {{- if .Values.tls.enabled }}
             - name: cert
-              mountPath: /opt/bitnami/mysql/certs
+              mountPath: /opt/nix-containers/mysql/certs
             {{- end }}
             {{- if or .Values.initdbScriptsConfigMap .Values.initdbScripts }}
             - name: custom-init-scripts
@@ -325,12 +325,12 @@ spec:
             {{- end }}
             {{- if or .Values.primary.configuration .Values.primary.existingConfigmap }}
             - name: config
-              mountPath: /opt/bitnami/mysql/conf/my.cnf
+              mountPath: /opt/nix-containers/mysql/conf/my.cnf
               subPath: my.cnf
             {{- end }}
             {{- if and .Values.auth.usePasswordFiles (not .Values.auth.customPasswordFiles) }}
             - name: mysql-credentials
-              mountPath: /opt/bitnami/mysql/secrets/
+              mountPath: /opt/nix-containers/mysql/secrets/
             {{- end }}
             {{- if .Values.primary.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.primary.extraVolumeMounts "context" $) | nindent 12 }}
@@ -345,7 +345,7 @@ spec:
           env:
             {{- if .Values.auth.usePasswordFiles }}
             - name: MYSQL_ROOT_PASSWORD_FILE
-              value: {{ default "/opt/bitnami/mysqld-exporter/secrets/mysql-root-password" .Values.auth.customPasswordFiles.root }}
+              value: {{ default "/opt/nix-containers/mysqld-exporter/secrets/mysql-root-password" .Values.auth.customPasswordFiles.root }}
             {{- else }}
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -392,7 +392,7 @@ spec:
           volumeMounts:
           {{- if and .Values.auth.usePasswordFiles (not .Values.auth.customPasswordFiles) }}
             - name: mysql-credentials
-              mountPath: /opt/bitnami/mysqld-exporter/secrets/
+              mountPath: /opt/nix-containers/mysqld-exporter/secrets/
           {{- end }}
             - name: empty-dir
               mountPath: /tmp

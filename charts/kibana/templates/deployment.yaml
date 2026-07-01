@@ -76,9 +76,9 @@ spec:
           args:
             - -ec
             - |
-              mkdir -p /bitnami/kibana
-              chown {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }} /bitnami/kibana
-              find /bitnami/kibana -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }}
+              mkdir -p /nix-containers/kibana
+              chown {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }} /nix-containers/kibana
+              find /nix-containers/kibana -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R {{ .Values.containerSecurityContext.runAsUser }}:{{ .Values.podSecurityContext.fsGroup }}
           securityContext:
             runAsUser: 0
           {{- if .Values.volumePermissions.resources }}
@@ -88,7 +88,7 @@ spec:
           {{- end }}
           volumeMounts:
           - name: kibana-data
-            mountPath: /bitnami/kibana
+            mountPath: /nix-containers/kibana
             {{- if .Values.persistence.subPath }}
             subPath: {{ .Values.persistence.subPath }}
             {{- end }}
@@ -111,8 +111,8 @@ spec:
             - |
                 #!/bin/bash
 
-                . /opt/bitnami/scripts/libfs.sh
-                . /opt/bitnami/scripts/kibana-env.sh
+                . /opt/nix-containers/scripts/libfs.sh
+                . /opt/nix-containers/scripts/kibana-env.sh
 
                 if ! is_dir_empty "$SERVER_DEFAULT_PLUGINS_DIR"; then
                     cp -nr "$SERVER_DEFAULT_PLUGINS_DIR"/* /plugins
@@ -164,7 +164,7 @@ spec:
             {{- if and .Values.tls.enabled .Values.tls.usePemCerts (or .Values.tls.keyPassword .Values.tls.passwordsSecret) }}
             {{- if .Values.usePasswordFiles }}
             - name: KIBANA_SERVER_KEY_PASSWORD_FILE
-              value: "/opt/bitnami/kibana/secrets/kibana-key-password"
+              value: "/opt/nix-containers/kibana/secrets/kibana-key-password"
             {{- else }}
             - name: KIBANA_SERVER_KEY_PASSWORD
               valueFrom:
@@ -176,7 +176,7 @@ spec:
             {{- if and .Values.tls.enabled (not .Values.tls.usePemCerts) (or .Values.tls.keystorePassword .Values.tls.passwordsSecret) }}
             {{- if .Values.usePasswordFiles }}
             - name: KIBANA_SERVER_KEYSTORE_PASSWORD_FILE
-              value: "/opt/bitnami/kibana/secrets/kibana-keystore-password"
+              value: "/opt/nix-containers/kibana/secrets/kibana-keystore-password"
             {{- else }}
             - name: KIBANA_SERVER_KEYSTORE_PASSWORD
               valueFrom:
@@ -188,7 +188,7 @@ spec:
             {{- if .Values.elasticsearch.security.auth.enabled }}
             {{- if .Values.usePasswordFiles }}
             - name: KIBANA_PASSWORD_FILE
-              value: "/opt/bitnami/kibana/secrets/kibana-password"
+              value: "/opt/nix-containers/kibana/secrets/kibana-password"
             {{- else }}
             - name: KIBANA_PASSWORD
               valueFrom:
@@ -200,7 +200,7 @@ spec:
             {{- if and .Values.elasticsearch.security.auth.enabled .Values.elasticsearch.security.auth.createSystemUser }}
             {{- if .Values.usePasswordFiles }}
             - name: KIBANA_ELASTICSEARCH_PASSWORD_FILE
-              value: "/opt/bitnami/kibana/secrets/elasticsearch-password"
+              value: "/opt/nix-containers/kibana/secrets/elasticsearch-password"
             {{- else }}
             - name: KIBANA_ELASTICSEARCH_PASSWORD
               valueFrom:
@@ -220,7 +220,7 @@ spec:
             {{- if and .Values.elasticsearch.security.tls.enabled (not .Values.elasticsearch.security.tls.usePemCerts) (or .Values.elasticsearch.security.tls.truststorePassword .Values.elasticsearch.security.tls.passwordsSecret) }}
             {{- if .Values.usePasswordFiles }}
             - name: KIBANA_ELASTICSEARCH_TRUSTSTORE_PASSWORD_FILE
-              value: "/opt/bitnami/kibana/secrets/elasticsearch-truststore-password"
+              value: "/opt/nix-containers/kibana/secrets/elasticsearch-truststore-password"
             {{- else }}
             - name: KIBANA_ELASTICSEARCH_TRUSTSTORE_PASSWORD
               valueFrom:
@@ -280,33 +280,33 @@ spec:
               mountPath: /tmp
               subPath: tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/kibana/config
+              mountPath: /opt/nix-containers/kibana/config
               subPath: app-conf-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/kibana/tmp
+              mountPath: /opt/nix-containers/kibana/tmp
               subPath: app-tmp-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/kibana/logs
+              mountPath: /opt/nix-containers/kibana/logs
               subPath: app-logs-dir
             - name: empty-dir
-              mountPath: /opt/bitnami/kibana/plugins
+              mountPath: /opt/nix-containers/kibana/plugins
               subPath: app-plugins-dir
             - name: kibana-data
-              mountPath: /bitnami/kibana
+              mountPath: /nix-containers/kibana
             - name: kibana-config
-              mountPath: /bitnami/kibana/conf
+              mountPath: /nix-containers/kibana/conf
             {{- if and .Values.usePasswordFiles (or .Values.elasticsearch.security.auth.enabled (and .Values.tls.enabled (or .Values.tls.passwordsSecret (ternary .Values.tls.keyPassword .Values.tls.keystorePassword .Values.tls.usePemCerts)))) }}
             - name: kibana-secrets
-              mountPath: /opt/bitnami/kibana/secrets
+              mountPath: /opt/nix-containers/kibana/secrets
             {{- end }}
             {{- if .Values.tls.enabled }}
             - name: kibana-certificates
-              mountPath: /opt/bitnami/kibana/config/certs/server
+              mountPath: /opt/nix-containers/kibana/config/certs/server
               readOnly: true
             {{- end }}
             {{- if and .Values.elasticsearch.security.tls.enabled (not (eq .Values.elasticsearch.security.tls.verificationMode "none" )) }}
             - name: elasticsearch-certificates
-              mountPath: /opt/bitnami/kibana/config/certs/elasticsearch
+              mountPath: /opt/nix-containers/kibana/config/certs/elasticsearch
               readOnly: true
             {{- end }}
             {{- if .Values.plugins }}
@@ -319,7 +319,7 @@ spec:
             {{- end }}
             {{- if .Values.savedObjects.configmap }}
             - name: saved-objects-configmap
-              mountPath: /bitnami/kibana/saved-objects
+              mountPath: /nix-containers/kibana/saved-objects
             {{- end }}
             {{- if .Values.initScriptsCM }}
             - name: custom-init-scripts-cm

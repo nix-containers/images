@@ -20,12 +20,12 @@ Returns an init-container that prepares the Airflow configuration files for main
   args:
     - -ec
     - |
-      . /opt/bitnami/scripts/libairflow.sh
+      . /opt/nix-containers/scripts/libairflow.sh
 
       mkdir -p /emptydir/app-base-dir /emptydir/app-conf-dir
 
       # Copy the configuration files to the writable directory
-      cp /opt/bitnami/airflow/airflow.cfg /emptydir/app-base-dir/airflow.cfg
+      cp /opt/nix-containers/airflow/airflow.cfg /emptydir/app-base-dir/airflow.cfg
 
       # Apply changes affecting credentials
       export AIRFLOW_CONF_FILE="/emptydir/app-base-dir/airflow.cfg"
@@ -59,8 +59,8 @@ Returns an init-container that prepares the Airflow configuration files for main
       airflow_conf_set "core" "auth_manager" "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
       info "Airflow configuration ready"
 
-      if [[ -f "/opt/bitnami/airflow/config/airflow_local_settings.py" ]]; then
-          cp /opt/bitnami/airflow/config/airflow_local_settings.py /emptydir/app-conf-dir/airflow_local_settings.py
+      if [[ -f "/opt/nix-containers/airflow/config/airflow_local_settings.py" ]]; then
+          cp /opt/nix-containers/airflow/config/airflow_local_settings.py /emptydir/app-conf-dir/airflow_local_settings.py
       else
           touch /emptydir/app-conf-dir/airflow_local_settings.py
       fi
@@ -74,7 +74,7 @@ Returns an init-container that prepares the Airflow configuration files for main
     {{- if (include "airflow.database.useSqlConnection" .) }}
     {{- if .Values.usePasswordFiles }}
     - name: AIRFLOW_DATABASE_SQL_CONN_FILE
-      value: {{ printf "/opt/bitnami/airflow/secrets/%s" (include "airflow.database.secretKey" .) }}
+      value: {{ printf "/opt/nix-containers/airflow/secrets/%s" (include "airflow.database.secretKey" .) }}
     {{- else }}
     - name: AIRFLOW_DATABASE_SQL_CONN
       valueFrom:
@@ -89,7 +89,7 @@ Returns an init-container that prepares the Airflow configuration files for main
       value: {{ include "airflow.database.user" . }}
     {{- if .Values.usePasswordFiles }}
     - name: AIRFLOW_DATABASE_PASSWORD_FILE
-      value: {{ printf "/opt/bitnami/airflow/secrets/%s" (include "airflow.database.secretKey" .) }}
+      value: {{ printf "/opt/nix-containers/airflow/secrets/%s" (include "airflow.database.secretKey" .) }}
     {{- else }}
     - name: AIRFLOW_DATABASE_PASSWORD
       valueFrom:
@@ -113,7 +113,7 @@ Returns an init-container that prepares the Airflow configuration files for main
     {{- end }}
     {{- if .Values.usePasswordFiles }}
     - name: REDIS_PASSWORD_FILE
-      value: "/opt/bitnami/airflow/secrets/redis-password"
+      value: "/opt/nix-containers/airflow/secrets/redis-password"
     {{- else }}
     - name: REDIS_PASSWORD
       valueFrom:
@@ -129,14 +129,14 @@ Returns an init-container that prepares the Airflow configuration files for main
     - name: empty-dir
       mountPath: /emptydir
     - name: configuration
-      mountPath: /opt/bitnami/airflow/airflow.cfg
+      mountPath: /opt/nix-containers/airflow/airflow.cfg
       subPath: airflow.cfg
     - name: configuration
-      mountPath: /opt/bitnami/airflow/config/airflow_local_settings.py
+      mountPath: /opt/nix-containers/airflow/config/airflow_local_settings.py
       subPath: airflow_local_settings.py
     {{- if  .Values.usePasswordFiles }}
     - name: airflow-secrets
-      mountPath: /opt/bitnami/airflow/secrets
+      mountPath: /opt/nix-containers/airflow/secrets
     {{- end }}
 {{- end -}}
 
@@ -160,10 +160,10 @@ Returns an init-container that prepares the Airflow Webserver configuration file
   args:
     - -ec
     - |
-      . /opt/bitnami/scripts/libairflow.sh
+      . /opt/nix-containers/scripts/libairflow.sh
 
       # Copy the configuration files to the writable directory
-      cp /opt/bitnami/airflow/webserver_config.py /emptydir/app-base-dir/webserver_config.py
+      cp /opt/nix-containers/airflow/webserver_config.py /emptydir/app-base-dir/webserver_config.py
     {{- if .Values.ldap.enabled }}
       {{- if .Values.usePasswordFiles }}
       export AIRFLOW_LDAP_BIND_PASSWORD="$(< $AIRFLOW_LDAP_BIND_PASSWORD_FILE)"
@@ -178,7 +178,7 @@ Returns an init-container that prepares the Airflow Webserver configuration file
     {{- if .Values.ldap.enabled }}
     {{- if .Values.usePasswordFiles }}
     - name: AIRFLOW_LDAP_BIND_PASSWORD_FILE
-      value: "/opt/bitnami/airflow/secrets/bind-password"
+      value: "/opt/nix-containers/airflow/secrets/bind-password"
     {{- else }}
     - name: AIRFLOW_LDAP_BIND_PASSWORD
       valueFrom:
@@ -194,11 +194,11 @@ Returns an init-container that prepares the Airflow Webserver configuration file
     - name: empty-dir
       mountPath: /emptydir
     - name: webserver-configuration
-      mountPath: /opt/bitnami/airflow/webserver_config.py
+      mountPath: /opt/nix-containers/airflow/webserver_config.py
       subPath: webserver_config.py
     {{- if  .Values.usePasswordFiles }}
     - name: airflow-secrets
-      mountPath: /opt/bitnami/airflow/secrets
+      mountPath: /opt/nix-containers/airflow/secrets
     {{- end }}
 {{- end -}}
 
@@ -222,8 +222,8 @@ Returns an init-container that waits for db migrations to be ready
   args:
     - -ec
     - |
-      . /opt/bitnami/scripts/airflow-env.sh
-      . /opt/bitnami/scripts/libairflow.sh
+      . /opt/nix-containers/scripts/airflow-env.sh
+      . /opt/nix-containers/scripts/libairflow.sh
 
       info "Trying to connect to the database server"
       airflow_wait_for_db_connection
@@ -244,19 +244,19 @@ Returns an init-container that waits for db migrations to be ready
       mountPath: /tmp
       subPath: tmp-dir
     - name: empty-dir
-      mountPath: /opt/bitnami/airflow/logs
+      mountPath: /opt/nix-containers/airflow/logs
       subPath: app-logs-dir
     - name: empty-dir
-      mountPath: /opt/bitnami/airflow/tmp
+      mountPath: /opt/nix-containers/airflow/tmp
       subPath: app-tmp-dir
     - name: empty-dir
-      mountPath: /opt/bitnami/airflow/airflow.db
+      mountPath: /opt/nix-containers/airflow/airflow.db
       subPath: app-base-dir/airflow.db
     - name: empty-dir
-      mountPath: /opt/bitnami/airflow/airflow.cfg
+      mountPath: /opt/nix-containers/airflow/airflow.cfg
       subPath: app-base-dir/airflow.cfg
     - name: empty-dir
-      mountPath: /opt/bitnami/airflow/config/airflow_local_settings.py
+      mountPath: /opt/nix-containers/airflow/config/airflow_local_settings.py
       subPath: app-conf-dir/airflow_local_settings.py
     {{- if .Values.extraVolumeMounts }}
     {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 4 }}
@@ -292,10 +292,10 @@ Returns an init-container that prepares the venv directory
   args:
     - -ec
     - |
-      . /opt/bitnami/scripts/libairflow.sh
+      . /opt/nix-containers/scripts/libairflow.sh
 
       # Copy the configuration files to the writable directory
-      cp -r --preserve=mode /opt/bitnami/airflow/venv /emptydir/venv-base-dir
+      cp -r --preserve=mode /opt/nix-containers/airflow/venv /emptydir/venv-base-dir
 
       info "Copy operation completed"
   env:
@@ -350,13 +350,13 @@ Returns shared structure between load-dags and load-plugins init containers
       mountPath: /tmp
       subPath: tmp-dir
     - name: empty-dir
-      mountPath: /opt/bitnami/airflow/nss-wrapper
+      mountPath: /opt/nix-containers/airflow/nss-wrapper
       subPath: app-nss-wrapper-dir
     - name: empty-dir
       mountPath: /etc/ssh
       subPath: etc-ssh-dir
     - name: empty-dir
-      mountPath: /opt/bitnami/airflow/.ssh
+      mountPath: /opt/nix-containers/airflow/.ssh
       subPath: ssh-dir
     {{- if .Values.defaultInitContainers.loadDAGsPlugins.extraVolumeMounts }}
     {{- include "common.tplvalues.render" (dict "value" .Values.defaultInitContainers.loadDAGsPlugins.extraVolumeMounts "context" $) | nindent 4 }}
@@ -379,7 +379,7 @@ Returns an init-container that loads DAGs from a ConfigMap or Git repositories
     {{- end }}
     {{- if or .Values.dags.sshKey .Values.dags.existingSshKeySecret }}
     - name: dags-ssh-key
-      mountPath: /opt/bitnami/airflow/.ssh/dags-ssh-key
+      mountPath: /opt/nix-containers/airflow/.ssh/dags-ssh-key
       subPath: dags-ssh-key
     {{- end }}
   {{- if .Values.defaultInitContainers.loadDAGsPlugins.args }}
@@ -388,8 +388,8 @@ Returns an init-container that loads DAGs from a ConfigMap or Git repositories
   args:
     - -ec
     - |
-      . /opt/bitnami/scripts/libfs.sh
-      . /opt/bitnami/scripts/libos.sh
+      . /opt/nix-containers/scripts/libfs.sh
+      . /opt/nix-containers/scripts/libos.sh
 
       if ! am_i_root && [[ -e "$LIBNSS_WRAPPER_PATH" ]]; then
           echo "airflow:x:$(id -u):$(id -g):Airflow:$AIRFLOW_HOME:/bin/false" > "$NSS_WRAPPER_PASSWD"
@@ -400,7 +400,7 @@ Returns an init-container that loads DAGs from a ConfigMap or Git repositories
       fi
 
     {{- if or .Values.dags.sshKey .Values.dags.existingSshKeySecret }}
-      export GIT_SSH_COMMAND="ssh -i /opt/bitnami/airflow/.ssh/dags-ssh-key -o StrictHostKeyChecking=no"
+      export GIT_SSH_COMMAND="ssh -i /opt/nix-containers/airflow/.ssh/dags-ssh-key -o StrictHostKeyChecking=no"
     {{- end }}
     {{- range .Values.dags.repositories }}
       is_dir_empty "/dags/{{ include "airflow.dagsPlugins.repository.name" . }}" && git clone {{ .repository }} --depth 1 --branch {{ .branch }} /dags/{{ include "airflow.dagsPlugins.repository.name" . }}
@@ -423,7 +423,7 @@ Returns an init-container that loads plugins from  Git repositories
       subPath: app-plugins-dir
     {{- if or .Values.plugins.sshKey .Values.plugins.existingSshKeySecret }}
     - name: plugins-ssh-key
-      mountPath: /opt/bitnami/airflow/.ssh/plugins-ssh-key
+      mountPath: /opt/nix-containers/airflow/.ssh/plugins-ssh-key
       subPath: plugins-ssh-key
     {{- end }}
   {{- if .Values.defaultInitContainers.loadDAGsPlugins.args }}
@@ -432,8 +432,8 @@ Returns an init-container that loads plugins from  Git repositories
   args:
     - -ec
     - |
-      . /opt/bitnami/scripts/libfs.sh
-      . /opt/bitnami/scripts/libos.sh
+      . /opt/nix-containers/scripts/libfs.sh
+      . /opt/nix-containers/scripts/libos.sh
 
       if ! am_i_root && [[ -e "$LIBNSS_WRAPPER_PATH" ]]; then
           echo "airflow:x:$(id -u):$(id -g):Airflow:$AIRFLOW_HOME:/bin/false" > "$NSS_WRAPPER_PASSWD"
@@ -444,7 +444,7 @@ Returns an init-container that loads plugins from  Git repositories
       fi
 
     {{- if or .Values.plugins.sshKey .Values.plugins.existingSshKeySecret }}
-      export GIT_SSH_COMMAND="ssh -i /opt/bitnami/airflow/.ssh/plugins-ssh-key -o StrictHostKeyChecking=no"
+      export GIT_SSH_COMMAND="ssh -i /opt/nix-containers/airflow/.ssh/plugins-ssh-key -o StrictHostKeyChecking=no"
     {{- end }}
     {{- range .Values.plugins.repositories }}
       is_dir_empty "/plugins/{{ include "airflow.dagsPlugins.repository.name" . }}" && git clone {{ .repository }} --depth 1 --branch {{ .branch }} /plugins/{{ include "airflow.dagsPlugins.repository.name" . }}
@@ -497,13 +497,13 @@ Returns shared structure between sync-dags and sync-plugins sidecars
       mountPath: /tmp
       subPath: tmp-dir
     - name: empty-dir
-      mountPath: /opt/bitnami/airflow/nss-wrapper
+      mountPath: /opt/nix-containers/airflow/nss-wrapper
       subPath: app-nss-wrapper-dir
     - name: empty-dir
       mountPath: /etc/ssh
       subPath: etc-ssh-dir
     - name: empty-dir
-      mountPath: /opt/bitnami/airflow/.ssh
+      mountPath: /opt/nix-containers/airflow/.ssh
       subPath: ssh-dir
     {{- if .Values.defaultSidecars.syncDAGsPlugins.extraVolumeMounts }}
     {{- include "common.tplvalues.render" (dict "value" .Values.defaultSidecars.syncDAGsPlugins.extraVolumeMounts "context" $) | nindent 4 }}
@@ -520,7 +520,7 @@ Returns a sidecar that syncs DAGs from Git repositories
       subPath: app-dags-dir
     {{- if or .Values.dags.sshKey .Values.dags.existingSshKeySecret }}
     - name: dags-ssh-key
-      mountPath: /opt/bitnami/airflow/.ssh/dags-ssh-key
+      mountPath: /opt/nix-containers/airflow/.ssh/dags-ssh-key
       subPath: dags-ssh-key
     {{- end }}
   {{- if .Values.defaultSidecars.syncDAGsPlugins.args }}
@@ -529,7 +529,7 @@ Returns a sidecar that syncs DAGs from Git repositories
   args:
     - -ec
     - |
-      . /opt/bitnami/scripts/libos.sh
+      . /opt/nix-containers/scripts/libos.sh
 
       if ! am_i_root && [[ -e "$LIBNSS_WRAPPER_PATH" ]]; then
           echo "airflow:x:$(id -u):$(id -g):Airflow:$AIRFLOW_HOME:/bin/false" > "$NSS_WRAPPER_PASSWD"
@@ -541,7 +541,7 @@ Returns a sidecar that syncs DAGs from Git repositories
 
       while true; do
     {{- if or .Values.dags.sshKey .Values.dags.existingSshKeySecret }}
-      export GIT_SSH_COMMAND="ssh -i /opt/bitnami/airflow/.ssh/dags-ssh-key -o StrictHostKeyChecking=no"
+      export GIT_SSH_COMMAND="ssh -i /opt/nix-containers/airflow/.ssh/dags-ssh-key -o StrictHostKeyChecking=no"
     {{- end }}
     {{- range .Values.dags.repositories }}
           cd /dags/{{ include "airflow.dagsPlugins.repository.name" . }} && git pull origin {{ .branch }} || true
@@ -562,7 +562,7 @@ Returns a sidecar that syncs plugins from Git repositories
       subPath: app-plugins-dir
     {{- if or .Values.plugins.sshKey .Values.plugins.existingSshKeySecret }}
     - name: plugins-ssh-key
-      mountPath: /opt/bitnami/airflow/.ssh/plugins-ssh-key
+      mountPath: /opt/nix-containers/airflow/.ssh/plugins-ssh-key
       subPath: plugins-ssh-key
     {{- end }}
   {{- if .Values.defaultSidecars.syncDAGsPlugins.args }}
@@ -571,7 +571,7 @@ Returns a sidecar that syncs plugins from Git repositories
   args:
     - -ec
     - |
-      . /opt/bitnami/scripts/libos.sh
+      . /opt/nix-containers/scripts/libos.sh
 
       if ! am_i_root && [[ -e "$LIBNSS_WRAPPER_PATH" ]]; then
           echo "airflow:x:$(id -u):$(id -g):Airflow:$AIRFLOW_HOME:/bin/false" > "$NSS_WRAPPER_PASSWD"
@@ -581,7 +581,7 @@ Returns a sidecar that syncs plugins from Git repositories
           export HOME="$AIRFLOW_HOME"
       fi
     {{- if or .Values.plugins.sshKey .Values.plugins.existingSshKeySecret }}
-      export GIT_SSH_COMMAND="ssh -i /opt/bitnami/airflow/.ssh/plugins-ssh-key -o StrictHostKeyChecking=no"
+      export GIT_SSH_COMMAND="ssh -i /opt/nix-containers/airflow/.ssh/plugins-ssh-key -o StrictHostKeyChecking=no"
     {{- end }}
       while true; do
     {{- range .Values.plugins.repositories }}
@@ -599,12 +599,12 @@ Returns the volume mounts to use on Airflow containers to mount custom DAGs
 {{- define "airflow.dags.volumeMounts" -}}
 {{- if not (empty .Values.dags.existingConfigmap) }}
 - name: empty-dir
-  mountPath: /opt/bitnami/airflow/dags/external
+  mountPath: /opt/nix-containers/airflow/dags/external
   subPath: app-dags-dir/external
 {{- end }}
 {{- range .Values.dags.repositories }}
 - name: empty-dir
-  mountPath: /opt/bitnami/airflow/dags/git_{{ include "airflow.dagsPlugins.repository.name" . }}
+  mountPath: /opt/nix-containers/airflow/dags/git_{{ include "airflow.dagsPlugins.repository.name" . }}
   {{- if .path }}
   subPath: app-dags-dir/{{ include "airflow.dagsPlugins.repository.name" . }}/{{ .path }}
   {{- else }}
@@ -639,7 +639,7 @@ Returns the volume mounts to use on Airflow containers to mount custom plugins
 {{- define "airflow.plugins.volumeMounts" -}}
 {{- range .Values.plugins.repositories }}
 - name: empty-dir
-  mountPath: /opt/bitnami/airflow/plugins/git_{{ include "airflow.dagsPlugins.repository.name" . }}
+  mountPath: /opt/nix-containers/airflow/plugins/git_{{ include "airflow.dagsPlugins.repository.name" . }}
   {{- if .path }}
   subPath: app-plugins-dir/{{ include "airflow.dagsPlugins.repository.name" . }}/{{ .path }}
   {{- else }}

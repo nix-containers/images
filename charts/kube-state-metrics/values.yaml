@@ -109,8 +109,8 @@ serviceAccount:
   name: ""
   automountServiceAccountToken: false
   annotations: {}
-## Bitnami kube-state-metrics image version
-## ref: https://hub.docker.com/r/bitnami/kube-state-metrics/tags/
+## nix-containers kube-state-metrics image version
+## ref: https://hub.docker.com/r/nix-containers/kube-state-metrics/tags/
 ## @param image.registry [default: REGISTRY_NAME] kube-state-metrics image registry
 ## @param image.repository [default: REPOSITORY_NAME/kube-state-metrics] kube-state-metrics image repository
 ## @skip image.tag kube-state-metrics image tag (immutable tags are recommended)
@@ -119,8 +119,8 @@ serviceAccount:
 ## @param image.pullSecrets Specify docker-registry secret names as an array
 ##
 image:
-  registry: docker.io
-  repository: bitnami/kube-state-metrics
+  registry: ghcr.io
+  repository: nix-containers/kube-state-metrics-nixchart
   tag: 2.16.0-debian-12-r5
   digest: ""
   ## Specify a imagePullPolicy
@@ -455,7 +455,7 @@ topologySpreadConstraints: []
 ## resources, such as Minikube. If you do want to specify resources, uncomment the following
 ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "micro"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -611,7 +611,7 @@ serviceMonitor:
   ##
   scrapeTimeout: ""
   ## @param serviceMonitor.selector ServiceMonitor selector labels
-  ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+  ## ref: https://github.com/nix-containers/images
   ## e.g:
   ## selector:
   ##   prometheus: my-prometheus

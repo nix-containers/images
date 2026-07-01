@@ -94,9 +94,9 @@ spec:
                 - name: certs
                   mountPath: /certs
                 - name: common-scripts
-                  mountPath: /bitnami/scripts
+                  mountPath: /nix-containers/scripts
               command:
-                - /bitnami/scripts/generate-certs.sh
+                - /nix-containers/scripts/generate-certs.sh
               args:
                 - -s {{ include "mongodb.service.nameOverride" . }}
                 {{- if .Values.externalAccess.service.loadBalancerIPs }}
@@ -124,7 +124,7 @@ spec:
                 value: {{ .Values.auth.rootUser | quote }}
               {{- if .Values.usePasswordFiles }}
               - name: MONGODB_ROOT_PASSWORD_FILE
-                value: "/opt/bitnami/mongodb/secrets/mongodb-root-password"
+                value: "/opt/nix-containers/mongodb/secrets/mongodb-root-password"
               {{- else }}
               - name: MONGODB_ROOT_PASSWORD
                 valueFrom:
@@ -166,7 +166,7 @@ spec:
                 subPath: tmp-dir
               {{- if and .Values.usePasswordFiles .Values.auth.enabled }}
               - name: mongodb-secrets
-                mountPath: /opt/bitnami/mongodb/secrets
+                mountPath: /opt/nix-containers/mongodb/secrets
               {{- end }}
               {{- if .Values.tls.enabled }}
               - name: certs

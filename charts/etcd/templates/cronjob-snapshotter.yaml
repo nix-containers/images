@@ -72,7 +72,7 @@ spec:
               command: {{- include "common.tplvalues.render" (dict "value" .Values.disasterRecovery.cronjob.command "context" $) | nindent 16 }}
               {{- else }}
               command:
-                - /opt/bitnami/scripts/etcd/snapshot.sh
+                - /opt/nix-containers/scripts/etcd/snapshot.sh
               {{- end }}
               env:
                 - name: BITNAMI_DEBUG
@@ -93,17 +93,17 @@ spec:
                   value: {{ .Values.disasterRecovery.cronjob.snapshotsDir | quote }}
                 {{- if .Values.auth.client.secureTransport }}
                 - name: ETCD_CERT_FILE
-                  value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.certFilename }}"
+                  value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.certFilename }}"
                 - name: ETCD_KEY_FILE
-                  value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.certKeyFilename }}"
+                  value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.certKeyFilename }}"
                 {{- if .Values.auth.client.enableAuthentication }}
                 - name: ETCD_CLIENT_CERT_AUTH
                   value: "true"
                 - name: ETCD_TRUSTED_CA_FILE
-                  value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}"
+                  value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.caFilename | default "ca.crt" }}"
                 {{- else if .Values.auth.client.caFilename }}
                 - name: ETCD_TRUSTED_CA_FILE
-                  value: "/opt/bitnami/etcd/certs/client/{{ .Values.auth.client.caFilename }}"
+                  value: "/opt/nix-containers/etcd/certs/client/{{ .Values.auth.client.caFilename }}"
                 {{- else }}
                 - name: ETCD_EXTRA_AUTH_FLAGS
                   value: "--insecure-skip-tls-verify"
@@ -112,7 +112,7 @@ spec:
                 {{- if or .Values.auth.rbac.create .Values.auth.rbac.enabled }}
                 {{- if .Values.usePasswordFiles }}
                 - name: ETCD_ROOT_PASSWORD_FILE
-                  value: {{ printf "/opt/bitnami/etcd/secrets/%s" (include "etcd.secretPasswordKey" .) }}
+                  value: {{ printf "/opt/nix-containers/etcd/secrets/%s" (include "etcd.secretPasswordKey" .) }}
                 {{- else }}
                 - name: ETCD_ROOT_PASSWORD
                   valueFrom:
@@ -137,12 +137,12 @@ spec:
                   {{- end }}
                 {{- if .Values.auth.client.secureTransport }}
                 - name: certs
-                  mountPath: /opt/bitnami/etcd/certs/client
+                  mountPath: /opt/nix-containers/etcd/certs/client
                   readOnly: true
                 {{- end }}
                 {{- if and .Values.usePasswordFiles (or .Values.auth.rbac.create .Values.auth.rbac.enabled) }}
                 - name: etcd-secrets
-                  mountPath: /opt/bitnami/etcd/secrets
+                  mountPath: /opt/nix-containers/etcd/secrets
                 {{- end }}
           volumes:
             - name: empty-dir

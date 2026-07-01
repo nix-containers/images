@@ -95,8 +95,8 @@ diagnosticMode:
 ## @section Valkey Image parameters
 ##
 
-## Bitnami Valkey image
-## ref: https://hub.docker.com/r/bitnami/valkey/tags/
+## nix-containers Valkey image
+## ref: https://hub.docker.com/r/nix-containers/valkey/tags/
 ## @param image.registry [default: REGISTRY_NAME] Valkey image registry
 ## @param image.repository [default: REPOSITORY_NAME/valkey] Valkey image repository
 ## @skip image.tag Valkey image tag (immutable tags are recommended)
@@ -106,8 +106,8 @@ diagnosticMode:
 ## @param image.debug Enable image debug mode
 ##
 image:
-  registry: docker.io
-  repository: bitnami/valkey
+  registry: ghcr.io
+  repository: nix-containers/valkey-nixchart
   tag: 8.1.3-debian-12-r3
   digest: ""
   ## Specify a imagePullPolicy
@@ -126,14 +126,14 @@ image:
   ##
   debug: false
 ## @section Valkey common configuration parameters
-## https://github.com/bitnami/containers/tree/main/bitnami/valkey#configuration
+## https://github.com/nix-containers/containers/tree/main/nix-containers/valkey#configuration
 ##
 
 ## @param architecture Valkey architecture. Allowed values: `standalone` or `replication`
 ##
 architecture: replication
 ## Valkey Authentication parameters
-## ref: https://github.com/bitnami/containers/tree/main/bitnami/valkey#setting-the-server-password-on-first-run
+## ref: https://github.com/nix-containers/containers/tree/main/nix-containers/valkey#setting-the-server-password-on-first-run
 ##
 auth:
   ## @param auth.enabled Enable password authentication
@@ -280,7 +280,7 @@ primary:
   ## Valkey primary resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param primary.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if primary.resources is set (primary.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param primary.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -753,7 +753,7 @@ replica:
   ## Valkey replicas resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param replica.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if replica.resources is set (replica.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param replica.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1158,8 +1158,8 @@ sentinel:
   ## create a single Valkey service exposing both the Valkey and Sentinel ports
   ##
   enabled: false
-  ## Bitnami Valkey Sentinel image version
-  ## ref: https://hub.docker.com/r/bitnami/valkey-sentinel/tags/
+  ## nix-containers Valkey Sentinel image version
+  ## ref: https://hub.docker.com/r/nix-containers/valkey-sentinel/tags/
   ## @param sentinel.image.registry [default: REGISTRY_NAME] Valkey Sentinel image registry
   ## @param sentinel.image.repository [default: REPOSITORY_NAME/valkey-sentinel] Valkey Sentinel image repository
   ## @skip sentinel.image.tag Valkey Sentinel image tag (immutable tags are recommended)
@@ -1169,8 +1169,8 @@ sentinel:
   ## @param sentinel.image.debug Enable image debug mode
   ##
   image:
-    registry: docker.io
-    repository: bitnami/valkey-sentinel
+    registry: ghcr.io
+    repository: nix-containers/valkey-sentinel-nixchart
     tag: 8.1.3-debian-12-r3
     digest: ""
     ## Specify a imagePullPolicy
@@ -1366,7 +1366,7 @@ sentinel:
   ## Valkey Sentinel resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param sentinel.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if sentinel.resources is set (sentinel.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param sentinel.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1636,8 +1636,8 @@ metrics:
   ## @param metrics.enabled Start a sidecar Prometheus Exporter to expose Valkey metrics
   ##
   enabled: false
-  ## Bitnami Redis(R) Exporter image
-  ## ref: https://hub.docker.com/r/bitnami/redis-exporter/tags/
+  ## nix-containers Redis(R) Exporter image
+  ## ref: https://hub.docker.com/r/nix-containers/redis-exporter/tags/
   ## @param metrics.image.registry [default: REGISTRY_NAME] Redis(R) Exporter image registry
   ## @param metrics.image.repository [default: REPOSITORY_NAME/redis-exporter] Redis(R) Exporter image repository
   ## @skip metrics.image.tag Redis(R) Exporter image tag (immutable tags are recommended)
@@ -1646,8 +1646,8 @@ metrics:
   ## @param metrics.image.pullSecrets Redis(R) Exporter image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/redis-exporter
+    registry: ghcr.io
+    repository: nix-containers/prometheus-redis-exporter-nixchart
     tag: 1.76.0-debian-12-r0
     digest: ""
     pullPolicy: IfNotPresent
@@ -1769,7 +1769,7 @@ metrics:
   ## Redis(R) Exporter resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param metrics.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if metrics.resources is set (metrics.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param metrics.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2008,7 +2008,7 @@ volumePermissions:
   ##
   enabled: false
   ## OS Shell + Utility image
-  ## ref: https://hub.docker.com/r/bitnami/os-shell/tags/
+  ## ref: https://hub.docker.com/r/nix-containers/os-shell/tags/
   ## @param volumePermissions.image.registry [default: REGISTRY_NAME] OS Shell + Utility image registry
   ## @param volumePermissions.image.repository [default: REPOSITORY_NAME/os-shell] OS Shell + Utility image repository
   ## @skip volumePermissions.image.tag OS Shell + Utility image tag (immutable tags are recommended)
@@ -2017,8 +2017,8 @@ volumePermissions:
   ## @param volumePermissions.image.pullSecrets OS Shell + Utility image pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/os-shell
+    registry: ghcr.io
+    repository: nix-containers/os-shell-nixchart
     tag: 12-debian-12-r51
     digest: ""
     pullPolicy: IfNotPresent
@@ -2033,7 +2033,7 @@ volumePermissions:
   ## Init container's resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param volumePermissions.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "nano"
   ## @param volumePermissions.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -2063,8 +2063,8 @@ volumePermissions:
 ## used by Sentinel to update the isPrimary label on the Valkey(TM) pods
 ##
 kubectl:
-  ## Bitnami Kubectl image version
-  ## ref: https://hub.docker.com/r/bitnami/kubectl/tags/
+  ## nix-containers Kubectl image version
+  ## ref: https://hub.docker.com/r/nix-containers/kubectl/tags/
   ## @param kubectl.image.registry [default: REGISTRY_NAME] Kubectl image registry
   ## @param kubectl.image.repository [default: REPOSITORY_NAME/kubectl] Kubectl image repository
   ## @skip kubectl.image.tag Kubectl image tag (immutable tags are recommended), by default, using the current version
@@ -2073,8 +2073,8 @@ kubectl:
   ## @param kubectl.image.pullSecrets Kubectl pull secrets
   ##
   image:
-    registry: docker.io
-    repository: bitnami/kubectl
+    registry: ghcr.io
+    repository: nix-containers/kubectl-nixchart
     tag: 1.33.4-debian-12-r0
     digest: ""
     ## Specify a imagePullPolicy
@@ -2091,7 +2091,7 @@ kubectl:
     pullSecrets: []
   ## @param kubectl.command kubectl command to execute
   ##
-  command: ["/opt/bitnami/scripts/kubectl-scripts/update-primary-label.sh"]
+  command: ["/opt/nix-containers/scripts/kubectl-scripts/update-primary-label.sh"]
   ## Configure Container Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param kubectl.containerSecurityContext.enabled Enable kubectl containers' Security Context
@@ -2116,7 +2116,7 @@ kubectl:
       type: RuntimeDefault
     capabilities:
       drop: ["ALL"]
-  ## Bitnami Kubectl resource requests and limits
+  ## nix-containers Kubectl resource requests and limits
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param kubectl.resources.limits The resources limits for the kubectl containers
   ## @param kubectl.resources.requests The requested resources for the kubectl containers

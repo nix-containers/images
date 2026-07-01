@@ -97,8 +97,8 @@ defaultInitContainers:
     ## @param defaultInitContainers.volumePermissions.image.pullSecrets "volume-permissions" init-containers' image pull secrets
     ##
     image:
-      registry: docker.io
-      repository: bitnami/os-shell
+      registry: ghcr.io
+      repository: nix-containers/os-shell-nixchart
       tag: 12-debian-12-r51
       digest: ""
       pullPolicy: IfNotPresent
@@ -135,7 +135,7 @@ defaultInitContainers:
     ## ClickHouse Keeper "volume-permissions" init container resource requests and limits
     ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     ## @param defaultInitContainers.volumePermissions.resourcesPreset Set ClickHouse Keeper "volume-permissions" init container resources according to one common preset (allowed values: none, nano, small, medium, large, xlarge, 2xlarge). This is ignored if defaultInitContainers.volumePermissions.resources is set (defaultInitContainers.volumePermissions.resources is recommended for production).
-    ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+    ## More information: https://github.com/nix-containers/images
     ##
     resourcesPreset: "nano"
     ## @param defaultInitContainers.volumePermissions.resources Set ClickHouse Keeper "volume-permissions" init container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -152,8 +152,8 @@ defaultInitContainers:
 
 ## @section ClickHouse parameters
 
-## Bitnami ClickHouse image
-## ref: https://hub.docker.com/r/bitnami/clickhouse/tags/
+## nix-containers ClickHouse image
+## ref: https://hub.docker.com/r/nix-containers/clickhouse/tags/
 ## @param image.registry [default: REGISTRY_NAME] ClickHouse image registry
 ## @param image.repository [default: REPOSITORY_NAME/clickhouse] ClickHouse image repository
 ## @skip image.tag ClickHouse image tag (immutable tags are recommended)
@@ -163,8 +163,8 @@ defaultInitContainers:
 ## @param image.debug Enable ClickHouse image debug mode
 ##
 image:
-  registry: docker.io
-  repository: bitnami/clickhouse
+  registry: ghcr.io
+  repository: nix-containers/clickhouse-nixchart
   tag: 25.7.5-debian-12-r0
   digest: ""
   ## Specify a imagePullPolicy
@@ -379,7 +379,7 @@ customStartupProbe: {}
 ## ClickHouse resource requests and limits
 ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
 ## @param resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if resources is set (resources is recommended for production).
-## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+## More information: https://github.com/nix-containers/images
 ##
 resourcesPreset: "small"
 ## @param resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -935,7 +935,7 @@ persistence:
   dataSource: {}
   ## @param persistence.mountPath Mount path of the ClickHouse data volume
   ##
-  mountPath: /bitnami/clickhouse
+  mountPath: /nix-containers/clickhouse
 
 ## @section ClickHouse Keeper parameters
 
@@ -943,8 +943,8 @@ keeper:
   ## @param keeper.enabled Deploy ClickHouse Keeper to provide coordination capabilities
   ##
   enabled: true
-  ## Bitnami ClickHouse Keeper image
-  ## ref: https://hub.docker.com/r/bitnami/clickhouse-keeper/tags/
+  ## nix-containers ClickHouse Keeper image
+  ## ref: https://hub.docker.com/r/nix-containers/clickhouse-keeper/tags/
   ## @param keeper.image.registry [default: REGISTRY_NAME] ClickHouse Keeper image registry
   ## @param keeper.image.repository [default: REPOSITORY_NAME/clickhouse-keeper] ClickHouse Keeper image repository
   ## @skip keeper.image.tag ClickHouse Keeper image tag (immutable tags are recommended)
@@ -954,8 +954,8 @@ keeper:
   ## @param keeper.image.debug Enable ClickHouse image debug mode
   ##
   image:
-    registry: docker.io
-    repository: bitnami/clickhouse-keeper
+    registry: ghcr.io
+    repository: nix-containers/clickhouse-keeper-nixchart
     tag: 25.7.5-debian-12-r0
     digest: ""
     ## Specify a imagePullPolicy
@@ -1067,7 +1067,7 @@ keeper:
   ## ClickHouse Keeper resource requests and limits
   ## ref: http://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param keeper.resourcesPreset Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if keeper.resources is set (keeper.resources is recommended for production).
-  ## More information: https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15
+  ## More information: https://github.com/nix-containers/images
   ##
   resourcesPreset: "small"
   ## @param keeper.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
@@ -1474,7 +1474,7 @@ keeper:
     dataSource: {}
     ## @param keeper.persistence.mountPath Mount path of the ClickHouse Keeper data volume
     ##
-    mountPath: /bitnami/clickhouse-keeper
+    mountPath: /nix-containers/clickhouse-keeper
 
 ## @section Other Parameters
 
@@ -1544,7 +1544,7 @@ metrics:
     ##
     relabelings: []
     ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+    ## ref: https://github.com/nix-containers/images
     ## selector:
     ##   prometheus: my-prometheus
     ##

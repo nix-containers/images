@@ -1,22 +1,22 @@
 <!--- app-name: PostgreSQL HA -->
 
-# Bitnami Secure Images Helm chart for PostgreSQL HA
+# nix-containers Secure Images Helm chart for PostgreSQL HA
 
 This PostgreSQL cluster solution includes the PostgreSQL replication manager, an open-source tool for managing replication and failover on PostgreSQL clusters.
 
 [Overview of PostgreSQL HA](https://www.postgresql.org/)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by nix-containers. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
 ```console
-helm install my-release oci://registry-1.docker.io/bitnamicharts/postgresql-ha
+helm install my-release oci://registry-1.docker.io/nix-containerscharts/postgresql-ha
 ```
 
-## Why use Bitnami Secure Images?
+## Why use nix-containers Secure Images?
 
-Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
+Those are hardened, minimal CVE images built and maintained by nix-containers. nix-containers Secure Images are based on the cloud-optimized, security-hardened enterprise [OS Photon Linux](https://vmware.github.io/photon/). Why choose BSI images?
 
 - Hardened secure images of popular open source software with Near-Zero Vulnerabilities
 - Vulnerability Triage & Prioritization with VEX Statements, KEV and EPSS Scores
@@ -24,21 +24,21 @@ Those are hardened, minimal CVE images built and maintained by Bitnami. Bitnami 
 - Software supply chain provenance attestation through in-toto
 - First class support for the internet’s favorite Helm charts
 
-Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/bitnami/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://bitnami.com/).
+Each image comes with valuable security metadata. You can view the metadata in [our public catalog here](https://app-catalog.vmware.com/nix-containers/apps). Note: Some data is only available with [commercial subscriptions to BSI](https://nix-containers.com/).
 
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
-![Alt text](https://github.com/bitnami/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%201.png?raw=true "Application details")
+![Alt text](https://github.com/nix-containers/containers/blob/main/BSI%20UI%202.png?raw=true "Packaging report")
 
-If you are looking for our previous generation of images based on Debian Linux, please see the [Bitnami Legacy registry](https://hub.docker.com/u/bitnamilegacy).
+If you are looking for our previous generation of images based on Debian Linux, please see the [nix-containers Legacy registry](https://hub.docker.com/u/nix-containerslegacy).
 
 ## Introduction
 
-This [Helm](https://github.com/kubernetes/helm) chart installs [PostgreSQL](https://www.postgresql.org/) with HA architecture in a Kubernetes cluster. Welcome to [contribute](https://github.com/bitnami/charts/blob/main/CONTRIBUTING.md) to Helm Chart for PostgreSQL HA.
+This [Helm](https://github.com/kubernetes/helm) chart installs [PostgreSQL](https://www.postgresql.org/) with HA architecture in a Kubernetes cluster. Welcome to [contribute](https://github.com/nix-containers/images to Helm Chart for PostgreSQL HA.
 
-This Helm chart has been developed based on [bitnami/postgresql](https://github.com/bitnami/charts/tree/main/bitnami/postgresql) chart but including some changes to guarantee high availability such as:
+This Helm chart has been developed based on [nix-containers/postgresql](https://github.com/nix-containers/images chart but including some changes to guarantee high availability such as:
 
 - A new deployment, service have been added to deploy [Pgpool-II](https://pgpool.net/mediawiki/index.php/Main_Page) to act as proxy for PostgreSQL backend. It helps to reduce connection overhead, acts as a load balancer for PostgreSQL, and ensures database node failover.
-- Replacing `bitnami/postgresql` with `bitnami/postgresql-repmgr` which includes and configures [repmgr](https://repmgr.org/). Repmgr ensures standby nodes assume the primary role when the primary node is unhealthy.
+- Replacing `nix-containers/postgresql` with `nix-containers/postgresql-repmgr` which includes and configures [repmgr](https://repmgr.org/). Repmgr ensures standby nodes assume the primary role when the primary node is unhealthy.
 
 ## Differences between the PostgreSQL-HA and PostgreSQL Helm charts
 
@@ -49,7 +49,7 @@ There are two different ways to deploy a PostgreSQL cluster, using the PostgreSQ
 - The PostgreSQL HA Helm chart uses Pgpool-II to handle the connection to the nodes. Pgpool-II is responsible to spread the queries among nodes.
 - The PostgreSQL HA Helm chart includes a Repmgr module that ensures high-availability thanks to automatic membership control. If the primary is down, any of the replica nodes will be promoted as primary to avoid data loss.
 
-The following diagram shows you the options you have for using Bitnami's PostgreSQL solutions in your deployments:
+The following diagram shows you the options you have for using nix-containers's PostgreSQL solutions in your deployments:
 
 ![A diagram comparing a PostgreSQL solution versus a PostgreSQL HA with Pgpool-II and Repmgr](img/postgresql-ha-topology.png)
 
@@ -66,7 +66,7 @@ To install the chart with the release name `my-release`:
 helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/postgresql-ha
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 ## Configuration and installation details
 
@@ -74,7 +74,7 @@ helm install my-release oci://REGISTRY_NAME/REPOSITORY_NAME/postgresql-ha
 
 these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
-To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the nix-containers/common chart](https://github.com/nix-containers/images However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
 ### Prometheus metrics
 
@@ -82,7 +82,7 @@ This chart can be integrated with Prometheus by setting `metrics.enabled` to `tr
 
 #### Prometheus requirements
 
-It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [Bitnami Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/prometheus) or the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) to easily have a working Prometheus in your cluster.
+It is necessary to have a working installation of Prometheus or Prometheus Operator for the integration to work. Install the [nix-containers Prometheus helm chart](https://github.com/nix-containers/images or the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images to easily have a working Prometheus in your cluster.
 
 #### Integration with Prometheus Operator
 
@@ -92,7 +92,7 @@ The chart can deploy `ServiceMonitor` objects for integration with Prometheus Op
 no matches for kind "ServiceMonitor" in version "monitoring.coreos.com/v1"
 ```
 
-Install the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus) for having the necessary CRDs and the Prometheus Operator.
+Install the [nix-containers Kube Prometheus helm chart](https://github.com/nix-containers/images for having the necessary CRDs and the Prometheus Operator.
 
 ### Update credentials
 
@@ -109,7 +109,7 @@ kubectl create secret generic SECRET_NAME --from-literal=postgres-password=POSTG
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+nix-containers will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### Use a different PostgreSQL version
 
@@ -189,7 +189,7 @@ The chart handles two main flows of traffic information:
 - Connections between end-clients and Pgpool-II (sometimes referred to as *frontend* connections).
 - Internal connections between Pgpool-II and PostgreSQL nodes (sometimes referred to as *backend* connections).
 
-The Bitnami postgresql-ha chart allows configuring the securitization of both types of traffic using TLS.
+The nix-containers postgresql-ha chart allows configuring the securitization of both types of traffic using TLS.
 
 #### Encrypt traffic between clients and Pgpool-II (frontend)
 
@@ -288,7 +288,7 @@ In addition to this option, you can also set an external ConfigMap with all the 
 
 ### Initialize a fresh instance
 
-The [Bitnami PostgreSQL with Repmgr](https://github.com/bitnami/containers/tree/main/bitnami/postgresql-repmgr) image allows you to use your custom scripts to initialize a fresh instance. You can specify custom scripts using the `initdbScripts` parameter as dict so they can be consumed as a ConfigMap.
+The [nix-containers PostgreSQL with Repmgr](https://github.com/nix-containers/containers/tree/main/nix-containers/postgresql-repmgr) image allows you to use your custom scripts to initialize a fresh instance. You can specify custom scripts using the `initdbScripts` parameter as dict so they can be consumed as a ConfigMap.
 
 In addition to this option, you can also set an external ConfigMap with all the initialization scripts. This is done by setting the `initdbScriptsCM` parameter. Note that this will override the two previous options. If your initialization scripts contain sensitive information such as credentials or passwords, you can use the `initdbScriptsSecret` parameter.
 
@@ -296,7 +296,7 @@ The above parameters (`initdbScripts`, `initdbScriptsCM`, and `initdbScriptsSecr
 
 The allowed extensions are `.sh`, `.sql` and `.sql.gz` in the **Postgresql** container while only `.sh` in the case of the **Pgpool-II** one.
 
-+info: <https://github.com/bitnami/containers/tree/main/bitnami/postgresql#initializing-a-new-instance> and <https://github.com/bitnami/containers/tree/main/bitnami/pgpool#initializing-with-custom-scripts>
++info: <https://github.com/nix-containers/containers/tree/main/nix-containers/postgresql#initializing-a-new-instance> and <https://github.com/nix-containers/containers/tree/main/nix-containers/pgpool#initializing-with-custom-scripts>
 
 ### Use of global variables
 
@@ -344,7 +344,7 @@ This way, the credentials will be available in all of the sub-charts.
 
 This chart allows you to set your custom affinity using the `XXX.affinity` paremeter(s). Find more information about Pod's affinity in the [kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/main/bitnami/common#affinities) chart. To do so, set the `XXX.podAffinityPreset`, `XXX.podAntiAffinityPreset`, or `XXX.nodeAffinityPreset` parameters.
+As an alternative, you can use of the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [nix-containers/common](https://github.com/nix-containers/images chart. To do so, set the `XXX.podAffinityPreset`, `XXX.podAntiAffinityPreset`, or `XXX.nodeAffinityPreset` parameters.
 
 ### Backup and restore
 
@@ -875,7 +875,7 @@ A default `StorageClass` is needed in the Kubernetes cluster to dynamically prov
 | `metrics.serviceMonitor.scrapeTimeout`           | Service monitor scrape timeout                                                                                                                                                                                                    | `""`                                |
 | `metrics.serviceMonitor.annotations`             | Additional annotations for the ServiceMonitor                                                                                                                                                                                     | `{}`                                |
 | `metrics.serviceMonitor.labels`                  | Additional labels that can be used so ServiceMonitor will be discovered by Prometheus                                                                                                                                             | `{}`                                |
-| `metrics.serviceMonitor.selector`                | Defaults to what's used if you follow CoreOS Prometheus Install Instructions (<https://github.com/bitnami/charts/tree/main/bitnami/kube-prometheus#tldr>)                                                                         | `{}`                                |
+| `metrics.serviceMonitor.selector`                | Defaults to what's used if you follow CoreOS Prometheus Install Instructions (<https://github.com/nix-containers/images                                                                         | `{}`                                |
 | `metrics.serviceMonitor.relabelings`             | ServiceMonitor relabelings. Value is evaluated as a template                                                                                                                                                                      | `[]`                                |
 | `metrics.serviceMonitor.metricRelabelings`       | ServiceMonitor metricRelabelings. Value is evaluated as a template                                                                                                                                                                | `[]`                                |
 | `metrics.serviceMonitor.honorLabels`             | Specify honorLabels parameter to add the scrape endpoint                                                                                                                                                                          | `false`                             |
@@ -907,7 +907,7 @@ A default `StorageClass` is needed in the Kubernetes cluster to dynamically prov
 | `persistence.enabled`                              | Enable data persistence                                                                 | `true`                |
 | `persistence.existingClaim`                        | A manually managed Persistent Volume and Claim                                          | `""`                  |
 | `persistence.storageClass`                         | Persistent Volume Storage Class                                                         | `""`                  |
-| `persistence.mountPath`                            | The path the volume will be mounted at, useful when using different PostgreSQL images.  | `/bitnami/postgresql` |
+| `persistence.mountPath`                            | The path the volume will be mounted at, useful when using different PostgreSQL images.  | `/nix-containers/postgresql` |
 | `persistence.accessModes`                          | List of access modes of data volume                                                     | `["ReadWriteOnce"]`   |
 | `persistence.size`                                 | Persistent Volume Claim size                                                            | `8Gi`                 |
 | `persistence.annotations`                          | Persistent Volume Claim annotations                                                     | `{}`                  |
@@ -998,7 +998,7 @@ helm install my-release \
     oci://REGISTRY_NAME/REPOSITORY_NAME/postgresql-ha
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 The above command sets the password for user `postgres` to `password`.
 
@@ -1009,12 +1009,12 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 ```console
 helm install my-release \
     -f values.yaml \
-    bitnami/postgresql-ha
+    nix-containers/postgresql-ha
 ```
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to nix-containers's Helm charts in [this troubleshooting guide](https://docs.nix-containers.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
@@ -1022,7 +1022,7 @@ Find more information about how to deal with common errors related to Bitnami's 
 
 This major version makes it possible to customize the user & password to be used by Pgpool-II for performing Stream Replication Checks and sets the default user to `sr_check_user`. Previously, the user was hardcoded to `repmgr`, reusing the same user used by Repmgr. This change allows for a more flexible & secure configuration, as the user used by Pgpool-II can be different from the one used by Repmgr.
 
-This major version includes a security fix for [GHSA-mx38-x658-5fwj](https://github.com/bitnami/charts/security/advisories/GHSA-mx38-x658-5fwj) and CVE-2025-22248. Upgrading to this or higher versions is recommended.
+This major version includes a security fix for [GHSA-mx38-x658-5fwj](https://github.com/nix-containers/images and CVE-2025-22248. Upgrading to this or higher versions is recommended.
 
 Given users' creation is skipped when there's existing data, upgrading from `15.x` to `16.x` will fail when persistence is enabled unless the user is created manually or the `pgpool.srCheckUsername` and `pgpool.srCheckPassword` parameters are set to the same values as the `postgresql.repmgrUsername` and `postgresql.repmgrPassword` parameters:
 
@@ -1030,9 +1030,9 @@ Given users' creation is skipped when there's existing data, upgrading from `15.
 
 ```console
 export POSTGRES_PASSWORD=$(kubectl get secret --namespace default postgresql-ha-postgresql -o jsonpath="{.data.password}" | base64 -d)
-kubectl run pg-client --rm --tty -i --restart='Never' --image docker.io/bitnami/postgresql-repmgr:17 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- \
+kubectl run pg-client --rm --tty -i --restart='Never' --image docker.io/nix-containers/postgresql-repmgr:17 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- \
     psql -h postgresql-ha-pgpool -p 5432 -U postgres --command "CREATE ROLE sr_check_user WITH LOGIN PASSWORD 'some-password';"
-kubectl run pg-client --rm --tty -i --restart='Never' --image docker.io/bitnami/postgresql-repmgr:17 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- \
+kubectl run pg-client --rm --tty -i --restart='Never' --image docker.io/nix-containers/postgresql-repmgr:17 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- \
     psql -h postgresql-ha-pgpool -p 5432 -U postgres --command "GRANT CONNECT ON DATABASE postgres TO sr_check_user;"
 helm upgrade my-release oci://REGISTRY_NAME/REPOSITORY_NAME/postgresql-ha \
     --set pgpool.srCheckPassword="some-password"
@@ -1049,7 +1049,7 @@ helm upgrade my-release oci://REGISTRY_NAME/REPOSITORY_NAME/postgresql-ha \
 
 ### To 15.1.0
 
-This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/bitnami/charts/issues/30850).
+This version introduces image verification for security purposes. To disable it, set `global.security.allowInsecureImages` to `true`. More details at [GitHub issue](https://github.com/nix-containers/images
 
 It's necessary to specify the existing passwords while performing a upgrade to ensure the secrets are not updated with invalid randomly generated passwords. Remember to specify the existing values of the `postgresql.password` and `postgresql.repmgrPassword` parameters when upgrading the chart:
 
@@ -1059,7 +1059,7 @@ helm upgrade my-release oci://REGISTRY_NAME/REPOSITORY_NAME/postgresql-ha \
     --set postgresql.repmgrPassword=[REPMGR_PASSWORD]
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 > Note: you need to substitute the placeholders *[POSTGRES_PASSWORD]*, and *[REPMGR_PASSWORD]* with the values obtained from instructions in the installation notes.
 > Note: As general rule, it is always wise to do a backup before the upgrading procedures.
 
@@ -1077,7 +1077,7 @@ postgresql-repmgr 13:57:07.50 INFO  ==> ** Starting repmgrd **
 You will need to perform the following step first, and then continue with the upgrade:
 
 ```console
-$ helm upgrade mypg oci://registry-1.docker.io/bitnamicharts/postgresql-ha \
+$ helm upgrade mypg oci://registry-1.docker.io/nix-containerscharts/postgresql-ha \
   --set postgresql.replicaCount=1 \
   --set postgresql.upgradeRepmgrExtension=true
 ```
@@ -1095,7 +1095,7 @@ This could potentially break any customization or init scripts used in your depl
 
 ### To 13.0.0
 
-This major version adapts the NetworkPolicy objects to the most recent Bitnami standards. Now there is a separate object for `pgpool` and for `postgresql`, being located in their corresponding sections. It is also enabled by default in other to comply with the best security standards.
+This major version adapts the NetworkPolicy objects to the most recent nix-containers standards. Now there is a separate object for `pgpool` and for `postgresql`, being located in their corresponding sections. It is also enabled by default in other to comply with the best security standards.
 
 Check the parameter section for the new value structure.
 
@@ -1103,7 +1103,7 @@ Check the parameter section for the new value structure.
 
 This major version updates the PostgreSQL container image version used from 15 to 16, the new stable version. There are no major changes in the chart, but we recommend checking the [PostgreSQL 16 release notes](https://www.postgresql.org/docs/current/release-16.html) before upgrading.
 
-> Note: Due to an error in our release process, the latest version in the previous major branch (11.9.8) already uses 16 by default, see [PR#19590](https://github.com/bitnami/charts/pull/19590)
+> Note: Due to an error in our release process, the latest version in the previous major branch (11.9.8) already uses 16 by default, see [PR#19590](https://github.com/nix-containers/images
 
 ### To 10.0.0
 
@@ -1145,7 +1145,7 @@ helm upgrade my-release --version 8.0.0 oci://REGISTRY_NAME/REPOSITORY_NAME/post
     --set postgresql.upgradeRepmgrExtension=true
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 - Scale your PostgreSQL setup to the original number of replicas:
 
@@ -1156,7 +1156,7 @@ helm upgrade my-release --version 8.0.0 oci://REGISTRY_NAME/REPOSITORY_NAME/post
     --set postgresql.replicaCount=[NUMBER_OF_REPLICAS]
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 > Note: you need to substitute the placeholders *[POSTGRESQL_PASSWORD]*, and *[REPMGR_PASSWORD]* with the values obtained from instructions in the installation notes.
 
 ### To 6.4.0
@@ -1201,7 +1201,7 @@ helm upgrade my-release --version 5.2.0 oci://REGISTRY_NAME/REPOSITORY_NAME/post
     --set postgresql.upgradeRepmgrExtension=true
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 - Scale your PostgreSQL setup to the original number of replicas:
 
@@ -1212,7 +1212,7 @@ helm upgrade my-release --version 5.2.0 oci://REGISTRY_NAME/REPOSITORY_NAME/post
     --set postgresql.replicaCount=[NUMBER_OF_REPLICAS]
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 > Note: you need to substitute the placeholders *[POSTGRESQL_PASSWORD]*, and *[REPMGR_PASSWORD]* with the values obtained from instructions in the installation notes (`helm get notes RELEASE_NAME`).
 
 ### To 5.0.0
@@ -1240,7 +1240,7 @@ helm install my-release \
     oci://REGISTRY_NAME/REPOSITORY_NAME/postgresql-ha --version 5.0.0
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 ### To 4.0.x
 
@@ -1260,7 +1260,7 @@ helm upgrade my-release --version 3.0.0 oci://REGISTRY_NAME/REPOSITORY_NAME/post
     --set postgresql.upgradeRepmgrExtension=true
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 - Scale your PostgreSQL setup to the original number of replicas:
 
@@ -1271,12 +1271,12 @@ helm upgrade my-release --version 3.0.0 oci://REGISTRY_NAME/REPOSITORY_NAME/post
     --set postgresql.replicaCount=[NUMBER_OF_REPLICAS]
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 > Note: you need to substitute the placeholders *[POSTGRESQL_PASSWORD]*, and *[REPMGR_PASSWORD]* with the values obtained from instructions in the installation notes.
 
 ### To 2.0.0
 
-The [Bitnami Pgpool](https://github.com/bitnami/containers/tree/main/bitnami/pgpool) image was migrated to a "non-root" user approach. Previously the container ran as the `root` user and the Pgpool daemon was started as the `pgpool` user. From now on, both the container and the Pgpool daemon run as user `1001`. You can revert this behavior by setting the parameters `pgpool.containerSecurityContext.runAsUser`, and `pgpool.securityContext.fsGroup` to `0`.
+The [nix-containers Pgpool](https://github.com/nix-containers/containers/tree/main/nix-containers/pgpool) image was migrated to a "non-root" user approach. Previously the container ran as the `root` user and the Pgpool daemon was started as the `pgpool` user. From now on, both the container and the Pgpool daemon run as user `1001`. You can revert this behavior by setting the parameters `pgpool.containerSecurityContext.runAsUser`, and `pgpool.securityContext.fsGroup` to `0`.
 
 Consequences:
 
@@ -1297,7 +1297,7 @@ helm upgrade my-release --version 1.0.0 oci://REGISTRY_NAME/REPOSITORY_NAME/post
     --set postgresql.upgradeRepmgrExtension=true
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 
 - Scale your PostgreSQL setup to the original number of replicas:
 
@@ -1308,7 +1308,7 @@ helm upgrade my-release --version 1.0.0 oci://REGISTRY_NAME/REPOSITORY_NAME/post
     --set postgresql.replicaCount=[NUMBER_OF_REPLICAS]
 ```
 
-> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of Bitnami, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=bitnamicharts`.
+> Note: You need to substitute the placeholders `REGISTRY_NAME` and `REPOSITORY_NAME` with a reference to your Helm chart registry and repository. For example, in the case of nix-containers, you need to use `REGISTRY_NAME=registry-1.docker.io` and `REPOSITORY_NAME=nix-containerscharts`.
 > Note: you need to substitute the placeholders *[POSTGRESQL_PASSWORD]*, and *[REPMGR_PASSWORD]* with the values obtained from instructions in the installation notes.
 
 ### To 0.4.0
@@ -1322,13 +1322,13 @@ In this version, the chart will use PostgreSQL-Repmgr container images with the 
 - proj
 - gdal
 
-## Bitnami Kubernetes Documentation
+## nix-containers Kubernetes Documentation
 
-Bitnami Kubernetes documentation is available at [https://docs.bitnami.com/](https://docs.bitnami.com/). You can find there the following resources:
+nix-containers Kubernetes documentation is available at [https://docs.nix-containers.com/](https://docs.nix-containers.com/). You can find there the following resources:
 
-- [Documentation for PostgreSQL HA Helm chart](https://github.com/bitnami/charts/tree/main/bitnami/postgresql-ha)
-- [Get Started with Kubernetes guides](https://docs.bitnami.com/kubernetes/)
-- [Kubernetes FAQs](https://docs.bitnami.com/kubernetes/faq/)
+- [Documentation for PostgreSQL HA Helm chart](https://github.com/nix-containers/images
+- [Get Started with Kubernetes guides](https://docs.nix-containers.com/kubernetes/)
+- [Kubernetes FAQs](https://docs.nix-containers.com/kubernetes/faq/)
 - [Kubernetes Developer guides](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-index.html)
 
 ## License

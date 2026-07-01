@@ -205,7 +205,7 @@ spec:
             {{- if (include "mlflow.v0.gcs.enabled" .) }}
             {{- if .Values.externalGCS.useCredentialsInSecret }}
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /bitnami/gcs/key.json
+              value: /nix-containers/gcs/key.json
             {{- end }}
             {{- end }}
 
@@ -331,12 +331,12 @@ spec:
               mountPath: /app/mlartifacts
             {{- if  .Values.tracking.tls.enabled }}
             - name: mlflow-certificates
-              mountPath: /bitnami/mlflow/certs
+              mountPath: /nix-containers/mlflow/certs
               readOnly: true
             {{- end }}
             {{- if .Values.tracking.auth.enabled }}
             - name: rendered-basic-auth
-              mountPath: /bitnami/mlflow-basic-auth/basic_auth.ini
+              mountPath: /nix-containers/mlflow-basic-auth/basic_auth.ini
               subPath: basic_auth.ini
             {{- end }}
             - name: data
@@ -346,7 +346,7 @@ spec:
               {{- end }}
             {{- if and (include "mlflow.v0.gcs.enabled" .) .Values.externalGCS.useCredentialsInSecret }}
             - name: gcs-key
-              mountPath: /bitnami/gcs/key.json
+              mountPath: /nix-containers/gcs/key.json
               subPath: key.json
             {{- end }}
           {{- if .Values.tracking.extraVolumeMounts }}
