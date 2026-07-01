@@ -1,8 +1,3 @@
-{{/*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
@@ -206,7 +201,6 @@ Compile all warnings into a single message, and call fail.
 {{- define "valkey.validateValues" -}}
 {{- $messages := list -}}
 {{- $messages := append $messages (include "valkey.validateValues.architecture" .) -}}
-{{- $messages := append $messages (include "valkey.validateValues.podSecurityPolicy.create" .) -}}
 {{- $messages := append $messages (include "valkey.validateValues.tls" .) -}}
 {{- $messages := append $messages (include "valkey.validateValues.createPrimary" .) -}}
 {{- $messages := without $messages "" -}}
@@ -232,13 +226,6 @@ valkey: architecture
 {{- end -}}
 {{- end -}}
 
-{{/* Validate values of Valkey - PodSecurityPolicy create */}}
-{{- define "valkey.validateValues.podSecurityPolicy.create" -}}
-{{- if and .Values.podSecurityPolicy.create (not .Values.podSecurityPolicy.enabled) }}
-valkey: podSecurityPolicy.create
-    In order to create PodSecurityPolicy, you also need to enable
-    podSecurityPolicy.enabled field
-{{- end -}}
 {{- end -}}
 
 {{/* Validate values of Valkey - TLS enabled */}}

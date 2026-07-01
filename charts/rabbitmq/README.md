@@ -59,7 +59,7 @@ The command deploys RabbitMQ on the Kubernetes cluster in the default configurat
 
 ### Resource requests and limits
 
-Bitnami charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
+these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
 To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
@@ -855,7 +855,7 @@ This major version changes the default RabbitMQ image from 3.9.x to 3.10.x. Foll
 
 ### To 9.0.0
 
-This major release renames several values in this chart and adds missing features, in order to be aligned with the rest of the assets in the Bitnami charts repository.
+This major release renames several values in this chart and adds missing features, in order to be aligned with the rest of the assets in the charts repository.
 
   .dist
   .manager
@@ -920,7 +920,7 @@ See the [Upgrading guide](https://www.rabbitmq.com/upgrade.html) and the [Rabbit
   - New parameters: `memoryHighWatermark.enabled`, `memoryHighWatermark.type`, and `memoryHighWatermark.value`.
 - Chart labels and Ingress configuration were adapted to follow the Helm charts best practices.
 - Initialization logic now relies on the container.
-- This version introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/main/bitnami/common#bitnami-common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
+- This version introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/main/bitnami/common#common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
 - The layout of the persistent volumes has changed (if using persistence). Action is required if preserving data through the upgrade is desired:
   - The data has moved from `mnesia/` within the persistent volume to the root of the persistent volume
   - The `config/` and `schema/` directories within the persistent volume are no longer used
@@ -931,7 +931,7 @@ See the [Upgrading guide](https://www.rabbitmq.com/upgrade.html) and the [Rabbit
 Consequences:
 
 - Backwards compatibility is not guaranteed.
-- Compatibility with non Bitnami images is not guaranteed anymore.
+- Compatibility with non images is not guaranteed anymore.
 
 ### To 6.0.0
 

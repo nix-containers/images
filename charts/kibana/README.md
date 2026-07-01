@@ -62,7 +62,7 @@ This chart requires an Elasticsearch instance to work. You can use an already ex
 
 ### Resource requests and limits
 
-Bitnami charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
+these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
 To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
@@ -74,7 +74,7 @@ Bitnami will release a new chart updating its containers if a new version of the
 
 ### Update credentials
 
-Bitnami charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
+these charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
 
 - Update the user password in Elasticsearch following [the upstream documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/reset-password.html)
 - Update the password secret with the new values (replace the SECRET_NAME and PASSWORD)
@@ -152,7 +152,7 @@ Alternatively, you can use a ConfigMap or a Secret with the environment variable
 
 ### Use custom initialization scripts
 
-For advanced operations, the Bitnami Kibana chart allows using custom initialization scripts that will be mounted in `/docker-entrypoint.init-db`. Mount these extra scripts using a ConfigMap or a Secret (in case of sensitive data) and specify them via the `initScriptsCM` and `initScriptsSecret` chart parameters, as shown below:
+For advanced operations, the Kibana chart allows using custom initialization scripts that will be mounted in `/docker-entrypoint.init-db`. Mount these extra scripts using a ConfigMap or a Secret (in case of sensitive data) and specify them via the `initScriptsCM` and `initScriptsSecret` chart parameters, as shown below:
 
 ```text
 elasticsearch.hosts[0]=elasticsearch-host
@@ -535,7 +535,7 @@ This could potentially break any customization or init scripts used in your depl
 ### To 10.0.0
 
 This major release updates Kibana its latest verstion 8.x.x.
-In addition, missing features have been added and values have been renamed, in order to get aligned with the rest of the assets in the Bitnami charts repository.
+In addition, missing features have been added and values have been renamed, in order to get aligned with the rest of the assets in the charts repository.
 
 Affected values:
 
@@ -570,7 +570,7 @@ Regular upgrade is compatible from previous versions.
 
 ### To 6.2.0
 
-This version introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/main/bitnami/common#bitnami-common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
+This version introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/main/bitnami/common#common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
 
 ### To 6.0.0
 

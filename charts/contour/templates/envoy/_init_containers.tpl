@@ -1,9 +1,4 @@
 {{/*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
-{{/*
 Returns an init-container that bootstraps Envoy configuration so it's ready to be consumed by Envoy "main" container
 */}}
 {{- define "contour.envoy.defaultInitContainers.initConfig" -}}

@@ -14,9 +14,9 @@ Trademarks: This software listing is packaged by Bitnami. The respective tradema
 helm install my-release oci://registry-1.docker.io/bitnamicharts/airflow
 ```
 
-Looking to use Apache Airflow in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the commercial edition of the Bitnami catalog.
+Looking to use Apache Airflow in production? Try [VMware Tanzu Application Catalog](https://bitnami.com/enterprise), the commercial edition of the catalog.
 
-## ⚠️ Important Notice: Upcoming changes to the Bitnami Catalog
+## ⚠️ Important Notice: Upcoming changes to the Catalog
 
 Beginning August 28th, 2025, Bitnami will evolve its public catalog to offer a curated set of hardened, security-focused images under the new [Bitnami Secure Images initiative](https://news.broadcom.com/app-dev/broadcom-introduces-bitnami-secure-images-for-production-ready-containerized-applications). As part of this transition:
 
@@ -108,7 +108,7 @@ redis.enabled=false
 
 ### Update credentials
 
-Bitnami charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
+these charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
 
 - Update the user password following [the upstream documentation](https://airflow.apache.org/docs/apache-airflow-providers-fab/stable/cli-ref.html#reset-password)
 - Update the password secret with the new values (replace the SECRET_NAME, PASSWORD, FERNET_KEY and SECRET_KEY placeholders)
@@ -271,7 +271,7 @@ Alternatively, you can disable this behavior by setting the `setupDBJob.enabled`
 
 ### Resource requests and limits
 
-Bitnami charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
+these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
 To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
@@ -1482,7 +1482,7 @@ This major update the Redis&reg; subchart to its newest major, 17.0.0, which upd
 
 ### To 12.0.0
 
-This major release renames several values in this chart and adds missing features, in order to be inline with the rest of assets in the Bitnami charts repository. Additionally updates the PostgreSQL & Redis subcharts to their newest major 11.x.x and 16.x.x, respectively, which contain similar changes.
+This major release renames several values in this chart and adds missing features, in order to be inline with the rest of assets in the charts repository. Additionally updates the PostgreSQL & Redis subcharts to their newest major 11.x.x and 16.x.x, respectively, which contain similar changes.
 
 - *auth.forcePassword* parameter is deprecated. The new version uses Helm's lookup functionalities and forcing passwords isn't required anymore.
 - *config* and *configurationConfigMap* have been renamed to *configuration* and *existingConfigmap*, respectively.
@@ -1561,7 +1561,7 @@ This major updates the Redis&reg; subchart to it newest major, 14.0.0, which con
 - Previous versions of this Helm Chart use `apiVersion: v1` (installable by both Helm 2 and 3), this Helm Chart was updated to `apiVersion: v2` (installable by Helm 3 only). [Here](https://helm.sh/docs/topics/charts/#the-apiversion-field) you can find more information about the `apiVersion` field.
 - Move dependency information from the *requirements.yaml* to the *Chart.yaml*
 - After running *helm dependency update*, a *Chart.lock* file is generated containing the same structure used in the previous *requirements.lock*
-- The different fields present in the *Chart.yaml* file has been ordered alphabetically in a homogeneous way for all the Bitnami Helm Chart.
+- The different fields present in the *Chart.yaml* file has been ordered alphabetically in a homogeneous way for all the Helm Chart.
 - Several parameters were renamed or disappeared in favor of new ones on this major version:
   - The image objects have been moved to its corresponding component object, e.g: *workerImage* now is located at *worker.image*.
   - The prefix *airflow* has been removed. Therefore, parameters prefixed with *airflow* are now at root level, e.g. *airflow.loadExamples* now is *loadExamples* or *airflow.worker.resources* now is *worker.resources*.

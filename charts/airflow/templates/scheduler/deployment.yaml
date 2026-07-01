@@ -1,8 +1,3 @@
-{{- /*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{- $kube := (contains "KubernetesExecutor" .Values.executor) -}}
 {{- $isStatefulset := (eq "true" (include "airflow.scheduler.requiresStatefulset" .)) -}}
 apiVersion: {{ ternary (include "common.capabilities.statefulset.apiVersion" .) (include "common.capabilities.deployment.apiVersion" .) $isStatefulset }}

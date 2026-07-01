@@ -33,7 +33,7 @@ If you are looking for our previous generation of images based on Debian Linux, 
 
 ## Introduction
 
-Bitnami charts for Helm are carefully engineered, actively maintained and are the quickest and easiest way to deploy containers on a Kubernetes cluster that are ready to handle production workloads.
+these charts for Helm are carefully engineered, actively maintained and are the quickest and easiest way to deploy containers on a Kubernetes cluster that are ready to handle production workloads.
 
 This chart bootstraps a [ClickHouse](https://github.com/clickhouse/clickhouse) Deployment in a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
@@ -66,7 +66,7 @@ The command deploys ClickHouse on the Kubernetes cluster in the default configur
 
 ### Resource requests and limits
 
-Bitnami charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
+these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
 To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
@@ -96,7 +96,7 @@ Bitnami will release a new chart updating its containers if a new version of the
 
 ### Update credentials
 
-Bitnami charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
+these charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
 
 - Update the user password following [the upstream documentation](https://clickhouse.com/docs/en/sql-reference/statements/alter/user)
 - Update the password secret with the new values (replace the SECRET_NAME, and PASSWORD placeholders)
@@ -212,7 +212,7 @@ Learn more about [sidecar containers](https://kubernetes.io/docs/concepts/worklo
 
 ### Using custom scripts
 
-For advanced operations, the Bitnami ClickHouse chart allows using custom init and start scripts that will be mounted in `/docker-entrypoint.initdb.d` and `/docker-entrypoint.startdb.d` . The `init` scripts will be run on the first boot whereas the `start` scripts will be run on every container start. For adding the scripts directly as values use the `initdbScripts` and `startdbScripts` values. For using Secrets use the `initdbScriptsSecret` and `startdbScriptsSecret`.
+For advanced operations, the ClickHouse chart allows using custom init and start scripts that will be mounted in `/docker-entrypoint.initdb.d` and `/docker-entrypoint.startdb.d` . The `init` scripts will be run on the first boot whereas the `start` scripts will be run on every container start. For adding the scripts directly as values use the `initdbScripts` and `startdbScripts` values. For using Secrets use the `initdbScriptsSecret` and `startdbScriptsSecret`.
 
 ```yaml
 initdbScriptsSecret: init-scripts-secret
@@ -733,7 +733,7 @@ Other notable changes:
 In order to upgrade from `8.y.z` to this major version, if ZooKeeper was used on your existing release, you have two alternatives:
 
 - Stop ZooKeeper servers and migrate the ZooKeeper data to ClickHouse Keeper data as explained in the [official documentation](https://clickhouse.com/docs/guides/sre/keeper/clickhouse-keeper#migration-from-zookeeper).
-- Scale down your existing ZooKeeper StatefulSet to 0 replicas keeping its associated PVC(s). Then, deploy the Bitnami ZooKeeper Helm chart independently reusing PVC(s) that were used by your previous ZooKeeper servers. Finally, upgrade using the `externalZookeeper.*` parameters to connect to the existing ZooKeeper servers.
+- Scale down your existing ZooKeeper StatefulSet to 0 replicas keeping its associated PVC(s). Then, deploy the ZooKeeper Helm chart independently reusing PVC(s) that were used by your previous ZooKeeper servers. Finally, upgrade using the `externalZookeeper.*` parameters to connect to the existing ZooKeeper servers.
 
 ### To 7.1.0
 

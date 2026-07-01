@@ -1,9 +1,4 @@
 {{/*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
-{{/*
 Return the proper ClickHouse Keeper fullname
 */}}
 {{- define "clickhouse.keeper.fullname" -}}

@@ -1,8 +1,3 @@
-{{/*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
@@ -237,7 +232,6 @@ Compile all warnings into a single message, and call fail.
 {{- define "redis.validateValues" -}}
 {{- $messages := list -}}
 {{- $messages := append $messages (include "redis.validateValues.architecture" .) -}}
-{{- $messages := append $messages (include "redis.validateValues.podSecurityPolicy.create" .) -}}
 {{- $messages := append $messages (include "redis.validateValues.tls" .) -}}
 {{- $messages := append $messages (include "redis.validateValues.createMaster" .) -}}
 {{- $messages := without $messages "" -}}
@@ -263,13 +257,6 @@ redis: architecture
 {{- end -}}
 {{- end -}}
 
-{{/* Validate values of Redis&reg; - PodSecurityPolicy create */}}
-{{- define "redis.validateValues.podSecurityPolicy.create" -}}
-{{- if and .Values.podSecurityPolicy.create (not .Values.podSecurityPolicy.enabled) }}
-redis: podSecurityPolicy.create
-    In order to create PodSecurityPolicy, you also need to enable
-    podSecurityPolicy.enabled field
-{{- end -}}
 {{- end -}}
 
 {{/* Validate values of Redis&reg; - TLS enabled */}}

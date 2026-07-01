@@ -1,8 +1,3 @@
-{{/*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
@@ -92,24 +87,10 @@ fluentd:
 
 {{/* Validate values of Fluentd - must create serviceAccount to create enable RBAC */}}
 {{- define "fluentd.validateValues.rbac" -}}
-{{- $pspAvailable := (semverCompare "<1.25-0" (include "common.capabilities.kubeVersion" .)) -}}
 {{- if and .Values.forwarder.rbac.create (not .Values.forwarder.serviceAccount.create) }}
 fluentd: forwarder.rbac.create
     A ServiceAccount is required ("forwarder.rbac.create=true" is set)
     Please create a ServiceAccount (--set serviceAccount.forwarder.create=true)
-{{- end -}}
-{{- if and $pspAvailable .Values.forwarder.rbac.pspEnabled (not .Values.forwarder.rbac.create) }}
-fluentd: forwarder.rbac.pspEnabled
-    Enabling PSP requires RBAC to be created ("forwarder.rbac.create=true" is set)
-    Please enable RBAC, or disable creation of PSP (--set forwarder.rbac.create=true) or (--set forwarder.rbac.pspEnabled=false)
-{{- end -}}
-{{- if and $pspAvailable .Values.forwarder.rbac.pspEnabled (not .Values.forwarder.podSecurityContext.enabled) }}
-fluentd: forwarder.rbac.pspEnabled
-    Enabling PSP requires enabling forwarder pod security context ("forwarder.podSecurityContext.enabled=true")
-{{- end -}}
-{{- if and $pspAvailable .Values.forwarder.rbac.pspEnabled (not .Values.forwarder.containerSecurityContext.enabled) }}
-fluentd: forwarder.rbac.pspEnabled
-    Enabling PSP requires enabling forwarder container security context ("forwarder.containerSecurityContext.enabled=true")
 {{- end -}}
 {{- end -}}
 

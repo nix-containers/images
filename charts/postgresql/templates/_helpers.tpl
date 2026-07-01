@@ -1,8 +1,3 @@
-{{/*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
@@ -378,7 +373,6 @@ Compile all warnings into a single message, and call fail.
 {{- define "postgresql.v1.validateValues" -}}
 {{- $messages := list -}}
 {{- $messages := append $messages (include "postgresql.v1.validateValues.ldapConfigurationMethod" .) -}}
-{{- $messages := append $messages (include "postgresql.v1.validateValues.psp" .) -}}
 {{- $messages := without $messages "" -}}
 {{- $message := join "\n" $messages -}}
 
@@ -402,12 +396,6 @@ postgresql: ldap.url, ldap.server
 {{/*
 Validate values of Postgresql - If PSP is enabled RBAC should be enabled too
 */}}
-{{- define "postgresql.v1.validateValues.psp" -}}
-{{- if and .Values.psp.create (not .Values.rbac.create) -}}
-postgresql: psp.create, rbac.create
-    RBAC should be enabled if PSP is enabled in order for PSP to work.
-    More info at https://kubernetes.io/docs/concepts/policy/pod-security-policy/#authorizing-policies
-{{- end -}}
 {{- end -}}
 
 {{/*

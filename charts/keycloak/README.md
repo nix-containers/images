@@ -33,7 +33,7 @@ If you are looking for our previous generation of images based on Debian Linux, 
 
 ## Introduction
 
-Bitnami charts for Helm are carefully engineered, actively maintained and are the quickest and easiest way to deploy containers on a Kubernetes cluster that are ready to handle production workloads.
+these charts for Helm are carefully engineered, actively maintained and are the quickest and easiest way to deploy containers on a Kubernetes cluster that are ready to handle production workloads.
 
 This chart bootstraps a [Keycloak](https://www.keycloak.org/) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
@@ -255,7 +255,7 @@ If your ingress controller has the TLS/SSL Termination, you might need to proper
 
 ### Update credentials
 
-Bitnami charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
+these charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
 
 - Update the user password following [the upstream documentation](https://www.keycloak.org/server/configuration)
 - Update the password secret with the new values (replace the SECRET_NAME and PASSWORD placeholders)
@@ -270,7 +270,7 @@ To back up and restore Helm chart deployments on Kubernetes, you need to back up
 
 ### Resource requests and limits
 
-Bitnami charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
+these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
 To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
@@ -763,7 +763,7 @@ Find more information about how to deal with common errors related to Bitnami's 
 This version stops relying on the [Keycloak Metrics SPI](https://github.com/aerogear/keycloak-metrics-spi) to expose metrics and, relies on the native metrics exposed by Keycloak via [the management interface](https://www.keycloak.org/server/management-interface) and removes SPI Truststore related parameters given this functionality was deprecated on Keycloak as described in this [GitHub discussion](https://github.com/keycloak/keycloak/discussions/28007).
 For security reasons, we also dropped support for exposing the management interface via Ingress.
 
-This version includes some important refactoring to remove technical debt. As a consequence, some deprecated parameters were removed and it's likely some others were renamed to match the standards used in the Bitnami Charts catalog.
+This version includes some important refactoring to remove technical debt. As a consequence, some deprecated parameters were removed and it's likely some others were renamed to match the standards used in the Charts catalog.
 
 ### To 24.3.0
 
@@ -876,7 +876,7 @@ kubectl delete pod keycloak-postgresql-0
 - Previous versions of this Helm Chart use `apiVersion: v1` (installable by both Helm 2 and 3), this Helm Chart was updated to `apiVersion: v2` (installable by Helm 3 only). [Here](https://helm.sh/docs/topics/charts/#the-apiversion-field) you can find more information about the `apiVersion` field.
 - Move dependency information from the *requirements.yaml* to the *Chart.yaml*
 - After running *helm dependency update*, a *Chart.lock* file is generated containing the same structure used in the previous *requirements.lock*
-- The different fields present in the *Chart.yaml* file has been ordered alphabetically in a homogeneous way for all the Bitnami Helm Chart.
+- The different fields present in the *Chart.yaml* file has been ordered alphabetically in a homogeneous way for all the Helm Chart.
 
 #### Considerations when upgrading to this version
 

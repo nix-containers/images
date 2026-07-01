@@ -1,8 +1,3 @@
-{{- /*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{- if .Values.run.enabled }}
 apiVersion: {{ ternary "batch/v1" "apps/v1" .Values.run.useJob }}
 kind: {{ ternary "Job" "Deployment" .Values.run.useJob }}

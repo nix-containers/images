@@ -1,8 +1,3 @@
-{{- /*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{- if and (or (contains "CeleryExecutor" .Values.executor) (eq .Values.executor "CeleryKubernetesExecutor")) (coalesce .Values.worker.autoscaling.hpa.enabled .Values.worker.autoscaling.enabled) }}
 apiVersion: {{ include "common.capabilities.hpa.apiVersion" ( dict "context" $ ) }}
 kind: HorizontalPodAutoscaler

@@ -1,8 +1,3 @@
-{{- /*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{- $config := fromYaml (include "kubernetes-event-exporter.config" .) -}}
 {{- if and .Values.rbac.create $config.leaderElection.enabled -}}
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}

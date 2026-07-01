@@ -1,8 +1,3 @@
-{{/*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
@@ -116,16 +111,6 @@ Return the appropriate apiVersion for Vertical Pod Autoscaler.
 */}}
 {{- define "common.capabilities.vpa.apiVersion" -}}
 {{- print "autoscaling.k8s.io/v1" -}}
-{{- end -}}
-
-{{/*
-Returns true if PodSecurityPolicy is supported
-*/}}
-{{- define "common.capabilities.psp.supported" -}}
-{{- $kubeVersion := include "common.capabilities.kubeVersion" . -}}
-{{- if or (empty $kubeVersion) (semverCompare "<1.25-0" $kubeVersion) -}}
-  {{- true -}}
-{{- end -}}
 {{- end -}}
 
 {{/*

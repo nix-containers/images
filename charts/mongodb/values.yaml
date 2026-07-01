@@ -1,5 +1,3 @@
-# Copyright Broadcom, Inc. All Rights Reserved.
-# SPDX-License-Identifier: APACHE-2.0
 
 ## @section Global parameters
 ## Global Docker image parameters
@@ -1563,58 +1561,6 @@ rbac:
   ##       - update
   ##
   rules: []
-## PodSecurityPolicy configuration
-## Be sure to also set rbac.create to true, otherwise Role and RoleBinding won't be created.
-## ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
-##
-podSecurityPolicy:
-  ## @param podSecurityPolicy.create Whether to create a PodSecurityPolicy. WARNING: PodSecurityPolicy is deprecated in Kubernetes v1.21 or later, unavailable in v1.25 or later
-  ##
-  create: false
-  ## @param podSecurityPolicy.allowPrivilegeEscalation Enable privilege escalation
-  ## Either use predefined policy with some adjustments or use `podSecurityPolicy.spec`
-  ##
-  allowPrivilegeEscalation: false
-  ## @param podSecurityPolicy.privileged Allow privileged
-  ##
-  privileged: false
-  ## @param podSecurityPolicy.spec Specify the full spec to use for Pod Security Policy
-  ## ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
-  ## Defining a spec ignores the above values.
-  ##
-  spec: {}
-  ## Example:
-  ##    allowPrivilegeEscalation: false
-  ##    fsGroup:
-  ##      rule: 'MustRunAs'
-  ##      ranges:
-  ##        - min: 1001
-  ##          max: 1001
-  ##    hostIPC: false
-  ##    hostNetwork: false
-  ##    hostPID: false
-  ##    privileged: false
-  ##    readOnlyRootFilesystem: true
-  ##    requiredDropCapabilities:
-  ##      - ALL
-  ##    runAsUser:
-  ##      rule: 'MustRunAs'
-  ##      ranges:
-  ##        - min: 1001
-  ##          max: 1001
-  ##    seLinux:
-  ##      rule: 'RunAsAny'
-  ##    supplementalGroups:
-  ##      rule: 'MustRunAs'
-  ##      ranges:
-  ##        - min: 1001
-  ##          max: 1001
-  ##    volumes:
-  ##      - 'configMap'
-  ##      - 'secret'
-  ##      - 'emptyDir'
-  ##      - 'persistentVolumeClaim'
-  ##
 ## @section Volume Permissions parameters
 ##
 ## Init Container parameters

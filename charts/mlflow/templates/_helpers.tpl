@@ -1,9 +1,4 @@
 {{/*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
-{{/*
 Return the proper image name
 */}}
 {{- define "mlflow.v0.image" -}}

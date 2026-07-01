@@ -1,9 +1,4 @@
 {{/*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
-{{/*
 Returns an init-container that copies writable directories to an empty dir volume in order to not break the application functionality
 */}}
 {{- define "keycloak.defaultInitContainers.prepareWriteDirs" -}}

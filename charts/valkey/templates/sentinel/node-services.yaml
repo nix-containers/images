@@ -1,8 +1,3 @@
-{{- /*
-Copyright Broadcom, Inc. All Rights Reserved.
-SPDX-License-Identifier: APACHE-2.0
-*/}}
-
 {{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled (eq .Values.sentinel.service.type "NodePort") (or .Release.IsUpgrade .Values.sentinel.service.nodePorts.valkey ) }}
 
 {{- range $i := until (int .Values.replica.replicaCount) }}

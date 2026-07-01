@@ -59,7 +59,7 @@ These commands deploy etcd on the Kubernetes cluster in the default configuratio
 
 ### Resource requests and limits
 
-Bitnami charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
+these charts allow setting resource requests and limits for all containers inside the chart deployment. These are inside the `resources` value (check parameter table). Setting requests is essential for production workloads and these should be adapted to your specific use case.
 
 To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcesPreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
@@ -89,7 +89,7 @@ Install the [Bitnami Kube Prometheus helm chart](https://github.com/bitnami/char
 
 ### Update credentials
 
-Bitnami charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
+these charts configure credentials at first boot. Any further change in the secrets or credentials require manual intervention. Follow these instructions:
 
 - Update the user password following [the upstream documentation](https://etcd.io/docs/latest/op-guide/authentication/)
 - Update the password secret with the new values (replace the SECRET_NAME and PASSWORD placeholders)
@@ -816,7 +816,7 @@ This version introduces several features and performance improvements:
 
 - The statefulset can now be scaled using `kubectl scale` command. Using `helm upgrade` to recalculate available endpoints is no longer needed.
 - The scripts used for bootstrapping, runtime reconfiguration, and disaster recovery have been refactored and moved to the etcd container with two purposes: removing technical debt & improving the stability.
-- Several parameters were reorganized to simplify the structure and follow the same standard used on other Bitnami charts:
+- Several parameters were reorganized to simplify the structure and follow the same standard used on other these charts:
   - `etcd.initialClusterState` is renamed to `initialClusterState`.
   - `statefulset.replicaCount` is renamed to `replicaCount`.
   - `statefulset.podManagementPolicy` is renamed to `podManagementPolicy`.
@@ -840,7 +840,7 @@ Consequences:
 
 ### To 5.2.0
 
-This version introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/main/bitnami/common#bitnami-common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
+This version introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/main/bitnami/common#common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
 
 ### To 5.0.0
 
