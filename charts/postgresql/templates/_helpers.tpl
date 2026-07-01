@@ -394,11 +394,6 @@ postgresql: ldap.url, ldap.server
 {{- end -}}
 
 {{/*
-Validate values of Postgresql - If PSP is enabled RBAC should be enabled too
-*/}}
-{{- end -}}
-
-{{/*
 Return the path to the cert file.
 */}}
 {{- define "postgresql.v1.tlsCert" -}}

@@ -1,12 +1,12 @@
 { pkgs, image }:
 
-pkgs.writeShellScript "test-prometheus-postgres-exporter-iamguarded" ''
+pkgs.writeShellScript "test-prometheus-postgres-exporter-nixchart" ''
   set -euo pipefail
-  echo "Testing prometheus-postgres-exporter-iamguarded image..."
+  echo "Testing prometheus-postgres-exporter-nixchart image..."
 
   # 1. Entrypoint runs and prints version/help output (non-empty).
   #    Tolerant of exit code; the real check is that the binary produced output.
-  echo "  Checking prometheus-postgres-exporter-iamguarded runs..."
+  echo "  Checking prometheus-postgres-exporter-nixchart runs..."
   out=$(docker run --rm ${image.imageName}:test --version 2>&1 || true)
   [ -n "$out" ]
 
@@ -14,5 +14,5 @@ pkgs.writeShellScript "test-prometheus-postgres-exporter-iamguarded" ''
   echo "  Checking image shell..."
   docker run --rm --entrypoint /bin/sh ${image.imageName}:test -c 'echo ok' | grep -q ok
 
-  echo "All prometheus-postgres-exporter-iamguarded tests passed!"
+  echo "All prometheus-postgres-exporter-nixchart tests passed!"
 ''

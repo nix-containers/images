@@ -1,6 +1,6 @@
 { nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
 
-# os-shell-iamguarded-fips
+# os-shell-nixchart-fips
 # Container image
 
 let
@@ -14,11 +14,11 @@ let
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];
 
 in nix2container.buildImage {
-  name = "os-shell-iamguarded-fips";
+  name = "os-shell-nixchart-fips";
   tag = "latest";
   copyToRoot = [
     (buildEnv {
-      name = "os-shell-iamguarded-fips-root";
+      name = "os-shell-nixchart-fips-root";
       paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
     })
   ];
@@ -27,8 +27,8 @@ in nix2container.buildImage {
     Labels = base.defaultLabels // {
       "io.nix-containers.build-type" = "source";
       "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "os-shell-iamguarded-fips";
-      "org.opencontainers.image.description" = "os-shell-iamguarded-fips container image";
+      "org.opencontainers.image.title" = "os-shell-nixchart-fips";
+      "org.opencontainers.image.description" = "os-shell-nixchart-fips container image";
     "io.nix-containers.compliance" = "FIPS-140-2";
     };
   };

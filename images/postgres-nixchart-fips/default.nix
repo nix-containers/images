@@ -1,11 +1,9 @@
 { nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
 
-# os-shell-iamguarded
+# postgres-nixchart-fips
 # Container image
 
 let
-  version = "latest";
-  
   imagePkgs = with pkgs; [
     bash
     coreutils
@@ -16,11 +14,11 @@ let
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];
 
 in nix2container.buildImage {
-  name = "os-shell-iamguarded";
-  tag = version;
+  name = "postgres-nixchart-fips";
+  tag = "latest";
   copyToRoot = [
     (buildEnv {
-      name = "os-shell-iamguarded-root";
+      name = "postgres-nixchart-fips-root";
       paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
     })
   ];
@@ -29,9 +27,9 @@ in nix2container.buildImage {
     Labels = base.defaultLabels // {
       "io.nix-containers.build-type" = "source";
       "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "os shell iamguarded";
-      "org.opencontainers.image.description" = "os-shell-iamguarded container image";
-      "org.opencontainers.image.version" = version;
+      "org.opencontainers.image.title" = "postgres-nixchart-fips";
+      "org.opencontainers.image.description" = "postgres-nixchart-fips container image";
+    "io.nix-containers.compliance" = "FIPS-140-2";
     };
   };
 }

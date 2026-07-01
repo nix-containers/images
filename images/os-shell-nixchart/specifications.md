@@ -1,4 +1,4 @@
-# os-shell-iamguarded Specifications
+# os-shell-nixchart Specifications
 
 Container image specifications and configuration details.
 

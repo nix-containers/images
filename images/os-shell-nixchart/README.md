@@ -1,4 +1,4 @@
-# os-shell-iamguarded
+# os-shell-nixchart
 
 OS Shell + Utility is a general-purpose minimal image, used by Iamguarded Helm Charts
 
@@ -13,8 +13,8 @@ OS Shell + Utility is a general-purpose minimal image, used by Iamguarded Helm C
 
 ```bash
 # Build the image
-nix build .#os-shell-iamguarded
+nix build .#os-shell-nixchart
 
 # Load into Docker
-nix build .#load-os-shell-iamguarded-to-docker && ./result/bin/load-os-shell-iamguarded-to-docker
+nix build .#load-os-shell-nixchart-to-docker && ./result/bin/load-os-shell-nixchart-to-docker
 ```

@@ -1,4 +1,4 @@
-# postgres-iamguarded-fips
+# postgres-nixchart
 
 PostgreSQL is a powerful, open source object-relational database system
 
@@ -13,8 +13,8 @@ PostgreSQL is a powerful, open source object-relational database system
 
 ```bash
 # Build the image
-nix build .#postgres-iamguarded-fips
+nix build .#postgres-nixchart
 
 # Load into Docker
-nix build .#load-postgres-iamguarded-fips-to-docker && ./result/bin/load-postgres-iamguarded-fips-to-docker
+nix build .#load-postgres-nixchart-to-docker && ./result/bin/load-postgres-nixchart-to-docker
 ```

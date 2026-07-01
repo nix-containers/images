@@ -481,9 +481,6 @@ Compile all warnings into a single message, and call fail.
 {{- end -}}
 {{- end -}}
 
-{{/* Validate RBAC is created when using PSP */}}
-{{- end -}}
-
 {{/* Validate values of MongoDB&reg; - must provide a valid architecture */}}
 {{- define "mongodb.validateValues.architecture" -}}
 {{- if and (ne .Values.architecture "standalone") (ne .Values.architecture "replicaset") -}}

@@ -1,4 +1,4 @@
-# os-shell-iamguarded-fips Specifications
+# os-shell-nixchart-fips Specifications
 
 Container image specifications and configuration details.
 

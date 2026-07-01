@@ -1228,7 +1228,7 @@ let
     "prometheus-podman-exporter-fips" = "3.4.0";
     "prometheus-podman-exporter" = "3.4.0";
     "prometheus-postgres-exporter-fips" = "3.4.0";
-    "prometheus-postgres-exporter-iamguarded" = "3.0.0";
+    "prometheus-postgres-exporter-nixchart" = "3.0.0";
     "prometheus-process-exporter-fips" = "3.4.0";
     "prometheus-pushgateway-fips" = "3.4.0";
     "prometheus-pushgateway-iamguarded-fips" = "3.0.0";

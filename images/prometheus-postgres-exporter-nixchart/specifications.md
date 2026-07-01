@@ -1,4 +1,4 @@
-# prometheus-postgres-exporter-iamguarded Specifications
+# prometheus-postgres-exporter-nixchart Specifications
 
 Container image specifications and configuration details.
 

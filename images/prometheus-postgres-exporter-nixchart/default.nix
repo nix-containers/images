@@ -1,12 +1,12 @@
 { mkImage, fetchFromGitHub, buildGoModule, pkgs, lib, ... }:
 
-# prometheus-postgres-exporter-iamguarded
+# prometheus-postgres-exporter-nixchart
 # Prometheus ecosystem component
 
 let
   version = "3.0.0";
   component = buildGoModule {
-    pname = "prometheus-postgres-exporter-iamguarded";
+    pname = "prometheus-postgres-exporter-nixchart";
     inherit version;
     src = fetchFromGitHub {
       owner = "prometheus";
@@ -23,14 +23,14 @@ let
 
 in mkImage {
   drv = component;
-  name = "prometheus-postgres-exporter-iamguarded";
+  name = "prometheus-postgres-exporter-nixchart";
   tag = "v${version}";
-  entrypoint = [ "${component}/bin/prometheus-postgres-exporter-iamguarded" ];
+  entrypoint = [ "${component}/bin/prometheus-postgres-exporter-nixchart" ];
   cmd = [];
   extraPkgs = with pkgs; [ cacert tzdata ];
   labels = {
-    "org.opencontainers.image.title" = "prometheus-postgres-exporter-iamguarded";
-    "org.opencontainers.image.description" = "Prometheus prometheus-postgres-exporter-iamguarded";
+    "org.opencontainers.image.title" = "prometheus-postgres-exporter-nixchart";
+    "org.opencontainers.image.description" = "Prometheus prometheus-postgres-exporter-nixchart";
     "org.opencontainers.image.version" = version;
     "io.nix-containers.chart" = "prometheus";
   };

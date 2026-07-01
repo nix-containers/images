@@ -1,4 +1,4 @@
-# postgres-iamguarded Specifications
+# postgres-nixchart-fips Specifications
 
 Container image specifications and configuration details.
 
