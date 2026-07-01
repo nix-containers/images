@@ -54,13 +54,34 @@ let
     };
   };
 
+  # Alertmanager refuses to start without a config file, so cmd=--help exits and
+  # a bare run would too. Bake a minimal valid config (a single catch-all route
+  # to a no-op 'null' receiver) — mirrors the sibling `alertmanager` image (same
+  # alertmanager binary), whose kind-test validates this. Operators mount their
+  # own config with real receivers/routes.
+  alertmanagerConfig = pkgs.writeTextDir "etc/alertmanager/alertmanager.yml" ''
+    route:
+      receiver: 'null'
+    receivers:
+      - name: 'null'
+  '';
+
 in
 mkImage {
   drv = alertmanager-fips;
   name = "alertmanager-fips";
   tag = "v${version}";
   entrypoint = [ "${alertmanager-fips}/bin/alertmanager" ];
-  cmd = [ "--help" ];
+  # Was `--help` (a one-shot, so the kind-test pod CrashLoops). Run the server
+  # with the baked config, bind the web UI/API on 0.0.0.0:9093, and keep the
+  # notification-log/silences storage under the writable /tmp.
+  cmd = [
+    "--config.file=/etc/alertmanager/alertmanager.yml"
+    "--storage.path=/tmp/alertmanager"
+    "--web.listen-address=0.0.0.0:9093"
+  ];
+
+  extraPkgs = [ alertmanagerConfig ];
 
   env = {
     ALERTMANAGER_DATA_DIR = "/alertmanager";
