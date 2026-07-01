@@ -4,12 +4,17 @@
 # https://opensearch.org/
 
 let
+  # Image packages. NB: gnused is intentionally NOT here — the mkImage base
+  # (busybox) already provides /bin/sed, and adding gnused's /bin/sed conflicts
+  # with it in the nix2container layer assembly ("the file '/bin/sed' already
+  # exists in the graph"). gnused is only needed by the entrypoint's in-place
+  # jvm.options edit, so it goes in runtimeInputs (the script's own PATH) below,
+  # which does not add it to the image root.
   opensearchPackages = with pkgs; [
     opensearch
     openjdk21_headless # OpenSearch 3.x runs on JDK 21; the nix package ships no bundled JRE
     bash
     coreutils
-    gnused
     curl
     cacert
   ];
@@ -21,7 +26,7 @@ let
   # shellcheck at build time.
   entrypoint = pkgs.writeShellApplication {
     name = "docker-entrypoint.sh";
-    runtimeInputs = opensearchPackages;
+    runtimeInputs = opensearchPackages ++ [ pkgs.gnused ];
     text = builtins.readFile ./docker-entrypoint.sh;
   };
 in
