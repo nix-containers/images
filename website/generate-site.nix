@@ -97,7 +97,25 @@ let
           versionBinding = builtins.match ".*[^[:alnum:]_]version[[:space:]]*=[[:space:]]*\"([^\"]+)\".*" nixContent;
         in
           if staticMatch != null then builtins.head staticMatch
-          else if dynamicMatch != null then "dynamic-${builtins.head dynamicMatch}"
+          # `"...image.version" = pkgs.<attr>.version` — resolve the attr's real
+          # version directly (pkgs is in scope) instead of emitting a
+          # "dynamic-<attr>" placeholder that only resolved if a version tag had
+          # been pushed. Fixes the catalog card for the ~800 images using this
+          # label. tryEval + hasAttrByPath guard removed/broken attrs; nested
+          # paths (e.g. python3Packages.pip) are handled via splitString.
+          else if dynamicMatch != null then
+            let
+              attr = builtins.head dynamicMatch;
+              path = lib.splitString "." attr;
+              resolved = builtins.tryEval (
+                if lib.hasAttrByPath path pkgs
+                then let p = lib.getAttrFromPath path pkgs;
+                     in if p ? version then toString p.version else null
+                else null
+              );
+            in if resolved.success && resolved.value != null
+               then resolved.value
+               else "dynamic-${attr}"
           else if varLabel && versionBinding != null && builtins.head versionBinding != "latest"
             then builtins.head versionBinding
           else "latest";
