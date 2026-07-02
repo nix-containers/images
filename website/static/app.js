@@ -31,6 +31,10 @@ function imgCritical(i) {
   return (i.scan && i.scan.critical) || 0;
 }
 
+function imgHigh(i) {
+  return (i.scan && i.scan.high) || 0;
+}
+
 async function loadImages() {
   try {
     const r = await fetch(BASE + 'images-data.json');
@@ -51,9 +55,11 @@ function updateStats(data) {
     allImages.filter(i => i.hasTest).length;
   document.getElementById('categories-count').textContent =
     new Set(allImages.map(i => i.category)).size;
-  const totalCritical = allImages.reduce(
-    (acc, i) => acc + ((i.scan && i.scan.critical) || 0), 0);
+  const totalCritical = allImages.reduce((acc, i) => acc + imgCritical(i), 0);
   document.getElementById('critical-count').textContent = totalCritical;
+  const totalHigh = allImages.reduce((acc, i) => acc + imgHigh(i), 0);
+  const highEl = document.getElementById('high-count');
+  if (highEl) highEl.textContent = totalHigh.toLocaleString();
 
   // Size summary. Three numbers from render.py:
   //   compressed  — on-the-wire pull cost (gzip'd layer sum)
@@ -147,12 +153,14 @@ function filter() {
     const matchesCat = !cat || i.category === cat;
     const matchesChart = !chartsOnly ||
       (Array.isArray(i.usedByCharts) && i.usedByCharts.length > 0);
-    const matchesCrit = !criticalsOnly || imgCritical(i) > 0;
+    // The Critical/High stat card filters to images with either severity.
+    const matchesCrit = !criticalsOnly || imgCritical(i) > 0 || imgHigh(i) > 0;
     return matchesQ && matchesCat && matchesChart && matchesCrit;
   });
-  // When filtering to critical-CVE images, surface the worst offenders first.
+  // Surface the worst offenders first: by critical count, then high count.
   if (criticalsOnly) {
-    filteredImages.sort((a, b) => imgCritical(b) - imgCritical(a));
+    filteredImages.sort((a, b) =>
+      (imgCritical(b) - imgCritical(a)) || (imgHigh(b) - imgHigh(a)));
   }
   render();
 }
@@ -165,9 +173,10 @@ function render() {
     const total = allImages.length;
     if (criticalsOnly) {
       const totalCrit = filteredImages.reduce((a, i) => a + imgCritical(i), 0);
+      const totalHi = filteredImages.reduce((a, i) => a + imgHigh(i), 0);
       counter.textContent =
         `${shown.toLocaleString()} image${shown === 1 ? '' : 's'} with `
-        + `${totalCrit.toLocaleString()} critical CVE${totalCrit === 1 ? '' : 's'} `
+        + `${totalCrit.toLocaleString()} critical + ${totalHi.toLocaleString()} high CVEs `
         + `— click any image for its CVE list`;
     } else {
       counter.textContent = shown === total
@@ -212,6 +221,13 @@ function render() {
       ? `<span class="badge bg-accent-bad/20 text-accent-bad font-mono"
                title="${criticalCount} critical CVE${criticalCount === 1 ? '' : 's'} — click the image to see them">${criticalCount} crit</span>`
       : '';
+    // High-CVE count badge (only in the criticals/highs filtered view, to
+    // avoid cluttering every card in the full catalog).
+    const highCount = (i.scan && i.scan.high) || 0;
+    const highBadge = (criticalsOnly && highCount > 0)
+      ? `<span class="badge bg-accent-warn/20 text-accent-warn font-mono"
+               title="${highCount} high CVE${highCount === 1 ? '' : 's'} — click the image to see them">${highCount} high</span>`
+      : '';
     // Show the actual semver when we have it (resolved from the
     // pushed :version tag via tags-data). Falls back to "latest" only
     // when no real version is known — bare "latest" is uninformative
@@ -227,6 +243,7 @@ function render() {
         <div class="flex items-center gap-2">
           ${rank}
           ${critBadge}
+          ${highBadge}
           ${zeroCve}
           ${nixBadge}
           <span class="badge-cat-${escapeAttr(i.categorySlug || 'unknown')}" title="${escapeAttr(i.categoryDesc || '')}">${escapeHtml(i.category || 'unknown')}</span>
