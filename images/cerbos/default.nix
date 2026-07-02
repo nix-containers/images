@@ -39,12 +39,38 @@ let
     };
   };
 
+  # Cerbos needs a config; without one the old cmd was `--help` (a one-shot ->
+  # the kind-test pod CrashLoops). Bake a minimal config: HTTP :3592 + gRPC :3593
+  # on 0.0.0.0, disk policy store under the writable /tmp mkImage provides.
+  # Operators mount their own policies at /tmp/cerbos-policies + config.
+  cerbosConfig = pkgs.writeTextDir "etc/cerbos/config.yaml" ''
+    server:
+      httpListenAddr: "0.0.0.0:3592"
+      grpcListenAddr: "0.0.0.0:3593"
+    storage:
+      driver: "disk"
+      disk:
+        directory: /tmp/cerbos-policies
+        watchForChanges: false
+  '';
+
+  entrypoint = pkgs.writeShellApplication {
+    name = "docker-entrypoint.sh";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      mkdir -p /tmp/cerbos-policies
+      exec ${cerbos}/bin/cerbos server --config=/etc/cerbos/config.yaml "$@"
+    '';
+  };
+
 in mkImage {
   drv = cerbos;
   name = "cerbos";
   tag = "v${version}";
-  entrypoint = [ "${cerbos}/bin/cerbos" ];
-  cmd = [ "--help" ];
+  entrypoint = [ "${entrypoint}/bin/docker-entrypoint.sh" ];
+  cmd = [ ];
+
+  extraPkgs = [ cerbosConfig ];
 
   labels = {
     "org.opencontainers.image.title" = "cerbos";
