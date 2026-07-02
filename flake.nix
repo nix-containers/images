@@ -139,6 +139,20 @@
                   vendorHash = null;
                 });
               })
+              # Grafana Loki 3.7.1 (nixpkgs) vendors x/net v0.51, x/crypto v0.50
+              # — 60 high CVEs. 3.7.3 patch-bump pulls x/net v0.55, x/crypto v0.52.
+              (final: prev: {
+                grafana-loki = prev.grafana-loki.overrideAttrs (o: rec {
+                  version = "3.7.3";
+                  src = prev.fetchFromGitHub {
+                    owner = "grafana";
+                    repo = "loki";
+                    rev = "v${version}";
+                    hash = "sha256-2dqwnM2+9+P/ZIiz5Z9JPN9WicHLRzq9xn6jG1OBqLs=";
+                  };
+                  vendorHash = null;
+                });
+              })
             ];
           };
 
