@@ -21,12 +21,37 @@ let
       runHook postInstall
     '';
   };
+
+  # Derive a runnable config from the upstream `development-sqlite` env
+  # (in-memory SQLite -> no external DB, no schema setup) with the services
+  # bound on all interfaces instead of localhost, plus its dynamic-config file
+  # (referenced by a CWD-relative path). sed keeps this in sync with upstream.
+  serverConfig = pkgs.runCommand "temporal-server-config" {} ''
+    mkdir -p $out/config/dynamicconfig
+    sed 's/      bindOnLocalHost: true/      bindOnLocalHost: false\n      bindOnIP: "0.0.0.0"/' \
+      ${drv}/config/development-sqlite.yaml > $out/config/development-sqlite.yaml
+    cp ${drv}/config/dynamicconfig/development-sql.yaml $out/config/dynamicconfig/
+  '';
+
+  # Was cmd=["--help"] (a one-shot -> the kind-test pod CrashLoops). Run the
+  # all-in-one server (frontend/history/matching/worker) on the in-memory SQLite
+  # config, frontend gRPC on 0.0.0.0:7233. temporal resolves the dynamic-config
+  # filepath relative to CWD, so cd into the config root first. Operators mount
+  # their own config (real datastore) + point --root at it.
+  entrypoint = pkgs.writeShellApplication {
+    name = "docker-entrypoint.sh";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      cd ${serverConfig}
+      exec ${drv}/bin/temporal-server --env development-sqlite --root ${serverConfig} start "$@"
+    '';
+  };
 in mkImage {
   inherit drv;
   name = "temporal-server";
   tag = "v${version}";
-  entrypoint = [ "${drv}/bin/temporal-server" ];
-  cmd = [ "--help" ];
+  entrypoint = [ "${entrypoint}/bin/docker-entrypoint.sh" ];
+  cmd = [ ];
   labels = {
     "org.opencontainers.image.title" = "temporal-server";
     "org.opencontainers.image.description" = "Temporal durable execution platform server";
