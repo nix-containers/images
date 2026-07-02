@@ -26,12 +26,43 @@ let
       runHook postInstall
     '';
   };
+
+  # The old cmd was `--help` (a one-shot -> the kind-test pod CrashLoops), and
+  # otelcol refuses to start without a config. Bake a minimal, self-contained
+  # pipeline: an OTLP receiver on 0.0.0.0:4317 (gRPC) + :4318 (HTTP) feeding a
+  # debug exporter (in-memory, no writable dir / external deps). Operators mount
+  # their own config (or set SPLUNK_* env) for real exporters.
+  otelConfig = pkgs.writeTextDir "etc/otelcol/config.yaml" ''
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+    exporters:
+      debug:
+        verbosity: basic
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          exporters: [debug]
+        metrics:
+          receivers: [otlp]
+          exporters: [debug]
+        logs:
+          receivers: [otlp]
+          exporters: [debug]
+  '';
 in mkImage {
   inherit drv;
   name = "splunk-otel-collector";
   tag = "v${version}";
   entrypoint = [ "${drv}/bin/otelcol" ];
-  cmd = [ "--help" ];
+  cmd = [ "--config=/etc/otelcol/config.yaml" ];
+
+  extraPkgs = [ otelConfig ];
   labels = {
     "org.opencontainers.image.title" = "splunk-otel-collector";
     "org.opencontainers.image.version" = version;
