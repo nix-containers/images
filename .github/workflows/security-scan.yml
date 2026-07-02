@@ -193,6 +193,10 @@ jobs:
     needs: resolve-images
     if: needs.resolve-images.outputs.has-work == 'true'
     runs-on: ubuntu-latest
+    # Backstop so a wedged shard can't run the 6h default and freeze the
+    # aggregate. The per-image `timeout` above is the primary guard; this
+    # caps total shard time even if many images are slow.
+    timeout-minutes: 120
     permissions:
       contents: read
       packages: read
@@ -248,17 +252,24 @@ jobs:
           IMAGES_JSON=$(jq -nc --argjson xs '${{ toJSON(matrix.images) }}' '$xs')
           COUNT=$(echo "$IMAGES_JSON" | jq 'length')
           echo "Shard ${{ matrix.shard }}: scanning $COUNT images"
+          # Per-scanner-call timeout. Without this, a single pathological image
+          # (e.g. a multi-GB one whose layer pull/scan stalls) hangs the whole
+          # shard until the job's 6h default, blocking the aggregate and
+          # freezing the website's scan data. `timeout` exits 124 on expiry,
+          # which the `|| echo skip`/`|| true` fallbacks already tolerate, so a
+          # slow image is skipped and the shard moves on.
+          TO=360
           echo "$IMAGES_JSON" | jq -r '.[]' | while read -r image; do
             [ -z "$image" ] && continue
             safe="${image//[\/:]/_}"
             echo "=== $image ==="
-            trivy image --exit-code 0 --severity HIGH,CRITICAL --format table  "$image" 2>&1 | tee "scan-results/${safe}-trivy.txt"    || echo "skip: trivy table   $image"
-            trivy image --exit-code 0 --format json  --output "scan-results/${safe}-trivy.json"  "$image"                                  || echo "skip: trivy json    $image"
-            trivy image --exit-code 0 --format sarif --output "scan-results/${safe}-trivy.sarif" "$image"                                  || echo "skip: trivy sarif   $image"
-            grype "$image" -o table              | tee "scan-results/${safe}-grype.txt" || true
-            grype "$image" -o json   > "scan-results/${safe}-grype.json"               || true
-            syft  "$image" -o json   > "scan-results/${safe}-sbom.json"                || true
-            syft  "$image" -o spdx-json > "scan-results/${safe}-sbom-spdx.json"        || true
+            timeout $TO trivy image --exit-code 0 --severity HIGH,CRITICAL --format table  "$image" 2>&1 | tee "scan-results/${safe}-trivy.txt"    || echo "skip: trivy table   $image"
+            timeout $TO trivy image --exit-code 0 --format json  --output "scan-results/${safe}-trivy.json"  "$image"                                  || echo "skip: trivy json    $image"
+            timeout $TO trivy image --exit-code 0 --format sarif --output "scan-results/${safe}-trivy.sarif" "$image"                                  || echo "skip: trivy sarif   $image"
+            timeout $TO grype "$image" -o table              | tee "scan-results/${safe}-grype.txt" || true
+            timeout $TO grype "$image" -o json   > "scan-results/${safe}-grype.json"               || true
+            timeout $TO syft  "$image" -o json   > "scan-results/${safe}-sbom.json"                || true
+            timeout $TO syft  "$image" -o spdx-json > "scan-results/${safe}-sbom-spdx.json"        || true
             # Reclaim disk between images: trivy/grype/syft each cache the
             # scanned image's layers, so a shard of large images accrues until
             # the runner is out of space. Keep the vuln DB (that's the slow
