@@ -88,6 +88,19 @@
                   };
                 });
               })
+              # Apache Druid 36.0.0 (current nixpkgs) bundles jackson 2.12.7.1,
+              # netty 4.2.6, protobuf-java 3.7.1 — 40+ crit + 250 high CVEs.
+              # Druid 37.0.0 rebuilds against jackson 2.19, netty 4.2.15+,
+              # protobuf 3.25.5+. Big cleanup.
+              (final: prev: {
+                druid = prev.druid.overrideAttrs (o: rec {
+                  version = "37.0.0";
+                  src = prev.fetchurl {
+                    url = "mirror://apache/druid/${version}/apache-druid-${version}-bin.tar.gz";
+                    hash = "sha256-xeYCvm70NWQ79fWCcTU5JXmMgYwj15qsB3ZjOMnKDdA=";
+                  };
+                });
+              })
             ];
           };
 
