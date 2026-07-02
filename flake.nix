@@ -251,6 +251,21 @@
                   vendorHash = null;
                 });
               })
+              # vitess 23.0.3 (nixpkgs) vendors x/net v0.47, x/crypto v0.45,
+              # stdlib on old Go. 218 high CVEs. 24.0.2 pulls x/net v0.53,
+              # x/crypto v0.50. Major bump — client API stable.
+              (final: prev: {
+                vitess = prev.vitess.overrideAttrs (o: rec {
+                  version = "24.0.2";
+                  src = prev.fetchFromGitHub {
+                    owner = "vitessio";
+                    repo = "vitess";
+                    rev = "v${version}";
+                    hash = "sha256-DAhAchR7N/uCDly6+3pu7Jj2cQ5j9a5i5kh3UZ63MoI=";
+                  };
+                  vendorHash = "sha256-S6hzgSIYJdTKFMFpNqYyWzcMGT4aSaWE6SfmOWB7NOM=";
+                });
+              })
             ];
           };
 
