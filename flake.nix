@@ -237,6 +237,20 @@
                   vendorHash = null;
                 });
               })
+              # victoriametrics 1.142.0 vendors old x/net + x/crypto.
+              # 1.146.0 pulls x/net v0.56, x/crypto v0.53. 4 images cascade.
+              (final: prev: {
+                victoriametrics = prev.victoriametrics.overrideAttrs (o: rec {
+                  version = "1.146.0";
+                  src = prev.fetchFromGitHub {
+                    owner = "VictoriaMetrics";
+                    repo = "VictoriaMetrics";
+                    rev = "v${version}";
+                    hash = "sha256-EWRVbUeugyLsExP3NyPVLd7v2kwbRg5OjFg2WAY1FuM=";
+                  };
+                  vendorHash = null;
+                });
+              })
             ];
           };
 
