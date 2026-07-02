@@ -40,15 +40,46 @@ let
     meta.mainProgram = "logstash";
   };
 
+  # Minimal pipeline so the server runs with no args (the old cmd was `--help`,
+  # a one-shot -> the kind-test pod CrashLoops). A `heartbeat` input (core
+  # plugin, no deps) feeds `stdout`, which keeps the pipeline — and the process
+  # — running. Operators mount their own pipeline at /etc/logstash/pipeline.conf
+  # (or pass -f their own path).
+  pipelineConfig = pkgs.writeTextDir "etc/logstash/pipeline.conf" ''
+    input {
+      heartbeat {
+        interval => 60
+        message => "ok"
+      }
+    }
+    output {
+      stdout { codec => rubydebug }
+    }
+  '';
+
 in
 mkImage {
   drv = logstash;
   name = "logstash";
   tag = "v${version}";
   entrypoint = [ "${logstash}/bin/logstash" ];
-  cmd = [ "--help" ];
+  # Run the baked pipeline. Data + logs go on the writable /tmp mkImage provides
+  # (the dist dirs are read-only nix store); expose the monitoring API on all
+  # interfaces so the kind-test probe can reach it.
+  cmd = [
+    "-f" "/etc/logstash/pipeline.conf"
+    "--path.data" "/tmp/logstash-data"
+    "--path.logs" "/tmp/logstash-logs"
+    "--api.http.host" "0.0.0.0"
+  ];
 
-  extraPkgs = with pkgs; [ cacert bash coreutils ];
+  extraPkgs = with pkgs; [ cacert bash coreutils pipelineConfig ];
+
+  env = {
+    # Keep the JVM small so it fits the CI runner (mirrors the elasticsearch
+    # image); the pipeline only needs to launch and stay up.
+    LS_JAVA_OPTS = "-Xms512m -Xmx512m";
+  };
 
   labels = {
     "org.opencontainers.image.title" = "Logstash";
