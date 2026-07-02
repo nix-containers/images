@@ -14,6 +14,8 @@ echo "Testing Tempo deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install Tempo
+helm repo add grafana https://grafana.github.io/helm-charts 2>/dev/null || true
+helm repo update grafana 2>/dev/null || true
 helm_install "$RELEASE" grafana/tempo "$NAMESPACE" \
     --set tempo.image.repository=nix-containers/tempo \
     --set tempo.image.tag=test

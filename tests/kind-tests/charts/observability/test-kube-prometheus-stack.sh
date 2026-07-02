@@ -14,6 +14,8 @@ echo "Testing kube-prometheus-stack deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install kube-prometheus-stack (minimal for testing)
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2>/dev/null || true
+helm repo update prometheus-community 2>/dev/null || true
 helm_install "$RELEASE" prometheus-community/kube-prometheus-stack "$NAMESPACE" \
     --set prometheus.prometheusSpec.image.repository=nix-containers/prometheus \
     --set prometheus.prometheusSpec.image.tag=test \

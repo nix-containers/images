@@ -14,6 +14,8 @@ echo "Testing External Secrets Operator deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install External Secrets Operator
+helm repo add external-secrets https://charts.external-secrets.io 2>/dev/null || true
+helm repo update external-secrets 2>/dev/null || true
 helm_install "$RELEASE" external-secrets/external-secrets "$NAMESPACE" \
     --set image.repository=nix-containers/external-secrets \
     --set image.tag=test \

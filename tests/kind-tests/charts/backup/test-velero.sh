@@ -14,6 +14,8 @@ echo "Testing Velero deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install Velero (without cloud provider for testing)
+helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts 2>/dev/null || true
+helm repo update vmware-tanzu 2>/dev/null || true
 helm_install "$RELEASE" vmware-tanzu/velero "$NAMESPACE" \
     --set image.repository=nix-containers/velero \
     --set image.tag=test \
