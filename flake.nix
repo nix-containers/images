@@ -237,6 +237,28 @@
                   vendorHash = "sha256-yoTl5kmM4VKrLgvEUNaKYCiNbspd4VgG8CbulKjnoJE=";
                 });
               })
+              # falcoctl 0.11.4 → 0.13.0: newer x/net + x/crypto deps.
+              (final: prev: {
+                falcoctl = prev.falcoctl.overrideAttrs (o: rec {
+                  version = "0.13.0";
+                  src = prev.fetchFromGitHub {
+                    owner = "falcosecurity"; repo = "falcoctl"; rev = "v${version}";
+                    hash = "sha256-nqikPwIlDZQLs6JQ8DSKGOHlp0qt3OLe0p5y33qR0cI=";
+                  };
+                  vendorHash = "sha256-FYbmrdg8K5ptVdG1qs5dCQ+2faBCHBxe4wCD4tHhgss=";
+                });
+              })
+              # k8sgpt 0.4.33 → 0.4.35: newer deps.
+              (final: prev: {
+                k8sgpt = prev.k8sgpt.overrideAttrs (o: rec {
+                  version = "0.4.35";
+                  src = prev.fetchFromGitHub {
+                    owner = "k8sgpt-ai"; repo = "k8sgpt"; rev = "v${version}";
+                    hash = "sha256-JqoBjCxw2Zx/E3mXYApODUiJiC3XNpaYLXPCie5GOVA=";
+                  };
+                  vendorHash = "sha256-tkS38PK86jp2uEWiB8eh4jQGWPirAilmgIqt1TOAPL8=";
+                });
+              })
               # Grafana Mimir 3.0.6 (nixpkgs) vendors old x/net + x/crypto
               # (56 high). 3.1.2 pulls x/net v0.55, x/crypto v0.52.
               (final: prev: {
