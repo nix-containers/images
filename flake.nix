@@ -193,6 +193,50 @@
                   vendorHash = "sha256-FBkQXKNtstQ+F7jvKUj6oCbsri+SjGKy0tG59TtUHPQ=";
                 });
               })
+              # telegraf 1.39.0 (nixpkgs) → 1.39.1: newer x/net + x/crypto (6 crit + 2 high).
+              (final: prev: {
+                telegraf = prev.telegraf.overrideAttrs (o: rec {
+                  version = "1.39.1";
+                  src = prev.fetchFromGitHub {
+                    owner = "influxdata"; repo = "telegraf"; rev = "v${version}";
+                    hash = "sha256-B9Xy02oYSYcU0IBOZes9tof/04TLvLybOU/nLLaFORk=";
+                  };
+                  vendorHash = "sha256-9o0Tt6OZnoNO8iSLYmn1SMkQmZzC19uNmfHSkEqWzmA=";
+                });
+              })
+              # cadvisor 0.56.2 → 0.60.3: newer deps (14 high ×2 incl. -fips).
+              (final: prev: {
+                cadvisor = prev.cadvisor.overrideAttrs (o: rec {
+                  version = "0.60.3";
+                  src = prev.fetchFromGitHub {
+                    owner = "google"; repo = "cadvisor"; rev = "v${version}";
+                    hash = "sha256-DnUwGdncSVKyGrDWYXlt4E0ylqrhsL1+nyCbK5LAJaY=";
+                  };
+                  vendorHash = "sha256-wfOaluyxarJQa2vxV7UK23k34JozVSmDqnzjjvHOXow=";
+                });
+              })
+              # cosign 3.0.6 → 3.1.1: newer deps (9 high + 18 -fips).
+              (final: prev: {
+                cosign = prev.cosign.overrideAttrs (o: rec {
+                  version = "3.1.1";
+                  src = prev.fetchFromGitHub {
+                    owner = "sigstore"; repo = "cosign"; rev = "v${version}";
+                    hash = "sha256-DOsGLU6W0JrUGpthILTZfKv3fC45SlIXkvt+idUn5Tc=";
+                  };
+                  vendorHash = "sha256-AeVvp+6iKiTZ4dWy5kjAS2njI3IU+ANgTdUxOFcihSg=";
+                });
+              })
+              # velero 1.18.0 → 1.18.2: newer deps (25 high).
+              (final: prev: {
+                velero = prev.velero.overrideAttrs (o: rec {
+                  version = "1.18.2";
+                  src = prev.fetchFromGitHub {
+                    owner = "vmware-tanzu"; repo = "velero"; rev = "v${version}";
+                    hash = "sha256-rW9OiVFGI1ZO0UmZLVZ/7gXclOmqKBPh6P/Bd54QjZY=";
+                  };
+                  vendorHash = "sha256-yoTl5kmM4VKrLgvEUNaKYCiNbspd4VgG8CbulKjnoJE=";
+                });
+              })
               # Grafana Mimir 3.0.6 (nixpkgs) vendors old x/net + x/crypto
               # (56 high). 3.1.2 pulls x/net v0.55, x/crypto v0.52.
               (final: prev: {
