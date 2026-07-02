@@ -159,15 +159,19 @@ jobs:
                 /tmp/existing-names.txt /tmp/candidates.txt > /tmp/existing.txt
             else
               echo "GHCR API unavailable/implausible ($PUBLISHED); using manifest inspect"
-              # Lower parallelism (-P 4) + more retries with longer backoff than
-              # before to cut the GHCR secondary-rate-limit false negatives that
-              # were dropping ~387 published images from the scan.
-              xargs -a /tmp/candidates.txt -I {} -P 4 sh -c '
-                for attempt in 1 2 3 4 5; do
+              # -P 8 / 3 retries. A slower -P 4 / 5-retry pass was measured to
+              # take ~83 min and recover only +4 images (2232 vs 2228) — the
+              # ~380 pushed-but-undetected images stay rate-limited regardless,
+              # so the extra retries just burn time on the ~850 genuinely
+              # unpublished candidates. The reliable full-close is the GHCR
+              # packages API, which needs a PAT with read:packages (the default
+              # GITHUB_TOKEN can't list org packages) — tracked as a follow-up.
+              xargs -a /tmp/candidates.txt -I {} -P 8 sh -c '
+                for attempt in 1 2 3; do
                   if docker manifest inspect "$1" >/dev/null 2>&1; then
                     echo "$1"; exit 0
                   fi
-                  if [ "$attempt" -lt 5 ]; then sleep $((attempt * 2)); fi
+                  if [ "$attempt" -lt 3 ]; then sleep $((attempt * attempt)); fi
                 done
               ' _ {} > /tmp/existing.txt
             fi
