@@ -210,6 +210,13 @@ function render() {
     const nixBadge = i.fromNixpkgs
       ? `<span class="badge-nix" title="Packaged directly from nixpkgs">Nix</span>`
       : '';
+    // "Scaffold" badge: placeholder image that isn't built out yet — contains
+    // only base packages, not the named software. Flagged so the catalog
+    // doesn't imply it ships the tool.
+    const scaffoldBadge = i.scaffold
+      ? `<span class="badge bg-fg-muted/20 text-fg-muted font-mono"
+               title="Scaffold — placeholder not yet built with the actual software">scaffold</span>`
+      : '';
     // "0 CVE" badge: scan exists and reported zero vulnerabilities at
     // every severity level. Only shown when we have actual scan data —
     // missing scan ≠ zero CVE.
@@ -246,6 +253,7 @@ function render() {
           ${highBadge}
           ${zeroCve}
           ${nixBadge}
+          ${scaffoldBadge}
           <span class="badge-cat-${escapeAttr(i.categorySlug || 'unknown')}" title="${escapeAttr(i.categoryDesc || '')}">${escapeHtml(i.category || 'unknown')}</span>
         </div>
       </div>
