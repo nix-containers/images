@@ -1,14 +1,13 @@
 { pkgs, image }:
 
-# Auto-generated smoke test (scripts/local-verify-orphans.sh).
-# Verifies the image loads and `--help` exits cleanly. Add deeper
-# checks (subcommands, config parsing, etc.) when you have time.
 pkgs.writeShellScript "test-strimzi-kafka" ''
   set -euo pipefail
-  echo "Testing strimzi-kafka image functionality..."
+  echo "Testing strimzi-kafka image..."
 
-  # The image loads and the entrypoint accepts --help without crashing.
-  docker run --rm ${image.imageName}:test --help >/dev/null 2>&1     || docker run --rm ${image.imageName}:test --version >/dev/null 2>&1     || docker run --rm --entrypoint /bin/sh ${image.imageName}:test -c "exit 0"
+  # Server image (entrypoint starts the Kafka broker). Smoke test: shell runs
+  # and the kafka start script is present in the image.
+  echo "  Checking shell and kafka-server-start.sh are present..."
+  docker run --rm --entrypoint /bin/sh ${image.imageName}:test -c 'ls -la / >/dev/null && (command -v kafka-server-start.sh >/dev/null 2>&1 || ls /nix/store/*/bin/kafka-server-start.sh >/dev/null 2>&1) && echo ok' | grep -q ok
 
-  echo "strimzi-kafka smoke test passed."
+  echo "All strimzi-kafka tests passed!"
 ''
