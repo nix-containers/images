@@ -14,6 +14,8 @@ echo "Testing Loki deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install Loki in monolithic mode (simpler for testing)
+helm repo add grafana https://grafana.github.io/helm-charts 2>/dev/null || true
+helm repo update grafana 2>/dev/null || true
 helm_install "$RELEASE" grafana/loki "$NAMESPACE" \
     --set loki.image.repository=nix-containers/loki \
     --set loki.image.tag=test \

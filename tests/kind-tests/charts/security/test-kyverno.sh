@@ -14,6 +14,8 @@ echo "Testing Kyverno deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install Kyverno
+helm repo add kyverno https://kyverno.github.io/kyverno/ 2>/dev/null || true
+helm repo update kyverno 2>/dev/null || true
 helm_install "$RELEASE" kyverno/kyverno "$NAMESPACE" \
     --set image.repository=nix-containers/kyverno \
     --set image.tag=test \
