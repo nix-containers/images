@@ -113,6 +113,17 @@
                   };
                 });
               })
+              # neo4j 2026.02.2 (nixpkgs) bundles netty 4.2.9 + jackson 2.20.1
+              # with 50 high CVEs. 2026.05.0 rebuilds against newer versions.
+              (final: prev: {
+                neo4j = prev.neo4j.overrideAttrs (o: rec {
+                  version = "2026.05.0";
+                  src = prev.fetchurl {
+                    url = "https://neo4j.com/artifact.php?name=neo4j-community-${version}-unix.tar.gz";
+                    hash = "sha256-u3U7TpvMMx6QuWjt2NpEXpdAkIZ8qCXMZy3v2tYGbw4=";
+                  };
+                });
+              })
             ];
           };
 
