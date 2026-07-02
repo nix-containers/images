@@ -1,14 +1,20 @@
 { pkgs, image }:
 
-# Auto-generated smoke test (scripts/local-verify-orphans.sh).
-# Verifies the image loads and `--help` exits cleanly. Add deeper
-# checks (subcommands, config parsing, etc.) when you have time.
 pkgs.writeShellScript "test-fluentd-kubernetes-daemonset" ''
   set -euo pipefail
   echo "Testing fluentd-kubernetes-daemonset image functionality..."
 
-  # The image loads and the entrypoint accepts --help without crashing.
-  docker run --rm ${image.imageName}:test --help >/dev/null 2>&1     || docker run --rm ${image.imageName}:test --version >/dev/null 2>&1     || docker run --rm --entrypoint /bin/sh ${image.imageName}:test -c "exit 0"
+  # Test 1: Version check
+  echo "  Testing fluentd version..."
+  docker run --rm --entrypoint fluentd ${image.imageName}:test --version 2>&1 | grep -qE "fluentd [0-9]+\.[0-9]+"
 
-  echo "fluentd-kubernetes-daemonset smoke test passed."
+  # Test 2: Help output
+  echo "  Testing fluentd help..."
+  docker run --rm --entrypoint fluentd ${image.imageName}:test --help 2>&1 | grep -q "fluentd"
+
+  # Test 3: Binary exists
+  echo "  Testing fluentd binary exists..."
+  docker run --rm --entrypoint /bin/sh ${image.imageName}:test -c "ls /nix/store/*/bin/fluentd" 2>&1 | grep -q "fluentd"
+
+  echo "All fluentd-kubernetes-daemonset tests passed!"
 ''
