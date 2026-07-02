@@ -25,6 +25,15 @@ let
 
   # Dynamic version lookups (from nixpkgs)
   dynamicVersions = {
+    # Real-but-"latest" images: had no version mapping so getPackageVersion
+    # fell back to "latest" on the catalog card. Their nixpkgs attr exposes a
+    # version, so map them to it (resolves dynamically, stays current).
+    "bank-vaults" = getVer "bank-vaults";
+    "cluster-autoscaler" = getVer "cluster-autoscaler";
+    "kubernetes-dashboard" = getVer "kubernetes-dashboard";
+    "node-feature-discovery" = getVer "node-feature-discovery";
+    "sealed-secrets" = getVer "sealed-secrets";
+    "vertical-pod-autoscaler" = getVer "vertical-pod-autoscaler";
     "act" = getVer "act";
     "actionlint" = getVer "actionlint";
     "age" = getVer "age";
@@ -434,6 +443,10 @@ let
 
   # Static/hardcoded versions (built from source)
   staticVersions = {
+    # python3Packages.* are nested attrs getVer can't reach; pin the resolved
+    # versions (these wheels rarely move, and it beats showing "latest").
+    "py3-pip-wheel" = "25.3";
+    "py3-setuptools-wheel" = "80.10.1";
     "actions-runner-controller" = "0.13.0";
     "actions-runner" = "2.330.0";
     "addon-resizer-fips" = "1.8.23";
