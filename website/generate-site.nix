@@ -4,6 +4,13 @@ let
   imagesPath = ../images;
   allFiles = lib.filesystem.listFilesRecursive imagesPath;
 
+  # Curated image-name -> version map (same source the version-tagged image
+  # builds use). Consulted as a fallback when the OCI-label regexes below can't
+  # read an image's version. Only evaluates the curated attr set, so it's
+  # build-safe (no arbitrary pkgs.<attr>.version eval that could hit a broken
+  # nixpkgs alias).
+  getPackageVersion = import ../lib/versions.nix { inherit pkgs; };
+
   # A directory with a file-extension suffix (e.g. images/PACKAGE_SUMMARY.md/)
   # is invariably a generation-script artifact, not a real image. Reject so it
   # never resurfaces on the site. Legitimate image names with version dots
@@ -95,11 +102,20 @@ let
           # these show their real version instead of "latest".
           varLabel = builtins.match ".*\"org\\.opencontainers\\.image\\.version\"[[:space:]]*=[[:space:]]*version[[:space:]]*;.*" nixContent != null;
           versionBinding = builtins.match ".*[^[:alnum:]_]version[[:space:]]*=[[:space:]]*\"([^\"]+)\".*" nixContent;
+          # Curated fallback (lib/versions.nix) for images whose label the
+          # regexes can't read — computed `version` bindings and
+          # `= pkgs.<attr>.version` labels. Only the curated attr set is
+          # evaluated (unlisted -> "latest"), so it never touches a broken
+          # nixpkgs alias; tryEval is a belt-and-suspenders guard.
+          curated =
+            let r = builtins.tryEval (getPackageVersion imageName);
+            in if r.success && r.value != null then r.value else "latest";
         in
           if staticMatch != null then builtins.head staticMatch
-          else if dynamicMatch != null then "dynamic-${builtins.head dynamicMatch}"
           else if varLabel && versionBinding != null && builtins.head versionBinding != "latest"
             then builtins.head versionBinding
+          else if curated != "latest" then curated
+          else if dynamicMatch != null then "dynamic-${builtins.head dynamicMatch}"
           else "latest";
       nixMeta = nixMetaFor imageName;
     in {
