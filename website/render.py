@@ -844,6 +844,16 @@ def main():
                 if tag_name and tag_name != "latest" and not _looks_like_commit_sha(tag_name):
                     display_version = tag_name
                     break
+        # A scaffold image is a placeholder from the catalog build-out that was
+        # never filled with real software: version left at "latest" and
+        # copyToRoot is just the base packages + trivial tools + userEnv, with
+        # no upstream package wired in. Flag these so the catalog can mark them
+        # "not yet built" rather than implying they ship the named tool.
+        _nix = img.get("nixCode", "") or ""
+        is_scaffold = (
+            display_version == "latest"
+            and "base.basePackages ++ imagePkgs ++ [ userEnv ]" in _nix
+        )
         mapping = {
             "NAME": name,
             "UPSTREAM_HTML": upstream_html,
@@ -990,6 +1000,7 @@ def main():
             "categorySlug": category_slug(img.get("category", "")),
             "categoryDesc": category_description(img.get("category", "")),
             "version": display_version,
+            "scaffold": is_scaffold,
             "hasTest": img.get("hasTest", False),
             "fromNixpkgs": img.get("fromNixpkgs", False),
             "upstreamUrl": upstream,
