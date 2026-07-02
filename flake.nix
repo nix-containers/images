@@ -181,6 +181,18 @@
                   vendorHash = "sha256-bF4jIEEG5DFhtDdy8LwK6SfE5OdyUsDjOIbAddvb5V8=";
                 });
               })
+              # step-ca 0.29.0 (nixpkgs) vendors old x/net + x/crypto (10 crit +
+              # 22 high, incl. -fips). 0.30.2 pulls newer deps.
+              (final: prev: {
+                step-ca = prev.step-ca.overrideAttrs (o: rec {
+                  version = "0.30.2";
+                  src = prev.fetchFromGitHub {
+                    owner = "smallstep"; repo = "certificates"; rev = "v${version}";
+                    hash = "sha256-Cxr2DMF415iERdAltd2FvX+C5qJmVW5Npu2JbMC4k8o=";
+                  };
+                  vendorHash = "sha256-FBkQXKNtstQ+F7jvKUj6oCbsri+SjGKy0tG59TtUHPQ=";
+                });
+              })
               # Grafana Mimir 3.0.6 (nixpkgs) vendors old x/net + x/crypto
               # (56 high). 3.1.2 pulls x/net v0.55, x/crypto v0.52.
               (final: prev: {
