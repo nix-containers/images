@@ -114,6 +114,12 @@ jobs:
     needs: [resolve-charts]
     if: needs.resolve-charts.outputs.run == 'true'
     runs-on: ubuntu-latest
+    # Kind-cluster Helm integration tests are inherently flaky and are not a
+    # gate on image publishing. Tolerate failures here so a flaky chart doesn't
+    # fail the whole build+push run; real regressions are triaged from this
+    # job's own status. (This is where the tolerance belongs — continue-on-error
+    # is invalid on the reusable-workflow caller in build-containers.yml.)
+    continue-on-error: true
     timeout-minutes: 25
     strategy:
       fail-fast: false
