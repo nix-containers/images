@@ -270,6 +270,28 @@
                   vendorHash = "sha256-PkYDJK2oGl+siCG9p4R8shC0e5BhGFdJsc+ksL9J5zw=";
                 });
               })
+              # statsd_exporter 0.28.0 → 0.30.0: newer deps.
+              (final: prev: {
+                prometheus-statsd-exporter = prev.prometheus-statsd-exporter.overrideAttrs (o: rec {
+                  version = "0.30.0";
+                  src = prev.fetchFromGitHub {
+                    owner = "prometheus"; repo = "statsd_exporter"; rev = "v${version}";
+                    hash = "sha256-BvX1S+PXOGVk5VmBcGypANmf5gJk1niA1knCxUAfQLY=";
+                  };
+                  vendorHash = "sha256-cWASZL8pnlGyb07HZ11oMxJbcmDlX93oqXUhXOTiKP4=";
+                });
+              })
+              # kubescape 4.0.9 → 4.0.10: newer deps.
+              (final: prev: {
+                kubescape = prev.kubescape.overrideAttrs (o: rec {
+                  version = "4.0.10";
+                  src = prev.fetchFromGitHub {
+                    owner = "kubescape"; repo = "kubescape"; rev = "v${version}";
+                    hash = "sha256-RbTGgSnaRUZdj2RdyTHgPy/+AbvAecTmdUeaDubyCSg=";
+                  };
+                  vendorHash = "sha256-y17ZrVzeRVzODGuIFKV8nsMu2720d/I4HUfwdinwOg4=";
+                });
+              })
               # Grafana Mimir 3.0.6 (nixpkgs) vendors old x/net + x/crypto
               # (56 high). 3.1.2 pulls x/net v0.55, x/crypto v0.52.
               (final: prev: {
