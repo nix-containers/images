@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "cluster-autoscaler";
-  version = "1.34.2";
+  version = "chart-9.58.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes";
     repo = "autoscaler";
     rev = "cluster-autoscaler-${version}";
-    hash = "sha256-yQE4SsEZuUWLWtMUK3WgVQfrKDwoxrk2JddbzUGyMkc=";
+    hash = "sha256-81OKhrmUsl8aP6w0XqQmBFpJ4Gcqg9nYvgAUxszfE1M=";
   };
 
   vendorHash = null;

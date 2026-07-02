@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "metallb";
-  version = "0.15.3";
+  version = "0.16.1";
 
   src = fetchFromGitHub {
     owner = "metallb";
     repo = "metallb";
     rev = "v${version}";
-    hash = "sha256-yP7y2FqqpMxlZ8Zbvu5bQpf0PFrczNJ1PxBCJVIEM/c=";
+    hash = "sha256-3qlreWMIakPzSnhudGoqFZDiX0U1lVQkn/wHNzPpyTw=";
   };
 
   vendorHash = "sha256-7DHURGK702xBQEEKhuwxaXdH2MXCA/SvDsvXu7LNcIA=";

@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "node-feature-discovery";
-  version = "0.18.3";
+  version = "0.19.0-devel";
 
   src = fetchFromGitHub {
     owner = "kubernetes-sigs";
     repo = "node-feature-discovery";
     rev = "v${version}";
-    hash = "sha256-3nDkhZYiG8ZYP0vnK+Xs6Fl3N93RRuuZYlTjRup6BQk=";
+    hash = "sha256-dHxMofibTwGt4hMr7VWQYzaVcLZ6TkLWv+emdBS1V4s=";
   };
 
   vendorHash = "sha256-sA9OukYpNEe0tDD/WTGFbWMvMKtk8F8oakFNAEwGG6M=";

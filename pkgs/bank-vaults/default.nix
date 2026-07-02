@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "bank-vaults";
-  version = "1.32.1";
+  version = "1.33.1";
 
   src = fetchFromGitHub {
     owner = "bank-vaults";
     repo = "bank-vaults";
     rev = "v${version}";
-    hash = "sha256-4N7CC111mrNxPpqAwg9JqA1RKYuooknkh0liIaUwYHU=";
+    hash = "sha256-D0rgrYQDIYU6BwSOgmDLbetDsyCT6Dvlw0UminH4hfo=";
   };
 
   vendorHash = null;

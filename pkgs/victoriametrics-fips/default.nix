@@ -7,7 +7,7 @@
 { lib, stdenv, fetchurl, autoPatchelfHook }:
 
 let
-  version = "1.146.0";
+  version = "pmm-6401-v1.146.0";
 
   arch = if stdenv.hostPlatform.isAarch64 then "arm64" else "amd64";
 
