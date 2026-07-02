@@ -14,6 +14,8 @@ echo "Testing Crossplane deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install Crossplane
+helm repo add crossplane https://charts.crossplane.io/stable 2>/dev/null || true
+helm repo update crossplane 2>/dev/null || true
 helm_install "$RELEASE" crossplane/crossplane "$NAMESPACE" \
     --set image.repository=nix-containers/crossplane \
     --set image.tag=test

@@ -14,6 +14,8 @@ echo "Testing cert-manager deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install cert-manager with CRDs
+helm repo add jetstack https://charts.jetstack.io 2>/dev/null || true
+helm repo update jetstack 2>/dev/null || true
 helm_install "$RELEASE" jetstack/cert-manager "$NAMESPACE" \
     --set installCRDs=true \
     --set image.repository=nix-containers/cert-manager-controller \
