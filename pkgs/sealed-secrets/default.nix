@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "sealed-secrets";
-  version = "helm-v2.19.0";
+  version = "0.38.1";
 
   src = fetchFromGitHub {
     owner = "bitnami-labs";
