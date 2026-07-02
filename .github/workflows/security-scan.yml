@@ -88,6 +88,7 @@ jobs:
           EVENT: ${{ github.event_name }}
           REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
@@ -120,31 +121,47 @@ jobs:
           TOTAL_CANDIDATES=$(echo "$CANDIDATES_JSON" | jq 'length')
           echo "Total candidates: $TOTAL_CANDIDATES"
 
-          # ---- step 2: existence-filter in parallel ----
-          # `docker manifest inspect` against GHCR triggers a secondary
-          # rate limit at -P 32 (the original setting) — half-plus of the
-          # probes 429 silently and those images get dropped from the
-          # matrix even though they're on the registry. Dropped to -P 8
-          # and added a 3-attempt retry with exponential backoff (1s, 3s,
-          # 9s) — same pattern as the tag-fetch step in deploy-website.yml.
-          #
-          # Post-fix expectation: of N candidates, the count flagged as
-          # "not yet published" should match the count we genuinely have
-          # not pushed; rate-limit-induced false negatives go away.
+          # ---- step 2: existence-filter ----
+          # Authoritative source: the GHCR packages API — one paginated list of
+          # every published container package. Per-image `docker manifest
+          # inspect` hits GHCR's secondary rate limit and silently 429s, so
+          # hundreds of PUBLISHED images were dropped from the scan (no CVE data
+          # + no green dot on the site). The API has no per-image rate limit, so
+          # coverage is complete. Fall back to manifest inspect only if the API
+          # is unavailable (empty result), preserving the old behavior.
           if [ "$TOTAL_CANDIDATES" -eq 0 ]; then
             EXISTING_JSON="[]"
           else
             echo "$CANDIDATES_JSON" | jq -r '.[]' > /tmp/candidates.txt
-            xargs -a /tmp/candidates.txt -I {} -P 8 sh -c '
-              for attempt in 1 2 3; do
-                if docker manifest inspect "$1" >/dev/null 2>&1; then
-                  echo "$1"
-                  exit 0
-                fi
-                # Backoff (1, 3, 9). No sleep after the third attempt.
-                if [ "$attempt" -lt 3 ]; then sleep $((attempt * attempt)); fi
-              done
-            ' _ {} > /tmp/existing.txt
+            ORG="${REPO%%/*}"
+            # Package names return as "images/<name>"; keep the bare <name>.
+            gh api --paginate \
+              "orgs/${ORG}/packages?package_type=container&per_page=100" \
+              --jq '.[].name' 2>/dev/null | sed 's#^images/##' | sort -u \
+              > /tmp/published.txt || true
+            PUBLISHED=$(wc -l < /tmp/published.txt | tr -d ' ')
+            echo "Published packages from GHCR API: $PUBLISHED"
+            if [ "$PUBLISHED" -gt 0 ]; then
+              # candidate ref -> bare image name (…/<name>:<tag>)
+              sed -E 's#.*/([^/:]+):.*#\1#' /tmp/candidates.txt > /tmp/cand-names.txt
+              # names present in both the catalog and the registry
+              grep -Fxf /tmp/published.txt /tmp/cand-names.txt | sort -u \
+                > /tmp/existing-names.txt || true
+              # reconstruct the full candidate refs (preserving their tag)
+              awk -F'[/:]' 'NR==FNR{keep[$0]=1;next}
+                           {n=$(NF-1); if (n in keep) print}' \
+                /tmp/existing-names.txt /tmp/candidates.txt > /tmp/existing.txt
+            else
+              echo "GHCR API returned no packages; falling back to manifest inspect"
+              xargs -a /tmp/candidates.txt -I {} -P 8 sh -c '
+                for attempt in 1 2 3; do
+                  if docker manifest inspect "$1" >/dev/null 2>&1; then
+                    echo "$1"; exit 0
+                  fi
+                  if [ "$attempt" -lt 3 ]; then sleep $((attempt * attempt)); fi
+                done
+              ' _ {} > /tmp/existing.txt
+            fi
             EXISTING_JSON=$(jq -Rc '.' /tmp/existing.txt | jq -cs '.')
           fi
           TOTAL_EXISTING=$(echo "$EXISTING_JSON" | jq 'length')
