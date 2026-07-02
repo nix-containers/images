@@ -61,6 +61,29 @@ function updateStats(data) {
   const highEl = document.getElementById('high-count');
   if (highEl) highEl.textContent = totalHigh.toLocaleString();
 
+  // Last scan: the most recent per-image scannedAt across the catalog, shown
+  // with an exact timestamp and an "N hours ago" relative age.
+  const scanEl = document.getElementById('last-scan');
+  if (scanEl) {
+    const times = allImages
+      .map(i => i.scan && i.scan.scannedAt)
+      .filter(Boolean);
+    if (times.length) {
+      const latest = times.reduce((a, b) => (a > b ? a : b));
+      const d = new Date(latest);
+      const ageMs = Date.now() - d.getTime();
+      const hours = ageMs / 3.6e6;
+      const ago = hours < 1
+        ? `${Math.max(0, Math.round(hours * 60))} min ago`
+        : (hours < 48
+            ? `${hours.toFixed(1)} h ago`
+            : `${Math.round(hours / 24)} d ago`);
+      scanEl.textContent = `Last scan: ${d.toLocaleString()} (${ago})`;
+    } else {
+      scanEl.textContent = 'Last scan: unknown';
+    }
+  }
+
   // Size summary. Three numbers from render.py:
   //   compressed  — on-the-wire pull cost (gzip'd layer sum)
   //   uncompressed — extracted disk cost (decompressed layer sum)
