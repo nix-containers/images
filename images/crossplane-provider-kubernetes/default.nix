@@ -4,7 +4,7 @@
 # https://github.com/crossplane-contrib/provider-kubernetes
 
 let
-  version = "0.1.0";
+  version = "1.2.1";
   provider-kubernetes = buildGoModule {
     pname = "provider-kubernetes";
     inherit version;
@@ -13,10 +13,10 @@ let
       owner = "crossplane-contrib";
       repo = "provider-kubernetes";
       rev = "v${version}";
-      hash = "sha256-Rb+plMyBivFNCKJSUnkLkV5vmH+pbIGsI2RjQ9HTnQg=";
+      hash = "sha256-5IgPUT5hJ21zv+Y65jWatV88PQ9AfA9K+XkmjmrfXeE=";
     };
 
-    vendorHash = "sha256-OtZn5pF9ot90IK3EIhJOfk3LyJe1aqrudBrwGaZRsfI=";
+    vendorHash = "sha256-510b6GkDxFNmPsSJD1STTdP1Oqn04SfDYu+NWGmOCus=";
 
     subPackages = [ "cmd/provider" ];
 

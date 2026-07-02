@@ -4,7 +4,7 @@
 # https://github.com/crossplane-contrib/provider-gitlab
 
 let
-  version = "0.1.0";
+  version = "0.21.0";
   provider-gitlab = buildGoModule {
     pname = "provider-gitlab";
     inherit version;
@@ -13,10 +13,10 @@ let
       owner = "crossplane-contrib";
       repo = "provider-gitlab";
       rev = "v${version}";
-      hash = "sha256-moluGWbxFW+2Uq29jgL0w+f7fp0NLbJ4CDzmiojIbpg=";
+      hash = "sha256-IPxE1f6ExVzrcvgh++evymGOGXjznJpQnSNAXmJXz0Y=";
     };
 
-    vendorHash = "sha256-vZoigbk9dUc6wmryO68JfEVUB3gxNoblyq0DlkJ+fEk=";
+    vendorHash = "sha256-pAa6qg/QzX/2tNmMd42FK8BVwmerrd14yiYFAJzpgwU=";
 
     subPackages = [ "cmd/provider" ];
 
