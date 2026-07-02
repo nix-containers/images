@@ -136,7 +136,7 @@
                     rev = "v${version}";
                     hash = "sha256-Y7zAeGtLvB19MpxeCIxeEOKXCQS+ws8/xs/rmvYHcLY=";
                   };
-                  vendorHash = null;
+                  vendorHash = "sha256-yvzQHfe7yd6Sjh1Vd2VxTp3jK8OWoKTmJ2uMyXX3+xs=";
                 });
               })
               # Grafana Loki 3.7.1 (nixpkgs) vendors x/net v0.51, x/crypto v0.50
@@ -150,7 +150,21 @@
                     rev = "v${version}";
                     hash = "sha256-2dqwnM2+9+P/ZIiz5Z9JPN9WicHLRzq9xn6jG1OBqLs=";
                   };
-                  vendorHash = null;
+                  vendorHash = "sha256-yvzQHfe7yd6Sjh1Vd2VxTp3jK8OWoKTmJ2uMyXX3+xs=";
+                });
+              })
+              # Prometheus 3.11.3 (nixpkgs) vendors x/net v0.49, x/crypto v0.47
+              # — 36 high CVEs. 3.13.0 pulls x/net v0.55, x/crypto v0.52.
+              (final: prev: {
+                prometheus = prev.prometheus.overrideAttrs (o: rec {
+                  version = "3.13.0";
+                  src = prev.fetchFromGitHub {
+                    owner = "prometheus";
+                    repo = "prometheus";
+                    rev = "v${version}";
+                    hash = "sha256-v6jk4MqoxcfK+yj+T31Ovqj1tyh3mc4aEr8BD0vjBOc=";
+                  };
+                  vendorHash = "sha256-yvzQHfe7yd6Sjh1Vd2VxTp3jK8OWoKTmJ2uMyXX3+xs=";
                 });
               })
             ];
