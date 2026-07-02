@@ -124,6 +124,21 @@
                   };
                 });
               })
+              # Grafana Tempo 2.10.5 (nixpkgs) bundles golang.org/x/net v0.43,
+              # x/crypto v0.41, apache/thrift v0.22 — 76 high CVEs.
+              # 2.10.7 patch-bump pulls x/net v0.55, x/crypto v0.52, thrift v0.23.
+              (final: prev: {
+                tempo = prev.tempo.overrideAttrs (o: rec {
+                  version = "2.10.7";
+                  src = prev.fetchFromGitHub {
+                    owner = "grafana";
+                    repo = "tempo";
+                    rev = "v${version}";
+                    hash = "sha256-Y7zAeGtLvB19MpxeCIxeEOKXCQS+ws8/xs/rmvYHcLY=";
+                  };
+                  vendorHash = null;
+                });
+              })
             ];
           };
 
