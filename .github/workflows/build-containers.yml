@@ -173,12 +173,11 @@ jobs:
     if: needs.select-matrix.outputs.run == 'true'
     # Chart-level integration tests spin up a kind cluster and deploy Helm
     # charts — inherently flaky (cluster timing, image pulls) and NOT a gate
-    # on build-and-push (which only needs [select-matrix, test-images]). A
-    # flaky chart-test was marking the whole build+push run red even though the
-    # images built and pushed fine. Keep it informational: it still runs and
-    # reports, but its failure no longer fails the pipeline. Real chart
-    # regressions are triaged from its own job status, not by blocking publish.
-    continue-on-error: true
+    # on build-and-push (which only needs [select-matrix, test-images]).
+    # NOTE: continue-on-error is NOT valid on a reusable-workflow caller job —
+    # it makes the run a startup_failure (fails at parse time before any job
+    # runs). The flaky-tolerance therefore lives on the chart-test JOB inside
+    # test-images-charts.yml, where continue-on-error is valid.
     uses: ./.github/workflows/test-images-charts.yml
     with:
       matrix: ${{ needs.select-matrix.outputs.matrix }}
