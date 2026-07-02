@@ -43,12 +43,26 @@ let
     };
   };
 
+  # The old cmd was `--help` (a one-shot -> the kind-test pod CrashLoops). mongod
+  # also refuses to start without an existing --dbpath, so create it at runtime
+  # under the writable /tmp mkImage provides, then exec the server bound on all
+  # interfaces (0.0.0.0:27017). Operators mount their own volume at /tmp/mongodb
+  # (or override the command) for real data.
+  entrypoint = pkgs.writeShellApplication {
+    name = "docker-entrypoint.sh";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      mkdir -p /tmp/mongodb
+      exec ${drv}/bin/mongod --dbpath /tmp/mongodb --bind_ip_all "$@"
+    '';
+  };
+
 in mkImage {
   inherit drv;
   name = "mongod";
   tag = "v${version}";
-  entrypoint = [ "${drv}/bin/mongod" ];
-  cmd = [ "--help" ];
+  entrypoint = [ "${entrypoint}/bin/docker-entrypoint.sh" ];
+  cmd = [ ];
 
   labels = {
     "org.opencontainers.image.title" = "mongod";
