@@ -259,6 +259,17 @@
                   vendorHash = "sha256-tkS38PK86jp2uEWiB8eh4jQGWPirAilmgIqt1TOAPL8=";
                 });
               })
+              # k9s 0.50.18 → 0.51.0: newer x/net + x/crypto deps.
+              (final: prev: {
+                k9s = prev.k9s.overrideAttrs (o: rec {
+                  version = "0.51.0";
+                  src = prev.fetchFromGitHub {
+                    owner = "derailed"; repo = "k9s"; rev = "v${version}";
+                    hash = "sha256-70Rfu1BVd/QnwWXRRpwIeZ2UJNWIGixpdiOHo4v7adA=";
+                  };
+                  vendorHash = "sha256-PkYDJK2oGl+siCG9p4R8shC0e5BhGFdJsc+ksL9J5zw=";
+                });
+              })
               # Grafana Mimir 3.0.6 (nixpkgs) vendors old x/net + x/crypto
               # (56 high). 3.1.2 pulls x/net v0.55, x/crypto v0.52.
               (final: prev: {
