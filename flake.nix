@@ -101,6 +101,18 @@
                   };
                 });
               })
+              # Cypress 14.5.4 (current nixpkgs) bundles axios 1.8.3,
+              # node-forge 1.3.0, tar 6.2.1, ws 7.4.5 — 12 crit + 270 high.
+              # 15.18.0 rebuilds these Node deps.
+              (final: prev: {
+                cypress = prev.cypress.overrideAttrs (o: rec {
+                  version = "15.18.0";
+                  src = prev.fetchurl {
+                    url = "https://cdn.cypress.io/desktop/${version}/linux-x64/cypress.zip";
+                    hash = "sha256-WGwO0gnrwuxV0Rqi9LtZUrFcXSVUTDWvkWG91pKFrCY=";
+                  };
+                });
+              })
             ];
           };
 
