@@ -167,6 +167,20 @@
                   vendorHash = "sha256-yvzQHfe7yd6Sjh1Vd2VxTp3jK8OWoKTmJ2uMyXX3+xs=";
                 });
               })
+              # Grafana Mimir 3.0.6 (nixpkgs) vendors old x/net + x/crypto
+              # (56 high). 3.1.2 pulls x/net v0.55, x/crypto v0.52.
+              (final: prev: {
+                mimir = prev.mimir.overrideAttrs (o: rec {
+                  version = "3.1.2";
+                  src = prev.fetchFromGitHub {
+                    owner = "grafana";
+                    repo = "mimir";
+                    rev = "mimir-${version}";
+                    hash = "sha256-8GvpmCanVlsObH1mwPA/TsHzNp3f0hzF7fURIDHy/DU=";
+                  };
+                  vendorHash = null;
+                });
+              })
             ];
           };
 
