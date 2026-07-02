@@ -181,6 +181,20 @@
                   vendorHash = null;
                 });
               })
+              # etcd 3.6.10 (nixpkgs) vendors x/net v0.52, x/crypto v0.49
+              # (18 high). 3.6.13 pulls x/net v0.54, x/crypto v0.52.
+              (final: prev: {
+                etcd = prev.etcd.overrideAttrs (o: rec {
+                  version = "3.6.13";
+                  src = prev.fetchFromGitHub {
+                    owner = "etcd-io";
+                    repo = "etcd";
+                    rev = "v${version}";
+                    hash = "sha256-L6wnvexUxFlN4r2D9rIQPDIYWMvs6DqY8eWU1FToi3M=";
+                  };
+                  vendorHash = null;
+                });
+              })
             ];
           };
 
