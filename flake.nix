@@ -167,6 +167,20 @@
                   vendorHash = "sha256-yvzQHfe7yd6Sjh1Vd2VxTp3jK8OWoKTmJ2uMyXX3+xs=";
                 });
               })
+              # argo-rollouts 1.8.3 (nixpkgs) vendors old x/net + x/crypto
+              # (60 high, incl. the -fips image). 1.9.0 pulls newer deps.
+              (final: prev: {
+                argo-rollouts = prev.argo-rollouts.overrideAttrs (o: rec {
+                  version = "1.9.0";
+                  src = prev.fetchFromGitHub {
+                    owner = "argoproj";
+                    repo = "argo-rollouts";
+                    rev = "v${version}";
+                    hash = "sha256-qpTilslCu9rmBVMo73lHnKD8NPxLHSzeBwkWhEB4If4=";
+                  };
+                  vendorHash = "sha256-bF4jIEEG5DFhtDdy8LwK6SfE5OdyUsDjOIbAddvb5V8=";
+                });
+              })
               # Grafana Mimir 3.0.6 (nixpkgs) vendors old x/net + x/crypto
               # (56 high). 3.1.2 pulls x/net v0.55, x/crypto v0.52.
               (final: prev: {
