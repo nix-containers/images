@@ -209,6 +209,21 @@
                   vendorHash = "sha256-J1MofT7PwcQ74XwVumu7PfkAteKR6iJIZe+vMoaD+Eg=";
                 });
               })
+              # gitlab-container-registry 4.39.0 vendors x/net v0.49 + x/crypto
+              # v0.47 (many highs). 4.40.2 pulls x/net v0.55, x/crypto v0.53.
+              # pgx v5.8.0 crit still open (upstream lag).
+              (final: prev: {
+                gitlab-container-registry = prev.gitlab-container-registry.overrideAttrs (o: rec {
+                  version = "4.40.2-gitlab";
+                  src = prev.fetchFromGitLab {
+                    owner = "gitlab-org";
+                    repo = "container-registry";
+                    rev = "v${version}";
+                    hash = "sha256-k94uEM2VoOtdFRXWm6CDmeRt8LMXSNegRGes3ZKPg0I=";
+                  };
+                  vendorHash = "sha256-MD98JYwTo/t5/E7clIlUfjmv8t7nDPpVElbuYDRjMMc=";
+                });
+              })
             ];
           };
 
