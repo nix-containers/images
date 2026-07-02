@@ -29,12 +29,48 @@ let
       runHook postInstall
     '';
   };
+
+  # The old cmd was `--help` (a one-shot -> the kind-test pod CrashLoops), and
+  # keeper refuses to start without a config. Bake a minimal single-node config:
+  # client port 9181 + raft 9234, listen on 0.0.0.0, log/snapshot storage under
+  # the writable /tmp mkImage provides. A single-node raft elects itself leader,
+  # so it comes up with no external deps. Operators mount a multi-node config.
+  keeperConfig = pkgs.writeTextDir "etc/clickhouse-keeper/keeper_config.xml" ''
+    <clickhouse>
+        <logger><level>information</level><console>true</console></logger>
+        <listen_host>0.0.0.0</listen_host>
+        <keeper_server>
+            <tcp_port>9181</tcp_port>
+            <server_id>1</server_id>
+            <log_storage_path>/tmp/clickhouse-keeper/log</log_storage_path>
+            <snapshot_storage_path>/tmp/clickhouse-keeper/snapshots</snapshot_storage_path>
+            <coordination_settings>
+                <operation_timeout_ms>10000</operation_timeout_ms>
+                <session_timeout_ms>30000</session_timeout_ms>
+            </coordination_settings>
+            <raft_configuration>
+                <server><id>1</id><hostname>localhost</hostname><port>9234</port></server>
+            </raft_configuration>
+        </keeper_server>
+    </clickhouse>
+  '';
+
+  entrypoint = pkgs.writeShellApplication {
+    name = "docker-entrypoint.sh";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      mkdir -p /tmp/clickhouse-keeper/log /tmp/clickhouse-keeper/snapshots
+      exec ${drv}/bin/clickhouse-keeper --config-file=/etc/clickhouse-keeper/keeper_config.xml "$@"
+    '';
+  };
 in mkImage {
   inherit drv;
   name = "clickhouse-keeper";
   tag = "v${version}";
-  entrypoint = [ "${drv}/bin/clickhouse-keeper" ];
-  cmd = [ "--help" ];
+  entrypoint = [ "${entrypoint}/bin/docker-entrypoint.sh" ];
+  cmd = [ ];
+
+  extraPkgs = [ keeperConfig ];
 
   labels = {
     "org.opencontainers.image.title" = "clickhouse-keeper";
