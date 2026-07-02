@@ -4,7 +4,7 @@
 # Tekton CI/CD component
 
 let
-  version = "0.65.0";
+  version = "1.14.0";
   component = buildGoModule {
     pname = "tekton-controller";
     inherit version;
@@ -12,7 +12,7 @@ let
       owner = "tektoncd";
       repo = "pipeline";
       rev = "v${version}";
-      hash = "sha256-3nNACkp/YPeaSiMStg5aMrCKdWSaMg6XDbft/k3HANc=";
+      hash = "sha256-RfPCQ5Ug0EQkpUOEoJoFgFZ983Fp5bIZiVtRWmrNDVw=";
     };
     vendorHash = null;
     subPackages = [ "." ];
