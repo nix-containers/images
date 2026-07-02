@@ -14,6 +14,8 @@ echo "Testing KEDA deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install KEDA
+helm repo add keda https://kedacore.github.io/charts 2>/dev/null || true
+helm repo update keda 2>/dev/null || true
 helm_install "$RELEASE" keda/keda "$NAMESPACE" \
     --set image.keda.repository=nix-containers/keda \
     --set image.keda.tag=test \

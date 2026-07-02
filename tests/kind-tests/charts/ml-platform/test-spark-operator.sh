@@ -14,6 +14,8 @@ echo "Testing Spark Operator deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install Spark Operator
+helm repo add spark-operator https://kubeflow.github.io/spark-operator 2>/dev/null || true
+helm repo update spark-operator 2>/dev/null || true
 helm_install "$RELEASE" spark-operator/spark-operator "$NAMESPACE" \
     --set image.repository=nix-containers/spark-operator \
     --set image.tag=test \

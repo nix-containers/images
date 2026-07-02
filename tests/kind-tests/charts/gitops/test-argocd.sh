@@ -14,6 +14,8 @@ echo "Testing ArgoCD deployment..."
 helm_uninstall "$RELEASE" "$NAMESPACE"
 
 # Install ArgoCD
+helm repo add argoproj https://argoproj.github.io/argo-helm 2>/dev/null || true
+helm repo update argoproj 2>/dev/null || true
 helm_install "$RELEASE" argoproj/argo-cd "$NAMESPACE" \
     --set global.image.repository=nix-containers/argocd \
     --set global.image.tag=test \
