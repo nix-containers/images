@@ -141,7 +141,13 @@ jobs:
               > /tmp/published.txt || true
             PUBLISHED=$(wc -l < /tmp/published.txt | tr -d ' ')
             echo "Published packages from GHCR API: $PUBLISHED"
-            if [ "$PUBLISHED" -gt 0 ]; then
+            # The org-packages API needs a token that can list org packages;
+            # the workflow GITHUB_TOKEN often can't and returns ~1, which would
+            # wrongly mark everything "not published" and scan NOTHING. Only
+            # trust the API when it returns a plausible count (>= 500 — a
+            # healthy list is ~2.6k); otherwise fall back to manifest inspect.
+            if [ "$PUBLISHED" -ge 500 ]; then
+              echo "Using GHCR API existence list"
               # candidate ref -> bare image name (…/<name>:<tag>)
               sed -E 's#.*/([^/:]+):.*#\1#' /tmp/candidates.txt > /tmp/cand-names.txt
               # names present in both the catalog and the registry
@@ -152,13 +158,16 @@ jobs:
                            {n=$(NF-1); if (n in keep) print}' \
                 /tmp/existing-names.txt /tmp/candidates.txt > /tmp/existing.txt
             else
-              echo "GHCR API returned no packages; falling back to manifest inspect"
-              xargs -a /tmp/candidates.txt -I {} -P 8 sh -c '
-                for attempt in 1 2 3; do
+              echo "GHCR API unavailable/implausible ($PUBLISHED); using manifest inspect"
+              # Lower parallelism (-P 4) + more retries with longer backoff than
+              # before to cut the GHCR secondary-rate-limit false negatives that
+              # were dropping ~387 published images from the scan.
+              xargs -a /tmp/candidates.txt -I {} -P 4 sh -c '
+                for attempt in 1 2 3 4 5; do
                   if docker manifest inspect "$1" >/dev/null 2>&1; then
                     echo "$1"; exit 0
                   fi
-                  if [ "$attempt" -lt 3 ]; then sleep $((attempt * attempt)); fi
+                  if [ "$attempt" -lt 5 ]; then sleep $((attempt * 2)); fi
                 done
               ' _ {} > /tmp/existing.txt
             fi
