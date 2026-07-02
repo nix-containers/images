@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "csi-driver-smb";
-  version = "1.20.2";
+  version = "1.20.3";
 
   src = fetchFromGitHub {
     owner = "kubernetes-csi";
     repo = "csi-driver-smb";
     rev = "v${version}";
-    hash = "sha256-HlCvWhOPPRwxCVcbhw6TgKRZa0FOhhylXuK7abxK8Ck=";
+    hash = "sha256-u7VwWYHWTJRLIUuR+0haxHP+n5E3oqGuHttBa1TTa0Q=";
   };
 
   vendorHash = null;
