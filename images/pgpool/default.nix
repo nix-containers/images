@@ -53,12 +53,45 @@
 #   ... and 7 more
 
 # Pgpool-II - Connection pooler and load balancer for PostgreSQL
+let
+  # Minimal config so the pooler runs with no args (the old cmd was `--help`, a
+  # one-shot -> the kind-test pod CrashLoops). Listen on 0.0.0.0:9999 (+ PCP on
+  # 9898); runtime files under the writable /tmp mkImage provides. The backend
+  # need not be reachable — pgpool starts, binds, and marks the backend down
+  # (retrying), so the pod stays up. Operators mount their own pgpool.conf with
+  # real backends.
+  pgpoolConfig = pkgs.writeTextDir "etc/pgpool/pgpool.conf" ''
+    listen_addresses = '0.0.0.0'
+    port = 9999
+    socket_dir = '/tmp/pgpool'
+    pcp_listen_addresses = '0.0.0.0'
+    pcp_port = 9898
+    pcp_socket_dir = '/tmp/pgpool'
+    backend_hostname0 = 'localhost'
+    backend_port0 = 5432
+    num_init_children = 4
+    max_pool = 2
+    logdir = '/tmp/pgpool'
+    pid_file_name = '/tmp/pgpool/pgpool.pid'
+  '';
+
+  entrypoint = pkgs.writeShellApplication {
+    name = "docker-entrypoint.sh";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      mkdir -p /tmp/pgpool
+      exec ${pkgs.pgpool}/bin/pgpool -n -f /etc/pgpool/pgpool.conf "$@"
+    '';
+  };
+in
 mkImage {
   drv = pkgs.pgpool;
   name = "pgpool";
   tag = pkgs.pgpool.version;
-  entrypoint = [ "${pkgs.pgpool}/bin/pgpool" ];
-  cmd = [ "--help" ];
+  entrypoint = [ "${entrypoint}/bin/docker-entrypoint.sh" ];
+  cmd = [ ];
+
+  extraPkgs = [ pgpoolConfig ];
 
   labels = {
     "org.opencontainers.image.title" = "Pgpool-II";
