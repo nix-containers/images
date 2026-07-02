@@ -195,6 +195,20 @@
                   vendorHash = null;
                 });
               })
+              # fluxcd 2.8.6 (nixpkgs) vendors old x/net + x/crypto.
+              # 2.9.0 pulls x/net v0.56, x/crypto v0.53. Cascades to 13 flux imgs.
+              (final: prev: {
+                fluxcd = prev.fluxcd.overrideAttrs (o: rec {
+                  version = "2.9.0";
+                  src = prev.fetchFromGitHub {
+                    owner = "fluxcd";
+                    repo = "flux2";
+                    rev = "v${version}";
+                    hash = "sha256-zMlaBIxhmKFeBFhCC3M1wc9sKjSjUzpNLti53ow5SgU=";
+                  };
+                  vendorHash = "sha256-J1MofT7PwcQ74XwVumu7PfkAteKR6iJIZe+vMoaD+Eg=";
+                });
+              })
             ];
           };
 
