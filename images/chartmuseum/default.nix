@@ -40,12 +40,28 @@ let
     };
   };
 
+  # The old cmd was `--help` (a one-shot -> the kind-test pod CrashLoops). Run
+  # the server with the local filesystem storage backend under the writable
+  # /tmp mkImage provides (created at runtime), bound on 0.0.0.0:8080. Operators
+  # mount their own storage / config (S3/GCS/…) or override the command.
+  entrypoint = pkgs.writeShellApplication {
+    name = "docker-entrypoint.sh";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      mkdir -p /tmp/charts
+      exec ${chartmuseum}/bin/chartmuseum \
+        --storage local \
+        --storage-local-rootdir /tmp/charts \
+        --port 8080 "$@"
+    '';
+  };
+
 in mkImage {
   drv = chartmuseum;
   name = "chartmuseum";
   tag = "v${version}";
-  entrypoint = [ "${chartmuseum}/bin/chartmuseum" ];
-  cmd = [ "--help" ];
+  entrypoint = [ "${entrypoint}/bin/docker-entrypoint.sh" ];
+  cmd = [ ];
 
   labels = {
     "org.opencontainers.image.title" = "chartmuseum";
