@@ -224,6 +224,19 @@
                   vendorHash = "sha256-MD98JYwTo/t5/E7clIlUfjmv8t7nDPpVElbuYDRjMMc=";
                 });
               })
+              # containerd 2.2.3 → 2.3.2 for newer x/net + x/crypto.
+              (final: prev: {
+                containerd = prev.containerd.overrideAttrs (o: rec {
+                  version = "2.3.2";
+                  src = prev.fetchFromGitHub {
+                    owner = "containerd";
+                    repo = "containerd";
+                    rev = "v${version}";
+                    hash = "sha256-k/MU+boP0J6ttGDmEJuRh8fZjsJJCmeRRZe360yMUN4=";
+                  };
+                  vendorHash = null;
+                });
+              })
             ];
           };
 
