@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "aws-load-balancer-controller";
-  version = "2.17.1";
+  version = "3.4.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes-sigs";
     repo = "aws-load-balancer-controller";
     rev = "v${version}";
-    hash = "sha256-7vMdJc+rGz9AqIHmhrvIvGs3S7Lx5eTWGEA2wOyA1I8=";
+    hash = "sha256-zJlr/rKMSRaN+c7JPe+25iKJK68EEH++DF5XxL06A18=";
   };
 
   proxyVendor = true;

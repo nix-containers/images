@@ -10,7 +10,7 @@
 { stdenv, lib, fetchurl, autoPatchelfHook, zlib }:
 
 let
-  version = "1.39.0";
+  version = "19_6_26_with_instrumentation";
   selectSystem = {
     "x86_64-linux" = {
       arch = "x86_64";

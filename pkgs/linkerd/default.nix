@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "linkerd";
-  version = "2.14.10";
+  version = "edge-26.6.3";
 
   src = fetchFromGitHub {
     owner = "linkerd";

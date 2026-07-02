@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "ingress-nginx-controller";
-  version = "1.14.1";
+  version = "1.15.1";
 
   src = fetchFromGitHub {
     owner = "kubernetes";
     repo = "ingress-nginx";
     rev = "controller-v${version}";
-    hash = "sha256-iutz36zLnO6YwhYFkCrM7mKJMJEcQQ7MDsg9DRBb9Rw=";
+    hash = "sha256-EfaVvOE3ZM44ZVPYKb+gUzHwBTydzDrm31XFoEh0vTM=";
   };
 
   vendorHash = null;
