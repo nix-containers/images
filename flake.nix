@@ -167,32 +167,6 @@
                   vendorHash = "sha256-yvzQHfe7yd6Sjh1Vd2VxTp3jK8OWoKTmJ2uMyXX3+xs=";
                 });
               })
-              # argo-rollouts 1.8.3 (nixpkgs) vendors old x/net + x/crypto
-              # (60 high, incl. the -fips image). 1.9.0 pulls newer deps.
-              (final: prev: {
-                argo-rollouts = prev.argo-rollouts.overrideAttrs (o: rec {
-                  version = "1.9.0";
-                  src = prev.fetchFromGitHub {
-                    owner = "argoproj";
-                    repo = "argo-rollouts";
-                    rev = "v${version}";
-                    hash = "sha256-qpTilslCu9rmBVMo73lHnKD8NPxLHSzeBwkWhEB4If4=";
-                  };
-                  vendorHash = "sha256-bF4jIEEG5DFhtDdy8LwK6SfE5OdyUsDjOIbAddvb5V8=";
-                });
-              })
-              # step-ca 0.29.0 (nixpkgs) vendors old x/net + x/crypto (10 crit +
-              # 22 high, incl. -fips). 0.30.2 pulls newer deps.
-              (final: prev: {
-                step-ca = prev.step-ca.overrideAttrs (o: rec {
-                  version = "0.30.2";
-                  src = prev.fetchFromGitHub {
-                    owner = "smallstep"; repo = "certificates"; rev = "v${version}";
-                    hash = "sha256-Cxr2DMF415iERdAltd2FvX+C5qJmVW5Npu2JbMC4k8o=";
-                  };
-                  vendorHash = "sha256-FBkQXKNtstQ+F7jvKUj6oCbsri+SjGKy0tG59TtUHPQ=";
-                });
-              })
               # telegraf 1.39.0 (nixpkgs) → 1.39.1: newer x/net + x/crypto (6 crit + 2 high).
               (final: prev: {
                 telegraf = prev.telegraf.overrideAttrs (o: rec {
@@ -202,17 +176,6 @@
                     hash = "sha256-B9Xy02oYSYcU0IBOZes9tof/04TLvLybOU/nLLaFORk=";
                   };
                   vendorHash = "sha256-9o0Tt6OZnoNO8iSLYmn1SMkQmZzC19uNmfHSkEqWzmA=";
-                });
-              })
-              # cadvisor 0.56.2 → 0.60.3: newer deps (14 high ×2 incl. -fips).
-              (final: prev: {
-                cadvisor = prev.cadvisor.overrideAttrs (o: rec {
-                  version = "0.60.3";
-                  src = prev.fetchFromGitHub {
-                    owner = "google"; repo = "cadvisor"; rev = "v${version}";
-                    hash = "sha256-DnUwGdncSVKyGrDWYXlt4E0ylqrhsL1+nyCbK5LAJaY=";
-                  };
-                  vendorHash = "sha256-wfOaluyxarJQa2vxV7UK23k34JozVSmDqnzjjvHOXow=";
                 });
               })
               # cosign 3.0.6 → 3.1.1: newer deps (9 high + 18 -fips).
@@ -235,72 +198,6 @@
                     hash = "sha256-rW9OiVFGI1ZO0UmZLVZ/7gXclOmqKBPh6P/Bd54QjZY=";
                   };
                   vendorHash = "sha256-yoTl5kmM4VKrLgvEUNaKYCiNbspd4VgG8CbulKjnoJE=";
-                });
-              })
-              # falcoctl 0.11.4 → 0.13.0: newer x/net + x/crypto deps.
-              (final: prev: {
-                falcoctl = prev.falcoctl.overrideAttrs (o: rec {
-                  version = "0.13.0";
-                  src = prev.fetchFromGitHub {
-                    owner = "falcosecurity"; repo = "falcoctl"; rev = "v${version}";
-                    hash = "sha256-nqikPwIlDZQLs6JQ8DSKGOHlp0qt3OLe0p5y33qR0cI=";
-                  };
-                  vendorHash = "sha256-FYbmrdg8K5ptVdG1qs5dCQ+2faBCHBxe4wCD4tHhgss=";
-                });
-              })
-              # k8sgpt 0.4.33 → 0.4.35: newer deps.
-              (final: prev: {
-                k8sgpt = prev.k8sgpt.overrideAttrs (o: rec {
-                  version = "0.4.35";
-                  src = prev.fetchFromGitHub {
-                    owner = "k8sgpt-ai"; repo = "k8sgpt"; rev = "v${version}";
-                    hash = "sha256-JqoBjCxw2Zx/E3mXYApODUiJiC3XNpaYLXPCie5GOVA=";
-                  };
-                  vendorHash = "sha256-tkS38PK86jp2uEWiB8eh4jQGWPirAilmgIqt1TOAPL8=";
-                });
-              })
-              # k9s 0.50.18 → 0.51.0: newer x/net + x/crypto deps.
-              (final: prev: {
-                k9s = prev.k9s.overrideAttrs (o: rec {
-                  version = "0.51.0";
-                  src = prev.fetchFromGitHub {
-                    owner = "derailed"; repo = "k9s"; rev = "v${version}";
-                    hash = "sha256-70Rfu1BVd/QnwWXRRpwIeZ2UJNWIGixpdiOHo4v7adA=";
-                  };
-                  vendorHash = "sha256-PkYDJK2oGl+siCG9p4R8shC0e5BhGFdJsc+ksL9J5zw=";
-                });
-              })
-              # statsd_exporter 0.28.0 → 0.30.0: newer deps.
-              (final: prev: {
-                prometheus-statsd-exporter = prev.prometheus-statsd-exporter.overrideAttrs (o: rec {
-                  version = "0.30.0";
-                  src = prev.fetchFromGitHub {
-                    owner = "prometheus"; repo = "statsd_exporter"; rev = "v${version}";
-                    hash = "sha256-BvX1S+PXOGVk5VmBcGypANmf5gJk1niA1knCxUAfQLY=";
-                  };
-                  vendorHash = "sha256-cWASZL8pnlGyb07HZ11oMxJbcmDlX93oqXUhXOTiKP4=";
-                });
-              })
-              # kubescape 4.0.9 → 4.0.10: newer deps.
-              (final: prev: {
-                kubescape = prev.kubescape.overrideAttrs (o: rec {
-                  version = "4.0.10";
-                  src = prev.fetchFromGitHub {
-                    owner = "kubescape"; repo = "kubescape"; rev = "v${version}";
-                    hash = "sha256-RbTGgSnaRUZdj2RdyTHgPy/+AbvAecTmdUeaDubyCSg=";
-                  };
-                  vendorHash = "sha256-y17ZrVzeRVzODGuIFKV8nsMu2720d/I4HUfwdinwOg4=";
-                });
-              })
-              # open-policy-agent 1.16.2 → 1.18.2: newer x/net + x/crypto.
-              (final: prev: {
-                open-policy-agent = prev.open-policy-agent.overrideAttrs (o: rec {
-                  version = "1.18.2";
-                  src = prev.fetchFromGitHub {
-                    owner = "open-policy-agent"; repo = "opa"; rev = "v${version}";
-                    hash = "sha256-z4zLeSVDULl2uYOURD8Cmq3qj7XJxXMd/jk5CaCrbUU=";
-                  };
-                  vendorHash = "sha256-e3VQjkoGn3rHGQYHQ9q/h/BjOseaEF3BcYsWmxVd6Cw=";
                 });
               })
               # Grafana Mimir 3.0.6 (nixpkgs) vendors old x/net + x/crypto
