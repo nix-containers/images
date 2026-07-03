@@ -292,6 +292,17 @@
                   vendorHash = "sha256-y17ZrVzeRVzODGuIFKV8nsMu2720d/I4HUfwdinwOg4=";
                 });
               })
+              # open-policy-agent 1.16.2 → 1.18.2: newer x/net + x/crypto.
+              (final: prev: {
+                open-policy-agent = prev.open-policy-agent.overrideAttrs (o: rec {
+                  version = "1.18.2";
+                  src = prev.fetchFromGitHub {
+                    owner = "open-policy-agent"; repo = "opa"; rev = "v${version}";
+                    hash = "sha256-z4zLeSVDULl2uYOURD8Cmq3qj7XJxXMd/jk5CaCrbUU=";
+                  };
+                  vendorHash = "sha256-e3VQjkoGn3rHGQYHQ9q/h/BjOseaEF3BcYsWmxVd6Cw=";
+                });
+              })
               # Grafana Mimir 3.0.6 (nixpkgs) vendors old x/net + x/crypto
               # (56 high). 3.1.2 pulls x/net v0.55, x/crypto v0.52.
               (final: prev: {
