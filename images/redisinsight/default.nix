@@ -9,6 +9,7 @@ let
     coreutils
     cacert
     tzdata
+    redisinsight
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

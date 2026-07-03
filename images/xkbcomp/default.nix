@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    xkbcomp
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

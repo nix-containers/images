@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    keycloak-config-cli
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];
