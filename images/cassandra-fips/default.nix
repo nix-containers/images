@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    cassandra
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    zookeeper
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    temporal-ui-server
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

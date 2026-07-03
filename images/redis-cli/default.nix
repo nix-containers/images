@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    redis
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

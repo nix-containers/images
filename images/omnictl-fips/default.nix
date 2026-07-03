@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    omnictl
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

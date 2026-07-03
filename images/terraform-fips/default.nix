@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    terraform
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];
