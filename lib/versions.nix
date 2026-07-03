@@ -543,6 +543,10 @@ let
 
   # Static/hardcoded versions (built from source)
   staticVersions = {
+    # Static version mappings from src.rev (batch 3)
+    "postgis" = "3.6.4";
+    "postgres-cloudnative-pg" = "0.8.3";
+    "timescaledb-compat" = "2.28.0";
     # python3Packages.* are nested attrs getVer can't reach; pin the resolved
     # versions (these wheels rarely move, and it beats showing "latest").
     "py3-pip-wheel" = "25.3";
