@@ -25,6 +25,27 @@ let
 
   # Dynamic version lookups (from nixpkgs)
   dynamicVersions = {
+    # Version mappings for images that were showing only "latest" (batch 1)
+    "adoptium-jdk" = getVer "jdk";
+    "adoptium-jdk-fips" = getVer "jdk";
+    "adoptium-jre" = getVer "jdk";
+    "adoptium-jre-fips" = getVer "jdk";
+    "adoptium-openjdk" = getVer "jdk";
+    "adoptium-openjdk-21-default-jdk" = getVer "jdk21";
+    "adoptium-openjdk-21-default-jvm" = getVer "jdk21";
+    "adoptium-openjdk-21-jre" = getVer "jdk21";
+    "adoptium-openjdk-21-jre-base" = getVer "jdk21";
+    "confluent-kafka" = getVer "apacheKafka";
+    "fluentd-kubernetes-daemonset" = getVer "fluentd";
+    "git-nixchart" = getVer "git";
+    "git-nixchart-fips" = getVer "git";
+    "jdk-fips" = getVer "jdk";
+    "jre-fips" = getVer "jre";
+    "kubectl-1.33-default" = getVer "kubectl";
+    "kubectl-1.34-default" = getVer "kubectl";
+    "kubectl-fips-1.33-default" = getVer "kubectl";
+    "kubectl-fips-1.34-default" = getVer "kubectl";
+    "kubelet-1.33-default" = getVer "kubernetes";
     # Real-but-"latest" images: had no version mapping so getPackageVersion
     # fell back to "latest" on the catalog card. Their nixpkgs attr exposes a
     # version, so map them to it (resolves dynamically, stays current).
