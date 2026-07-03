@@ -9,6 +9,7 @@ let
     coreutils
     cacert
     tzdata
+    dcgm
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

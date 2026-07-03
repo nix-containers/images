@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    spire-server
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

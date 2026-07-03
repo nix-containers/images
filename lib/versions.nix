@@ -25,6 +25,24 @@ let
 
   # Dynamic version lookups (from nixpkgs)
   dynamicVersions = {
+    # Scaffolds filled with real software (batch 2 — aliased attrs)
+    "cassandra-fips" = getVer "cassandra";
+    "ceph-fips" = getVer "ceph";
+    "consul-fips" = getVer "consul";
+    "dcgm-fips" = getVer "dcgm";
+    "elasticsearch-fips" = getVer "elasticsearch";
+    "envoy-fips" = getVer "envoy";
+    "headlamp-fips" = getVer "headlamp";
+    "ipfs-cluster-fips" = getVer "ipfs-cluster";
+    "mongodb-fips" = getVer "mongodb";
+    "omnictl-fips" = getVer "omnictl";
+    "redis-cli" = getVer "redis";
+    "sox-ng" = getVer "sox_ng";
+    "spire-agent-fips" = getVer "spire-agent";
+    "spire-server-fips" = getVer "spire-server";
+    "temporal-ui-server-fips" = getVer "temporal-ui-server";
+    "terraform-fips" = getVer "terraform";
+    "zookeeper-fips" = getVer "zookeeper";
     # Scaffolds filled with real software (batch 1)
     "dcgm" = getVer "dcgm";
     "emissary" = getVer "emissary";

@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    ipfs-cluster
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

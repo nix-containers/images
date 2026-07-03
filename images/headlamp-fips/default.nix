@@ -9,6 +9,7 @@ let
     coreutils
     cacert
     tzdata
+    headlamp
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

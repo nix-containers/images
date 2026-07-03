@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    sox_ng
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

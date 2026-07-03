@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    elasticsearch
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

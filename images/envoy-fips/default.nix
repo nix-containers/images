@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    envoy
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

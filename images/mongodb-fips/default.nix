@@ -9,6 +9,7 @@ let
     coreutils
     cacert
     tzdata
+    mongodb
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];
