@@ -93,8 +93,6 @@ let
     "omnictl-fips" = getVer "omnictl";
     "redis-cli" = getVer "redis";
     "sox-ng" = getVer "sox_ng";
-    "spire-agent-fips" = getVer "spire-agent";
-    "spire-server-fips" = getVer "spire-server";
     "temporal-ui-server-fips" = getVer "temporal-ui-server";
     "terraform-fips" = getVer "terraform";
     "zookeeper-fips" = getVer "zookeeper";
