@@ -4,7 +4,7 @@
 # AWS Kubernetes component
 
 let
-  version = "2.1.1";
+  version = "2.1.2";
   aws-component = buildGoModule {
     pname = "aws-application-networking-k8s-fips";
     inherit version;
@@ -13,7 +13,7 @@ let
       owner = "aws";
       repo = "aws-application-networking-k8s";
       rev = "v${version}";
-      hash = "sha256-czBM1FeXWeDL1DtlkAViL/kMk4fanflVosVlMMNFJ40=";
+      hash = "sha256-+YQ/TME/5ciJalafnvdod2UdcdTeMAwxQNASWYGeetA=";
     };
 
     vendorHash = "sha256-7YA7cK83/SrE0no+jvXGOCXPudQFOrYsm4oOhS00Fjk=";
