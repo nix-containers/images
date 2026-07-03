@@ -543,6 +543,10 @@ let
 
   # Static/hardcoded versions (built from source)
   staticVersions = {
+    # Static mappings resolved via overlay (batch 4)
+    "apache-nifi" = "2.10.0";
+    "aws-node-termination-handler" = "1.25.6";
+    "karpenter" = "1.13.0";
     # Static version mappings from src.rev (batch 3)
     "postgis" = "3.6.4";
     "postgres-cloudnative-pg" = "0.8.3";
