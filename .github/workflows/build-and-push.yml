@@ -131,6 +131,10 @@ jobs:
               || nix_eval ".#\"${{ matrix.name }}\".imageTag" \
               || echo "latest")
             echo "Package version: $PACKAGE_VERSION"
+            # Docker tags allow only [A-Za-z0-9_.-]; nixpkgs versions can carry
+            # '+' (e.g. jdk 21.0.12+2, or +git…). Sanitize so the version-tag
+            # push doesn't fail with "invalid reference format".
+            PACKAGE_VERSION="${PACKAGE_VERSION//+/-}"
             
             # Calculate compressed size and add as label
             echo "Calculating compressed image size..."
