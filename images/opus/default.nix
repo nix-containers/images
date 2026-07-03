@@ -11,6 +11,7 @@ let
     coreutils
     cacert
     tzdata
+    opus
   ];
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

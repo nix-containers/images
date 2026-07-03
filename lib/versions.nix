@@ -25,6 +25,14 @@ let
 
   # Dynamic version lookups (from nixpkgs)
   dynamicVersions = {
+    # Scaffolds filled with real software (batch 1)
+    "dcgm" = getVer "dcgm";
+    "emissary" = getVer "emissary";
+    "keycloak-config-cli" = getVer "keycloak-config-cli";
+    "op-geth" = getVer "op-geth";
+    "opus" = getVer "opus";
+    "redisinsight" = getVer "redisinsight";
+    "xkbcomp" = getVer "xkbcomp";
     # Version mappings for images that were showing only "latest" (batch 1)
     "adoptium-jdk" = getVer "jdk";
     "adoptium-jdk-fips" = getVer "jdk";
