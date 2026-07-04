@@ -3,7 +3,7 @@
 # Azure cloud controller manager - Kubernetes cloud-provider for Azure
 # https://github.com/kubernetes-sigs/cloud-provider-azure
 let
-  version = "1.36.2";
+  version = "1.36.3";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "cloud-provider-azure-controller-manager";
@@ -11,7 +11,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/kubernetes-sigs/cloud-provider-azure/releases/download/v${version}/azure-cloud-controller-manager-linux-amd64";
-      hash = "sha256:1k4228b01jkzih5w70gqadnjlqlp4kmr4nlccrqvivyidh2czsd3";
+      hash = "sha256-bfkdgWpDHYR11RjJLvpnWyUfj0UiLIHD5H59OBXHu4I=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
