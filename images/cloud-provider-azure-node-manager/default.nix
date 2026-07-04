@@ -3,7 +3,7 @@
 # Azure cloud node manager - Kubernetes cloud-provider for Azure
 # https://github.com/kubernetes-sigs/cloud-provider-azure
 let
-  version = "1.36.2";
+  version = "1.36.3";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "cloud-provider-azure-node-manager";
@@ -11,7 +11,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/kubernetes-sigs/cloud-provider-azure/releases/download/v${version}/azure-cloud-node-manager-linux-amd64";
-      hash = "sha256:19yv504sfjplz8p6ch2l99pnvzd1v20ga9hg32650v2qijr44jhx";
+      hash = "sha256-vy3Eh/GnMgDibZcuQ/zYxvY6J/GnBGL72jh+p8ogaS8=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
