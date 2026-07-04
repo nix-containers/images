@@ -127,9 +127,20 @@ jobs:
             nix_eval() {
               nix --extra-experimental-features "nix-command flakes" eval --raw "$@" 2>/dev/null
             }
-            PACKAGE_VERSION=$(nix_eval ".#\"${{ matrix.name }}\".config.Labels.\"org.opencontainers.image.version\"" \
-              || nix_eval ".#\"${{ matrix.name }}\".imageTag" \
-              || echo "latest")
+            # Primary source: getPackageVersion (lib/versions.nix) — the same
+            # map that produces the versioned image variants. The old paths
+            # below don't work for these images: nix2container doesn't expose
+            # `.config` as an evaluable attr (so the Labels lookup errors), and
+            # the base image's `.imageTag` is hard-coded "latest" — so without
+            # this the version-tag push never happened.
+            PACKAGE_VERSION=$(nix --extra-experimental-features "nix-command flakes" eval --raw --impure --expr \
+              "(import ./lib/versions.nix { pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs { system = builtins.currentSystem; config.allowUnfree = true; }; }) \"${{ matrix.name }}\"" 2>/dev/null)
+            # Fallback to the legacy label/imageTag path, then "latest".
+            if [ -z "$PACKAGE_VERSION" ] || [ "$PACKAGE_VERSION" = "latest" ]; then
+              PACKAGE_VERSION=$(nix_eval ".#\"${{ matrix.name }}\".config.Labels.\"org.opencontainers.image.version\"" \
+                || nix_eval ".#\"${{ matrix.name }}\".imageTag" \
+                || echo "latest")
+            fi
             echo "Package version: $PACKAGE_VERSION"
             # Docker tags allow only [A-Za-z0-9_.-]; nixpkgs versions can carry
             # '+' (e.g. jdk 21.0.12+2, or +git…). Sanitize so the version-tag
