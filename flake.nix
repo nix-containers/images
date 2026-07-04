@@ -299,6 +299,19 @@
                   vendorHash = "sha256-S6hzgSIYJdTKFMFpNqYyWzcMGT4aSaWE6SfmOWB7NOM=";
                 });
               })
+              # boundary 0.21.2 (nixpkgs) bundles a prebuilt Go binary with
+              # jackc/pgx/v5 v5.7.5 baked in — 6 crit CVEs. 0.21.3 bumps
+              # pgx to v5.9.2 and stdlib to Go 1.25.7.
+              (final: prev: {
+                boundary = prev.boundary.overrideAttrs (o: rec {
+                  version = "0.21.3";
+                  src = prev.fetchzip {
+                    url = "https://releases.hashicorp.com/boundary/${version}/boundary_${version}_linux_amd64.zip";
+                    hash = "sha256-mCDWL4LrqpgnSgcJB1lODb+VOnzbBwpHaAX0HiPDop0=";
+                    stripRoot = false;
+                  };
+                });
+              })
             ];
           };
 
