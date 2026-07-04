@@ -197,6 +197,9 @@ jobs:
 
   save-versions:
     needs: [build-and-push, check-version-changes]
+    # Bookkeeping only (commits package-versions.json). A flaky check-versions
+    # eval must not turn the whole build red after images pushed successfully.
+    continue-on-error: true
     if: needs.check-version-changes.outputs.changes-detected == 'true' || github.event.inputs.force_rebuild == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -231,8 +234,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update package versions after successful build" \
-            git push
+            git commit -m "Update package versions after successful build" && git push
           fi
 
   security-scan:
