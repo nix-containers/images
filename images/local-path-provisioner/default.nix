@@ -2,31 +2,31 @@
 
 # Rancher local-path-provisioner - dynamic local PV provisioner for Kubernetes
 # https://github.com/rancher/local-path-provisioner
-# Note: v0.0.26 is the last release shipping standalone prebuilt binaries;
-# newer releases publish container images only.
+#
+# Prior revision pinned to v0.0.26 (last release shipping a prebuilt amd64
+# binary). Build from source with current nixpkgs Go so stdlib CVEs stay
+# fresh and pick up upstream provisioner fixes.
 
 let
-  version = "0.0.26";
+  version = "0.0.36";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "local-path-provisioner";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/rancher/local-path-provisioner/releases/download/v${version}/local-path-provisioner-amd64";
-      hash = "sha256:08wmjm5ai0dxib1lhr65kda394cr1jh0l7xilinb23lsy8flr6dr";
+    src = pkgs.fetchFromGitHub {
+      owner = "rancher";
+      repo = "local-path-provisioner";
+      rev = "v${version}";
+      hash = "sha256-pMcyabGJEdlV+CvdCjm0JcXUvWyNkdJRPEzVKIK7xOo=";
     };
 
-    dontUnpack = true;
+    vendorHash = null;
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    subPackages = [ "." ];
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/local-path-provisioner
-      runHook postInstall
-    '';
+    ldflags = [ "-s" "-w" ];
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -38,6 +38,6 @@ in mkImage {
     "org.opencontainers.image.title" = "local-path-provisioner";
     "org.opencontainers.image.description" = "Rancher dynamic local path provisioner for Kubernetes";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
