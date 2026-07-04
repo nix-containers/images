@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "sealed-secrets";
-  version = "helm-v2.19.0";
+  version = "0.38.4";
 
   src = fetchFromGitHub {
     owner = "bitnami-labs";
     repo = "sealed-secrets";
     rev = "v${version}";
-    hash = "sha256-a8D/k3Fxe/Im6tZqivvO9h/H4rVLZrHRli8xTHnDelI=";
+    hash = "sha256-cg9YEY78miw8BRX9CCIeWqdAeJDsFSr6VvgRJFYzREU=";
   };
 
   vendorHash = null;
