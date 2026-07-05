@@ -73,6 +73,19 @@
               # Custom packages overlay
               (final: prev: import ./pkgs { pkgs = final; })
 
+              # CVE: boundary 0.21.2 vendors github.com/jackc/pgx/v5 5.6.0
+              # (critical). Upstream v0.21.3 ships pgx 5.9.2. boundary is a
+              # prebuilt binary, so bump = version + release-zip hash.
+              (final: prev: {
+                boundary = prev.boundary.overrideAttrs (o: {
+                  version = "0.21.3";
+                  src = final.fetchurl {
+                    url = "https://releases.hashicorp.com/boundary/0.21.3/boundary_0.21.3_linux_amd64.zip";
+                    hash = "sha256-GpSMFDuEnO26kRJ6oRFVxgBthAUSgqDZPz2JUltGDRI=";
+                  };
+                });
+              })
+
               # OpenSearch 3.5.0 (current nixpkgs pin) ships jackson-databind
               # 2.20.1, netty 4.2.9, bouncycastle 1.78.1, kafka-clients 4.1.1
               # — a nest of high/critical CVEs. Override to 3.7.0 which
