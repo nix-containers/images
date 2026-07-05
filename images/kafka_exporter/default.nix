@@ -2,36 +2,34 @@
 
 # kafka_exporter - Prometheus exporter for Apache Kafka (danielqsj/kafka_exporter)
 # https://github.com/danielqsj/kafka_exporter
-# Upstream prebuilt linux amd64 release tarball (pure-Go static binary).
+#
+# Prior revision consumed the upstream prebuilt tarball, which was Go
+# stdlib v1.24.0-stale (crit CVEs). Rebuild from source at the same tag
+# so the current nixpkgs Go toolchain patches stdlib forward.
 
 let
   version = "1.9.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "kafka_exporter";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/danielqsj/kafka_exporter/releases/download/v${version}/kafka_exporter-${version}.linux-amd64.tar.gz";
-      hash = "sha256-xyJRitccU7OYjqJq4r04e7WWznqY/GOdCL9jmlN2maE=";
+    src = pkgs.fetchFromGitHub {
+      owner = "danielqsj";
+      repo = "kafka_exporter";
+      rev = "v${version}";
+      hash = "sha256-wn0OC+5uSz4rdpgkwqDFCCSt/BJpWOVp4fRZ25GKwIc=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    # Upstream vendor/modules.txt drifts from go.mod; use proxyVendor to
+    # re-fetch modules through the Go proxy instead of the committed tree.
+    proxyVendor = true;
+    vendorHash = "sha256-J3MkLIVAOg5n/p/pn3Nj/PcoR40ohhUjmSMnkOEkEH4=";
 
-    sourceRoot = "kafka_exporter-${version}.linux-amd64";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 kafka_exporter $out/bin/kafka_exporter
-      runHook postInstall
-    '';
-
-    meta = with lib; {
-      description = "Kafka exporter for Prometheus";
-      homepage = "https://github.com/danielqsj/kafka_exporter";
-      license = licenses.asl20;
-      platforms = [ "x86_64-linux" ];
-    };
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 
 in mkImage {
@@ -45,6 +43,6 @@ in mkImage {
     "org.opencontainers.image.title" = "kafka_exporter";
     "org.opencontainers.image.description" = "Kafka exporter for Prometheus";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
