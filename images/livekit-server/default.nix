@@ -4,7 +4,7 @@
 # https://github.com/livekit/livekit
 
 let
-  version = "1.13.2";
+  version = "1.13.3";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "livekit-server";
@@ -12,7 +12,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/livekit/livekit/releases/download/v${version}/livekit_${version}_linux_amd64.tar.gz";
-      hash = "sha256:029xw7wxah8j9a782brvdwkr2ng5xipjscmfyam8qdaaz1jv9641";
+      hash = "sha256-esk3KiKbPTGnFtY7WpkVrS/7fSiousxbpfwzoqR12KM=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
