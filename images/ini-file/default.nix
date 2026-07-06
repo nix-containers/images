@@ -1,30 +1,33 @@
 { mkImage, pkgs, lib, ... }:
 
-# Bitnami ini-file CLI - https://github.com/bitnami/ini-file
-# Upstream prebuilt linux/amd64 release tarball.
+# ini-file - small CLI for editing INI-format config files
+# https://github.com/bitnami/ini-file
+#
+# Prior revision consumed the upstream prebuilt Linux tarball, which is
+# Go-stdlib v1.25.0 stale (crit CVEs). Rebuild from source with current
+# nixpkgs Go so stdlib patches forward at each build.
 
 let
   version = "1.4.9";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "ini-file";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/bitnami/ini-file/releases/download/v${version}/ini-file-linux-amd64.tar.gz";
-      hash = "sha256-Z9WOffuHdyIzgSDDSPSW+YvFY+k5uim6URECXj3O+WM=";
+    src = pkgs.fetchFromGitHub {
+      owner = "bitnami";
+      repo = "ini-file";
+      rev = "v${version}";
+      hash = "sha256-XTKi37Z8CF678q34c830DLyfB4rCSJXErsLHHCtZnXM=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    # Upstream vendor/modules.txt drifts from go.mod; use proxyVendor.
+    proxyVendor = true;
+    vendorHash = "sha256-t1cByPucjP299l/IV/olZIRCOOG2tYuUgnhvQAalIwQ=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 ini-file-linux-amd64 $out/bin/ini-file
-      runHook postInstall
-    '';
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -36,6 +39,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "ini-file";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
