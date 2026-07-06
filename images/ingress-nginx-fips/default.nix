@@ -8,6 +8,7 @@ let
   version = "1.12.0";
 
   ingress-nginx-fips = buildGoModule {
+    preBuild = "export GOTOOLCHAIN=local";
     pname = "ingress-nginx-fips";
     inherit version;
 
