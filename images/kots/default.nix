@@ -4,7 +4,7 @@
 # https://github.com/replicatedhq/kots
 
 let
-  version = "1.130.6";
+  version = "1.130.7";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "kots";
@@ -12,7 +12,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/replicatedhq/kots/releases/download/v${version}/kots_linux_amd64.tar.gz";
-      hash = "sha256-+HnSbfMuoJ7UBG2IoGZAk2RskfjWNZ3vq8Oz+cimxWs=";
+      hash = "sha256-evm2cl1v0D/l2Sx1ea1D9c7KuZ7XCZz3fTCeMmnzzEc=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];

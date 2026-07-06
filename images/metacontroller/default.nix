@@ -4,7 +4,7 @@
 # https://github.com/metacontroller/metacontroller
 
 let
-  version = "4.15.1";
+  version = "4.16.2";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "metacontroller";
@@ -12,7 +12,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/metacontroller/metacontroller/releases/download/v${version}/metacontroller_.${version}_Linux_x86_64.tar.gz";
-      hash = "sha256-X1z+Y/uuE8gyoCQQVsU1ckUPrsR1LiHw54GdkhnlKN8=";
+      hash = "sha256-YCuaDi0/X54+tCc7TfUA4BBedgysS4r6iW6ffOqri5Q=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];

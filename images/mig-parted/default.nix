@@ -5,7 +5,7 @@
 # Packaged from the upstream nvidia-mig-manager release tarball.
 
 let
-  version = "0.14.2";
+  version = "0.14.3";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "mig-parted";
@@ -13,7 +13,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/NVIDIA/mig-parted/releases/download/v${version}/nvidia-mig-manager-${version}-1.x86_64.tar.gz";
-      hash = "sha256:10xl27brc2701kznpyc1pksqfp7xqc4gv4gnnmn32dxd2yxpdrx3";
+      hash = "sha256-4o7HfxBQsbFyeQRFDflaiZmJnUbtgpXrONW5JuX/fSM=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
