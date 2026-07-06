@@ -23,11 +23,12 @@ let
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-E0rE8PU3RoSpwDM6oL2aNn89I/6fWobT+PRgKSfRPMg=";
+    vendorHash = "sha256-AaUXdRqArk9bspc7/AFp63hOQwesCOE8efgSY/WDDac=";
 
     subPackages = [ "." ];
 
     env.CGO_ENABLED = 0;
+    preBuild = "export GOTOOLCHAIN=local";
 
     ldflags = [
       "-s" "-w"
