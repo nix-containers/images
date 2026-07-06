@@ -27,6 +27,7 @@ let
 
     ldflags = [ "-s" "-w" ];
     env.CGO_ENABLED = 0;
+    env.GOTOOLCHAIN = "local";
     doCheck = false;
   };
 in mkImage {
