@@ -22,6 +22,7 @@ let
     vendorHash = "sha256-k6nWWe6anWVD40pv/mF6CNqWgJDhD1ttXOuWk3pAUto=";
 
     env.CGO_ENABLED = 0;
+    preBuild = "export GOTOOLCHAIN=local";
 
     ldflags = [
       "-s" "-w"

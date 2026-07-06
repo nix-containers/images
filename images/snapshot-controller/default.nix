@@ -23,6 +23,7 @@ let
     subPackages = [ "cmd/snapshot-controller" ];
 
     env.CGO_ENABLED = 0;
+    preBuild = "export GOTOOLCHAIN=local";
 
     ldflags = [
       "-s" "-w"
