@@ -26,6 +26,7 @@ let
     subPackages = [ "cmd/scanner-trivy" ];
 
     env.CGO_ENABLED = 0;
+    env.GOTOOLCHAIN = "local";
 
     ldflags = [
       "-s" "-w"
