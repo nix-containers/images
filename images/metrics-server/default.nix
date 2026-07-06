@@ -24,6 +24,7 @@ let
     subPackages = [ "cmd/metrics-server" ];
 
     env.CGO_ENABLED = 0;
+    preBuild = "export GOTOOLCHAIN=local";
 
     ldflags = [
       "-s" "-w"
