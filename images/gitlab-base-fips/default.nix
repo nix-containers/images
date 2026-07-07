@@ -1,40 +1,20 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
-
-# GitLab Base Image-fips
-# Base image for GitLab components
-
+# gitlab-base-fips (FIPS) — re-wrapped from official CNG FIPS image at 19.1.1.
+# Update: bump version + imageDigest (cng/gitlab-base:v<ver>-fips) + refresh sha256.
+{ nix2container, pkgs, lib, ... }:
 let
-  basePkgs = with pkgs; [
-    bash
-    coreutils
-    findutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in
-nix2container.buildImage {
-  name = "gitlab-base-fips";
-  tag = "latest";
-
-  copyToRoot = [
-    (buildEnv {
-      name = "gitlab-base-fips-root";
-      paths = base.basePackages ++ basePkgs ++ [ userEnv ];
-    })
-  ];
-
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "GitLab Base";
-      "org.opencontainers.image.description" = "Base image for GitLab components";
-      "io.nix-containers.chart" = "gitlab";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-base";
+    imageDigest = "sha256:5f18efc9e6c9af7d54d3fa792ffb9f1693c16054ec419e7e0a7d04da95f146d4";
+    sha256      = "sha256-oauGeuRJS4+onvNiFipdk8NUJKbBTnPlKRt9azKTStA=";
+  };
+in nix2container.buildImage {
+  name = "gitlab-base-fips"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title" = "gitlab-base-fips";
+    "org.opencontainers.image.version" = version;
+    "org.opencontainers.image.source" = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-base:v19.1.1-fips";
   };
 }
