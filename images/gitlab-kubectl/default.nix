@@ -1,37 +1,28 @@
-{ mkImage, fetchFromGitLab, buildGoModule, pkgs, lib, ... }:
-
 # gitlab-kubectl
-# GitLab component
+# =====
+# GitLab component — re-wrapped from the official CNG image at 19.1.1.
+# https://gitlab.com/gitlab-org/build/CNG
+# Update: bump version + imageDigest (skopeo inspect
+# docker://registry.gitlab.com/gitlab-org/build/cng/kubectl:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-kubectl 2>&1 | grep 'got:'
+
+{ nix2container, pkgs, lib, ... }:
 
 let
-  version = "17.6.0";
-  component = buildGoModule {
-    pname = "gitlab-kubectl";
-    inherit version;
-    src = fetchFromGitLab {
-      owner = "gitlab-org";
-      repo = "gitlab-foss";
-      rev = "v${version}";
-      hash = "sha256-2dZumkupbqOouKZaPPnKAVINjiLFW63wYVNj0klvRoo=";
-    };
-    vendorHash = null;
-    subPackages = [ "." ];
-    env.CGO_ENABLED = 0;
-    ldflags = [ "-s" "-w" ];
-    doCheck = false;
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/kubectl";
+    imageDigest = "sha256:6dc0172bbd9908a15d675903e0ac0dadbc40af473ac7d0d2b3f254bc84cf88f1";
+    sha256      = "sha256-6FsAraF748d2BcN43seGf/Q9uuD/BsrSQiO35av19/E=";
   };
-
-in mkImage {
-  drv = component;
-  name = "gitlab-kubectl";
-  tag = "v${version}";
-  entrypoint = [ "${component}/bin/gitlab-kubectl" ];
-  cmd = [];
-  extraPkgs = with pkgs; [ cacert tzdata git ];
-  labels = {
-    "org.opencontainers.image.title" = "gitlab-kubectl";
-    "org.opencontainers.image.description" = "GitLab gitlab-kubectl";
+in
+nix2container.buildImage {
+  name = "gitlab-kubectl"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title"   = "gitlab-kubectl";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.chart" = "gitlab";
+    "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/kubectl:v19.1.1";
   };
 }

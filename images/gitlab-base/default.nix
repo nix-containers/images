@@ -1,72 +1,28 @@
 # gitlab-base
-# =============
-# GitLab Base - Base image with common GitLab dependencies
-# https://gitlab.com/gitlab-org/gitlab
+# =====
+# GitLab component — re-wrapped from the official CNG image at 19.1.1.
+# https://gitlab.com/gitlab-org/build/CNG
+# Update: bump version + imageDigest (skopeo inspect
+# docker://registry.gitlab.com/gitlab-org/build/cng/gitlab-base:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-base 2>&1 | grep 'got:'
 
 { nix2container, pkgs, lib, ... }:
 
-# GitLab Base provides common runtime dependencies for GitLab services
-
 let
-  version = "18.6.1";
-
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-base";
+    imageDigest = "sha256:d4c18288bddaf6dd491be95b125919d7c4ce25bff945b3e526ef37270c3ce619";
+    sha256      = "sha256-uzoU3DHGbk+5jQOXy1gX9e2dA0rB2y9zwkfleNv/0g0=";
+  };
 in
 nix2container.buildImage {
-  name = "gitlab-base";
-  tag = "v${version}";
-
-  copyToRoot = pkgs.buildEnv {
-    name = "gitlab-base-root";
-    paths = with pkgs; [
-      # Shell and core utilities
-      bash
-      busybox
-      coreutils
-      findutils
-      gawk
-      gnugrep
-      less
-      procps
-
-      # Network and SSL
-      curl
-      cacert
-      openssl
-
-      # Process management
-      tini
-
-      # Templating
-      gomplate
-
-      # Time zone data
-      tzdata
-
-      # Create required directories
-      (pkgs.runCommand "gitlab-base-dirs" {} ''
-        mkdir -p $out/srv/gitlab
-        mkdir -p $out/var/log/gitlab
-        mkdir -p $out/var/opt/gitlab
-        mkdir -p $out/etc/gitlab
-        mkdir -p $out/tmp
-      '')
-    ];
-    pathsToLink = [ "/bin" "/etc" "/lib" "/share" "/srv" "/var" "/tmp" ];
-  };
-
-  config = {
-    entrypoint = [ "${pkgs.tini}/bin/tini" "--" ];
-    cmd = [ "/bin/bash" ];
-    workingDir = "/srv/gitlab";
-    env = [
-      "LANG=C.UTF-8"
-      "TZ=UTC"
-    ];
-    labels = {
-      "org.opencontainers.image.title" = "GitLab Base";
-      "org.opencontainers.image.description" = "Base image with common GitLab dependencies";
-      "org.opencontainers.image.version" = version;
-      "io.nix-containers.chart" = "gitlab";
-    };
+  name = "gitlab-base"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title"   = "gitlab-base";
+    "org.opencontainers.image.version" = version;
+    "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-base:v19.1.1";
   };
 }
