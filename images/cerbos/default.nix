@@ -6,30 +6,26 @@
 let
   version = "0.53.0";
 
-  cerbos = pkgs.stdenv.mkDerivation rec {
+  # Built from source with current nixpkgs Go so the stdlib CVE from
+  # the upstream prebuilt (stdlib v1.26.2 → 1.26.4) clears at each rebuild.
+  cerbos = pkgs.buildGoModule {
     pname = "cerbos";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/cerbos/cerbos/releases/download/v${version}/cerbos_${version}_Linux_x86_64.tar.gz";
-      hash = "sha256-VkJxdr0uXmdgl/mgh0PtIR58ASOvHnGkj5TUl+PJ4TE=";
+    src = pkgs.fetchFromGitHub {
+      owner = "cerbos";
+      repo = "cerbos";
+      rev = "v${version}";
+      hash = "sha256-Pge4nxR7UMY1a8ytzIWUJZHYBKO5iXvjZJiG8PTG4co=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    proxyVendor = true;
+    vendorHash = "sha256-lGC/c+av1KMSzhV8PDVrckKIjShOACe9f4+DdF6Wkxg=";
 
-    buildInputs = with pkgs; [
-      stdenv.cc.cc.lib
-    ];
-
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/bin
-      cp cerbos $out/bin/cerbos
-      chmod +x $out/bin/cerbos
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/cerbos" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
     meta = with lib; {
       description = "Decoupled access control / authorization server";
