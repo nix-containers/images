@@ -1,62 +1,38 @@
 # gitaly
-# =============
-# Gitaly - Git RPC service for GitLab
-# https://gitlab.com/gitlab-org/gitaly
+# =====
+# GitLab component — re-wrapped from the official CNG image at the current
+# stable release (matches gitlab 19.1.1). nixpkgs lags; the CNG images are
+# the official build behind the GitLab Helm chart.
+# https://gitlab.com/gitlab-org/build/CNG
+#
+# Update: bump version + imageDigest
+# (skopeo inspect docker://registry.gitlab.com/gitlab-org/build/cng/gitaly:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitaly 2>&1 | grep 'got:'
 
-{ mkImage, pkgs, lib, ... }:
+{ nix2container, pkgs, lib, ... }:
 
-# Gitaly is a Git RPC service that handles all Git calls made by GitLab
+let
+  version = "19.1.1";
 
-mkImage {
-  drv = pkgs.gitaly;
-  name = "gitaly";
-  tag = "v${pkgs.gitaly.version}";
-  entrypoint = [ "${pkgs.gitaly}/bin/gitaly" ];
-  cmd = [ "/etc/gitaly/config.toml" ];
-
-  extraPkgs = with pkgs; [
-    # Shell and utilities
-    bash
-    busybox
-    coreutils
-    findutils
-    gawk
-    gnugrep
-    less
-
-    # Git and related
-    git
-
-    # Network and SSL
-    curl
-    cacert
-    openssh
-
-    # Compression
-    bzip2
-    gzip
-
-    # Templating
-    gomplate
-
-    # Process management
-    tini
-
-    # Time zone data
-    tzdata
-
-    # Ruby runtime (for hooks)
-    ruby_3_2
-  ];
-
-  env = {
-    GITALY_CONFIG_FILE = "/etc/gitaly/config.toml";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitaly";
+    imageDigest = "sha256:43f712f3dda7912a259db6cd8b9fba33b9295f77fee4558050f92c79a07e4d6a";
+    sha256      = "sha256-Kmg64FikfEoYa8grYXLL95qpYHKArMK9sZniBuZOuOU=";
   };
 
-  labels = {
-    "org.opencontainers.image.title" = "Gitaly";
-    "org.opencontainers.image.description" = "Git RPC service for GitLab";
-    "org.opencontainers.image.version" = pkgs.gitaly.version;
-    "io.nix-containers.chart" = "gitlab";
+in
+nix2container.buildImage {
+  name      = "gitaly";
+  tag       = "v${version}";
+  fromImage = upstreamImage;
+
+  config = {
+    Labels = {
+      "org.opencontainers.image.title"   = "gitaly";
+      "org.opencontainers.image.version" = version;
+      "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+      "io.nix-containers.build-strategy" = "nix2container-pullImage";
+      "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitaly:v19.1.1";
+    };
   };
 }

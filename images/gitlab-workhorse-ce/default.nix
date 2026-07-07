@@ -1,38 +1,38 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+# gitlab-workhorse-ce
+# =====
+# GitLab component — re-wrapped from the official CNG image at the current
+# stable release (matches gitlab 19.1.1). nixpkgs lags; the CNG images are
+# the official build behind the GitLab Helm chart.
+# https://gitlab.com/gitlab-org/build/CNG
+#
+# Update: bump version + imageDigest
+# (skopeo inspect docker://registry.gitlab.com/gitlab-org/build/cng/gitlab-workhorse-ce:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-workhorse-ce 2>&1 | grep 'got:'
 
-# GitLab workhorse ce
-# GitLab component: workhorse-ce
+{ nix2container, pkgs, lib, ... }:
 
 let
-  componentPkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
+  version = "19.1.1";
 
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-workhorse-ce";
+    imageDigest = "sha256:29a88a68578d67f0dcf96184e69f785339b2a795b794282c006a6663870a20f2";
+    sha256      = "sha256-u6tEv/YekgAE2VeMh+IHt39mnfhPd+SFH65ptOaOU5c=";
+  };
 
 in
 nix2container.buildImage {
-  name = "gitlab-workhorse-ce";
-  tag = "latest";
+  name      = "gitlab-workhorse-ce";
+  tag       = "v${version}";
+  fromImage = upstreamImage;
 
-  copyToRoot = [
-    (buildEnv {
-      name = "gitlab-workhorse-ce-root";
-      paths = base.basePackages ++ componentPkgs ++ [ userEnv ];
-    })
-  ];
-
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "GitLab workhorse ce";
-      "org.opencontainers.image.description" = "GitLab workhorse-ce component";
-      "io.nix-containers.chart" = "gitlab";
+  config = {
+    Labels = {
+      "org.opencontainers.image.title"   = "gitlab-workhorse-ce";
+      "org.opencontainers.image.version" = version;
+      "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+      "io.nix-containers.build-strategy" = "nix2container-pullImage";
+      "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-workhorse-ce:v19.1.1";
     };
   };
 }
