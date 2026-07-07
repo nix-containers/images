@@ -1,39 +1,13 @@
 { mkImage, pkgs, lib, ... }:
-
-# rekor-server — upstream prebuilt release binary
+# rekor-server (fips variant) - https://github.com/sigstore/rekor
+# Built from source + GOTOOLCHAIN=local to clear stale Go-stdlib CVEs.
 let
   version = "1.5.2";
-
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "rekor-server";
-    inherit version;
-
-    src = pkgs.fetchurl {
-      url = "https://github.com/sigstore/rekor/releases/download/v1.5.2/rekor-server-linux-amd64";
-      hash = "sha256-L1FxtLiing4VeTwqK2Ki0SZoVQ+bWA661qdieyfecXA=";
-    };
-
-    dontUnpack = true;
-
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/rekor-server
-      runHook postInstall
-    '';
+  drv = pkgs.buildGoModule {
+    pname = "rekor-fips-server"; inherit version;
+    src = pkgs.fetchFromGitHub { owner = "sigstore"; repo = "rekor"; rev = "v${version}"; hash = "sha256-fqhEjVrEOejbUco80rRQsNDK9URZ3Ob2Eo6xBHt4tVM="; };
+    vendorHash = "sha256-QxIw3rGTntNpLNhLZq9G6OiuTd+UbjA5B60TYBqFiSY=";
+    subPackages = [ "cmd/rekor-server" ];
+    env.CGO_ENABLED = 0; preBuild = "export GOTOOLCHAIN=local"; ldflags = [ "-s" "-w" ]; doCheck = false;
   };
-in mkImage {
-  inherit drv;
-  name = "rekor-fips-server";
-  tag = "v${version}";
-  entrypoint = [ "${drv}/bin/rekor-server" ];
-  cmd = [ "--help" ];
-  labels = {
-    "org.opencontainers.image.title" = "rekor-fips-server";
-    "org.opencontainers.image.description" = "Sigstore Rekor transparency log server";
-    "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
-  };
-}
+in mkImage { inherit drv; name = "rekor-fips-server"; tag = "v${version}"; entrypoint = [ "${drv}/bin/rekor-server" ]; cmd = [ "--help" ]; labels = { "org.opencontainers.image.title" = "rekor-fips-server"; "org.opencontainers.image.version" = version; "io.nix-containers.source" = "upstream-source"; }; }
