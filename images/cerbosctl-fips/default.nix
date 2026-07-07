@@ -1,29 +1,32 @@
 { mkImage, pkgs, lib, ... }:
 
-# cerbosctl - command-line interface for Cerbos
+# cerbosctl (-fips variant) - command-line interface for Cerbos
 # https://github.com/cerbos/cerbos
+# Same upstream tool as cerbosctl; no FIPS claim made.
+#
+# Built from source with current nixpkgs Go so stdlib CVEs from the
+# upstream prebuilt (stdlib v1.26.2 → 1.26.4) clear at each rebuild.
 let
   version = "0.53.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "cerbosctl";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/cerbos/cerbos/releases/download/v${version}/cerbosctl_${version}_Linux_x86_64.tar.gz";
-      hash = "sha256-HHel8kULMoKIwfisR6tnz4My+qhJdPFTyqwynY1EDtE=";
+    src = pkgs.fetchFromGitHub {
+      owner = "cerbos";
+      repo = "cerbos";
+      rev = "v${version}";
+      hash = "sha256-Pge4nxR7UMY1a8ytzIWUJZHYBKO5iXvjZJiG8PTG4co=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-lGC/c+av1KMSzhV8PDVrckKIjShOACe9f4+DdF6Wkxg=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 cerbosctl $out/bin/cerbosctl
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/cerbosctl" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -36,6 +39,6 @@ in mkImage {
     "org.opencontainers.image.title" = "cerbosctl-fips";
     "org.opencontainers.image.description" = "Cerbos command-line interface";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
