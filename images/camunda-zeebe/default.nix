@@ -5,7 +5,7 @@
 # Java distribution tarball; requires a JRE at runtime (provided via extraPkgs).
 
 let
-  version = "8.9.11";
+  version = "8.9.12";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "camunda-zeebe";
@@ -13,7 +13,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/camunda/camunda/releases/download/${version}/camunda-zeebe-${version}.tar.gz";
-      hash = "sha256:07d4qd8vcbxv7gzhhl43r9mjrqdwamyb5bmmpx06xqnfkm8prcs0";
+      hash = "sha256-HEsWG7uFnXiW9PmqeMq5gHf9MpAgR1qXrESgvggZVAw=";
     };
 
     # Pure-Java distribution (no ELF to patch); autoPatchelfHook is a harmless no-op.
