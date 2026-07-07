@@ -1,30 +1,32 @@
 { mkImage, pkgs, lib, ... }:
 
-# CNI bandwidth plugin (from containernetworking/plugins release bundle)
+# CNI bandwidth plugin (from containernetworking/plugins)
 # https://github.com/containernetworking/plugins
+#
+# Rebuilt from source with current nixpkgs Go so stdlib CVEs from the
+# upstream prebuilt tarball clear at each rebuild.
 
 let
   version = "1.9.1";
+  binary = "bandwidth";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "cni-plugins-bandwidth";
+  drv = pkgs.buildGoModule {
+    pname = "cni-plugins-${binary}";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/containernetworking/plugins/releases/download/v${version}/cni-plugins-linux-amd64-v${version}.tgz";
-      hash = "sha256-uY90oPhSLwqDhnF4cpwapw8hWPkMRaLKj6eR2xx2swM=";
+    src = pkgs.fetchFromGitHub {
+      owner = "containernetworking";
+      repo = "plugins";
+      rev = "v${version}";
+      hash = "sha256-3OhUvIJPU5Ayc4/po9Rj4Tfa5536aN8bj+51M6Xg5os=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;  # upstream ships committed vendor/
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 ./bandwidth $out/bin/bandwidth
-      runHook postInstall
-    '';
+    subPackages = [ "plugins/meta/${binary}" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
     meta = with lib; {
       description = "CNI bandwidth plugin";
@@ -38,11 +40,11 @@ in mkImage {
   inherit drv;
   name = "cni-plugins-bandwidth";
   tag = "v${version}";
-  entrypoint = [ "${drv}/bin/bandwidth" ];
+  entrypoint = [ "${drv}/bin/${binary}" ];
   cmd = [];
   labels = {
     "org.opencontainers.image.title" = "cni-plugins-bandwidth";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
