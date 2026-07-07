@@ -556,7 +556,7 @@ let
     "py3-pip-wheel" = "25.3";
     "py3-setuptools-wheel" = "80.10.1";
     "actions-runner-controller" = "0.13.0";
-    "actions-runner" = "2.330.0";
+    "actions-runner-nix" = "2.330.0";
     "addon-resizer-fips" = "1.8.23";
     "addon-resizer" = "1.8.23";
     "age-fips" = "1.2.1";
