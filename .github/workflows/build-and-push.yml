@@ -7,6 +7,11 @@ on:
         description: "Matrix of images to build"
         required: true
         type: string
+      runner:
+        description: "Runner label (ubuntu-latest default, or arc-runners for Talos self-hosted)"
+        required: false
+        type: string
+        default: 'ubuntu-latest'
 
 env:
   REGISTRY: ghcr.io
@@ -14,7 +19,7 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
     permissions:
       contents: read
       packages: write

@@ -21,6 +21,11 @@ on:
         required: false
         default: ''
         type: string
+      runner:
+        description: 'Runner label for the build job (ubuntu-latest default, or arc-runners for Talos self-hosted — e.g. for a full-catalog build).'
+        required: false
+        default: 'ubuntu-latest'
+        type: string
 
 jobs:
   discover-images:
@@ -191,6 +196,7 @@ jobs:
       packages: write
     with:
       matrix: ${{ needs.select-matrix.outputs.matrix }}
+      runner: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
 
   check-package-updates:
     uses: ./.github/workflows/check-package-updates.yml
