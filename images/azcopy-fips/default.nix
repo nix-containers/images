@@ -3,7 +3,7 @@
 # azcopy - Azure Storage data transfer command-line utility
 # https://github.com/Azure/azure-storage-azcopy
 let
-  version = "10.32.4";
+  version = "10.32.5";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "azcopy";
@@ -11,7 +11,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/Azure/azure-storage-azcopy/releases/download/v${version}/azcopy_linux_amd64_${version}.tar.gz";
-      hash = "sha256-j4WaDbvBF2YMJJ+zVpaU/IoPM7aHAfWyuSzMAB7lB4Q=";
+      hash = "sha256-hvp92zb7SRm+a/sa7BHpgyoG8nh9H9FPJnKIRzE4fGU=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
