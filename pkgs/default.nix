@@ -38,11 +38,6 @@
   # vendored abseil_cpp build fails with no cache hit. Use upstream prebuilt
   # binary (1.39.0) until nixpkgs ships a working derivation.
   dragonflydb = pkgs.callPackage ./dragonflydb { };
-  # GitLab: nixpkgs lags at 18.11.6; build the latest STABLE release (19.1.1)
-  # from the official upstream tag. Regenerated via the vendored update.py
-  # (data.json + rubyEnv/gemset.nix + component versions). Overrides
-  # nixpkgs' gitlab so the image tracks the current GitLab release.
-  gitlab = pkgs.callPackage ./gitlab/package.nix { };
   # Override nixpkgs' forgejo: bump to 15.0.3 ahead of nixpkgs 15.0.1.
   # Uses the upstream statically-linked prebuilt binary.
   forgejo = pkgs.callPackage ./forgejo { };
