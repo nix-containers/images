@@ -31,6 +31,16 @@ The only reliable way to get both fields correct is:
 - **~62 packages** that are unlinked but either lack an `images/<name>/` source dir (can't be rebuilt from this repo) OR had a placeholder `sha256-AAAAA…=` `vendorHash` that would fail the CI build. These stay orphaned until the underlying issue is repaired.
 - **~104 image `default.nix` files** with placeholder `vendorHash`. These are always-failing builds — never usable via CI or `local-build-push.sh`. Run `scripts/fix-hashes.sh --all` to iteratively derive real hashes from the build-error output. Expect ~5-10 minutes per image (each iteration re-runs `nix build` until the hash mismatch surfaces), so a full sweep is many hours.
 
+## In-flight state (2026-07-07 23:00 UTC)
+
+Rebuild wave dispatched. **Live progress tracker: issue #566** — has a checkbox list of every `build-shard.yml` run keyed by prefix + run ID. Update that issue when a shard succeeds/fails rather than editing this doc.
+
+- 23 single-letter shards dispatched (a, b, d-j, l-t, v-z; u already ran green as smoke test)
+- 31 sub-shards for oversized letters c (15) and k (16); all sub-prefixes ≤ 256 job cap
+- Fresh Security Scan dispatched but queued behind the shard drain — its intermediate output will look bad (many packages still mid-rebuild); wait for the last shard before treating scan numbers as real
+
+Package count is climbing as pushes land: **830 → 897 in the first ~20 min after dispatch**.
+
 ## Rebuilding the deleted set
 
 Use `build-shard.yml` — a workflow-dispatch that builds every image whose name starts with a given prefix, capped at the 256-job GitHub matrix limit:
