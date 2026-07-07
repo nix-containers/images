@@ -68,12 +68,25 @@ let
       lttng-ust
     ];
 
+    # The runner tarball ships musl-linked Alpine node binaries for use
+    # on Alpine images; on this glibc-based image they can never run,
+    # and auto-patchelf can't satisfy libc.musl-x86_64.so.1 anyway.
+    # liblttng-ust.so.0 is only needed for CoreCLR tracing, not runtime.
+    autoPatchelfIgnoreMissingDeps = [
+      "libc.musl-x86_64.so.1"
+      "liblttng-ust.so.0"
+      "liblttng-ust.so.1"
+    ];
+
     sourceRoot = ".";
 
     installPhase = ''
       runHook preInstall
       mkdir -p $out/runner
       cp -r . $out/runner/
+      # Strip Alpine-only node builds — they're musl-linked and never
+      # run in this glibc image; keeping them just clutters the layer.
+      rm -rf $out/runner/externals/node*_alpine
       mkdir -p $out/bin
       ln -s $out/runner/run.sh $out/bin/run.sh
       ln -s $out/runner/config.sh $out/bin/config.sh
