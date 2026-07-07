@@ -1,68 +1,28 @@
 # gitlab-exporter
-# =============
-# GitLab Exporter - Prometheus metrics exporter for GitLab
-# https://gitlab.com/gitlab-org/gitlab-exporter
+# =====
+# GitLab component — re-wrapped from the official CNG image at 19.1.1 (matches
+# the gitlab image). https://gitlab.com/gitlab-org/build/CNG
+# Update: bump version + imageDigest (skopeo inspect
+# docker://registry.gitlab.com/gitlab-org/build/cng/gitlab-exporter:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-exporter 2>&1 | grep 'got:'
 
 { nix2container, pkgs, lib, ... }:
 
-# GitLab Exporter provides Prometheus metrics for GitLab components
-# It's a Ruby application that connects to GitLab's internal components
-
 let
-  version = "18.6.1";
-
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-exporter";
+    imageDigest = "sha256:523d15d24ff2596d2f60d763f9932cc9e33397e1e902df1d40940483b5cbeec9";
+    sha256      = "sha256-01XI50jOR/x6sH4hHaIlahyQZw6HQgOCqkrlVdQWpjw=";
+  };
 in
 nix2container.buildImage {
-  name = "gitlab-exporter";
-  tag = "v${version}";
-
-  copyToRoot = pkgs.buildEnv {
-    name = "gitlab-exporter-root";
-    paths = with pkgs; [
-      # Ruby runtime
-      ruby_3_2
-
-      # Shell and utilities
-      bash
-      busybox
-      coreutils
-      curl
-      cacert
-
-      # Database client
-      postgresql
-
-      # Process management
-      tini
-
-      # Time zone data
-      tzdata
-
-      # Create directories
-      (pkgs.runCommand "gitlab-exporter-dirs" {} ''
-        mkdir -p $out/srv/gitlab-exporter
-        mkdir -p $out/var/log/gitlab
-        mkdir -p $out/tmp
-      '')
-    ];
-    pathsToLink = [ "/bin" "/etc" "/lib" "/share" "/srv" "/var" "/tmp" ];
-  };
-
-  config = {
-    entrypoint = [ "${pkgs.tini}/bin/tini" "--" ];
-    cmd = [ "${pkgs.ruby_3_2}/bin/ruby" "/srv/gitlab-exporter/gitlab-exporter" ];
-    workingDir = "/srv/gitlab-exporter";
-    exposedPorts = {
-      "9168/tcp" = {};
-    };
-    env = [
-      "GITLAB_EXPORTER_PORT=9168"
-    ];
-    labels = {
-      "org.opencontainers.image.title" = "GitLab Exporter";
-      "org.opencontainers.image.description" = "Prometheus metrics exporter for GitLab";
-      "org.opencontainers.image.version" = version;
-      "io.nix-containers.chart" = "gitlab";
-    };
+  name = "gitlab-exporter"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title"   = "gitlab-exporter";
+    "org.opencontainers.image.version" = version;
+    "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-exporter:v19.1.1";
   };
 }

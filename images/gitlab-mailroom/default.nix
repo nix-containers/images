@@ -1,64 +1,28 @@
 # gitlab-mailroom
-# =============
-# GitLab Mailroom - Email processing for GitLab
-# https://gitlab.com/gitlab-org/gitlab/-/tree/master/lib/gitlab/mail_room
+# =====
+# GitLab component — re-wrapped from the official CNG image at 19.1.1 (matches
+# the gitlab image). https://gitlab.com/gitlab-org/build/CNG
+# Update: bump version + imageDigest (skopeo inspect
+# docker://registry.gitlab.com/gitlab-org/build/cng/gitlab-mailroom:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-mailroom 2>&1 | grep 'got:'
 
 { nix2container, pkgs, lib, ... }:
 
-# GitLab Mailroom handles incoming email processing for GitLab
-# It's a Ruby application that processes emails for creating issues, merge requests, etc.
-
 let
-  version = "18.6.1";
-
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-mailroom";
+    imageDigest = "sha256:a7ef990ba0c5205dd3f9f9217912310d8a358e5f8511a4419c774be4521eb8d5";
+    sha256      = "sha256-21AsbWpQod9Q4AtDkmERdubvmPlTHbCu7ETfjCbf7Co=";
+  };
 in
 nix2container.buildImage {
-  name = "gitlab-mailroom";
-  tag = "v${version}";
-
-  copyToRoot = pkgs.buildEnv {
-    name = "gitlab-mailroom-root";
-    paths = with pkgs; [
-      # Ruby runtime
-      ruby_3_2
-
-      # Shell and utilities
-      bash
-      coreutils
-      curl
-      cacert
-
-      # Database client
-      postgresql
-
-      # Process management
-      tini
-
-      # Time zone data
-      tzdata
-
-      # Create directories
-      (pkgs.runCommand "gitlab-mailroom-dirs" {} ''
-        mkdir -p $out/srv/gitlab
-        mkdir -p $out/var/log/gitlab
-        mkdir -p $out/tmp
-      '')
-    ];
-    pathsToLink = [ "/bin" "/etc" "/lib" "/share" "/srv" "/var" "/tmp" ];
-  };
-
-  config = {
-    entrypoint = [ "${pkgs.tini}/bin/tini" "--" ];
-    cmd = [ "${pkgs.ruby_3_2}/bin/ruby" "bin/mail_room" ];
-    workingDir = "/srv/gitlab";
-    env = [
-      "LANG=C.UTF-8"
-    ];
-    labels = {
-      "org.opencontainers.image.title" = "GitLab Mailroom";
-      "org.opencontainers.image.description" = "Email processing service for GitLab";
-      "org.opencontainers.image.version" = version;
-      "io.nix-containers.chart" = "gitlab";
-    };
+  name = "gitlab-mailroom"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title"   = "gitlab-mailroom";
+    "org.opencontainers.image.version" = version;
+    "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-mailroom:v19.1.1";
   };
 }

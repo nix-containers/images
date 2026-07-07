@@ -1,37 +1,28 @@
-{ mkImage, fetchFromGitLab, buildGoModule, pkgs, lib, ... }:
-
 # gitlab-toolbox-ce
-# GitLab component
+# =====
+# GitLab component — re-wrapped from the official CNG image at 19.1.1 (matches
+# the gitlab image). https://gitlab.com/gitlab-org/build/CNG
+# Update: bump version + imageDigest (skopeo inspect
+# docker://registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ce:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-toolbox-ce 2>&1 | grep 'got:'
+
+{ nix2container, pkgs, lib, ... }:
 
 let
-  version = "17.6.0";
-  component = buildGoModule {
-    pname = "gitlab-toolbox-ce";
-    inherit version;
-    src = fetchFromGitLab {
-      owner = "gitlab-org";
-      repo = "gitlab-foss";
-      rev = "v${version}";
-      hash = "sha256-2dZumkupbqOouKZaPPnKAVINjiLFW63wYVNj0klvRoo=";
-    };
-    vendorHash = null;
-    subPackages = [ "." ];
-    env.CGO_ENABLED = 0;
-    ldflags = [ "-s" "-w" ];
-    doCheck = false;
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ce";
+    imageDigest = "sha256:86e9f1c840b41a885a2ce5f012b94a4cd73c257087acd852e2fb011325f0d6f5";
+    sha256      = "sha256-YA9BkVuETTLN0+SvVyTPc5/VZpvKxUNw+xCzVVO2mHA=";
   };
-
-in mkImage {
-  drv = component;
-  name = "gitlab-toolbox-ce";
-  tag = "v${version}";
-  entrypoint = [ "${component}/bin/gitlab-toolbox-ce" ];
-  cmd = [];
-  extraPkgs = with pkgs; [ cacert tzdata git ];
-  labels = {
-    "org.opencontainers.image.title" = "gitlab-toolbox-ce";
-    "org.opencontainers.image.description" = "GitLab gitlab-toolbox-ce";
+in
+nix2container.buildImage {
+  name = "gitlab-toolbox-ce"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title"   = "gitlab-toolbox-ce";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.chart" = "gitlab";
+    "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ce:v19.1.1";
   };
 }
