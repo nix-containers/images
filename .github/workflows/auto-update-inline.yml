@@ -20,6 +20,11 @@ on:
         required: false
         default: '20'
         type: string
+      runner:
+        description: 'Runner label (e.g. ubuntu-latest, or an ARC/Talos self-hosted tag for more disk/capacity)'
+        required: false
+        default: 'ubuntu-latest'
+        type: string
 
 permissions:
   contents: write
@@ -31,10 +36,26 @@ concurrency:
 
 jobs:
   bump:
-    runs-on: ubuntu-latest
+    # Overridable so heavy build-to-hash runs can target ARC/Talos self-hosted
+    # runners (more disk than GitHub's ~14 GB). Defaults to ubuntu-latest, and
+    # the free-disk-space step below keeps that path working too.
+    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      # GitHub's ubuntu-latest ships ~14 GB free; building many images to
+      # repair hashes overflows it ("no space left on device"). Reclaim the
+      # preinstalled toolchains we never use (~25 GB) before building.
+      - name: Free disk space
+        if: ${{ !startsWith(github.event.inputs.runner || 'ubuntu-latest', 'arc') && !contains(github.event.inputs.runner || '', 'talos') }}
+        run: |
+          echo "Before:"; df -h / | tail -1
+          sudo rm -rf /usr/local/lib/android /opt/ghc /usr/local/.ghcup \
+            /opt/hostedtoolcache/CodeQL /usr/share/dotnet /usr/local/share/boost \
+            /usr/share/swift 2>/dev/null || true
+          sudo docker image prune --all --force 2>/dev/null || true
+          echo "After:"; df -h / | tail -1
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -77,6 +98,12 @@ jobs:
               else
                 echo "- \`$img\` (${entry} → ${new}): $(tail -1 /tmp/bump-$img.log)" >> failed.md
                 entry_ok=0
+              fi
+              # Reclaim /nix/store space when disk gets tight so a long run of
+              # image builds doesn't hit "no space left on device".
+              if [ "$(df --output=avail / | tail -1)" -lt 4194304 ]; then
+                echo "  (disk low — running nix-collect-garbage)"
+                nix-collect-garbage >/dev/null 2>&1 || true
               fi
             done
             # Advance the nvchecker baseline only when every image for this
