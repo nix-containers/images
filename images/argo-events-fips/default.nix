@@ -1,42 +1,24 @@
 { mkImage, pkgs, lib, ... }:
 
-# Argo Events controller (argo-events-fips variant) - upstream prebuilt release binary
-# https://github.com/argoproj/argo-events
-# The -fips suffix is an upstream naming variant; this packages the upstream argo-events binary.
-
+# argo-events (fips variant) - https://github.com/argoproj/argo-events
+# Built from source + GOTOOLCHAIN=local to clear stale Go-stdlib CVEs.
 let
   version = "1.9.10";
-
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "argo-events";
+  drv = pkgs.buildGoModule {
+    pname = "argo-events-fips";
     inherit version;
-
-    src = pkgs.fetchurl {
-      url = "https://github.com/argoproj/argo-events/releases/download/v${version}/argo-events-linux-amd64.gz";
-      hash = "sha256-sE0sghxpQAguVuFdC/gvKQei0G2PLK1pnDDiy1OFeLE=";
+    src = pkgs.fetchFromGitHub {
+      owner = "argoproj"; repo = "argo-events";
+      rev = "v${version}"; hash = "sha256-C0FDilzSjY7OMtqQV/mudT+Ojg4+w2FL6IKVgs0dNQ4=";
     };
-
-    dontUnpack = true;
-
-    nativeBuildInputs = [ pkgs.autoPatchelfHook pkgs.gzip ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-
-    installPhase = ''
-      runHook preInstall
-      gunzip -c $src > argo-events
-      install -Dm755 argo-events $out/bin/argo-events
-      runHook postInstall
-    '';
+    vendorHash = "sha256-XeA2SwqS8qZVWisXhGAGE+kFH/tyRdb29L+3sPfLIZU=";
+    env.CGO_ENABLED = 0;
+    preBuild = "export GOTOOLCHAIN=local";
+    ldflags = [ "-s" "-w" ];
+    doCheck = false;
   };
 in mkImage {
-  inherit drv;
-  name = "argo-events-fips";
-  tag = "v${version}";
-  entrypoint = [ "${drv}/bin/argo-events" ];
-  cmd = [ "--help" ];
-  labels = {
-    "org.opencontainers.image.title" = "argo-events-fips";
-    "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
-  };
+  inherit drv; name = "argo-events-fips"; tag = "v${version}";
+  entrypoint = [ "${drv}/bin/argo-events" ]; cmd = [ "--help" ];
+  labels = { "org.opencontainers.image.title" = "argo-events-fips"; "org.opencontainers.image.version" = version; "io.nix-containers.source" = "upstream-source"; };
 }
