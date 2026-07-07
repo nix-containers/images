@@ -31,10 +31,12 @@ on:
         type: string
         default: '[]'
   schedule:
-    # Daily at 06:00 UTC. Off-peak; not on the :00 minute is fine here
-    # because the scan grows with image count and we don't want hour-
-    # boundary contention with the auto-update cron.
+    # Daily at 06:00 UTC on ubuntu-latest (the canonical scan feeding the site).
     - cron: '0 6 * * *'
+    # Daily at 09:00 UTC on arc-runners (Talos) — exercises the self-hosted
+    # path so the ARC scale set spins up and we validate full-catalog scans
+    # there. github.event.schedule below maps this cron to arc-runners.
+    - cron: '0 9 * * *'
   workflow_dispatch:
     inputs:
       images:
@@ -69,7 +71,7 @@ permissions:
 
 jobs:
   resolve-images:
-    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.schedule == '0 9 * * *' && 'arc-runners' || github.event.inputs.runner || 'ubuntu-latest' }}
     outputs:
       matrix: ${{ steps.split.outputs.matrix }}
       has-work: ${{ steps.split.outputs.has-work }}
@@ -227,7 +229,7 @@ jobs:
   scan:
     needs: resolve-images
     if: needs.resolve-images.outputs.has-work == 'true'
-    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.schedule == '0 9 * * *' && 'arc-runners' || github.event.inputs.runner || 'ubuntu-latest' }}
     # Backstop so a wedged shard can't run the 6h default and freeze the
     # aggregate. The per-image `timeout` above is the primary guard; this
     # caps total shard time even if many images are slow.
@@ -325,7 +327,7 @@ jobs:
   aggregate:
     needs: [resolve-images, scan]
     if: ${{ always() && needs.resolve-images.outputs.has-work == 'true' }}
-    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.schedule == '0 9 * * *' && 'arc-runners' || github.event.inputs.runner || 'ubuntu-latest' }}
     permissions:
       contents: read
       packages: read
