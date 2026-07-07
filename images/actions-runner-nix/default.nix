@@ -48,7 +48,7 @@ let
   };
 
   actions-runner = pkgs.stdenv.mkDerivation rec {
-    pname = "actions-runner";
+    pname = "actions-runner-nix";
     inherit version;
 
     src = pkgs.fetchurl {
@@ -123,7 +123,7 @@ let
 
 in mkImage {
   drv = actions-runner;
-  name = "actions-runner";
+  name = "actions-runner-nix";
   tag = "v${version}";
   entrypoint = [ "${actions-runner}/runner/run.sh" ];
   cmd = [];
