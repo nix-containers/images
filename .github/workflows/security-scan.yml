@@ -65,6 +65,13 @@ on:
         default: 'ubuntu-latest'
         type: string
 
+# Only one security scan at a time — schedules (06:00 ubuntu, 09:00 arc),
+# workflow_call (post-build), and manual dispatch all share this group, so
+# a new scan queues behind a running one instead of two scanning at once.
+concurrency:
+  group: security-scan
+  cancel-in-progress: false
+
 permissions:
   contents: read
   packages: read
