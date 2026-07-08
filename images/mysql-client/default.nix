@@ -1,34 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
-
-# mysql-client
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+{ mkImage, pkgs, lib, ... }:
+# mysql-client — packaged from nixpkgs pkgs.mysql-client (#618).
+mkImage {
+  drv = pkgs.mysql-client;
   name = "mysql-client";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "mysql-client-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "mysql-client";
-      "org.opencontainers.image.description" = "mysql-client container image";
-    };
+  tag = pkgs.mysql-client.version;
+  entrypoint = [ "${pkgs.mysql-client}/bin/mysql-client" ];
+  cmd = [];
+  extraPkgs = with pkgs; [ cacert tzdata ];
+  labels = {
+    "org.opencontainers.image.version" = pkgs.mysql-client.version;
+    "org.opencontainers.image.description" = "mysql-client (nixpkgs mysql-client)";
   };
 }

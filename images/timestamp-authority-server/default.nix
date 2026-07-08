@@ -1,37 +1,29 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ mkImage, pkgs, lib, ... }:
 
-# timestamp-authority-server
-# Container image
-
+# timestamp-authority-server — built from the upstream release artifact (#618).
 let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+  version = "2.1.3";
+  src = pkgs.fetchurl { url = "https://github.com/sigstore/timestamp-authority/releases/download/v2.1.3/timestamp-server-linux-amd64"; hash = "sha256-GraLrLjlEgWnIuOkmiyJ1iB34bw/VYwibtfkWO9UBKc="; };
+  drv = pkgs.runCommand "timestamp-authority-server-2.1.3" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
+    mkdir -p $out/bin extract
+    cp ${src} extract/timestamp-server
+    chmod -R +x extract 2>/dev/null || true
+    f=$(find extract -type f -name 'timestamp-server' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -name 'timestamp-server*' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -perm -u+x | head -1)
+    [ -z "$f" ] && f=$(find extract -type f | head -1)
+    install -m755 "$f" $out/bin/timestamp-server
+  '';
+in
+mkImage {
+  drv = drv;
   name = "timestamp-authority-server";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "timestamp-authority-server-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "timestamp authority server";
-      "org.opencontainers.image.description" = "timestamp-authority-server container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "2.1.3";
+  entrypoint = [ "${drv}/bin/timestamp-server" ];
+  cmd = [];
+  extraPkgs = with pkgs; [ cacert tzdata ];
+  labels = {
+    "org.opencontainers.image.version" = "2.1.3";
+    "org.opencontainers.image.description" = "timestamp-authority-server (built from upstream release v2.1.3)";
   };
 }
