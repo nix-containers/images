@@ -1,44 +1,17 @@
-{ mkImage, fetchFromGitHub, buildGoModule, pkgs, lib, ... }:
+{ mkImage, pkgs, lib, ... }:
 
-# kube-proxy
-# Kubernetes component
-
-let
-  version = "1.34.0";
-  kube-proxy = buildGoModule {
-    pname = "kube-proxy";
-    inherit version;
-
-    src = fetchFromGitHub {
-      owner = "kubernetes";
-      repo = "kubernetes";
-      rev = "v${version}";
-      hash = "sha256-rKy4X01pX+kovJ8b2JHV0KuzHJ7PYZ08eDEO3GeuPoc=";
-    };
-
-    vendorHash = null;
-    subPackages = [ "cmd/proxy" ];
-    
-    env.CGO_ENABLED = 0;
-
-    ldflags = [ "-s" "-w" ];
-    doCheck = false;
-  };
-
-in
+# kube-proxy-1.34-default — Kubernetes component from the nixpkgs binary (auto-updates via flake.lock).
 mkImage {
-  drv = kube-proxy;
+  drv = pkgs.kubernetes;
   name = "kube-proxy-1.34-default";
-  tag = "v${version}";
-  entrypoint = [ "${kube-proxy}/bin/proxy" ];
+  tag = "v${pkgs.kubernetes.version}";
+  entrypoint = [ "${pkgs.kubernetes}/bin/kube-proxy" ];
   cmd = [];
-
   extraPkgs = with pkgs; [ cacert tzdata ];
-
   labels = {
-    "org.opencontainers.image.title" = "kuue proxy";
+    "org.opencontainers.image.title" = "kube-proxy-1.34-default";
     "org.opencontainers.image.description" = "Kubernetes kube-proxy";
-    "org.opencontainers.image.version" = version;
+    "org.opencontainers.image.version" = pkgs.kubernetes.version;
     "io.nix-containers.chart" = "kubernetes";
   };
 }
