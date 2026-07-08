@@ -539,6 +539,60 @@ let
     "zig" = getVer "zig";
     "zipkin" = getVer "zipkin";
     "zoxide" = getVer "zoxide";
+
+    # Catalog "latest"-count fix (#602): real nixpkgs-composed images that
+    # hardcoded version="latest" in their def. Map to the contained package
+    # so build-and-push tags them :<version> instead of :latest.
+    "argo-cli" = getVer "argo-workflows";
+    "argo-exec" = getVer "argo-workflows";
+    "argo-workflow-cli" = getVer "argo-workflows";
+    "argo-workflow-cli-fips" = getVer "argo-workflows";
+    "argo-workflow-controller" = getVer "argo-workflows";
+    "argo-workflow-controller-fips" = getVer "argo-workflows";
+    "argo-workflow-executor" = getVer "argo-workflows";
+    "argo-workflow-executor-fips" = getVer "argo-workflows";
+    "argo-workflowcontroller" = getVer "argo-workflows";
+    "argo-workflows" = getVer "argo-workflows";
+    "argo-workflows-fips" = getVer "argo-workflows";
+    "enterprise-logs" = getVer "grafana-loki";
+    "enterprise-metrics" = getVer "mimir";
+    "grafana-enterprise-logs" = getVer "grafana-loki";
+    "logstash-nixchart" = getVer "logstash";
+    "nexus" = getVer "nexus";
+    "nifi" = getVer "nifi";
+    "openjdk-11-default-jvm" = getVer "jdk11";
+    "openjdk-11-jre" = getVer "jdk11";
+    "openjdk-17-default-jdk" = getVer "jdk17";
+    "openjdk-17-default-jvm" = getVer "jdk17";
+    "openjdk-17-jre" = getVer "jdk17";
+    "openjdk-21-default-jdk" = getVer "jdk21";
+    "openjdk-21-default-jvm" = getVer "jdk21";
+    "openjdk-21-jre" = getVer "jdk21";
+    "openjdk-8-default-jdk" = getVer "jdk8";
+    "openjdk-8-default-jvm" = getVer "jdk8";
+    "openjdk-8-jre" = getVer "jdk8";
+    "openjdk-8-openj9" = getVer "jdk8";
+    "openjdk-8-openj9-default-jdk" = getVer "jdk8";
+    "openjdk-crac" = getVer "jdk21";
+    "os-shell-nixchart" = getVer "util-linux";
+    "rabbitmq-nixchart" = getVer "rabbitmq-server";
+    "selenium-base" = getVer "selenium-server-standalone";
+    "selenium-distributor" = getVer "selenium-server-standalone";
+    "selenium-event-bus" = getVer "selenium-server-standalone";
+    "selenium-node-base" = getVer "selenium-server-standalone";
+    "selenium-node-chromium" = getVer "selenium-server-standalone";
+    "selenium-node-docker" = getVer "selenium-server-standalone";
+    "selenium-node-firefox" = getVer "selenium-server-standalone";
+    "selenium-router" = getVer "selenium-server-standalone";
+    "selenium-session-queue" = getVer "selenium-server-standalone";
+    "selenium-sessions" = getVer "selenium-server-standalone";
+    "selenium-standalone-chromium" = getVer "selenium-server-standalone";
+    "selenium-standalone-docker" = getVer "selenium-server-standalone";
+    "selenium-standalone-firefox" = getVer "selenium-server-standalone";
+    "sig-storage-local-static-provisioner" = getVer "util-linux";
+    "spire-agent-fips" = getVer "spire-agent";
+    "spire-server-fips" = getVer "spire-server";
+    "steampipe" = getVer "steampipe";
   };
 
   # Static/hardcoded versions (built from source)
