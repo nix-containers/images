@@ -1,39 +1,28 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+# gitlab-shell-fips
+# =====
+# GitLab component (FIPS) — re-wrapped from the official CNG FIPS image at 19.1.1.
+# https://gitlab.com/gitlab-org/build/CNG
+# Update: bump version + imageDigest (skopeo inspect
+# docker://registry.gitlab.com/gitlab-org/build/cng/gitlab-shell:v<ver>-fips --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-shell-fips 2>&1 | grep 'got:'
 
-# GitLab shell-fips
-# GitLab component: shell
+{ nix2container, pkgs, lib, ... }:
 
 let
-  componentPkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-shell";
+    imageDigest = "sha256:0bf89dcf25ff6a38090baa574d5773dfe301055fca31a8cc14982cdf8df5ac25";
+    sha256      = "sha256-67Z53k1p73jI+ihcRlcR+DQQRoda0cogIIaUdxLjgq0=";
+  };
 in
 nix2container.buildImage {
-  name = "gitlab-shell-fips";
-  tag = "latest";
-
-  copyToRoot = [
-    (buildEnv {
-      name = "gitlab-shell-fips-root";
-      paths = base.basePackages ++ componentPkgs ++ [ userEnv ];
-    })
-  ];
-
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "GitLab shell";
-      "org.opencontainers.image.description" = "GitLab shell component";
-      "io.nix-containers.chart" = "gitlab";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  name = "gitlab-shell-fips"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title"   = "gitlab-shell-fips";
+    "org.opencontainers.image.version" = version;
+    "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-shell:v19.1.1-fips";
   };
 }

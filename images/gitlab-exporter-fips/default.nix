@@ -1,39 +1,20 @@
-{ mkImage, fetchFromGitLab, buildGoModule, pkgs, lib, ... }:
-
-# gitlab-exporter-fips
-# GitLab component
-
+# gitlab-exporter-fips (FIPS) — re-wrapped from official CNG FIPS image at 19.1.1.
+# Update: bump version + imageDigest (cng/gitlab-exporter:v<ver>-fips) + refresh sha256.
+{ nix2container, pkgs, lib, ... }:
 let
-  version = "17.6.0";
-  component = buildGoModule {
-    pname = "gitlab-exporter-fips";
-    inherit version;
-    src = fetchFromGitLab {
-      owner = "gitlab-org";
-      repo = "gitlab-foss";
-      rev = "v${version}";
-      hash = "sha256-2dZumkupbqOouKZaPPnKAVINjiLFW63wYVNj0klvRoo=";
-    };
-    vendorHash = null;
-    subPackages = [ "." ];
-    env.CGO_ENABLED = 1;
-    env.GOEXPERIMENT = "boringcrypto";
-    ldflags = [ "-s" "-w" ];
-    doCheck = false;
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-exporter";
+    imageDigest = "sha256:57cffaa2584b41e8058ad6a08984caef96873329adb2818de4cd8cee2f4666bf";
+    sha256      = "sha256-pccR8YAdss0jUWXkDggRZEMypVSo8GpQIcJJdDxDQSw=";
   };
-
-in mkImage {
-  drv = component;
-  name = "gitlab-exporter-fips";
-  tag = "v${version}";
-  entrypoint = [ "${component}/bin/gitlab-exporter" ];
-  cmd = [];
-  extraPkgs = with pkgs; [ cacert tzdata git ];
-  labels = {
+in nix2container.buildImage {
+  name = "gitlab-exporter-fips"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
     "org.opencontainers.image.title" = "gitlab-exporter-fips";
-    "org.opencontainers.image.description" = "GitLab gitlab-exporter";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.chart" = "gitlab";
-    "io.nix-containers.compliance" = "FIPS-140-2";
+    "org.opencontainers.image.source" = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-exporter:v19.1.1-fips";
   };
 }

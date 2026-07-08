@@ -1,32 +1,38 @@
 # gitlab-pages
-# =============
-# GitLab Pages - Static site hosting for GitLab
-# https://gitlab.com/gitlab-org/gitlab-pages
+# =====
+# GitLab component — re-wrapped from the official CNG image at the current
+# stable release (matches gitlab 19.1.1). nixpkgs lags; the CNG images are
+# the official build behind the GitLab Helm chart.
+# https://gitlab.com/gitlab-org/build/CNG
+#
+# Update: bump version + imageDigest
+# (skopeo inspect docker://registry.gitlab.com/gitlab-org/build/cng/gitlab-pages:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-pages 2>&1 | grep 'got:'
 
-{ mkImage, pkgs, lib, ... }:
+{ nix2container, pkgs, lib, ... }:
 
-# GitLab Pages serves static websites for GitLab projects
+let
+  version = "19.1.1";
 
-mkImage {
-  drv = pkgs.gitlab-pages;
-  name = "gitlab-pages";
-  tag = "v${pkgs.gitlab-pages.version}";
-  entrypoint = [ "${pkgs.gitlab-pages}/bin/gitlab-pages" ];
-  cmd = [];
-
-  extraPkgs = with pkgs; [
-    cacert
-    tzdata
-  ];
-
-  env = {
-    PAGES_CONFIG_FILE = "/etc/gitlab-pages/config.toml";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-pages";
+    imageDigest = "sha256:f3ea3a227a0fbfca3ed6a81d5a46c97db6b853eaded153ce5d54a8c330971057";
+    sha256      = "sha256-69j15T84WeQiCXYZkK0SUXpjaQJeDsY4U+s2UUmw+Rw=";
   };
 
-  labels = {
-    "org.opencontainers.image.title" = "GitLab Pages";
-    "org.opencontainers.image.description" = "Static site hosting for GitLab";
-    "org.opencontainers.image.version" = pkgs.gitlab-pages.version;
-    "io.nix-containers.chart" = "gitlab";
+in
+nix2container.buildImage {
+  name      = "gitlab-pages";
+  tag       = "v${version}";
+  fromImage = upstreamImage;
+
+  config = {
+    Labels = {
+      "org.opencontainers.image.title"   = "gitlab-pages";
+      "org.opencontainers.image.version" = version;
+      "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+      "io.nix-containers.build-strategy" = "nix2container-pullImage";
+      "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-pages:v19.1.1";
+    };
   };
 }

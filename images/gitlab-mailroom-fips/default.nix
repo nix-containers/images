@@ -1,39 +1,20 @@
-{ mkImage, fetchFromGitLab, buildGoModule, pkgs, lib, ... }:
-
-# gitlab-mailroom-fips
-# GitLab component
-
+# gitlab-mailroom-fips (FIPS) — re-wrapped from official CNG FIPS image at 19.1.1.
+# Update: bump version + imageDigest (cng/gitlab-mailroom:v<ver>-fips) + refresh sha256.
+{ nix2container, pkgs, lib, ... }:
 let
-  version = "17.6.0";
-  component = buildGoModule {
-    pname = "gitlab-mailroom-fips";
-    inherit version;
-    src = fetchFromGitLab {
-      owner = "gitlab-org";
-      repo = "gitlab-foss";
-      rev = "v${version}";
-      hash = "sha256-2dZumkupbqOouKZaPPnKAVINjiLFW63wYVNj0klvRoo=";
-    };
-    vendorHash = null;
-    subPackages = [ "." ];
-    env.CGO_ENABLED = 1;
-    env.GOEXPERIMENT = "boringcrypto";
-    ldflags = [ "-s" "-w" ];
-    doCheck = false;
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-mailroom";
+    imageDigest = "sha256:eb59b0ef379268703ddb340e3c358d4ec56b08e1b20481f30244311625f578e1";
+    sha256      = "sha256-ml5dkl2RsFKO/6rcdv8Hbywg4Zk1OR/B5y8BGQl2ulE=";
   };
-
-in mkImage {
-  drv = component;
-  name = "gitlab-mailroom-fips";
-  tag = "v${version}";
-  entrypoint = [ "${component}/bin/gitlab-mailroom" ];
-  cmd = [];
-  extraPkgs = with pkgs; [ cacert tzdata git ];
-  labels = {
+in nix2container.buildImage {
+  name = "gitlab-mailroom-fips"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
     "org.opencontainers.image.title" = "gitlab-mailroom-fips";
-    "org.opencontainers.image.description" = "GitLab gitlab-mailroom";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.chart" = "gitlab";
-    "io.nix-containers.compliance" = "FIPS-140-2";
+    "org.opencontainers.image.source" = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-mailroom:v19.1.1-fips";
   };
 }

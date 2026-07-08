@@ -1,46 +1,20 @@
-{ mkImage, fetchFromGitLab, buildGoModule, pkgs, lib, ... }:
-
-# GitLab KAS (Kubernetes Agent Server)-fips
-# https://gitlab.com/gitlab-org/cluster-integration/gitlab-agent
-
+# gitlab-kas-fips (FIPS) — re-wrapped from official CNG FIPS image at 19.1.1.
+# Update: bump version + imageDigest (cng/gitlab-kas:v<ver>-fips) + refresh sha256.
+{ nix2container, pkgs, lib, ... }:
 let
-  version = "17.10.1";
-  gitlab-kas-fips = buildGoModule {
-    pname = "gitlab-kas-fips";
-    inherit version;
-
-    src = fetchFromGitLab {
-      owner = "gitlab-org";
-      repo = "cluster-integration/gitlab-agent";
-      rev = "v${version}";
-      hash = "sha256-eupwFR1XQLCJc99E80d+CTuPM2zj6o8HauYW+ObeVfU=";
-    };
-
-    vendorHash = null;
-    subPackages = [ "cmd/kas" ];
-
-    env.CGO_ENABLED = 1;
-    env.GOEXPERIMENT = "boringcrypto";
-
-    ldflags = [ "-s" "-w" ];
-    doCheck = false;
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-kas";
+    imageDigest = "sha256:8e84d4a4a59d0d158dd9cb30956c03aad0921369ba97954e9fd591fe0e7bce70";
+    sha256      = "sha256-dn3tyu5FyhVQfCBPCGqdeCcV9Ci4KisYr2VU+tcRzM8=";
   };
-
-in
-mkImage {
-  drv = gitlab-kas-fips;
-  name = "gitlab-kas-fips";
-  tag = "v${version}";
-  entrypoint = [ "${gitlab-kas-fips}/bin/kas" ];
-  cmd = [];
-
-  extraPkgs = with pkgs; [ cacert tzdata ];
-
-  labels = {
-    "org.opencontainers.image.title" = "GitLab KAS";
-    "org.opencontainers.image.description" = "GitLab Kubernetes Agent Server";
+in nix2container.buildImage {
+  name = "gitlab-kas-fips"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title" = "gitlab-kas-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.chart" = "gitlab";
-    "io.nix-containers.compliance" = "FIPS-140-2";
+    "org.opencontainers.image.source" = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-kas:v19.1.1-fips";
   };
 }

@@ -1,39 +1,20 @@
-{ mkImage, fetchFromGitLab, buildGoModule, pkgs, lib, ... }:
-
-# gitlab-certificates-fips
-# GitLab component
-
+# gitlab-certificates-fips (FIPS) — re-wrapped from official CNG FIPS image at 19.1.1.
+# Update: bump version + imageDigest (cng/certificates:v<ver>-fips) + refresh sha256.
+{ nix2container, pkgs, lib, ... }:
 let
-  version = "17.6.0";
-  component = buildGoModule {
-    pname = "gitlab-certificates-fips";
-    inherit version;
-    src = fetchFromGitLab {
-      owner = "gitlab-org";
-      repo = "gitlab-foss";
-      rev = "v${version}";
-      hash = "sha256-2dZumkupbqOouKZaPPnKAVINjiLFW63wYVNj0klvRoo=";
-    };
-    vendorHash = null;
-    subPackages = [ "." ];
-    env.CGO_ENABLED = 1;
-    env.GOEXPERIMENT = "boringcrypto";
-    ldflags = [ "-s" "-w" ];
-    doCheck = false;
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/certificates";
+    imageDigest = "sha256:f725b5b572b553e54873848261b6cdea3a1e59aec6c42d4cf7954337633fb778";
+    sha256      = "sha256-Q7iq0aTNiWuWiC2ymZy193f5epDFRZhtTVi4TVV2xoc=";
   };
-
-in mkImage {
-  drv = component;
-  name = "gitlab-certificates-fips";
-  tag = "v${version}";
-  entrypoint = [ "${component}/bin/gitlab-certificates" ];
-  cmd = [];
-  extraPkgs = with pkgs; [ cacert tzdata git ];
-  labels = {
+in nix2container.buildImage {
+  name = "gitlab-certificates-fips"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
     "org.opencontainers.image.title" = "gitlab-certificates-fips";
-    "org.opencontainers.image.description" = "GitLab gitlab-certificates";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.chart" = "gitlab";
-    "io.nix-containers.compliance" = "FIPS-140-2";
+    "org.opencontainers.image.source" = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/certificates:v19.1.1-fips";
   };
 }

@@ -1,79 +1,28 @@
 # gitlab-certificates
-# =============
-# GitLab Certificates - Init container for certificate management
-# https://gitlab.com/gitlab-org/gitlab
+# =====
+# GitLab component — re-wrapped from the official CNG image at 19.1.1.
+# https://gitlab.com/gitlab-org/build/CNG
+# Update: bump version + imageDigest (skopeo inspect
+# docker://registry.gitlab.com/gitlab-org/build/cng/certificates:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-certificates 2>&1 | grep 'got:'
 
 { nix2container, pkgs, lib, ... }:
 
-# GitLab Certificates handles certificate configuration and updates
-
 let
-  version = "18.6.1";
-
-  # Script to update certificates
-  updateCertsScript = pkgs.writeShellScript "update-certificates" ''
-    #!/bin/bash
-    set -e
-
-    # Copy custom certificates if present
-    if [ -d /custom-certs ]; then
-      cp -r /custom-certs/* /etc/ssl/certs/ 2>/dev/null || true
-    fi
-
-    # Update CA certificates
-    if command -v update-ca-certificates &> /dev/null; then
-      update-ca-certificates
-    fi
-
-    echo "Certificate update completed"
-  '';
-
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/certificates";
+    imageDigest = "sha256:00c7d5c5008d83cb935537cb18b54cbcd8294eb5baa8e40ac8b6a8948e297b82";
+    sha256      = "sha256-vyM8nKCSUdnbpbVaDMleP5mhYHXQbFRe1RF8FInBKBo=";
+  };
 in
 nix2container.buildImage {
-  name = "gitlab-certificates";
-  tag = "v${version}";
-
-  copyToRoot = pkgs.buildEnv {
-    name = "gitlab-certificates-root";
-    paths = with pkgs; [
-      # Shell and utilities
-      bash
-      busybox
-      coreutils
-      findutils
-      gawk
-      gnugrep
-
-      # SSL/TLS
-      cacert
-      openssl
-
-      # Process management
-      tini
-
-      # Templating
-      gomplate
-
-      # Create required directories and scripts
-      (pkgs.runCommand "gitlab-certs-dirs" {} ''
-        mkdir -p $out/scripts
-        mkdir -p $out/etc/ssl/certs
-        mkdir -p $out/custom-certs
-        cp ${updateCertsScript} $out/scripts/update-certificates
-        chmod +x $out/scripts/update-certificates
-      '')
-    ];
-    pathsToLink = [ "/bin" "/etc" "/lib" "/share" "/scripts" "/custom-certs" ];
-  };
-
-  config = {
-    entrypoint = [ "${pkgs.tini}/bin/tini" "--" ];
-    cmd = [ "/scripts/update-certificates" ];
-    labels = {
-      "org.opencontainers.image.title" = "GitLab Certificates";
-      "org.opencontainers.image.description" = "Certificate management for GitLab";
-      "org.opencontainers.image.version" = version;
-      "io.nix-containers.chart" = "gitlab";
-    };
+  name = "gitlab-certificates"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title"   = "gitlab-certificates";
+    "org.opencontainers.image.version" = version;
+    "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/certificates:v19.1.1";
   };
 }

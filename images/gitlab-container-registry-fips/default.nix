@@ -1,46 +1,28 @@
-{ mkImage, pkgs, lib, fetchFromGitLab, buildGoModule, ... }:
+# gitlab-container-registry-fips
+# =====
+# GitLab component (FIPS) — re-wrapped from the official CNG FIPS image at 19.1.1.
+# https://gitlab.com/gitlab-org/build/CNG
+# Update: bump version + imageDigest (skopeo inspect
+# docker://registry.gitlab.com/gitlab-org/build/cng/gitlab-container-registry:v<ver>-fips --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-container-registry-fips 2>&1 | grep 'got:'
 
-# GitLab Container Registry-fips
-# https://gitlab.com/gitlab-org/container-registry
+{ nix2container, pkgs, lib, ... }:
 
 let
-  version = "4.19.0";
-  gitlab-container-registry-fips = buildGoModule {
-    pname = "gitlab-container-registry-fips";
-    inherit version;
-
-    src = fetchFromGitLab {
-      owner = "gitlab-org";
-      repo = "container-registry";
-      rev = "v${version}-gitlab";
-      hash = "sha256-WrijK/kQugCpiDbMw1+QTvG60SDsdJ5PDFGKGiLBsb8=";
-    };
-
-    vendorHash = null;
-    subPackages = [ "cmd/registry" ];
-
-    env.CGO_ENABLED = 1;
-    env.GOEXPERIMENT = "boringcrypto";
-
-    ldflags = [ "-s" "-w" ];
-    doCheck = false;
+  version = "19.1.1";
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-container-registry";
+    imageDigest = "sha256:81d52ac15cf05858eadbc8dd7cf79f4dbcbb676a0cebba6441c79e00cb06b856";
+    sha256      = "sha256-sI9FwK2mh6RdsVthVfI5rhUqrRLoQohcCdGV6JdrqmM=";
   };
-
 in
-mkImage {
-  drv = gitlab-container-registry-fips;
-  name = "gitlab-container-registry-fips";
-  tag = "v${version}";
-  entrypoint = [ "${gitlab-container-registry-fips}/bin/registry" ];
-  cmd = [];
-
-  extraPkgs = with pkgs; [ cacert tzdata ];
-
-  labels = {
-    "org.opencontainers.image.title" = "GitLab Container Registry";
-    "org.opencontainers.image.description" = "Docker registry for GitLab";
+nix2container.buildImage {
+  name = "gitlab-container-registry-fips"; tag = "v${version}"; fromImage = upstreamImage;
+  config.Labels = {
+    "org.opencontainers.image.title"   = "gitlab-container-registry-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.chart" = "gitlab";
-    "io.nix-containers.compliance" = "FIPS-140-2";
+    "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+    "io.nix-containers.build-strategy" = "nix2container-pullImage";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-container-registry:v19.1.1-fips";
   };
 }

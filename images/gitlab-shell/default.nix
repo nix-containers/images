@@ -1,20 +1,38 @@
-{ mkImage, gitlab-shell, openssh, bash, coreutils, ... }:
+# gitlab-shell
+# =====
+# GitLab component — re-wrapped from the official CNG image at the current
+# stable release (matches gitlab 19.1.1). nixpkgs lags; the CNG images are
+# the official build behind the GitLab Helm chart.
+# https://gitlab.com/gitlab-org/build/CNG
+#
+# Update: bump version + imageDigest
+# (skopeo inspect docker://registry.gitlab.com/gitlab-org/build/cng/gitlab-shell:v<ver> --format '{{.Digest}}')
+# then refresh sha256: nix build --no-link .#gitlab-shell 2>&1 | grep 'got:'
 
-# Chainguard SBOM packages for gitlab-shell:
-# Using nixpkgs.gitlab-shell
+{ nix2container, pkgs, lib, ... }:
 
-mkImage {
-  drv = gitlab-shell;
-  name = "gitlab-shell";
-  tag = gitlab-shell.version or "latest";
-  entrypoint = [ "${gitlab-shell}/bin/gitlab-shell" ];
-  cmd = [];
+let
+  version = "19.1.1";
 
-  extraPkgs = [ openssh bash coreutils ];
+  upstreamImage = nix2container.pullImage {
+    imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-shell";
+    imageDigest = "sha256:e47772b2efaa61d60f59341bcbd5cb4ded6583a7a89e14bc59685078c2ce2680";
+    sha256      = "sha256-seHCcmKnY5mXj0zDTW3PFDrJQ+RMsvkDmjWCG2+FgLo=";
+  };
 
-  labels = {
-    "org.opencontainers.image.title" = "GitLab Shell";
-    "org.opencontainers.image.description" = "GitLab Shell handles git SSH sessions for GitLab";
-    "org.opencontainers.image.source" = "https://gitlab.com/gitlab-org/gitlab-shell";
+in
+nix2container.buildImage {
+  name      = "gitlab-shell";
+  tag       = "v${version}";
+  fromImage = upstreamImage;
+
+  config = {
+    Labels = {
+      "org.opencontainers.image.title"   = "gitlab-shell";
+      "org.opencontainers.image.version" = version;
+      "org.opencontainers.image.source"  = "https://gitlab.com/gitlab-org/build/CNG";
+      "io.nix-containers.build-strategy" = "nix2container-pullImage";
+      "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-shell:v19.1.1";
+    };
   };
 }
