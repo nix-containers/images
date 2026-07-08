@@ -113,6 +113,12 @@ jobs:
     needs: shard-matrix
     if: needs.shard-matrix.outputs.count != '0' && (github.event.inputs.mode == 'push' || github.event.inputs.mode == 'both')
     uses: ./.github/workflows/build-and-push.yml
+    permissions:
+      contents: read
+      packages: write
+      # build-and-push declares id-token: write (FlakeHub Cache OIDC); the
+      # caller must grant it or the run fails validation (startup_failure).
+      id-token: write
     with:
       matrix: ${{ needs.shard-matrix.outputs.matrix }}
       runner: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
