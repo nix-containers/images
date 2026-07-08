@@ -1,34 +1,8 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, pkgs, lib, ... }:
 
-# amazon-corretto-jdk
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
-  name = "amazon-corretto-jdk";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "amazon-corretto-jdk-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "binary";
-      "io.nix-containers.build-method" = "Pre-built binary packaged with Nix";
-      "org.opencontainers.image.title" = "amazon-corretto-jdk";
-      "org.opencontainers.image.description" = "amazon-corretto-jdk container image";
-    };
-  };
+# amazon-corretto-jdk — mirror of OSS upstream docker.io/amazoncorretto (auto-generated, #618).
+nix2container.pullImage {
+  imageName = "docker.io/amazoncorretto";
+  imageDigest = "sha256:975b191f99b2f0fb9e76397b7d85523e9904dcb679e54d5f9099c1cdeab21cf1";
+  sha256 = "sha256-A9KmYVQHiNH6noFek5VwEtpQZoJhiJhTf9lROGtyrLM=";
 }

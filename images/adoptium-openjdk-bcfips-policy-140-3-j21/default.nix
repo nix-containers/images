@@ -1,37 +1,8 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, pkgs, lib, ... }:
 
-# adoptium-openjdk-bcfips-policy-140-3-j21
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
-  name = "adoptium-openjdk-bcfips-policy-140-3-j21";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "adoptium-openjdk-bcfips-policy-140-3-j21-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "binary";
-      "io.nix-containers.build-method" = "Pre-built binary packaged with Nix";
-      "org.opencontainers.image.title" = "adoptium openjdk ucfips policy 140 3 j21";
-      "org.opencontainers.image.description" = "adoptium-openjdk-bcfips-policy-140-3-j21 container image";
-      "org.opencontainers.image.version" = version;
-    };
-  };
+# adoptium-openjdk-bcfips-policy-140-3-j21 — mirror of OSS upstream docker.io/eclipse-temurin (auto-generated, #618).
+nix2container.pullImage {
+  imageName = "docker.io/eclipse-temurin";
+  imageDigest = "sha256:1eeacc8c295ed4805f6ffead2417b1936aad296b02ea9e56b457230befc9e98d";
+  sha256 = "sha256-7K0pLbY3SDh4TemJXkmpMeBo2H5gp3Z5AzmSxqwsoTs=";
 }

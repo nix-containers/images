@@ -1,37 +1,8 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, pkgs, lib, ... }:
 
-# amazon-cloudwatch-agent-amazon-cloudwatch-agent-config-wizard
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
-  name = "amazon-cloudwatch-agent-amazon-cloudwatch-agent-config-wizard";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "amazon-cloudwatch-agent-amazon-cloudwatch-agent-config-wizard-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "amazon cloudwatch agent amazon cloudwatch agent config wizard";
-      "org.opencontainers.image.description" = "amazon-cloudwatch-agent-amazon-cloudwatch-agent-config-wizard container image";
-      "org.opencontainers.image.version" = version;
-    };
-  };
+# amazon-cloudwatch-agent-amazon-cloudwatch-agent-config-wizard — mirror of OSS upstream docker.io/amazon/cloudwatch-agent (auto-generated, #618).
+nix2container.pullImage {
+  imageName = "docker.io/amazon/cloudwatch-agent";
+  imageDigest = "sha256:4722a6621bc05c94a852513a8c463dc7a69e3f15b99702aa347e5f8a0d994e7f";
+  sha256 = "sha256-tRT9tXcynXCMrOcmU4xUbBCV/LfwR1Q9+hIAAmPw03A=";
 }

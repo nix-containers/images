@@ -1,37 +1,8 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, pkgs, lib, ... }:
 
-# akhq
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
-  name = "akhq";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "akhq-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "akhq";
-      "org.opencontainers.image.description" = "akhq container image";
-      "org.opencontainers.image.version" = version;
-    };
-  };
+# akhq — mirror of OSS upstream docker.io/tchiotludo/akhq (auto-generated, #618).
+nix2container.pullImage {
+  imageName = "docker.io/tchiotludo/akhq";
+  imageDigest = "sha256:66a43e84a3355f0a13f3b165a48f515c72a5344ea7ea0575a3e4efe2d3ac9a91";
+  sha256 = "sha256-dCrvI3qksQuAUt9IxYxgcI+8ZUYZDdwPY3+2dvIqlNI=";
 }
