@@ -31,10 +31,12 @@ on:
         type: string
         default: '[]'
   schedule:
-    # Daily at 06:00 UTC. Off-peak; not on the :00 minute is fine here
-    # because the scan grows with image count and we don't want hour-
-    # boundary contention with the auto-update cron.
+    # Daily at 06:00 UTC on ubuntu-latest (the canonical scan feeding the site).
     - cron: '0 6 * * *'
+    # Daily at 09:00 UTC on self-hosted (Talos) — exercises the self-hosted
+    # path so the ARC scale set spins up and we validate full-catalog scans
+    # there. github.event.schedule below maps this cron to arc-runners.
+    - cron: '0 9 * * *'
   workflow_dispatch:
     inputs:
       images:
@@ -58,10 +60,17 @@ on:
         default: '10'
         type: string
       runner:
-        description: "Runner label. ubuntu-latest (default) or 'arc-runners' (Talos self-hosted) for full-catalog scans with more capacity."
+        description: "Runner label. ubuntu-latest (default) or 'self-hosted' (Talos self-hosted) for full-catalog scans with more capacity."
         required: false
         default: 'ubuntu-latest'
         type: string
+
+# Only one security scan at a time — schedules (06:00 ubuntu, 09:00 arc),
+# workflow_call (post-build), and manual dispatch all share this group, so
+# a new scan queues behind a running one instead of two scanning at once.
+concurrency:
+  group: security-scan
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -69,7 +78,8 @@ permissions:
 
 jobs:
   resolve-images:
-    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.schedule == '0 9 * * *' && 'self-hosted' || github.event.inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 25
     outputs:
       matrix: ${{ steps.split.outputs.matrix }}
       has-work: ${{ steps.split.outputs.has-work }}
@@ -140,7 +150,10 @@ jobs:
             echo "$CANDIDATES_JSON" | jq -r '.[]' > /tmp/candidates.txt
             ORG="${REPO%%/*}"
             # Package names return as "images/<name>"; keep the bare <name>.
-            gh api --paginate \
+            # Bound the API call — on some runners (self-hosted) the paginated
+            # list can hang; cap it so we fail fast into the manifest-inspect
+            # fallback instead of stalling the whole resolve job for 40+ min.
+            timeout 300 gh api --paginate \
               "orgs/${ORG}/packages?package_type=container&per_page=100" \
               --jq '.[].name' 2>/dev/null | sed 's#^images/##' | sort -u \
               > /tmp/published.txt || true
@@ -227,7 +240,7 @@ jobs:
   scan:
     needs: resolve-images
     if: needs.resolve-images.outputs.has-work == 'true'
-    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.schedule == '0 9 * * *' && 'self-hosted' || github.event.inputs.runner || 'ubuntu-latest' }}
     # Backstop so a wedged shard can't run the 6h default and freeze the
     # aggregate. The per-image `timeout` above is the primary guard; this
     # caps total shard time even if many images are slow.
@@ -325,7 +338,8 @@ jobs:
   aggregate:
     needs: [resolve-images, scan]
     if: ${{ always() && needs.resolve-images.outputs.has-work == 'true' }}
-    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
+    runs-on: ${{ github.event.schedule == '0 9 * * *' && 'self-hosted' || github.event.inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 30
     permissions:
       contents: read
       packages: read
