@@ -36,18 +36,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      # Self-hosted runners (nixtop NixOS, Talos arc-runner-nix) ship nix with a
+      # WARM STORE — use it (fast, cache hits) and skip the installer, which on
+      # NixOS conflicts with the system nix daemon and ignores the warm store.
+      # ubuntu-latest has no nix, so the installer runs there.
+      - name: Detect pre-installed Nix (warm store)
+        run: |
+          if command -v nix >/dev/null 2>&1; then
+            echo "Using pre-installed Nix: $(nix --version)"
+            echo "NIX_PREINSTALLED=true" >> "$GITHUB_ENV"
+            echo "NIX_INSTALLED=true" >> "$GITHUB_ENV"
+          fi
+
       - name: Install Nix
+        if: env.NIX_PREINSTALLED != 'true'
         uses: cachix/install-nix-action@v31
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-      # cachix/install-nix-action always succeeds or fails hard;
-      # no half-installed state to guard against. This env-var kept
-      # for compatibility with downstream steps that were written
-      # for the old curl-retry installer.
       - name: Mark Nix installed
+        if: env.NIX_PREINSTALLED != 'true'
         run: echo "NIX_INSTALLED=true" >> $GITHUB_ENV
 
       # (FlakeHub Cache removed — it requires FlakeHub org registration /
@@ -88,7 +98,7 @@ jobs:
         if: env.NIX_INSTALLED == 'true'
         run: |
           # Source Nix environment
-          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh 2>/dev/null || true
           # Build image using Nix flakes with explicit experimental features
           nix --extra-experimental-features "nix-command flakes" build .#"${{ matrix.name }}" --print-build-logs
           echo "BUILD_SUCCESS=true" >> $GITHUB_ENV
@@ -100,7 +110,7 @@ jobs:
         if: env.ATTIC_READY == 'true' && env.BUILD_SUCCESS == 'true'
         continue-on-error: true
         run: |
-          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh 2>/dev/null || true
           attic push nc:nixcontainers ./result 2>/dev/null \
             && echo "pushed ${{ matrix.name }} closure to Attic" \
             || echo "attic push skipped/failed (non-fatal)"
@@ -111,7 +121,7 @@ jobs:
         # blobs are skipped). PR runs skip the push (see auth step above).
         if: env.NIX_INSTALLED == 'true' && env.BUILD_SUCCESS == 'true' && github.event_name != 'pull_request'
         run: |
-          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh 2>/dev/null || true
           set -euo pipefail
           nix_run() { nix --extra-experimental-features "nix-command flakes" "$@"; }
           nix_eval() { nix --extra-experimental-features "nix-command flakes" eval --raw "$@" 2>/dev/null; }
