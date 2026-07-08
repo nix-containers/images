@@ -2,28 +2,30 @@
 
 # buildctl - BuildKit client CLI (from moby/buildkit)
 # https://github.com/moby/buildkit
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
+
 let
   version = "0.31.1";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "buildctl";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-amd64.tar.gz";
-      hash = "sha256-H8eHUNDJa9wYeZo8C1UdaAe9STnozXnjV4I+RnRR4W4=";
+    src = pkgs.fetchFromGitHub {
+      owner = "moby";
+      repo = "buildkit";
+      rev = "v${version}";
+      hash = "sha256-lpcbCPsnvwMULeZgo1eQ0AqlfsyOMO/7b3ZOCoVTDKk=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 bin/buildctl $out/bin/buildctl
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/buildctl" ];
+    ldflags = [ "-s" "-w" "-X github.com/moby/buildkit/version.Version=v${version}" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -34,6 +36,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "buildctl";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
