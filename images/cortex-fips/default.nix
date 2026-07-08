@@ -2,30 +2,31 @@
 
 # Cortex - horizontally scalable, multi-tenant Prometheus-as-a-service
 # https://github.com/cortexproject/cortex
-# Note: packages the upstream cortex linux/amd64 binary; no FIPS certification claimed.
+# -fips variant packages the upstream cortex binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.21.1";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "cortex-fips";
+  drv = pkgs.buildGoModule {
+    pname = "cortex";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/cortexproject/cortex/releases/download/v${version}/cortex-linux-amd64";
-      hash = "sha256-mT+No9TJnZ+4K14mNpUCwaes9MK5XkuHGQ5gjNtXxkk=";
+    src = pkgs.fetchFromGitHub {
+      owner = "cortexproject";
+      repo = "cortex";
+      rev = "v${version}";
+      hash = "sha256-qi+9MLjCrlN7u4WKweKiCn58H0/gr+8TblZkNRk+7Uw=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;
 
-    dontUnpack = true;
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/cortex
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/cortex" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -36,6 +37,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "cortex-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
