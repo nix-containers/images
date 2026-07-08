@@ -1106,6 +1106,16 @@ def main():
         (out / "packages").mkdir(parents=True, exist_ok=True)
         (out / "packages" / "index.html").write_text(rendered_packages)
 
+    # /auto-updates/ page — client-side JS fetches merged deps: / auto-update
+    # PRs from GitHub over the last 24h and renders per-PR bumped-package
+    # tables. No server-side data payload; the template is a pure shell.
+    auto_updates_template_path = Path(args.templates, "auto-updates.html")
+    if auto_updates_template_path.exists():
+        auto_updates_template = auto_updates_template_path.read_text()
+        rendered_auto_updates = fill_template(auto_updates_template, {"BASE": base})
+        (out / "auto-updates").mkdir(parents=True, exist_ok=True)
+        (out / "auto-updates" / "index.html").write_text(rendered_auto_updates)
+
     # Charts pages — one index + one per-chart detail page. Feeds the
     # "Charts" nav link and the clickable chips on per-image pages
     # showing which nix-containers charts consume each image.

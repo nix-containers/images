@@ -25,93 +25,31 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCrit(); }
     });
   }
-  setupAutoUpdatesCard();
+  fetchAutoUpdateCount();
 });
 
-// Auto-updates card: pulls the last 24h of merged PRs from the auto-update
-// pipelines (deps: … / auto-update-inline / automated package + flake updates)
-// via the public GitHub API, populates the count, and — on click — opens a
-// modal listing every image/package that got bumped.
-function setupAutoUpdatesCard() {
-  const card = document.getElementById('auto-updates-card');
-  const modal = document.getElementById('auto-updates-modal');
-  const closeBtn = document.getElementById('auto-updates-modal-close');
-  if (!card || !modal) return;
-
-  const state = { prs: null, loading: null };
-  loadAutoUpdatePrs(state);
-
-  const openModal = () => {
-    modal.classList.remove('hidden');
-    renderAutoUpdateModal(state);
-  };
-  const closeModal = () => modal.classList.add('hidden');
-
-  card.addEventListener('click', openModal);
-  card.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(); }
-  });
-  closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
-  });
-}
-
-async function loadAutoUpdatePrs(state) {
-  const countEl = document.getElementById('auto-updates-count');
-  if (state.loading) return state.loading;
-  state.loading = (async () => {
-    try {
-      // Public repo — unauth GitHub API. 60 req/hr/IP is plenty for one call.
-      const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
-      const url = 'https://api.github.com/search/issues?q=' +
-        encodeURIComponent(
-          'repo:nix-containers/images is:pr is:merged ' +
-          '("deps:" OR "chore(deps)" OR "auto-update" OR "automated package") ' +
-          'merged:>=' + since
-        );
-      const r = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
-      if (!r.ok) throw new Error('gh api ' + r.status);
-      const data = await r.json();
-      state.prs = data.items || [];
-      if (countEl) countEl.textContent = state.prs.length;
-    } catch (e) {
-      state.prs = [];
-      if (countEl) countEl.textContent = '?';
-      console.warn('auto-updates fetch failed:', e);
-    }
-  })();
-  return state.loading;
-}
-
-function renderAutoUpdateModal(state) {
-  const body = document.getElementById('auto-updates-modal-body');
-  if (!body) return;
-  if (state.prs == null) { body.textContent = 'Loading…'; return; }
-  if (!state.prs.length) {
-    body.innerHTML = '<p class="text-fg-muted">No auto-update PRs merged in the last 24 hours.</p>';
-    return;
+// Populate the "Auto-updates today" homepage card. The card is a link to
+// /auto-updates/ — clicking navigates to a full-page view of every bumped
+// package. Just needs the count here.
+async function fetchAutoUpdateCount() {
+  const el = document.getElementById('auto-updates-count');
+  if (!el) return;
+  try {
+    const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+    const url = 'https://api.github.com/search/issues?q=' +
+      encodeURIComponent(
+        'repo:nix-containers/images is:pr is:merged ' +
+        '("deps:" OR "chore(deps)" OR "auto-update" OR "automated package") ' +
+        'merged:>=' + since
+      );
+    const r = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
+    if (!r.ok) throw new Error('gh api ' + r.status);
+    const data = await r.json();
+    el.textContent = (data.items || []).length;
+  } catch (e) {
+    el.textContent = '?';
+    console.warn('auto-updates fetch failed:', e);
   }
-  const rows = state.prs.map(pr => {
-    const merged = pr.pull_request?.merged_at || pr.closed_at || '';
-    const when = merged ? new Date(merged).toLocaleString() : '';
-    return `<tr class="border-t border-neutral-800">
-      <td class="py-2 pr-3 font-mono text-xs whitespace-nowrap">
-        <a href="${escapeAttr(pr.html_url)}" class="underline text-accent-ok">#${pr.number}</a>
-      </td>
-      <td class="py-2 pr-3">${escapeHtml(pr.title)}</td>
-      <td class="py-2 pr-3 text-xs text-fg-muted whitespace-nowrap">${escapeHtml(when)}</td>
-    </tr>`;
-  }).join('');
-  body.innerHTML = `<div class="max-h-[60vh] overflow-y-auto">
-    <table class="w-full text-left">
-      <thead class="text-xs text-fg-muted uppercase">
-        <tr><th class="py-2 pr-3">PR</th><th class="py-2 pr-3">Title</th><th class="py-2 pr-3">Merged</th></tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-  </div>`;
 }
 
 function imgCritical(i) {
