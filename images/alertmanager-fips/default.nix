@@ -26,7 +26,7 @@ let
       hash = "sha256-2HHQ7S1J/X4PVFnPbi8Oapsqf1MyNnsqfMMBJRItWf0=";
     };
 
-    vendorHash = null;  # TODO: Update after first build
+    vendorHash = "sha256-4XWHe32UZ+1HOQzQdZX4leoPD6pfJZwyjDQV3dv164s=";
 
     # Enable FIPS mode via BoringCrypto
     env = {
