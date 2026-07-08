@@ -1,44 +1,17 @@
-{ mkImage, fetchFromGitHub, buildGoModule, pkgs, lib, ... }:
+{ mkImage, pkgs, lib, ... }:
 
-# kube-apiserver
-# Kubernetes component
-
-let
-  version = "1.34.0";
-  kube-apiserver = buildGoModule {
-    pname = "kube-apiserver";
-    inherit version;
-
-    src = fetchFromGitHub {
-      owner = "kubernetes";
-      repo = "kubernetes";
-      rev = "v${version}";
-      hash = "sha256-rKy4X01pX+kovJ8b2JHV0KuzHJ7PYZ08eDEO3GeuPoc=";
-    };
-
-    vendorHash = null;
-    subPackages = [ "cmd/apiserver" ];
-    
-    env.CGO_ENABLED = 0;
-
-    ldflags = [ "-s" "-w" ];
-    doCheck = false;
-  };
-
-in
+# kube-apiserver-1.34-default — Kubernetes component from the nixpkgs binary (auto-updates via flake.lock).
 mkImage {
-  drv = kube-apiserver;
+  drv = pkgs.kubernetes;
   name = "kube-apiserver-1.34-default";
-  tag = "v${version}";
-  entrypoint = [ "${kube-apiserver}/bin/apiserver" ];
+  tag = "v${pkgs.kubernetes.version}";
+  entrypoint = [ "${pkgs.kubernetes}/bin/kube-apiserver" ];
   cmd = [];
-
   extraPkgs = with pkgs; [ cacert tzdata ];
-
   labels = {
-    "org.opencontainers.image.title" = "kuue apiserver";
+    "org.opencontainers.image.title" = "kube-apiserver-1.34-default";
     "org.opencontainers.image.description" = "Kubernetes kube-apiserver";
-    "org.opencontainers.image.version" = version;
+    "org.opencontainers.image.version" = pkgs.kubernetes.version;
     "io.nix-containers.chart" = "kubernetes";
   };
 }
