@@ -4,20 +4,20 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "0.92.1";
   prometheus-component = buildGoModule {
     pname = "prometheus-config-reloader-fips";
     inherit version;
 
     src = fetchFromGitHub {
-      owner = "prometheus";
-      repo = "config-reloader";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      owner = "prometheus-operator";
+      repo = "prometheus-operator";
+      rev = "v0.92.1";
+      hash = "sha256-z2dUojKghsqtIM5dWj0CxVRGcjBWlO8tLLGqj8LfaxU=";
     };
 
     vendorHash = null;
-    subPackages = [ "." ];
+    subPackages = [ "cmd/prometheus-config-reloader" ];
     
     env.CGO_ENABLED = 1;
     env.GOEXPERIMENT = "boringcrypto";

@@ -4,16 +4,16 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "0.30.0";
   prometheus-component = buildGoModule {
     pname = "prometheus-statsd-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "prometheus";
-      repo = "statsd-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      repo = "statsd_exporter";
+      rev = "v0.30.0";
+      hash = "sha256-BvX1S+PXOGVk5VmBcGypANmf5gJk1niA1knCxUAfQLY=";
     };
 
     vendorHash = null;

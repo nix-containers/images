@@ -4,16 +4,16 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "0.28.0";
   prometheus-component = buildGoModule {
     pname = "prometheus-blackbox-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "prometheus";
-      repo = "blackbox-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      repo = "blackbox_exporter";
+      rev = "v0.28.0";
+      hash = "sha256-Wt4AVBDptGJ4BlPzdaym5YyXRo0ApBDGEhoSrX7oRf4=";
     };
 
     vendorHash = null;

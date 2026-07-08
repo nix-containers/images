@@ -4,20 +4,20 @@
 # Rancher component
 
 let
-  version = "2.10.0";
+  version = "0.15.4";
   rancher-component = buildGoModule {
     pname = "rancher-fleet-agent-fips";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "rancher";
-      repo = "fleet-agent";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      repo = "fleet";
+      rev = "v0.15.4";
+      hash = "sha256-wyhLs1vZI8wtIu2rJZYT78GXe9t2VQqhM+MlNlNx6pU=";
     };
 
     vendorHash = null;
-    subPackages = [ "." ];
+    subPackages = [ "cmd/fleetagent" ];
     
     env.CGO_ENABLED = 1;
     env.GOEXPERIMENT = "boringcrypto";

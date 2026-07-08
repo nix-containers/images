@@ -15,7 +15,7 @@ let
       owner = "traefik";
       repo = "traefik";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Update hash
+      hash = "sha256-OF5HCuMBWSa1JfNE6xu46Oa3sIBHLSrSSXm3M3kTuXU=";  # TODO: Update hash
     };
 
     vendorHash = null;  # Uses vendor directory

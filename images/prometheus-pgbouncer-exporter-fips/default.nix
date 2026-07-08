@@ -4,16 +4,16 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "0.12.1";
   prometheus-component = buildGoModule {
     pname = "prometheus-pgbouncer-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
-      owner = "prometheus";
-      repo = "pgbouncer-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      owner = "prometheus-community";
+      repo = "pgbouncer_exporter";
+      rev = "v0.12.1";
+      hash = "sha256-P82ek6+OcvRd1dIuqkfqU4DEmOtHVkSfN5atLansCK4=";
     };
 
     vendorHash = null;

@@ -13,7 +13,7 @@ let
       owner = "rancher";
       repo = "helm";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-YjMTuV7yNQlzVXdc3M80vV6kFVo2Spll0DHp4ezXP4U=";
     };
 
     vendorHash = null;

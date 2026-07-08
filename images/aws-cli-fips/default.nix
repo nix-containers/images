@@ -12,7 +12,7 @@ let
       owner = "aws";
       repo = "aws-sdk-go";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-7QqI1XcFip2I1zIt2xxWH8k1/C+29XIOtDyY4Fne3uY=";
     };
     vendorHash = null;
     subPackages = [ "." ];

@@ -4,20 +4,20 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "0.12.0";
   prometheus-component = buildGoModule {
     pname = "prometheus-adapter-fips";
     inherit version;
 
     src = fetchFromGitHub {
-      owner = "prometheus";
-      repo = "adapter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      owner = "kubernetes-sigs";
+      repo = "prometheus-adapter";
+      rev = "v0.12.0";
+      hash = "sha256-GNAfrDWVyl0SiIJ+cHYxaLGAwvsHpwhVp4ieGGleXWk=";
     };
 
     vendorHash = null;
-    subPackages = [ "." ];
+    subPackages = [ "cmd/adapter" ];
     
     env.CGO_ENABLED = 1;
     env.GOEXPERIMENT = "boringcrypto";

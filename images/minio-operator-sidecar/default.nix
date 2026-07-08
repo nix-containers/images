@@ -17,10 +17,10 @@ let
       owner = "minio";
       repo = "operator";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+      hash = "sha256-K+q1cL1q5InBTA35R35aPvab17pNrlL0t6iDarWPbdI=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-/i1NmGT/3trJrmPHSZz8R8tqGqVPdJmf7Kxe5izBm+M=";  # TODO: Fix hash after first build
 
     sourceRoot = "source/sidecar";
 

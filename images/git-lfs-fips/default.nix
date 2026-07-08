@@ -15,7 +15,7 @@ let
       owner = "git-lfs";
       repo = "git-lfs";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Update with actual hash
+      hash = "sha256-N5ckTnyA3mueZre+rMhFZBiAFgEu4pmtzkiUidXnan8=";  # TODO: Update with actual hash
     };
 
     vendorHash = null;  # Uses vendor directory - update if needed

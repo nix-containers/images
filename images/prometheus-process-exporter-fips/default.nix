@@ -4,20 +4,20 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "0.8.7";
   prometheus-component = buildGoModule {
     pname = "prometheus-process-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
-      owner = "prometheus";
+      owner = "ncabatoff";
       repo = "process-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      rev = "v0.8.7";
+      hash = "sha256-dxXBhrZdYM+mH73K/cdaSmfzbzZaPJYCTzcfXGYMlyY=";
     };
 
     vendorHash = null;
-    subPackages = [ "." ];
+    subPackages = [ "cmd/process-exporter" ];
     
     env.CGO_ENABLED = 1;
     env.GOEXPERIMENT = "boringcrypto";

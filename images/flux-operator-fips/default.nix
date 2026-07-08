@@ -4,16 +4,16 @@
 # Flux GitOps component
 
 let
-  version = "2.4.0";
+  version = "0.54.1";
   flux-component = buildGoModule {
     pname = "flux-operator-fips";
     inherit version;
 
     src = fetchFromGitHub {
-      owner = "fluxcd";
-      repo = "operator";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      owner = "controlplaneio-fluxcd";
+      repo = "flux-operator";
+      rev = "v0.54.1";
+      hash = "sha256-9ZQosFR/FxTrGSWcbNyY3LHYOEFAi06MCOsoeDZLOmc=";
     };
 
     vendorHash = null;

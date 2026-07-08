@@ -15,10 +15,10 @@ let
       owner = "envoyproxy";
       repo = "gateway";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-ZLUC90on8HCKdO3+dbt1GVA8INfwExVW4/18EP21sMk=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    vendorHash = "sha256-1EgjJW/sRWLTZ1jP2iVBtnqEK5A2ptMPdfMiOpjk6Ik=";
 
     subPackages = [ "cmd/envoy-gateway" ];
 
