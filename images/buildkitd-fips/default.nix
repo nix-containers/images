@@ -1,36 +1,32 @@
 { mkImage, pkgs, lib, ... }:
 
 # buildkitd - concurrent, cache-efficient, and Dockerfile-agnostic builder daemon
-# Upstream prebuilt release binary from https://github.com/moby/buildkit
-# Note: the "-fips" suffix denotes the same upstream tool; no FIPS claim is made.
+# https://github.com/moby/buildkit
+# -fips variant packages the upstream buildkitd binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "0.31.1";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "buildkitd-fips";
+  drv = pkgs.buildGoModule {
+    pname = "buildkitd";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/moby/buildkit/releases/download/v${version}/buildkit-v${version}.linux-amd64.tar.gz";
-      hash = "sha256:0vp1a5s4cgl2azipkkg8754vs1v83mahng4sg4cdqsy9s188giqz";
+    src = pkgs.fetchFromGitHub {
+      owner = "moby";
+      repo = "buildkit";
+      rev = "v${version}";
+      hash = "sha256-lpcbCPsnvwMULeZgo1eQ0AqlfsyOMO/7b3ZOCoVTDKk=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    vendorHash = null;
 
-    buildInputs = [
-      pkgs.stdenv.cc.cc.lib
-      pkgs.zlib
-    ];
-
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/bin
-      install -Dm755 bin/* -t $out/bin
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/buildkitd" "cmd/buildctl" ];
+    ldflags = [ "-s" "-w" "-X github.com/moby/buildkit/version.Version=v${version}" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 
 in mkImage {
@@ -42,8 +38,8 @@ in mkImage {
 
   labels = {
     "org.opencontainers.image.title" = "buildkitd-fips";
-    "org.opencontainers.image.description" = "BuildKit builder daemon (moby/buildkit upstream binary)";
+    "org.opencontainers.image.description" = "BuildKit builder daemon (built from source)";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
