@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# katib-suggestion-skopt-enas
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# katib-suggestion-skopt-enas — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/kubeflowkatib/suggestion-skopt:v1beta1-9caa8bc
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "katib-suggestion-skopt-enas";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "katib-suggestion-skopt-enas-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "katiu suggestion skopt enas";
-      "org.opencontainers.image.description" = "katib-suggestion-skopt-enas container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v1beta1-9caa8bc";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1beta1-9caa8bc";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/kubeflowkatib/suggestion-skopt:v1beta1-9caa8bc directly.";
+    "io.nix-containers.upstream-image" = "docker.io/kubeflowkatib/suggestion-skopt:v1beta1-9caa8bc";
+    "io.nix-containers.image.upstream" = "docker.io/kubeflowkatib/suggestion-skopt";
   };
 }

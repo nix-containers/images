@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# nginx-mainline-mod-http_xslt_filter
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# nginx-mainline-mod-http_xslt_filter — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/library/nginx:1.31.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "nginx-mainline-mod-http_xslt_filter";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "nginx-mainline-mod-http_xslt_filter-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "nginx mainline mod http_xslt_filter";
-      "org.opencontainers.image.description" = "nginx-mainline-mod-http_xslt_filter container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "1.31.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.31.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/library/nginx:1.31.2 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/library/nginx:1.31.2";
+    "io.nix-containers.image.upstream" = "docker.io/library/nginx";
   };
 }

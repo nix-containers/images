@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# trillian-logserver-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# trillian-logserver-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: gcr.io/trillian-opensource-ci/log_server:v1.7.3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "trillian-logserver-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "trillian-logserver-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "trillian-logserver-fips";
-      "org.opencontainers.image.description" = "trillian-logserver-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.7.3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.7.3";
+    "org.opencontainers.image.description" = "Upstream reference — pull gcr.io/trillian-opensource-ci/log_server:v1.7.3 directly.";
+    "io.nix-containers.upstream-image" = "gcr.io/trillian-opensource-ci/log_server:v1.7.3";
+    "io.nix-containers.image.upstream" = "gcr.io/trillian-opensource-ci/log_server";
   };
 }

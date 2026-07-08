@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# linkerd-metrics-api
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# linkerd-metrics-api — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/linkerd/metrics-api:stable-2.11.4
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "linkerd-metrics-api";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "linkerd-metrics-api-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "linkerd-metrics-api";
-      "org.opencontainers.image.description" = "linkerd-metrics-api container image";
-    };
+  tag = "stable-2.11.4";
+  config.Labels = {
+    "org.opencontainers.image.version" = "stable-2.11.4";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/linkerd/metrics-api:stable-2.11.4 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/linkerd/metrics-api:stable-2.11.4";
+    "io.nix-containers.image.upstream" = "ghcr.io/linkerd/metrics-api";
   };
 }

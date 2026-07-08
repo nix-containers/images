@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# infinispan
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# infinispan — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/infinispan/server:16.0.14
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "infinispan";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "infinispan-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "infinispan";
-      "org.opencontainers.image.description" = "infinispan container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "16.0.14";
+  config.Labels = {
+    "org.opencontainers.image.version" = "16.0.14";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/infinispan/server:16.0.14 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/infinispan/server:16.0.14";
+    "io.nix-containers.image.upstream" = "docker.io/infinispan/server";
   };
 }

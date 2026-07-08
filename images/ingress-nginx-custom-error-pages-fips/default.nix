@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# ingress-nginx-custom-error-pages-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# ingress-nginx-custom-error-pages-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: quay.io/kubernetes-ingress-controller/custom-error-pages:0.4
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "ingress-nginx-custom-error-pages-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "ingress-nginx-custom-error-pages-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "ingress nginx custom error pages fips";
-      "org.opencontainers.image.description" = "ingress-nginx-custom-error-pages-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "0.4";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.4";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/kubernetes-ingress-controller/custom-error-pages:0.4 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/kubernetes-ingress-controller/custom-error-pages:0.4";
+    "io.nix-containers.image.upstream" = "quay.io/kubernetes-ingress-controller/custom-error-pages";
   };
 }

@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# temporal-server-oci-entrypoint-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# temporal-server-oci-entrypoint-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/temporalio/server:1.31.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "temporal-server-oci-entrypoint-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "temporal-server-oci-entrypoint-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "temporal server oci entrypoint fips";
-      "org.opencontainers.image.description" = "temporal-server-oci-entrypoint-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "1.31.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.31.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/temporalio/server:1.31.2 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/temporalio/server:1.31.2";
+    "io.nix-containers.image.upstream" = "docker.io/temporalio/server";
   };
 }

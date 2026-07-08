@@ -74,6 +74,13 @@ jobs:
             find images -mindepth 2 -maxdepth 2 -name default.nix -printf '%h\n' \
               | sed 's#images/##' | sort -u | grep -E "^$(printf '%s' "$PREFIX" | sed 's/[.[\*^$]/\\&/g')" || true
           )
+          # Drop upstream-reference images (catalog cards pointing at the OSS
+          # upstream — not built or hosted by us).
+          FILTERED=()
+          for nm in "${NAMES[@]}"; do
+            grep -q 'io\.nix-containers\.upstream-image' "images/$nm/default.nix" 2>/dev/null || FILTERED+=("$nm")
+          done
+          NAMES=("${FILTERED[@]}")
           COUNT=${#NAMES[@]}
           echo "Shard '${PREFIX}' matches ${COUNT} image(s)."
           echo "count=${COUNT}" >> "$GITHUB_OUTPUT"

@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# clamav-1.5-libunrar
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# clamav-1.5-libunrar — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/clamav/clamav:1.5.3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "clamav-1.5-libunrar";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "clamav-1.5-libunrar-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "clamav 1.5 liuunrar";
-      "org.opencontainers.image.description" = "clamav-1.5-libunrar container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "1.5.3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.5.3";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/clamav/clamav:1.5.3 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/clamav/clamav:1.5.3";
+    "io.nix-containers.image.upstream" = "docker.io/clamav/clamav";
   };
 }

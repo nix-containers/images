@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# mongodb-kubernetes-operator-readinessprobe
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# mongodb-kubernetes-operator-readinessprobe — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: quay.io/mongodb/mongodb-kubernetes-readinessprobe:1.0.24
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "mongodb-kubernetes-operator-readinessprobe";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "mongodb-kubernetes-operator-readinessprobe-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "mongodu kuuernetes operator readinessproue";
-      "org.opencontainers.image.description" = "mongodb-kubernetes-operator-readinessprobe container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "1.0.24";
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.0.24";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/mongodb/mongodb-kubernetes-readinessprobe:1.0.24 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/mongodb/mongodb-kubernetes-readinessprobe:1.0.24";
+    "io.nix-containers.image.upstream" = "quay.io/mongodb/mongodb-kubernetes-readinessprobe";
   };
 }

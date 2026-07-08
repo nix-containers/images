@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# opentelemetry-operator-fips-otel-allocator
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# opentelemetry-operator-fips-otel-allocator — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/open-telemetry/opentelemetry-operator/target-allocator:0.97.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "opentelemetry-operator-fips-otel-allocator";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "opentelemetry-operator-fips-otel-allocator-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "opentelemetry operator fips otel allocator";
-      "org.opencontainers.image.description" = "opentelemetry-operator-fips-otel-allocator container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "0.97.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.97.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/open-telemetry/opentelemetry-operator/target-allocator:0.97.0 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/open-telemetry/opentelemetry-operator/target-allocator:0.97.0";
+    "io.nix-containers.image.upstream" = "ghcr.io/open-telemetry/opentelemetry-operator/target-allocator";
   };
 }

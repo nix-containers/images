@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# policy-controller
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# policy-controller — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/sigstore/policy-controller/policy-controller:v0.9.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "policy-controller";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "policy-controller-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "policy controller";
-      "org.opencontainers.image.description" = "policy-controller container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v0.9.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.9.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/sigstore/policy-controller/policy-controller:v0.9.0 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/sigstore/policy-controller/policy-controller:v0.9.0";
+    "io.nix-containers.image.upstream" = "ghcr.io/sigstore/policy-controller/policy-controller";
   };
 }

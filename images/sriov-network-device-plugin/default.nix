@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# sriov-network-device-plugin
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# sriov-network-device-plugin — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin:v3.6.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "sriov-network-device-plugin";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "sriov-network-device-plugin-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "sriov network device plugin";
-      "org.opencontainers.image.description" = "sriov-network-device-plugin container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v3.6.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v3.6.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin:v3.6.2 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin:v3.6.2";
+    "io.nix-containers.image.upstream" = "ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin";
   };
 }

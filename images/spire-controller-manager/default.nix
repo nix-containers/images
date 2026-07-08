@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# spire-controller-manager
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# spire-controller-manager — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/spiffe/spire-controller-manager:0.6.6
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "spire-controller-manager";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "spire-controller-manager-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "spire-controller-manager";
-      "org.opencontainers.image.description" = "spire-controller-manager container image";
-    };
+  tag = "0.6.6";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.6.6";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/spiffe/spire-controller-manager:0.6.6 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/spiffe/spire-controller-manager:0.6.6";
+    "io.nix-containers.image.upstream" = "ghcr.io/spiffe/spire-controller-manager";
   };
 }

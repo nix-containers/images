@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# linkerd-extension-init
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# linkerd-extension-init — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/linkerd/extension-init:v0.1.11
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "linkerd-extension-init";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "linkerd-extension-init-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "linkerd-extension-init";
-      "org.opencontainers.image.description" = "linkerd-extension-init container image";
-    };
+  tag = "v0.1.11";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.1.11";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/linkerd/extension-init:v0.1.11 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/linkerd/extension-init:v0.1.11";
+    "io.nix-containers.image.upstream" = "ghcr.io/linkerd/extension-init";
   };
 }

@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# hubble-ui-backend-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# hubble-ui-backend-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: quay.io/cilium/hubble-ui-backend:v0.13.5
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "hubble-ui-backend-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "hubble-ui-backend-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "huuble ui uackend fips";
-      "org.opencontainers.image.description" = "hubble-ui-backend-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v0.13.5";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.13.5";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/cilium/hubble-ui-backend:v0.13.5 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/cilium/hubble-ui-backend:v0.13.5";
+    "io.nix-containers.image.upstream" = "quay.io/cilium/hubble-ui-backend";
   };
 }

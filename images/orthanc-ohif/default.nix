@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# orthanc-ohif
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# orthanc-ohif — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/jodogne/orthanc:1.12.11
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "orthanc-ohif";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "orthanc-ohif-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "orthanc ohif";
-      "org.opencontainers.image.description" = "orthanc-ohif container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "1.12.11";
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.12.11";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/jodogne/orthanc:1.12.11 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/jodogne/orthanc:1.12.11";
+    "io.nix-containers.image.upstream" = "docker.io/jodogne/orthanc";
   };
 }

@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# superset-nixchart
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# superset-nixchart — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/apache/superset:4.1.4
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "superset-nixchart";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "superset-nixchart-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "superset-nixchart";
-      "org.opencontainers.image.description" = "superset-nixchart container image";
-    };
+  tag = "4.1.4";
+  config.Labels = {
+    "org.opencontainers.image.version" = "4.1.4";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/apache/superset:4.1.4 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/apache/superset:4.1.4";
+    "io.nix-containers.image.upstream" = "docker.io/apache/superset";
   };
 }

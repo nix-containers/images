@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# newrelic-infrastructure-bundle-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# newrelic-infrastructure-bundle-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/newrelic/infrastructure-bundle:3.3.33
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "newrelic-infrastructure-bundle-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "newrelic-infrastructure-bundle-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "newrelic infrastructure uundle fips";
-      "org.opencontainers.image.description" = "newrelic-infrastructure-bundle-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "3.3.33";
+  config.Labels = {
+    "org.opencontainers.image.version" = "3.3.33";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/newrelic/infrastructure-bundle:3.3.33 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/newrelic/infrastructure-bundle:3.3.33";
+    "io.nix-containers.image.upstream" = "docker.io/newrelic/infrastructure-bundle";
   };
 }

@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# pdns-5.2-recursor-nosodium
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# pdns-5.2-recursor-nosodium — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/powerdns/pdns-recursor-52:5.2.11
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "pdns-5.2-recursor-nosodium";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "pdns-5.2-recursor-nosodium-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "pdns 5.2 recursor nosodium";
-      "org.opencontainers.image.description" = "pdns-5.2-recursor-nosodium container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "5.2.11";
+  config.Labels = {
+    "org.opencontainers.image.version" = "5.2.11";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/powerdns/pdns-recursor-52:5.2.11 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/powerdns/pdns-recursor-52:5.2.11";
+    "io.nix-containers.image.upstream" = "docker.io/powerdns/pdns-recursor-52";
   };
 }

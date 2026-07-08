@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# tetragon-bash-completion
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# tetragon-bash-completion — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: quay.io/cilium/tetragon:v1.7.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "tetragon-bash-completion";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "tetragon-bash-completion-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "tetragon uash completion";
-      "org.opencontainers.image.description" = "tetragon-bash-completion container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v1.7.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.7.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/cilium/tetragon:v1.7.0 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/cilium/tetragon:v1.7.0";
+    "io.nix-containers.image.upstream" = "quay.io/cilium/tetragon";
   };
 }

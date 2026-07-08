@@ -1,9 +1,15 @@
-# playwright-headed (full Chromium + headless shell)
-# See ../playwright/build.nix for shared configuration.
+{ nix2container, lib, pkgs, ... }:
 
-{ nix2container, pkgs, lib, nonRoot, ... }:
-
-import ../playwright-headless/build.nix {
-  inherit nix2container pkgs nonRoot;
-  headed = true;
+# playwright-headed — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: mcr.microsoft.com/playwright:v1.49.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
+  name = "playwright-headed";
+  tag = "v1.49.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.49.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull mcr.microsoft.com/playwright:v1.49.1 directly.";
+    "io.nix-containers.upstream-image" = "mcr.microsoft.com/playwright:v1.49.1";
+    "io.nix-containers.image.upstream" = "mcr.microsoft.com/playwright";
+  };
 }

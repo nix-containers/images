@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# kaniko-warmer-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# kaniko-warmer-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: gcr.io/kaniko-project/warmer:v1.19.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "kaniko-warmer-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "kaniko-warmer-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "kaniko warmer fips";
-      "org.opencontainers.image.description" = "kaniko-warmer-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.19.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.19.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull gcr.io/kaniko-project/warmer:v1.19.2 directly.";
+    "io.nix-containers.upstream-image" = "gcr.io/kaniko-project/warmer:v1.19.2";
+    "io.nix-containers.image.upstream" = "gcr.io/kaniko-project/warmer";
   };
 }

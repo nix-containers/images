@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# tritonserver-backend-pytorch-cuda
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# tritonserver-backend-pytorch-cuda — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: nvcr.io/nvidia/tritonserver:26.06-pyt-python-py3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "tritonserver-backend-pytorch-cuda";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "tritonserver-backend-pytorch-cuda-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "tritonserver uackend pytorch cuda";
-      "org.opencontainers.image.description" = "tritonserver-backend-pytorch-cuda container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "26.06-pyt-python-py3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "26.06-pyt-python-py3";
+    "org.opencontainers.image.description" = "Upstream reference — pull nvcr.io/nvidia/tritonserver:26.06-pyt-python-py3 directly.";
+    "io.nix-containers.upstream-image" = "nvcr.io/nvidia/tritonserver:26.06-pyt-python-py3";
+    "io.nix-containers.image.upstream" = "nvcr.io/nvidia/tritonserver";
   };
 }

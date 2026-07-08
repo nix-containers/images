@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# linkerd-tap
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# linkerd-tap — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/linkerd/tap:stable-2.12.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "linkerd-tap";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "linkerd-tap-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "linkerd-tap";
-      "org.opencontainers.image.description" = "linkerd-tap container image";
-    };
+  tag = "stable-2.12.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "stable-2.12.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/linkerd/tap:stable-2.12.0 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/linkerd/tap:stable-2.12.0";
+    "io.nix-containers.image.upstream" = "ghcr.io/linkerd/tap";
   };
 }

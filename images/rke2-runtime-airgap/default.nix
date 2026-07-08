@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# rke2-runtime-airgap
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# rke2-runtime-airgap — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/rancher/rke2-runtime:v1.36.2-rke2r1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "rke2-runtime-airgap";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "rke2-runtime-airgap-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "rke2-runtime-airgap";
-      "org.opencontainers.image.description" = "rke2-runtime-airgap container image";
-    };
+  tag = "v1.36.2-rke2r1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.36.2-rke2r1";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/rancher/rke2-runtime:v1.36.2-rke2r1 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/rancher/rke2-runtime:v1.36.2-rke2r1";
+    "io.nix-containers.image.upstream" = "docker.io/rancher/rke2-runtime";
   };
 }

@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# wavefront-proxy
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# wavefront-proxy — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/wavefronthq/proxy:13.7
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "wavefront-proxy";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "wavefront-proxy-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "wavefront proxy";
-      "org.opencontainers.image.description" = "wavefront-proxy container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "13.7";
+  config.Labels = {
+    "org.opencontainers.image.version" = "13.7";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/wavefronthq/proxy:13.7 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/wavefronthq/proxy:13.7";
+    "io.nix-containers.image.upstream" = "docker.io/wavefronthq/proxy";
   };
 }

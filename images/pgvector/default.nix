@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# pgvector
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# pgvector — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/pgvector/pgvector:0.8.4-pg17-trixie
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "pgvector";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "pgvector-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "pgvector";
-      "org.opencontainers.image.description" = "pgvector container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "0.8.4-pg17-trixie";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.8.4-pg17-trixie";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/pgvector/pgvector:0.8.4-pg17-trixie directly.";
+    "io.nix-containers.upstream-image" = "docker.io/pgvector/pgvector:0.8.4-pg17-trixie";
+    "io.nix-containers.image.upstream" = "docker.io/pgvector/pgvector";
   };
 }

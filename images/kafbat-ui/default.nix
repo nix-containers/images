@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# kafbat-ui
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# kafbat-ui — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/kafbat/kafka-ui:v1.5.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "kafbat-ui";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "kafbat-ui-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "kafuat ui";
-      "org.opencontainers.image.description" = "kafbat-ui container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v1.5.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.5.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/kafbat/kafka-ui:v1.5.0 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/kafbat/kafka-ui:v1.5.0";
+    "io.nix-containers.image.upstream" = "docker.io/kafbat/kafka-ui";
   };
 }

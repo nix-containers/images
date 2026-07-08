@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# gatekeeper-crds
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# gatekeeper-crds — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/openpolicyagent/gatekeeper:v3.22.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "gatekeeper-crds";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "gatekeeper-crds-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "gatekeeper-crds";
-      "org.opencontainers.image.description" = "gatekeeper-crds container image";
-    };
+  tag = "v3.22.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v3.22.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/openpolicyagent/gatekeeper:v3.22.2 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/openpolicyagent/gatekeeper:v3.22.2";
+    "io.nix-containers.image.upstream" = "docker.io/openpolicyagent/gatekeeper";
   };
 }

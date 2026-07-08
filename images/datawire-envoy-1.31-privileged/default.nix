@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# datawire-envoy-1.31-privileged
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# datawire-envoy-1.31-privileged — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/envoyproxy/envoy:v1.31.5
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "datawire-envoy-1.31-privileged";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "datawire-envoy-1.31-privileged-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "datawire envoy 1.31 privileged";
-      "org.opencontainers.image.description" = "datawire-envoy-1.31-privileged container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v1.31.5";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.31.5";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/envoyproxy/envoy:v1.31.5 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/envoyproxy/envoy:v1.31.5";
+    "io.nix-containers.image.upstream" = "docker.io/envoyproxy/envoy";
   };
 }

@@ -1,15 +1,15 @@
-{ nix2container, pkgs, lib, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# amazon-corretto-jdk — mirror of OSS upstream docker.io/amazoncorretto (#618).
-let
-  upstream = nix2container.pullImage {
-    imageName = "docker.io/amazoncorretto";
-    imageDigest = "sha256:975b191f99b2f0fb9e76397b7d85523e9904dcb679e54d5f9099c1cdeab21cf1";
-    sha256 = "sha256-A9KmYVQHiNH6noFek5VwEtpQZoJhiJhTf9lROGtyrLM=";
-  };
-in
+# amazon-corretto-jdk — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/amazoncorretto:21
+# Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "amazon-corretto-jdk";
   tag = "21";
-  fromImage = upstream;
+  config.Labels = {
+    "org.opencontainers.image.version" = "21";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/amazoncorretto:21 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/amazoncorretto:21";
+    "io.nix-containers.image.upstream" = "docker.io/amazoncorretto";
+  };
 }

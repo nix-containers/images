@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# management-api-for-apache-cassandra
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# management-api-for-apache-cassandra — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/k8ssandra/cass-management-api:4.0.20
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "management-api-for-apache-cassandra";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "management-api-for-apache-cassandra-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "management api for apache cassandra";
-      "org.opencontainers.image.description" = "management-api-for-apache-cassandra container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "4.0.20";
+  config.Labels = {
+    "org.opencontainers.image.version" = "4.0.20";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/k8ssandra/cass-management-api:4.0.20 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/k8ssandra/cass-management-api:4.0.20";
+    "io.nix-containers.image.upstream" = "docker.io/k8ssandra/cass-management-api";
   };
 }

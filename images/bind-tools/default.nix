@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# bind-tools
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# bind-tools — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/internetsystemsconsortium/bind9:9.20
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "bind-tools";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "bind-tools-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "uind tools";
-      "org.opencontainers.image.description" = "bind-tools container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "9.20";
+  config.Labels = {
+    "org.opencontainers.image.version" = "9.20";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/internetsystemsconsortium/bind9:9.20 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/internetsystemsconsortium/bind9:9.20";
+    "io.nix-containers.image.upstream" = "docker.io/internetsystemsconsortium/bind9";
   };
 }

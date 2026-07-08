@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# valkey-9.0-benchmark
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# valkey-9.0-benchmark — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/valkey/valkey:9.0-trixie
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "valkey-9.0-benchmark";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "valkey-9.0-benchmark-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "valkey 9.0 uenchmark";
-      "org.opencontainers.image.description" = "valkey-9.0-benchmark container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "9.0-trixie";
+  config.Labels = {
+    "org.opencontainers.image.version" = "9.0-trixie";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/valkey/valkey:9.0-trixie directly.";
+    "io.nix-containers.upstream-image" = "docker.io/valkey/valkey:9.0-trixie";
+    "io.nix-containers.image.upstream" = "docker.io/valkey/valkey";
   };
 }

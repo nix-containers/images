@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# keda-fips-2.18-metrics-apiserver
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# keda-fips-2.18-metrics-apiserver — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/kedacore/keda-metrics-apiserver:2.6.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "keda-fips-2.18-metrics-apiserver";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "keda-fips-2.18-metrics-apiserver-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "keda fips 2.18 metrics apiserver";
-      "org.opencontainers.image.description" = "keda-fips-2.18-metrics-apiserver container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "2.6.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2.6.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/kedacore/keda-metrics-apiserver:2.6.1 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/kedacore/keda-metrics-apiserver:2.6.1";
+    "io.nix-containers.image.upstream" = "ghcr.io/kedacore/keda-metrics-apiserver";
   };
 }

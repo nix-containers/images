@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# ratify-crds-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# ratify-crds-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/ratify-project/ratify-crds:v1.4.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "ratify-crds-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "ratify-crds-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "ratify-crds-fips";
-      "org.opencontainers.image.description" = "ratify-crds-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.4.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.4.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/ratify-project/ratify-crds:v1.4.0 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/ratify-project/ratify-crds:v1.4.0";
+    "io.nix-containers.image.upstream" = "ghcr.io/ratify-project/ratify-crds";
   };
 }

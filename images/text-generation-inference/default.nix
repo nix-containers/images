@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# text-generation-inference
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# text-generation-inference — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: ghcr.io/huggingface/text-generation-inference:0.9.4
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "text-generation-inference";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "text-generation-inference-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "text-generation-inference";
-      "org.opencontainers.image.description" = "text-generation-inference container image";
-    };
+  tag = "0.9.4";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.9.4";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/huggingface/text-generation-inference:0.9.4 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/huggingface/text-generation-inference:0.9.4";
+    "io.nix-containers.image.upstream" = "ghcr.io/huggingface/text-generation-inference";
   };
 }

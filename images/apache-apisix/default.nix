@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# apache-apisix
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# apache-apisix — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/apache/apisix:3.17.0-debian
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "apache-apisix";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "apache-apisix-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "apache apisix";
-      "org.opencontainers.image.description" = "apache-apisix container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "3.17.0-debian";
+  config.Labels = {
+    "org.opencontainers.image.version" = "3.17.0-debian";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/apache/apisix:3.17.0-debian directly.";
+    "io.nix-containers.upstream-image" = "docker.io/apache/apisix:3.17.0-debian";
+    "io.nix-containers.image.upstream" = "docker.io/apache/apisix";
   };
 }

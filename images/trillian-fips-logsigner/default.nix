@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# trillian-fips-logsigner
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# trillian-fips-logsigner — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: gcr.io/trillian-opensource-ci/log_signer:v1.7.3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "trillian-fips-logsigner";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "trillian-fips-logsigner-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "trillian fips logsigner";
-      "org.opencontainers.image.description" = "trillian-fips-logsigner container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.7.3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.7.3";
+    "org.opencontainers.image.description" = "Upstream reference — pull gcr.io/trillian-opensource-ci/log_signer:v1.7.3 directly.";
+    "io.nix-containers.upstream-image" = "gcr.io/trillian-opensource-ci/log_signer:v1.7.3";
+    "io.nix-containers.image.upstream" = "gcr.io/trillian-opensource-ci/log_signer";
   };
 }

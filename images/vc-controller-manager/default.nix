@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# vc-controller-manager
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# vc-controller-manager — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/volcanosh/vc-controller-manager:v1.14.3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "vc-controller-manager";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "vc-controller-manager-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "vc-controller-manager";
-      "org.opencontainers.image.description" = "vc-controller-manager container image";
-    };
+  tag = "v1.14.3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.14.3";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/volcanosh/vc-controller-manager:v1.14.3 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/volcanosh/vc-controller-manager:v1.14.3";
+    "io.nix-containers.image.upstream" = "docker.io/volcanosh/vc-controller-manager";
   };
 }

@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# klipper-helm
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# klipper-helm — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/rancher/klipper-helm:v0.12.0-build20260625
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "klipper-helm";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "klipper-helm-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "klipper helm";
-      "org.opencontainers.image.description" = "klipper-helm container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v0.12.0-build20260625";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.12.0-build20260625";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/rancher/klipper-helm:v0.12.0-build20260625 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/rancher/klipper-helm:v0.12.0-build20260625";
+    "io.nix-containers.image.upstream" = "docker.io/rancher/klipper-helm";
   };
 }

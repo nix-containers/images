@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# thingsboard-tb-mqtt-transport
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# thingsboard-tb-mqtt-transport — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/thingsboard/tb-mqtt-transport:4.3.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "thingsboard-tb-mqtt-transport";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "thingsboard-tb-mqtt-transport-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "thingsuoard tu mqtt transport";
-      "org.opencontainers.image.description" = "thingsboard-tb-mqtt-transport container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "4.3.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "4.3.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/thingsboard/tb-mqtt-transport:4.3.1 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/thingsboard/tb-mqtt-transport:4.3.1";
+    "io.nix-containers.image.upstream" = "docker.io/thingsboard/tb-mqtt-transport";
   };
 }

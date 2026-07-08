@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# timescaledb-oci-entrypoint-pg17
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# timescaledb-oci-entrypoint-pg17 — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/timescale/timescaledb:2.28.2-pg17
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "timescaledb-oci-entrypoint-pg17";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "timescaledb-oci-entrypoint-pg17-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "timescaledu oci entrypoint pg17";
-      "org.opencontainers.image.description" = "timescaledb-oci-entrypoint-pg17 container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "2.28.2-pg17";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2.28.2-pg17";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/timescale/timescaledb:2.28.2-pg17 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/timescale/timescaledb:2.28.2-pg17";
+    "io.nix-containers.image.upstream" = "docker.io/timescale/timescaledb";
   };
 }
