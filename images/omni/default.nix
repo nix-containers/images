@@ -4,7 +4,7 @@
 # https://github.com/siderolabs/omni
 
 let
-  version = "1.9.0";
+  version = "1.9.1";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "omni";
@@ -12,7 +12,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/siderolabs/omni/releases/download/v${version}/omni-linux-amd64";
-      hash = "sha256-6BZdcOFOgscvIdzGNSmXuDaBA7a8ymXO6Cv5NvdL8K8=";
+      hash = "sha256-skbzZ/y+1dN4QYaSGJOYTdSF7WdPqTDovwCOvuF3sr0=";
     };
 
     dontUnpack = true;
