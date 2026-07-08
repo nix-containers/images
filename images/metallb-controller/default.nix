@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# metallb-controller
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# metallb-controller — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: quay.io/metallb/controller:v0.16.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "metallb-controller";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "metallb-controller-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "metallu controller";
-      "org.opencontainers.image.description" = "metallb-controller container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v0.16.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.16.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/metallb/controller:v0.16.1 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/metallb/controller:v0.16.1";
+    "io.nix-containers.image.upstream" = "quay.io/metallb/controller";
   };
 }

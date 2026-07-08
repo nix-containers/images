@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# verticadb-operator-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# verticadb-operator-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/opentext/verticadb-operator:2.2.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "verticadb-operator-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "verticadb-operator-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "verticadu operator fips";
-      "org.opencontainers.image.description" = "verticadb-operator-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "2.2.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2.2.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/opentext/verticadb-operator:2.2.0 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/opentext/verticadb-operator:2.2.0";
+    "io.nix-containers.image.upstream" = "docker.io/opentext/verticadb-operator";
   };
 }

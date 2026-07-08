@@ -285,6 +285,11 @@ function render() {
       ? `<span class="badge bg-fg-muted/20 text-fg-muted font-mono"
                title="Scaffold — placeholder not yet built with the actual software">scaffold</span>`
       : '';
+    // "Good Upstream" badge: this catalog entry references a maintained OSS
+    // upstream image directly (not built or hosted by us — pull the upstream).
+    const upstreamBadge = i.upstreamImage
+      ? `<span class="badge-nix" title="Good upstream — pull directly: ${escapeAttr(i.upstreamImage)}">↑ upstream</span>`
+      : '';
     // "0 CVE" badge: scan exists and reported zero vulnerabilities at
     // every severity level. Only shown when we have actual scan data —
     // missing scan ≠ zero CVE.
@@ -321,6 +326,7 @@ function render() {
           ${highBadge}
           ${zeroCve}
           ${nixBadge}
+          ${upstreamBadge}
           ${scaffoldBadge}
           <span class="badge-cat-${escapeAttr(i.categorySlug || 'unknown')}" title="${escapeAttr(i.categoryDesc || '')}">${escapeHtml(i.category || 'unknown')}</span>
         </div>

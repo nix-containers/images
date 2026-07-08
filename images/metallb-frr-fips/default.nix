@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# metallb-frr-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# metallb-frr-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/frrouting/frr:v8.4.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "metallb-frr-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "metallb-frr-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "metallu frr fips";
-      "org.opencontainers.image.description" = "metallb-frr-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v8.4.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v8.4.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/frrouting/frr:v8.4.1 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/frrouting/frr:v8.4.1";
+    "io.nix-containers.image.upstream" = "docker.io/frrouting/frr";
   };
 }

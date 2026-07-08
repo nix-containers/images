@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# tomcat-10.1-openjdk-21-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# tomcat-10.1-openjdk-21-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/library/tomcat:10.1.57-jre21-temurin
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "tomcat-10.1-openjdk-21-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "tomcat-10.1-openjdk-21-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "binary";
-      "io.nix-containers.build-method" = "Pre-built binary packaged with Nix";
-      "org.opencontainers.image.title" = "tomcat 10.1 openjdk 21 fips";
-      "org.opencontainers.image.description" = "tomcat-10.1-openjdk-21-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "10.1.57-jre21-temurin";
+  config.Labels = {
+    "org.opencontainers.image.version" = "10.1.57-jre21-temurin";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/library/tomcat:10.1.57-jre21-temurin directly.";
+    "io.nix-containers.upstream-image" = "docker.io/library/tomcat:10.1.57-jre21-temurin";
+    "io.nix-containers.image.upstream" = "docker.io/library/tomcat";
   };
 }

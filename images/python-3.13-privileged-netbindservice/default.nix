@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# python-3.13-privileged-netbindservice
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# python-3.13-privileged-netbindservice — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/library/python:3.13.14
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "python-3.13-privileged-netbindservice";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "python-3.13-privileged-netbindservice-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "python 3.13 privileged netuindservice";
-      "org.opencontainers.image.description" = "python-3.13-privileged-netbindservice container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "3.13.14";
+  config.Labels = {
+    "org.opencontainers.image.version" = "3.13.14";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/library/python:3.13.14 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/library/python:3.13.14";
+    "io.nix-containers.image.upstream" = "docker.io/library/python";
   };
 }

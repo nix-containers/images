@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# gdal-py3.13
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# gdal-py3.13 — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/osgeo/gdal:ubuntu-full-3.6.3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "gdal-py3.13";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "gdal-py3.13-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "gdal py3.13";
-      "org.opencontainers.image.description" = "gdal-py3.13 container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "ubuntu-full-3.6.3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "ubuntu-full-3.6.3";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/osgeo/gdal:ubuntu-full-3.6.3 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/osgeo/gdal:ubuntu-full-3.6.3";
+    "io.nix-containers.image.upstream" = "docker.io/osgeo/gdal";
   };
 }

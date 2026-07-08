@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# vllm-openai-cuda
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# vllm-openai-cuda — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/vllm/vllm-openai:v0.24.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "vllm-openai-cuda";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "vllm-openai-cuda-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "vllm openai cuda";
-      "org.opencontainers.image.description" = "vllm-openai-cuda container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v0.24.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.24.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/vllm/vllm-openai:v0.24.0 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/vllm/vllm-openai:v0.24.0";
+    "io.nix-containers.image.upstream" = "docker.io/vllm/vllm-openai";
   };
 }

@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# ffmpeg-cuda-7.1-nozeromq
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# ffmpeg-cuda-7.1-nozeromq — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/jrottenberg/ffmpeg:8.0-nvidia
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "ffmpeg-cuda-7.1-nozeromq";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "ffmpeg-cuda-7.1-nozeromq-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "ffmpeg cuda 7.1 nozeromq";
-      "org.opencontainers.image.description" = "ffmpeg-cuda-7.1-nozeromq container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "8.0-nvidia";
+  config.Labels = {
+    "org.opencontainers.image.version" = "8.0-nvidia";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/jrottenberg/ffmpeg:8.0-nvidia directly.";
+    "io.nix-containers.upstream-image" = "docker.io/jrottenberg/ffmpeg:8.0-nvidia";
+    "io.nix-containers.image.upstream" = "docker.io/jrottenberg/ffmpeg";
   };
 }

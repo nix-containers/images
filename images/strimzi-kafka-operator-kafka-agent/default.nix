@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# strimzi-kafka-operator-kafka-agent
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# strimzi-kafka-operator-kafka-agent — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: quay.io/strimzi/kafka:0.47.0-kafka-4.0.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "strimzi-kafka-operator-kafka-agent";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "strimzi-kafka-operator-kafka-agent-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "strimzi kafka operator kafka agent";
-      "org.opencontainers.image.description" = "strimzi-kafka-operator-kafka-agent container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "0.47.0-kafka-4.0.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.47.0-kafka-4.0.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/strimzi/kafka:0.47.0-kafka-4.0.0 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/strimzi/kafka:0.47.0-kafka-4.0.0";
+    "io.nix-containers.image.upstream" = "quay.io/strimzi/kafka";
   };
 }

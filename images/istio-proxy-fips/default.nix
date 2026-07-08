@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# istio-proxy-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# istio-proxy-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/istio/proxyv2:1.28.10
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "istio-proxy-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "istio-proxy-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "istio-proxy-fips";
-      "org.opencontainers.image.description" = "istio-proxy-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "1.28.10";
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.28.10";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/istio/proxyv2:1.28.10 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/istio/proxyv2:1.28.10";
+    "io.nix-containers.image.upstream" = "docker.io/istio/proxyv2";
   };
 }

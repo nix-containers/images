@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# repmgr
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# repmgr — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/bitnamilegacy/postgresql-repmgr:17.6.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "repmgr";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "repmgr-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "repmgr";
-      "org.opencontainers.image.description" = "repmgr container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "17.6.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "17.6.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/bitnamilegacy/postgresql-repmgr:17.6.0 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/bitnamilegacy/postgresql-repmgr:17.6.0";
+    "io.nix-containers.image.upstream" = "docker.io/bitnamilegacy/postgresql-repmgr";
   };
 }

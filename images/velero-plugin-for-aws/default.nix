@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# velero-plugin-for-aws
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# velero-plugin-for-aws — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/velero/velero-plugin-for-aws:v1.14.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "velero-plugin-for-aws";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "velero-plugin-for-aws-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "velero plugin for aws";
-      "org.opencontainers.image.description" = "velero-plugin-for-aws container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v1.14.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.14.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/velero/velero-plugin-for-aws:v1.14.2 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/velero/velero-plugin-for-aws:v1.14.2";
+    "io.nix-containers.image.upstream" = "docker.io/velero/velero-plugin-for-aws";
   };
 }

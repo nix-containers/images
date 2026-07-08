@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# azurefile-csi-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# azurefile-csi-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: mcr.microsoft.com/oss/kubernetes-csi/azurefile-csi:v1.33.3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "azurefile-csi-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "azurefile-csi-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "azurefile csi fips";
-      "org.opencontainers.image.description" = "azurefile-csi-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.33.3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.33.3";
+    "org.opencontainers.image.description" = "Upstream reference — pull mcr.microsoft.com/oss/kubernetes-csi/azurefile-csi:v1.33.3 directly.";
+    "io.nix-containers.upstream-image" = "mcr.microsoft.com/oss/kubernetes-csi/azurefile-csi:v1.33.3";
+    "io.nix-containers.image.upstream" = "mcr.microsoft.com/oss/kubernetes-csi/azurefile-csi";
   };
 }

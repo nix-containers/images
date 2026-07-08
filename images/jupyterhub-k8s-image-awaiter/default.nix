@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# jupyterhub-k8s-image-awaiter
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# jupyterhub-k8s-image-awaiter — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/jupyterhub/k8s-image-awaiter:4.4.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "jupyterhub-k8s-image-awaiter";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "jupyterhub-k8s-image-awaiter-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "jupyterhuu k8s image awaiter";
-      "org.opencontainers.image.description" = "jupyterhub-k8s-image-awaiter container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "4.4.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "4.4.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/jupyterhub/k8s-image-awaiter:4.4.0 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/jupyterhub/k8s-image-awaiter:4.4.0";
+    "io.nix-containers.image.upstream" = "docker.io/jupyterhub/k8s-image-awaiter";
   };
 }

@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# metrics-agent
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# metrics-agent — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/cloudability/metrics-agent:2.14.14
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "metrics-agent";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "metrics-agent-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "metrics-agent";
-      "org.opencontainers.image.description" = "metrics-agent container image";
-    };
+  tag = "2.14.14";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2.14.14";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/cloudability/metrics-agent:2.14.14 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/cloudability/metrics-agent:2.14.14";
+    "io.nix-containers.image.upstream" = "docker.io/cloudability/metrics-agent";
   };
 }

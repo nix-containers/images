@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# tensorflow-core
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# tensorflow-core — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/tensorflow/tensorflow:2.21.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "tensorflow-core";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "tensorflow-core-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "tensorflow core";
-      "org.opencontainers.image.description" = "tensorflow-core container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "2.21.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2.21.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/tensorflow/tensorflow:2.21.0 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/tensorflow/tensorflow:2.21.0";
+    "io.nix-containers.image.upstream" = "docker.io/tensorflow/tensorflow";
   };
 }

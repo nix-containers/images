@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# neo4j-2025.10-browser
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# neo4j-2025.10-browser — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/library/neo4j:2025.10.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "neo4j-2025.10-browser";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "neo4j-2025.10-browser-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "neo4j 2025.10 urowser";
-      "org.opencontainers.image.description" = "neo4j-2025.10-browser container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "2025.10.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2025.10.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/library/neo4j:2025.10.1 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/library/neo4j:2025.10.1";
+    "io.nix-containers.image.upstream" = "docker.io/library/neo4j";
   };
 }

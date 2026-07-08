@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# sqlpad-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# sqlpad-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/sqlpad/sqlpad:7.5.7
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "sqlpad-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "sqlpad-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "sqlpad-fips";
-      "org.opencontainers.image.description" = "sqlpad-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "7.5.7";
+  config.Labels = {
+    "org.opencontainers.image.version" = "7.5.7";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/sqlpad/sqlpad:7.5.7 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/sqlpad/sqlpad:7.5.7";
+    "io.nix-containers.image.upstream" = "docker.io/sqlpad/sqlpad";
   };
 }

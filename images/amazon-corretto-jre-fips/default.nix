@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# amazon-corretto-jre-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# amazon-corretto-jre-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/amazoncorretto:21
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "amazon-corretto-jre-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "amazon-corretto-jre-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "binary";
-      "io.nix-containers.build-method" = "Pre-built binary packaged with Nix";
-      "org.opencontainers.image.title" = "amazon-corretto-jre-fips";
-      "org.opencontainers.image.description" = "amazon-corretto-jre-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "21";
+  config.Labels = {
+    "org.opencontainers.image.version" = "21";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/amazoncorretto:21 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/amazoncorretto:21";
+    "io.nix-containers.image.upstream" = "docker.io/amazoncorretto";
   };
 }

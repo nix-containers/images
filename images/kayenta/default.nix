@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# kayenta
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# kayenta — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: us-docker.pkg.dev/spinnaker-community/docker/kayenta:0.13.1-20200501030017
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "kayenta";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "kayenta-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "kayenta";
-      "org.opencontainers.image.description" = "kayenta container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "0.13.1-20200501030017";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.13.1-20200501030017";
+    "org.opencontainers.image.description" = "Upstream reference — pull us-docker.pkg.dev/spinnaker-community/docker/kayenta:0.13.1-20200501030017 directly.";
+    "io.nix-containers.upstream-image" = "us-docker.pkg.dev/spinnaker-community/docker/kayenta:0.13.1-20200501030017";
+    "io.nix-containers.image.upstream" = "us-docker.pkg.dev/spinnaker-community/docker/kayenta";
   };
 }

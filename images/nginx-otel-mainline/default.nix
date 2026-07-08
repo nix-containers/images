@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# nginx-otel-mainline
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# nginx-otel-mainline — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/library/nginx:1.31.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "nginx-otel-mainline";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "nginx-otel-mainline-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "nginx otel mainline";
-      "org.opencontainers.image.description" = "nginx-otel-mainline container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "1.31.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.31.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/library/nginx:1.31.2 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/library/nginx:1.31.2";
+    "io.nix-containers.image.upstream" = "docker.io/library/nginx";
   };
 }

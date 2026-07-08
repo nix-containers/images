@@ -24,6 +24,11 @@ jobs:
           first=true
           for dir in images/*/; do
             if [ -d "$dir" ] && [ -f "$dir/default.nix" ]; then
+              # Upstream-reference images are catalog cards pointing at the OSS
+              # upstream (badge) — not built or hosted by us. Skip them.
+              if grep -q 'io\.nix-containers\.upstream-image' "$dir/default.nix"; then
+                continue
+              fi
               image_name=$(basename "$dir")
               if [ "$first" = true ]; then
                 first=false

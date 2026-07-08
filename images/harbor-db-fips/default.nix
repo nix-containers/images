@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# harbor-db-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# harbor-db-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/goharbor/harbor-db:v2.15.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "harbor-db-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "harbor-db-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "harbor-db-fips";
-      "org.opencontainers.image.description" = "harbor-db-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v2.15.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v2.15.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/goharbor/harbor-db:v2.15.2 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/goharbor/harbor-db:v2.15.2";
+    "io.nix-containers.image.upstream" = "docker.io/goharbor/harbor-db";
   };
 }

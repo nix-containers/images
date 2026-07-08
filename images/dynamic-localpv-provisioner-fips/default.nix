@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# dynamic-localpv-provisioner-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# dynamic-localpv-provisioner-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/openebs/provisioner-localpv:4.5.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "dynamic-localpv-provisioner-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "dynamic-localpv-provisioner-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "dynamic localpv provisioner fips";
-      "org.opencontainers.image.description" = "dynamic-localpv-provisioner-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "4.5.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "4.5.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/openebs/provisioner-localpv:4.5.1 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/openebs/provisioner-localpv:4.5.1";
+    "io.nix-containers.image.upstream" = "docker.io/openebs/provisioner-localpv";
   };
 }

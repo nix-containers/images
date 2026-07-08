@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# trino-plugin-tpch
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# trino-plugin-tpch — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/trinodb/trino:482
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "trino-plugin-tpch";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "trino-plugin-tpch-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "trino plugin tpch";
-      "org.opencontainers.image.description" = "trino-plugin-tpch container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "482";
+  config.Labels = {
+    "org.opencontainers.image.version" = "482";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/trinodb/trino:482 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/trinodb/trino:482";
+    "io.nix-containers.image.upstream" = "docker.io/trinodb/trino";
   };
 }

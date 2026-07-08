@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# ingress-nginx-opentelemetry-plugin
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# ingress-nginx-opentelemetry-plugin — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: registry.k8s.io/ingress-nginx/opentelemetry:v20230721-3e2062ee5
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "ingress-nginx-opentelemetry-plugin";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "ingress-nginx-opentelemetry-plugin-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "ingress nginx opentelemetry plugin";
-      "org.opencontainers.image.description" = "ingress-nginx-opentelemetry-plugin container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v20230721-3e2062ee5";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v20230721-3e2062ee5";
+    "org.opencontainers.image.description" = "Upstream reference — pull registry.k8s.io/ingress-nginx/opentelemetry:v20230721-3e2062ee5 directly.";
+    "io.nix-containers.upstream-image" = "registry.k8s.io/ingress-nginx/opentelemetry:v20230721-3e2062ee5";
+    "io.nix-containers.image.upstream" = "registry.k8s.io/ingress-nginx/opentelemetry";
   };
 }

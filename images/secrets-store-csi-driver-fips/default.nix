@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# secrets-store-csi-driver-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# secrets-store-csi-driver-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: registry.k8s.io/csi-secrets-store/driver:v1.6.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "secrets-store-csi-driver-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "secrets-store-csi-driver-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "secrets store csi driver fips";
-      "org.opencontainers.image.description" = "secrets-store-csi-driver-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.6.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.6.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull registry.k8s.io/csi-secrets-store/driver:v1.6.0 directly.";
+    "io.nix-containers.upstream-image" = "registry.k8s.io/csi-secrets-store/driver:v1.6.0";
+    "io.nix-containers.image.upstream" = "registry.k8s.io/csi-secrets-store/driver";
   };
 }

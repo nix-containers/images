@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# neuvector-updater-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# neuvector-updater-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/neuvector/updater:0.0.12
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "neuvector-updater-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "neuvector-updater-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "neuvector-updater-fips";
-      "org.opencontainers.image.description" = "neuvector-updater-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "0.0.12";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.0.12";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/neuvector/updater:0.0.12 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/neuvector/updater:0.0.12";
+    "io.nix-containers.image.upstream" = "docker.io/neuvector/updater";
   };
 }

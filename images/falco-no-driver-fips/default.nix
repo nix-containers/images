@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# falco-no-driver-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# falco-no-driver-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/falcosecurity/falco-no-driver:0.39.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "falco-no-driver-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "falco-no-driver-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "falco-no-driver-fips";
-      "org.opencontainers.image.description" = "falco-no-driver-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "0.39.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.39.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/falcosecurity/falco-no-driver:0.39.2 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/falcosecurity/falco-no-driver:0.39.2";
+    "io.nix-containers.image.upstream" = "docker.io/falcosecurity/falco-no-driver";
   };
 }

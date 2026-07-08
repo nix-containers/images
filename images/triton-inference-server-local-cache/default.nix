@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# triton-inference-server-local-cache
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# triton-inference-server-local-cache — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: nvcr.io/nvidia/tritonserver:26.06-py3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "triton-inference-server-local-cache";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "triton-inference-server-local-cache-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "triton inference server local cache";
-      "org.opencontainers.image.description" = "triton-inference-server-local-cache container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "26.06-py3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "26.06-py3";
+    "org.opencontainers.image.description" = "Upstream reference — pull nvcr.io/nvidia/tritonserver:26.06-py3 directly.";
+    "io.nix-containers.upstream-image" = "nvcr.io/nvidia/tritonserver:26.06-py3";
+    "io.nix-containers.image.upstream" = "nvcr.io/nvidia/tritonserver";
   };
 }

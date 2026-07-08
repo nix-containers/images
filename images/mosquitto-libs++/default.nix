@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# mosquitto-libs++
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# mosquitto-libs++ — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/library/eclipse-mosquitto:2.0.22
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "mosquitto-libs++";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "mosquitto-libs++-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "mosquitto lius++";
-      "org.opencontainers.image.description" = "mosquitto-libs++ container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "2.0.22";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2.0.22";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/library/eclipse-mosquitto:2.0.22 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/library/eclipse-mosquitto:2.0.22";
+    "io.nix-containers.image.upstream" = "docker.io/library/eclipse-mosquitto";
   };
 }

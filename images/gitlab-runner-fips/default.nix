@@ -1,39 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# GitLab runner-fips
-# GitLab component: runner
-
-let
-  componentPkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in
+# gitlab-runner-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/gitlab/gitlab-runner:ubi-fips-v18.11.4
+# Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "gitlab-runner-fips";
-  tag = "latest";
-
-  copyToRoot = [
-    (buildEnv {
-      name = "gitlab-runner-fips-root";
-      paths = base.basePackages ++ componentPkgs ++ [ userEnv ];
-    })
-  ];
-
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "GitLab runner";
-      "org.opencontainers.image.description" = "GitLab runner component";
-      "io.nix-containers.chart" = "gitlab";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "ubi-fips-v18.11.4";
+  config.Labels = {
+    "org.opencontainers.image.version" = "ubi-fips-v18.11.4";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/gitlab/gitlab-runner:ubi-fips-v18.11.4 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/gitlab/gitlab-runner:ubi-fips-v18.11.4";
+    "io.nix-containers.image.upstream" = "docker.io/gitlab/gitlab-runner";
   };
 }

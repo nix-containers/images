@@ -1,15 +1,15 @@
-{ nix2container, pkgs, lib, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# amazon-cloudwatch-agent-start-amazon-cloudwatch-agent — mirror of OSS upstream docker.io/amazon/cloudwatch-agent (#618).
-let
-  upstream = nix2container.pullImage {
-    imageName = "docker.io/amazon/cloudwatch-agent";
-    imageDigest = "sha256:4722a6621bc05c94a852513a8c463dc7a69e3f15b99702aa347e5f8a0d994e7f";
-    sha256 = "sha256-tRT9tXcynXCMrOcmU4xUbBCV/LfwR1Q9+hIAAmPw03A=";
-  };
-in
+# amazon-cloudwatch-agent-start-amazon-cloudwatch-agent — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/amazon/cloudwatch-agent:1.300069.0b1529
+# Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "amazon-cloudwatch-agent-start-amazon-cloudwatch-agent";
   tag = "1.300069.0b1529";
-  fromImage = upstream;
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.300069.0b1529";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/amazon/cloudwatch-agent:1.300069.0b1529 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/amazon/cloudwatch-agent:1.300069.0b1529";
+    "io.nix-containers.image.upstream" = "docker.io/amazon/cloudwatch-agent";
+  };
 }

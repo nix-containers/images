@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# nrdot-collector-k8s-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# nrdot-collector-k8s-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/newrelic/nrdot-collector-k8s:1.12.0-fips
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "nrdot-collector-k8s-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "nrdot-collector-k8s-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "nrdot collector k8s fips";
-      "org.opencontainers.image.description" = "nrdot-collector-k8s-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "1.12.0-fips";
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.12.0-fips";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/newrelic/nrdot-collector-k8s:1.12.0-fips directly.";
+    "io.nix-containers.upstream-image" = "docker.io/newrelic/nrdot-collector-k8s:1.12.0-fips";
+    "io.nix-containers.image.upstream" = "docker.io/newrelic/nrdot-collector-k8s";
   };
 }

@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# rke2-cloud-provider-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# rke2-cloud-provider-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/rancher/rke2-cloud-provider:v1.36.1-0.20260508014929-7bbbf7c9b258-build20260515
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "rke2-cloud-provider-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "rke2-cloud-provider-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "rke2 cloud provider fips";
-      "org.opencontainers.image.description" = "rke2-cloud-provider-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.36.1-0.20260508014929-7bbbf7c9b258-build20260515";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.36.1-0.20260508014929-7bbbf7c9b258-build20260515";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/rancher/rke2-cloud-provider:v1.36.1-0.20260508014929-7bbbf7c9b258-build20260515 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/rancher/rke2-cloud-provider:v1.36.1-0.20260508014929-7bbbf7c9b258-build20260515";
+    "io.nix-containers.image.upstream" = "docker.io/rancher/rke2-cloud-provider";
   };
 }

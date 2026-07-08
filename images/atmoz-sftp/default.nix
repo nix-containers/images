@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# atmoz-sftp
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# atmoz-sftp — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/atmoz/sftp:alpine
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "atmoz-sftp";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "atmoz-sftp-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "atmoz sftp";
-      "org.opencontainers.image.description" = "atmoz-sftp container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "alpine";
+  config.Labels = {
+    "org.opencontainers.image.version" = "alpine";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/atmoz/sftp:alpine directly.";
+    "io.nix-containers.upstream-image" = "docker.io/atmoz/sftp:alpine";
+    "io.nix-containers.image.upstream" = "docker.io/atmoz/sftp";
   };
 }

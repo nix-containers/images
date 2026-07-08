@@ -130,6 +130,7 @@ let
       version = version;
       category = extractLabel nixContent "io\\.nix-containers\\.image\\.category" "utility";
       upstream = extractLabel nixContent "io\\.nix-containers\\.image\\.upstream" "";
+      upstreamImage = extractLabel nixContent "io\\.nix-containers\\.upstream-image" "";
       aliases = extractLabel nixContent "io\\.nix-containers\\.image\\.aliases" imageName;
       hasTest = builtins.pathExists testPath;
       # True when the image packages a tool directly from nixpkgs

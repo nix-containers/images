@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# secrets-store-csi-driver-provider-azure
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# secrets-store-csi-driver-provider-azure — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: mcr.microsoft.com/oss/azure/secrets-store/provider-azure:v1.6.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "secrets-store-csi-driver-provider-azure";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "secrets-store-csi-driver-provider-azure-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "secrets store csi driver provider azure";
-      "org.opencontainers.image.description" = "secrets-store-csi-driver-provider-azure container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v1.6.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.6.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull mcr.microsoft.com/oss/azure/secrets-store/provider-azure:v1.6.2 directly.";
+    "io.nix-containers.upstream-image" = "mcr.microsoft.com/oss/azure/secrets-store/provider-azure:v1.6.2";
+    "io.nix-containers.image.upstream" = "mcr.microsoft.com/oss/azure/secrets-store/provider-azure";
   };
 }

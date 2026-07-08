@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# portieris
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# portieris — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: icr.io/portieris/portieris:v0.13.32
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "portieris";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "portieris-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "portieris";
-      "org.opencontainers.image.description" = "portieris container image";
-    };
+  tag = "v0.13.32";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.13.32";
+    "org.opencontainers.image.description" = "Upstream reference — pull icr.io/portieris/portieris:v0.13.32 directly.";
+    "io.nix-containers.upstream-image" = "icr.io/portieris/portieris:v0.13.32";
+    "io.nix-containers.image.upstream" = "icr.io/portieris/portieris";
   };
 }

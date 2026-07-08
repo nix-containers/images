@@ -1004,6 +1004,7 @@ def main():
             "hasTest": img.get("hasTest", False),
             "fromNixpkgs": img.get("fromNixpkgs", False),
             "upstreamUrl": upstream,
+            "upstreamImage": img.get("upstreamImage", ""),
             "pullCommand": img.get("pullCommand", ""),
             "usedByCharts": img.get("usedByCharts", []),
             "scan": scan or None,

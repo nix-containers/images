@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# dotnet-10-runtime
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# dotnet-10-runtime — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: mcr.microsoft.com/dotnet/runtime:10.0.9
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "dotnet-10-runtime";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "dotnet-10-runtime-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "dotnet 10 runtime";
-      "org.opencontainers.image.description" = "dotnet-10-runtime container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "10.0.9";
+  config.Labels = {
+    "org.opencontainers.image.version" = "10.0.9";
+    "org.opencontainers.image.description" = "Upstream reference — pull mcr.microsoft.com/dotnet/runtime:10.0.9 directly.";
+    "io.nix-containers.upstream-image" = "mcr.microsoft.com/dotnet/runtime:10.0.9";
+    "io.nix-containers.image.upstream" = "mcr.microsoft.com/dotnet/runtime";
   };
 }

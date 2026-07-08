@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# orthanc-dicomweb
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# orthanc-dicomweb — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/orthancteam/orthanc:26.6.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "orthanc-dicomweb";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "orthanc-dicomweb-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "orthanc dicomweb";
-      "org.opencontainers.image.description" = "orthanc-dicomweb container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "26.6.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "26.6.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/orthancteam/orthanc:26.6.1 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/orthancteam/orthanc:26.6.1";
+    "io.nix-containers.image.upstream" = "docker.io/orthancteam/orthanc";
   };
 }

@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# dependency-track-bundled
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# dependency-track-bundled — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/dependencytrack/bundled:4.14.2
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "dependency-track-bundled";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "dependency-track-bundled-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "dependency track uundled";
-      "org.opencontainers.image.description" = "dependency-track-bundled container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "4.14.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "4.14.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/dependencytrack/bundled:4.14.2 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/dependencytrack/bundled:4.14.2";
+    "io.nix-containers.image.upstream" = "docker.io/dependencytrack/bundled";
   };
 }

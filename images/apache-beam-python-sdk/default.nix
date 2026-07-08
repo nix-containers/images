@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# apache-beam-python-sdk
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# apache-beam-python-sdk — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/apache/beam_python3.12_sdk:2.75.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "apache-beam-python-sdk";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "apache-beam-python-sdk-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "apache-beam-python-sdk";
-      "org.opencontainers.image.description" = "apache-beam-python-sdk container image";
-    };
+  tag = "2.75.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2.75.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/apache/beam_python3.12_sdk:2.75.0 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/apache/beam_python3.12_sdk:2.75.0";
+    "io.nix-containers.image.upstream" = "docker.io/apache/beam_python3.12_sdk";
   };
 }

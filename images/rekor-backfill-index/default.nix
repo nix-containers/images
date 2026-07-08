@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# rekor-backfill-index
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# rekor-backfill-index — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: gcr.io/projectsigstore/rekor-server:v1.5.3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "rekor-backfill-index";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "rekor-backfill-index-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "rekor uackfill index";
-      "org.opencontainers.image.description" = "rekor-backfill-index container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v1.5.3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.5.3";
+    "org.opencontainers.image.description" = "Upstream reference — pull gcr.io/projectsigstore/rekor-server:v1.5.3 directly.";
+    "io.nix-containers.upstream-image" = "gcr.io/projectsigstore/rekor-server:v1.5.3";
+    "io.nix-containers.image.upstream" = "gcr.io/projectsigstore/rekor-server";
   };
 }

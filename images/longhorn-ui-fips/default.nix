@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# longhorn-ui-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# longhorn-ui-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/longhornio/longhorn-ui:v1.11.3
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "longhorn-ui-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "longhorn-ui-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "longhorn-ui-fips";
-      "org.opencontainers.image.description" = "longhorn-ui-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.11.3";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.11.3";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/longhornio/longhorn-ui:v1.11.3 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/longhornio/longhorn-ui:v1.11.3";
+    "io.nix-containers.image.upstream" = "docker.io/longhornio/longhorn-ui";
   };
 }

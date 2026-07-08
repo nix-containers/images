@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# az-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# az-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: mcr.microsoft.com/azure-cli:2.88.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "az-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "az-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "az-fips";
-      "org.opencontainers.image.description" = "az-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "2.88.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2.88.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull mcr.microsoft.com/azure-cli:2.88.0 directly.";
+    "io.nix-containers.upstream-image" = "mcr.microsoft.com/azure-cli:2.88.0";
+    "io.nix-containers.image.upstream" = "mcr.microsoft.com/azure-cli";
   };
 }

@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# ml-metadata-store-server
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# ml-metadata-store-server — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: gcr.io/tfx-oss-public/ml_metadata_store_server:v0.22.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "ml-metadata-store-server";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "ml-metadata-store-server-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "ml metadata store server";
-      "org.opencontainers.image.description" = "ml-metadata-store-server container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v0.22.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.22.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull gcr.io/tfx-oss-public/ml_metadata_store_server:v0.22.1 directly.";
+    "io.nix-containers.upstream-image" = "gcr.io/tfx-oss-public/ml_metadata_store_server:v0.22.1";
+    "io.nix-containers.image.upstream" = "gcr.io/tfx-oss-public/ml_metadata_store_server";
   };
 }

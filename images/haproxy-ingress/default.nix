@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# haproxy-ingress
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# haproxy-ingress — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/jcmoraisjr/haproxy-ingress:v0.15.4
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "haproxy-ingress";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "haproxy-ingress-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "haproxy ingress";
-      "org.opencontainers.image.description" = "haproxy-ingress container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v0.15.4";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.15.4";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/jcmoraisjr/haproxy-ingress:v0.15.4 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/jcmoraisjr/haproxy-ingress:v0.15.4";
+    "io.nix-containers.image.upstream" = "docker.io/jcmoraisjr/haproxy-ingress";
   };
 }

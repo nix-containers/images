@@ -1,37 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# apache-nifi-registry-toolkit
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# apache-nifi-registry-toolkit — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/apache/nifi-registry:2.10.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "apache-nifi-registry-toolkit";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "apache-nifi-registry-toolkit-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "apache nifi registry toolkit";
-      "org.opencontainers.image.description" = "apache-nifi-registry-toolkit container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "2.10.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "2.10.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/apache/nifi-registry:2.10.0 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/apache/nifi-registry:2.10.0";
+    "io.nix-containers.image.upstream" = "docker.io/apache/nifi-registry";
   };
 }

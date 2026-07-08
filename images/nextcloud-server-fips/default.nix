@@ -1,35 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# nextcloud-server-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# nextcloud-server-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/library/nextcloud:34.0.1
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "nextcloud-server-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "nextcloud-server-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "nextcloud-server-fips";
-      "org.opencontainers.image.description" = "nextcloud-server-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "34.0.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "34.0.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/library/nextcloud:34.0.1 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/library/nextcloud:34.0.1";
+    "io.nix-containers.image.upstream" = "docker.io/library/nextcloud";
   };
 }

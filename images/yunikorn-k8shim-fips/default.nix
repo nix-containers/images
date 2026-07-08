@@ -1,38 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# yunikorn-k8shim-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# yunikorn-k8shim-fips — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: docker.io/apache/yunikorn:scheduler-1.8.0
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "yunikorn-k8shim-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "yunikorn-k8shim-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "yunikorn k8shim fips";
-      "org.opencontainers.image.description" = "yunikorn-k8shim-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "scheduler-1.8.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "scheduler-1.8.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/apache/yunikorn:scheduler-1.8.0 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/apache/yunikorn:scheduler-1.8.0";
+    "io.nix-containers.image.upstream" = "docker.io/apache/yunikorn";
   };
 }

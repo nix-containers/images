@@ -1,34 +1,15 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# azure-functions-node
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# azure-functions-node — UPSTREAM REFERENCE (not built or hosted by us).
+# Use the OSS upstream image directly: mcr.microsoft.com/azure-functions/node:4-node20
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "azure-functions-node";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "azure-functions-node-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "azure-functions-node";
-      "org.opencontainers.image.description" = "azure-functions-node container image";
-    };
+  tag = "4-node20";
+  config.Labels = {
+    "org.opencontainers.image.version" = "4-node20";
+    "org.opencontainers.image.description" = "Upstream reference — pull mcr.microsoft.com/azure-functions/node:4-node20 directly.";
+    "io.nix-containers.upstream-image" = "mcr.microsoft.com/azure-functions/node:4-node20";
+    "io.nix-containers.image.upstream" = "mcr.microsoft.com/azure-functions/node";
   };
 }
