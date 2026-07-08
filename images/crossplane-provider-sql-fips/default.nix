@@ -4,7 +4,7 @@
 # https://github.com/crossplane-contrib/provider-sql
 
 let
-  version = "0.1.0";
+  version = "0.15.0";
   provider-sql = buildGoModule {
     pname = "provider-sql-fips";
     inherit version;
@@ -13,10 +13,10 @@ let
       owner = "crossplane-contrib";
       repo = "provider-sql";
       rev = "v${version}";
-      hash = "sha256-bWHqUZR0NgZxaPMsDbtr3bSyKdntKle0+YxabSXbf50=";
+      hash = "sha256-3u/5qzQsDCUsGG2BVavZABCJcc8pPpEuqHLZnWxekss=";
     };
 
-    vendorHash = "sha256-8qExPoCI8gwwdcR+5iojcSYbKy1uGVg0cXL7D7cFPwg=";
+    vendorHash = "sha256-L2nFm3RqlZBz1INcR7bJ+Q4cct5SM+mtSBsL7sovtdI=";
 
     subPackages = [ "cmd/provider" ];
 

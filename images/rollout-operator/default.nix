@@ -6,7 +6,7 @@
 #   grafana-rollout-operator (0.32.0-r2)
 
 let
-  version = "0.20.0";
+  version = "0.38.0";
   rollout-operator = buildGoModule {
     pname = "rollout-operator";
     inherit version;
@@ -15,7 +15,7 @@ let
       owner = "grafana";
       repo = "rollout-operator";
       rev = "v${version}";
-      hash = "sha256-m0tgGLELn8V6BL05MdahPzJOti1nCNIcrKByq5VKSRw=";  # TODO: Fix hash after first build
+      hash = "sha256-zha9Ls49DN95tyc11EAzYyM8hfkyiZ9J3UR6Puf+oRY=";  # TODO: Fix hash after first build
     };
 
     vendorHash = null;  # TODO: Update after first build

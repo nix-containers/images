@@ -4,7 +4,7 @@
 # https://github.com/pulumi/pulumi-dotnet
 
 let
-  version = "3.107.2";
+  version = "3.107.3";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "pulumi-language-dotnet";
@@ -12,7 +12,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/pulumi/pulumi-dotnet/releases/download/v${version}/pulumi-language-dotnet-v${version}-linux-amd64.tar.gz";
-      hash = "sha256-Zu9gRE+zA6D4DD1EWtfpIV6FqENI5d1cBbephYWIOXo=";
+      hash = "sha256-NGsg/o0IgN6iMG28msDDcDwdseJTKdw0//SYOl1i3l0=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];

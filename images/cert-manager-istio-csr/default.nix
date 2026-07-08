@@ -4,7 +4,7 @@
 # cert-manager component
 
 let
-  version = "1.16.0";
+  version = "1.20.3";
   component = buildGoModule {
     pname = "cert-manager-istio-csr";
     inherit version;
@@ -12,9 +12,9 @@ let
       owner = "cert-manager";
       repo = "cert-manager";
       rev = "v${version}";
-      hash = "sha256-v/dooQU6QlXNk75DIU6bQ3eu2MuSvS+1abFH/1Hwh2o=";
+      hash = "sha256-YNTaUrtq2FUt8DTzNJaOyuNrlOPkUUx0CeImfGL5+Io=";
     };
-    vendorHash = "sha256-M1tDGVYrwNCe64dzQ6tBKMy7vVuoPCOnErqDFE/n9DY=";
+    vendorHash = "sha256-WIody/rEIDCtwCxrPmtX1+OP5Cs8kpRorUVDs3StLVo=";
     subPackages = [ "." ];
     env.CGO_ENABLED = 0;
     ldflags = [ "-s" "-w" ];
