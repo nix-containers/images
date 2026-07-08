@@ -50,13 +50,11 @@ jobs:
       - name: Mark Nix installed
         run: echo "NIX_INSTALLED=true" >> $GITHUB_ENV
 
-      # Public FlakeHub Cache — pulls prebuilt paths and pushes what we build,
-      # so shared closures across the ~3k images become cache hits over time.
-      # Best-effort: if the org isn't OIDC-linked to FlakeHub the action just
-      # warns, so it must NOT gate the build (continue-on-error).
-      - name: Enable FlakeHub Cache
-        continue-on-error: true
-        uses: DeterminateSystems/flakehub-cache-action@main
+      # (FlakeHub Cache removed — it requires FlakeHub org registration /
+      # OIDC-linking this org doesn't have, so the action hard-errored
+      # "registration required" and broke builds even under continue-on-error.
+      # Attic below is the shared-closure cache; re-add FlakeHub only after the
+      # org is linked at flakehub.com.)
 
       # Self-hosted (Talos) Attic cache — in-cluster, fast. The runner image
       # ships attic-client and the ARC template sets ATTIC_SERVER_URL/ATTIC_TOKEN.
