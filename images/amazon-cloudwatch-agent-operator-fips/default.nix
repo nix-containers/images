@@ -1,38 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# amazon-cloudwatch-agent-operator-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# amazon-cloudwatch-agent-operator-fips — UPSTREAM REFERENCE (not built/hosted). Use public.ecr.aws/cloudwatch-agent/cloudwatch-agent-operator:3.2.0 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "amazon-cloudwatch-agent-operator-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "amazon-cloudwatch-agent-operator-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "amazon cloudwatch agent operator fips";
-      "org.opencontainers.image.description" = "amazon-cloudwatch-agent-operator-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "3.2.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "3.2.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull public.ecr.aws/cloudwatch-agent/cloudwatch-agent-operator:3.2.0 directly.";
+    "io.nix-containers.upstream-image" = "public.ecr.aws/cloudwatch-agent/cloudwatch-agent-operator:3.2.0";
+    "io.nix-containers.image.upstream" = "public.ecr.aws/cloudwatch-agent/cloudwatch-agent-operator";
   };
 }

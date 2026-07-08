@@ -1,37 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# trivy-operator
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# trivy-operator — UPSTREAM REFERENCE (not built/hosted). Use ghcr.io/aquasecurity/trivy-operator:0.22.0 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "trivy-operator";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "trivy-operator-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "trivy operator";
-      "org.opencontainers.image.description" = "trivy-operator container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "0.22.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.22.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/aquasecurity/trivy-operator:0.22.0 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/aquasecurity/trivy-operator:0.22.0";
+    "io.nix-containers.image.upstream" = "ghcr.io/aquasecurity/trivy-operator";
   };
 }

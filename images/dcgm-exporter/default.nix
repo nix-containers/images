@@ -1,37 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# dcgm-exporter
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# dcgm-exporter — UPSTREAM REFERENCE (not built/hosted). Use docker.io/nvidia/dcgm-exporter:4.5.2-4.8.1-ubuntu22.04 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "dcgm-exporter";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "dcgm-exporter-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "dcgm exporter";
-      "org.opencontainers.image.description" = "dcgm-exporter container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "4.5.2-4.8.1-ubuntu22.04";
+  config.Labels = {
+    "org.opencontainers.image.version" = "4.5.2-4.8.1-ubuntu22.04";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/nvidia/dcgm-exporter:4.5.2-4.8.1-ubuntu22.04 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/nvidia/dcgm-exporter:4.5.2-4.8.1-ubuntu22.04";
+    "io.nix-containers.image.upstream" = "docker.io/nvidia/dcgm-exporter";
   };
 }

@@ -1,37 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# k8sgpt-operator
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# k8sgpt-operator — UPSTREAM REFERENCE (not built/hosted). Use ghcr.io/k8sgpt-ai/k8sgpt-operator:v0.0.15 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "k8sgpt-operator";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "k8sgpt-operator-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "k8sgpt operator";
-      "org.opencontainers.image.description" = "k8sgpt-operator container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v0.0.15";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.0.15";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/k8sgpt-ai/k8sgpt-operator:v0.0.15 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/k8sgpt-ai/k8sgpt-operator:v0.0.15";
+    "io.nix-containers.image.upstream" = "ghcr.io/k8sgpt-ai/k8sgpt-operator";
   };
 }

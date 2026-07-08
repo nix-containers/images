@@ -1,37 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# postgres-operator
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# postgres-operator — UPSTREAM REFERENCE (not built/hosted). Use ghcr.io/zalando/postgres-operator:v1.15.1 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "postgres-operator";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "postgres-operator-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "postgres operator";
-      "org.opencontainers.image.description" = "postgres-operator container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v1.15.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.15.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/zalando/postgres-operator:v1.15.1 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/zalando/postgres-operator:v1.15.1";
+    "io.nix-containers.image.upstream" = "ghcr.io/zalando/postgres-operator";
   };
 }

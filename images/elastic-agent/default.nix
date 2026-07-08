@@ -1,37 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# elastic-agent
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# elastic-agent — UPSTREAM REFERENCE (not built/hosted). Use docker.elastic.co/elastic-agent/elastic-agent:9.0.4 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "elastic-agent";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "elastic-agent-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "elastic agent";
-      "org.opencontainers.image.description" = "elastic-agent container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "9.0.4";
+  config.Labels = {
+    "org.opencontainers.image.version" = "9.0.4";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.elastic.co/elastic-agent/elastic-agent:9.0.4 directly.";
+    "io.nix-containers.upstream-image" = "docker.elastic.co/elastic-agent/elastic-agent:9.0.4";
+    "io.nix-containers.image.upstream" = "docker.elastic.co/elastic-agent/elastic-agent";
   };
 }

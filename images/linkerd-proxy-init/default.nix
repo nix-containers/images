@@ -1,34 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# linkerd-proxy-init
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# linkerd-proxy-init — UPSTREAM REFERENCE (not built/hosted). Use cr.l5d.io/linkerd/proxy-init:v2.4.9 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "linkerd-proxy-init";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "linkerd-proxy-init-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "linkerd-proxy-init";
-      "org.opencontainers.image.description" = "linkerd-proxy-init container image";
-    };
+  tag = "v2.4.9";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v2.4.9";
+    "org.opencontainers.image.description" = "Upstream reference — pull cr.l5d.io/linkerd/proxy-init:v2.4.9 directly.";
+    "io.nix-containers.upstream-image" = "cr.l5d.io/linkerd/proxy-init:v2.4.9";
+    "io.nix-containers.image.upstream" = "cr.l5d.io/linkerd/proxy-init";
   };
 }

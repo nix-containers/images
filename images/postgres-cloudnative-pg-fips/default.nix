@@ -1,35 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# postgres-cloudnative-pg-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# postgres-cloudnative-pg-fips — UPSTREAM REFERENCE (not built/hosted). Use ghcr.io/cloudnative-pg/postgresql:17.2 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "postgres-cloudnative-pg-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "postgres-cloudnative-pg-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "postgres-cloudnative-pg-fips";
-      "org.opencontainers.image.description" = "postgres-cloudnative-pg-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "17.2";
+  config.Labels = {
+    "org.opencontainers.image.version" = "17.2";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/cloudnative-pg/postgresql:17.2 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/cloudnative-pg/postgresql:17.2";
+    "io.nix-containers.image.upstream" = "ghcr.io/cloudnative-pg/postgresql";
   };
 }

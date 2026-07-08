@@ -1,37 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# keycloak-26.4-operator
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# keycloak-26.4-operator — UPSTREAM REFERENCE (not built/hosted). Use quay.io/keycloak/keycloak-operator:26.4.7 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "keycloak-26.4-operator";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "keycloak-26.4-operator-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "keycloak 26.4 operator";
-      "org.opencontainers.image.description" = "keycloak-26.4-operator container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "26.4.7";
+  config.Labels = {
+    "org.opencontainers.image.version" = "26.4.7";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/keycloak/keycloak-operator:26.4.7 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/keycloak/keycloak-operator:26.4.7";
+    "io.nix-containers.image.upstream" = "quay.io/keycloak/keycloak-operator";
   };
 }
