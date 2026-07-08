@@ -1,22 +1,29 @@
 { mkImage, fetchFromGitHub, buildGoModule, pkgs, lib, ... }:
 
-# Crossplane Provider - family-aws
-# https://github.com/crossplane-contrib/provider-family-aws
+# Crossplane Provider - provider-family-aws
+# https://github.com/crossplane-contrib/provider-upjet-aws
+#
+# The legacy per-service crossplane-contrib/provider-<svc> repos no longer
+# exist. Modern Crossplane packages all AWS services from a single monorepo
+# (provider-upjet-aws) that produces one `provider` binary. The runtime
+# selects the service at deploy time; this image bundles that binary under
+# a stable name for consumers referencing the historical path.
 
 let
-  version = "0.1.0";
-  provider-family-aws = buildGoModule {
-    pname = "provider-family-aws";
+  version = "2.6.0";
+  provider = buildGoModule {
+    pname = "provider-upjet-aws";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "crossplane-contrib";
-      repo = "provider-family-aws";
+      repo = "provider-upjet-aws";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-yQLnXa5kx2/v4YXsnupRTqZptTUW2xz3YvzVmbYkC9o=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    proxyVendor = true;
+    vendorHash = "sha256-4GBzXNjTAQlDLNgeDZpeIm7sJCPpjFUfzL+XsX0JVs4=";
 
     subPackages = [ "cmd/provider" ];
 
@@ -26,25 +33,25 @@ let
     doCheck = false;
 
     meta = with lib; {
-      description = "Crossplane provider for family-aws";
-      homepage = "https://github.com/crossplane-contrib/provider-family-aws";
+      description = "Crossplane provider for AWS (upjet family)";
+      homepage = "https://github.com/crossplane-contrib/provider-upjet-aws";
       license = licenses.asl20;
     };
   };
 
 in
 mkImage {
-  drv = provider-family-aws;
+  drv = provider;
   name = "crossplane-provider-family-aws";
   tag = "v${version}";
-  entrypoint = [ "${provider-family-aws}/bin/provider" ];
+  entrypoint = [ "${provider}/bin/provider" ];
   cmd = [];
 
   extraPkgs = with pkgs; [ cacert ];
 
   labels = {
-    "org.opencontainers.image.title" = "Crossplane Provider family aws";
-    "org.opencontainers.image.description" = "Crossplane provider for family-aws";
+    "org.opencontainers.image.title" = "crossplane-provider-family-aws";
+    "org.opencontainers.image.description" = "Crossplane provider for AWS (from provider-upjet-aws monorepo)";
     "org.opencontainers.image.version" = version;
     "io.nix-containers.chart" = "crossplane";
   };

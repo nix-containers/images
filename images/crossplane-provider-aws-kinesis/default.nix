@@ -1,22 +1,29 @@
 { mkImage, fetchFromGitHub, buildGoModule, pkgs, lib, ... }:
 
-# Crossplane Provider - aws-kinesis
-# https://github.com/crossplane-contrib/provider-aws-kinesis
+# Crossplane Provider - provider-aws-kinesis
+# https://github.com/crossplane-contrib/provider-upjet-aws
+#
+# The legacy per-service crossplane-contrib/provider-<svc> repos no longer
+# exist. Modern Crossplane packages all AWS services from a single monorepo
+# (provider-upjet-aws) that produces one `provider` binary. The runtime
+# selects the service at deploy time; this image bundles that binary under
+# a stable name for consumers referencing the historical path.
 
 let
-  version = "0.1.0";
-  provider-aws-kinesis = buildGoModule {
-    pname = "provider-aws-kinesis";
+  version = "2.6.0";
+  provider = buildGoModule {
+    pname = "provider-upjet-aws";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "crossplane-contrib";
-      repo = "provider-aws-kinesis";
+      repo = "provider-upjet-aws";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-yQLnXa5kx2/v4YXsnupRTqZptTUW2xz3YvzVmbYkC9o=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    proxyVendor = true;
+    vendorHash = "sha256-4GBzXNjTAQlDLNgeDZpeIm7sJCPpjFUfzL+XsX0JVs4=";
 
     subPackages = [ "cmd/provider" ];
 
@@ -26,25 +33,25 @@ let
     doCheck = false;
 
     meta = with lib; {
-      description = "Crossplane provider for aws-kinesis";
-      homepage = "https://github.com/crossplane-contrib/provider-aws-kinesis";
+      description = "Crossplane provider for AWS (upjet family)";
+      homepage = "https://github.com/crossplane-contrib/provider-upjet-aws";
       license = licenses.asl20;
     };
   };
 
 in
 mkImage {
-  drv = provider-aws-kinesis;
+  drv = provider;
   name = "crossplane-provider-aws-kinesis";
   tag = "v${version}";
-  entrypoint = [ "${provider-aws-kinesis}/bin/provider" ];
+  entrypoint = [ "${provider}/bin/provider" ];
   cmd = [];
 
   extraPkgs = with pkgs; [ cacert ];
 
   labels = {
-    "org.opencontainers.image.title" = "Crossplane Provider aws kinesis";
-    "org.opencontainers.image.description" = "Crossplane provider for aws-kinesis";
+    "org.opencontainers.image.title" = "crossplane-provider-aws-kinesis";
+    "org.opencontainers.image.description" = "Crossplane provider for AWS (from provider-upjet-aws monorepo)";
     "org.opencontainers.image.version" = version;
     "io.nix-containers.chart" = "crossplane";
   };
