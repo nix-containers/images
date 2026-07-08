@@ -30,14 +30,26 @@ function getComprehensiveImageData() {
                 nixPath: `images/${imageName}/default.nix`
             };
             
-            // Try to get version from Nix labels
+            // Resolve version the SAME way build-and-push tags images:
+            // getPackageVersion (lib/versions.nix) → the image's .imageTag →
+            // "latest". The old `.config.Labels."...version"` eval FAILS for
+            // nix2container images (their .config isn't an evaluable attr), so
+            // every image fell through to "latest" even when published with a
+            // real version tag. This was the root cause of the huge "latest"
+            // count on the catalog.
             try {
-                const version = execSync(
-                    `nix eval --raw .#${imageName}.config.Labels.\\"org.opencontainers.image.version\\" 2>/dev/null || echo "latest"`,
+                let version = execSync(
+                    `nix eval --raw --impure --expr '(import ./lib/versions.nix { pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs { system = builtins.currentSystem; config.allowUnfree = true; }; }) "${imageName}"' 2>/dev/null || echo ""`,
                     { encoding: 'utf8' }
                 ).trim();
-                
-                if (version !== 'latest') {
+                if (!version || version === 'latest') {
+                    const tag = execSync(
+                        `nix eval --raw .#"${imageName}".imageTag 2>/dev/null || echo ""`,
+                        { encoding: 'utf8' }
+                    ).trim();
+                    version = tag.replace(/^v/, '');
+                }
+                if (version && version !== 'latest') {
                     imageData.version = version;
                     imageData.tags = ['latest', version];
                 }
