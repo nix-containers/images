@@ -14,7 +14,7 @@ let
       rev = "v${version}";
       hash = "sha256-v/dooQU6QlXNk75DIU6bQ3eu2MuSvS+1abFH/1Hwh2o=";
     };
-    vendorHash = null;
+    vendorHash = "sha256-M1tDGVYrwNCe64dzQ6tBKMy7vVuoPCOnErqDFE/n9DY=";
     subPackages = [ "." ];
     env.CGO_ENABLED = 0;
     ldflags = [ "-s" "-w" ];
