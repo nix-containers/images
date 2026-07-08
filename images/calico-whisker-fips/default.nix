@@ -14,7 +14,7 @@ let
       rev = "v${version}";
       hash = "sha256-bgcY/unCLAtPOeEwRJGl8u1dHYdO3tSzMTg47DHOsJM=";
     };
-    vendorHash = null;
+    vendorHash = "sha256-9Kap6qHIttgMRSnSnTUvWj72jp5u2vIMy5l2sJRfKlU=";
     subPackages = [ "." ];
     env.CGO_ENABLED = 1;
     env.GOEXPERIMENT = "boringcrypto";
