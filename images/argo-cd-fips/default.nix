@@ -1,30 +1,36 @@
 { mkImage, pkgs, lib, ... }:
 
-# Argo CD CLI (argo-cd-fips variant) - upstream prebuilt release binary
+# Argo CD CLI (-fips variant) - built from source
 # https://github.com/argoproj/argo-cd
-# The -fips suffix is an upstream naming variant; this packages the upstream argocd binary.
+# Same upstream tool as argo-cd; no FIPS claim made.
+#
+# Built from source with current nixpkgs Go so stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "3.4.4";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "argocd";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/argoproj/argo-cd/releases/download/v${version}/argocd-linux-amd64";
-      hash = "sha256-uTwxKVaIDJWXokan0ecF+7fufxnFIpr/3smbJtVmPgk=";
+    src = pkgs.fetchFromGitHub {
+      owner = "argoproj";
+      repo = "argo-cd";
+      rev = "v${version}";
+      hash = "sha256-I3udVhmPpOA2Lf1mkJqG+d+mGpfM16HIKBkEnTiAw0c=";
     };
 
-    dontUnpack = true;
+    proxyVendor = true;
+    vendorHash = "sha256-w6jFNWKvcwxyeiSy+Pqb43qOfMOXF5UHr2VpyQD2dFw=";
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    subPackages = [ "cmd" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/argocd
-      runHook postInstall
+    postInstall = ''
+      mv $out/bin/cmd $out/bin/argocd
     '';
   };
 in mkImage {
@@ -36,6 +42,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "argo-cd-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
