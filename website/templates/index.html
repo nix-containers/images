@@ -38,17 +38,24 @@
 
   <main class="max-w-7xl mx-auto px-4 py-8">
     <div class="mb-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+      <div class="card cursor-pointer select-none transition hover:border-accent-ok"
+           id="auto-updates-card" role="button" tabindex="0"
+           title="Click to see which images the auto-update pipelines slated for a version bump in the last 24h">
+        <div class="text-2xl font-bold font-mono text-accent-ok" id="auto-updates-count">–</div>
+        <div class="text-sm text-fg-muted">Auto-updates today <span class="opacity-60">›</span></div>
+        <div class="text-xs text-fg-muted mt-1" id="auto-updates-window">last 24h</div>
+      </div>
       <div class="card">
         <div class="text-2xl font-bold font-mono text-accent-ok" id="total-images">–</div>
         <div class="text-sm text-fg-muted">Total images</div>
       </div>
       <div class="card">
-        <div class="text-2xl font-bold font-mono" id="tested-images">–</div>
-        <div class="text-sm text-fg-muted">With tests</div>
-      </div>
-      <div class="card">
         <div class="text-2xl font-bold font-mono" id="categories-count">–</div>
         <div class="text-sm text-fg-muted">Categories</div>
+        <div class="mt-3 pt-3 border-t border-neutral-800">
+          <div class="text-lg font-bold font-mono" id="tested-images">–</div>
+          <div class="text-xs text-fg-muted">With tests</div>
+        </div>
       </div>
       <div class="card cursor-pointer select-none transition hover:border-accent-bad"
            id="critical-card" role="button" tabindex="0"
@@ -78,6 +85,31 @@
         <div class="text-sm text-fg-muted">Total compressed</div>
         <div class="text-xs text-fg-muted mt-1" id="total-uncompressed"></div>
         <div class="text-xs text-fg-muted" id="upstream-comparison"></div>
+      </div>
+    </div>
+
+    <!-- Auto-updates details modal (populated from the GitHub API on click) -->
+    <div id="auto-updates-modal"
+         class="hidden fixed inset-0 bg-black/70 z-50 flex items-start justify-center p-4 overflow-y-auto"
+         role="dialog" aria-modal="true" aria-labelledby="auto-updates-modal-title">
+      <div class="card w-full max-w-4xl mt-8">
+        <div class="flex items-center justify-between mb-4">
+          <h2 id="auto-updates-modal-title" class="text-lg font-bold">
+            Auto-updates in the last 24h
+          </h2>
+          <button id="auto-updates-modal-close"
+                  class="text-fg-muted hover:text-fg-primary text-2xl leading-none"
+                  aria-label="Close">×</button>
+        </div>
+        <div id="auto-updates-modal-body" class="text-sm">
+          Loading…
+        </div>
+        <p class="text-xs text-fg-muted mt-3">
+          Sourced from merged PRs on
+          <a href="https://github.com/nix-containers/images/pulls?q=is%3Amerged+deps"
+             class="underline">nix-containers/images</a>
+          in the past 24 hours.
+        </p>
       </div>
     </div>
 
