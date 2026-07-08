@@ -1,5 +1,9 @@
 name: Build Shard
 
+# Put the prefix + runner + mode in the run title so shards are
+# distinguishable in the Actions UI (e.g. "Build Shard: b → self-hosted (push)").
+run-name: "Build Shard: ${{ inputs.prefix }} → ${{ inputs.runner || 'ubuntu-latest' }} (${{ inputs.mode }})"
+
 # Manual kickoff to build (and optionally push) a SHARD of the catalog —
 # every image whose name starts with a given prefix — feeding the same
 # reusable test-images / build-and-push pipelines the normal change-gated
