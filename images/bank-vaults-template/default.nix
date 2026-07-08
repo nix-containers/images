@@ -2,28 +2,32 @@
 
 # template - config templating helper shipped in the bank-vaults release
 # https://github.com/bank-vaults/bank-vaults
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 let
   version = "1.33.1";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "bank-vaults-template";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/bank-vaults/bank-vaults/releases/download/v${version}/bank-vaults_${version}_Linux_x86_64.tar.gz";
-      hash = "sha256-btpzC3EfMAisbBzCQE7l3xKBnjkXAf2YdzyfL4Y7Wnc=";
+    src = pkgs.fetchFromGitHub {
+      owner = "bank-vaults";
+      repo = "bank-vaults";
+      rev = "v${version}";
+      hash = "sha256-D0rgrYQDIYU6BwSOgmDLbetDsyCT6Dvlw0UminH4hfo=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-WgsaZoTmBkIq7YbX3B3WMwd5+lhMIOUM4N8cYPj2hqA=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 template $out/bin/template
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/template" ];
+    ldflags = [ "-s" "-w" ];
+    # cmd/template pulls in the same bank-vaults module tree which uses
+    # miekg/pkcs11/p11 transitively; leave cgo on to be safe.
+    env.CGO_ENABLED = 1;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -34,6 +38,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "bank-vaults-template";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

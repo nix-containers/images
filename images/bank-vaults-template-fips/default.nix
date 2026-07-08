@@ -2,30 +2,32 @@
 
 # bank-vaults "template" command-line tool
 # https://github.com/bank-vaults/bank-vaults
-# Note: upstream prebuilt binary; FIPS compliance is not claimed.
+# -fips variant packages the upstream template binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.33.1";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "bank-vaults-template-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/bank-vaults/bank-vaults/releases/download/v${version}/bank-vaults_${version}_Linux_x86_64.tar.gz";
-      hash = "sha256:0xss7f32z7rwfycgs08p76g824nzwm741hhwdjn0hc0zf45p7nkf";
+    src = pkgs.fetchFromGitHub {
+      owner = "bank-vaults";
+      repo = "bank-vaults";
+      rev = "v${version}";
+      hash = "sha256-D0rgrYQDIYU6BwSOgmDLbetDsyCT6Dvlw0UminH4hfo=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-WgsaZoTmBkIq7YbX3B3WMwd5+lhMIOUM4N8cYPj2hqA=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 template $out/bin/template
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/template" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 1;
+    doCheck = false;
   };
 
 in mkImage {
@@ -37,6 +39,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "bank-vaults-template-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

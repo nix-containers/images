@@ -2,28 +2,32 @@
 
 # bank-vaults - CLI for HashiCorp Vault automation
 # https://github.com/bank-vaults/bank-vaults
+# -fips variant packages the upstream bank-vaults binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 let
   version = "1.33.1";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "bank-vaults";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/bank-vaults/bank-vaults/releases/download/v${version}/bank-vaults_${version}_Linux_x86_64.tar.gz";
-      hash = "sha256-btpzC3EfMAisbBzCQE7l3xKBnjkXAf2YdzyfL4Y7Wnc=";
+    src = pkgs.fetchFromGitHub {
+      owner = "bank-vaults";
+      repo = "bank-vaults";
+      rev = "v${version}";
+      hash = "sha256-D0rgrYQDIYU6BwSOgmDLbetDsyCT6Dvlw0UminH4hfo=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-WgsaZoTmBkIq7YbX3B3WMwd5+lhMIOUM4N8cYPj2hqA=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 bank-vaults $out/bin/bank-vaults
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/bank-vaults" ];
+    ldflags = [ "-s" "-w" ];
+    # bank-vaults imports miekg/pkcs11/p11 which requires cgo
+    env.CGO_ENABLED = 1;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -34,6 +38,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "bank-vaults";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
