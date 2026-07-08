@@ -74,8 +74,20 @@ jobs:
 
       - name: Setup Docker
         run: |
-          # Docker is already available on Ubuntu runners, just start the daemon if needed
-          sudo systemctl start docker
+          # ubuntu-latest: docker is a systemd service → start it.
+          # self-hosted (ARC dind): no systemd — docker comes from the dind
+          # sidecar via DOCKER_HOST, so `systemctl start docker` errors and
+          # kills the build. Only systemctl where it exists, then wait for the
+          # daemon (dind may still be coming up) and verify it's reachable.
+          if command -v systemctl >/dev/null 2>&1 && systemctl list-unit-files docker.service >/dev/null 2>&1; then
+            sudo systemctl start docker || true
+          fi
+          for i in $(seq 1 30); do
+            docker info >/dev/null 2>&1 && break
+            sleep 2
+          done
+          docker info >/dev/null 2>&1 || { echo "::error::Docker daemon not reachable"; exit 1; }
+          echo "Docker ready: $(docker version --format '{{.Server.Version}}' 2>/dev/null)"
 
       - name: Login to Container Registry
         # PR events (esp. from feature branches) can't push to GHCR — the token
