@@ -103,7 +103,14 @@ jobs:
           EVENT: ${{ github.event_name }}
           REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Prefer a PAT with read:packages so the org-packages list API
+          # returns the full catalog (~2600 rows). Without it, GITHUB_TOKEN
+          # returns a handful and the resolver falls back to
+          # `docker manifest inspect` per image — that path measured at 25+
+          # min for the full fleet and has been hitting the job timeout
+          # (issue #547 stays stale because every scan since 2026-07-07
+          # 14:12 UTC has cancelled here).
+          GH_TOKEN: ${{ secrets.PACKAGES_ADMIN_PAT || secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
