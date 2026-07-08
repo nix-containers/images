@@ -1,38 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# thanos-operator-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# thanos-operator-fips — UPSTREAM REFERENCE (not built/hosted). Use quay.io/thanos/thanos-operator:latest directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "thanos-operator-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "thanos-operator-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "thanos operator fips";
-      "org.opencontainers.image.description" = "thanos-operator-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "latest";
+  config.Labels = {
+    "org.opencontainers.image.version" = "latest";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/thanos/thanos-operator:latest directly.";
+    "io.nix-containers.upstream-image" = "quay.io/thanos/thanos-operator:latest";
+    "io.nix-containers.image.upstream" = "quay.io/thanos/thanos-operator";
   };
 }

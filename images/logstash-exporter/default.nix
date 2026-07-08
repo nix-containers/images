@@ -1,37 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# logstash-exporter
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# logstash-exporter — UPSTREAM REFERENCE (not built/hosted). Use ghcr.io/kuskoman/logstash-exporter:v1.9.1 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "logstash-exporter";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "logstash-exporter-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "logstash exporter";
-      "org.opencontainers.image.description" = "logstash-exporter container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "v1.9.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.9.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/kuskoman/logstash-exporter:v1.9.1 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/kuskoman/logstash-exporter:v1.9.1";
+    "io.nix-containers.image.upstream" = "ghcr.io/kuskoman/logstash-exporter";
   };
 }

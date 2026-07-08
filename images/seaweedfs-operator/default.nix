@@ -1,37 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# seaweedfs-operator
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# seaweedfs-operator — UPSTREAM REFERENCE (not built/hosted). Use ghcr.io/seaweedfs/seaweedfs-operator:1.0.31 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "seaweedfs-operator";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "seaweedfs-operator-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "seaweedfs operator";
-      "org.opencontainers.image.description" = "seaweedfs-operator container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "1.0.31";
+  config.Labels = {
+    "org.opencontainers.image.version" = "1.0.31";
+    "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/seaweedfs/seaweedfs-operator:1.0.31 directly.";
+    "io.nix-containers.upstream-image" = "ghcr.io/seaweedfs/seaweedfs-operator:1.0.31";
+    "io.nix-containers.image.upstream" = "ghcr.io/seaweedfs/seaweedfs-operator";
   };
 }

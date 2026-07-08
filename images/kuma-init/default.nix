@@ -1,34 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# kuma-init
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# kuma-init — UPSTREAM REFERENCE (not built/hosted). Use docker.io/kumahq/kuma-init:latest directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "kuma-init";
   tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "kuma-init-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "kuma-init";
-      "org.opencontainers.image.description" = "kuma-init container image";
-    };
+  config.Labels = {
+    "org.opencontainers.image.version" = "latest";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/kumahq/kuma-init:latest directly.";
+    "io.nix-containers.upstream-image" = "docker.io/kumahq/kuma-init:latest";
+    "io.nix-containers.image.upstream" = "docker.io/kumahq/kuma-init";
   };
 }

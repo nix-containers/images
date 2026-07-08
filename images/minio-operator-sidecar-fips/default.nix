@@ -1,38 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# minio-operator-sidecar-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# minio-operator-sidecar-fips — UPSTREAM REFERENCE (not built/hosted). Use quay.io/minio/operator-sidecar:v7.1.0 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "minio-operator-sidecar-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "minio-operator-sidecar-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "minio operator sidecar fips";
-      "org.opencontainers.image.description" = "minio-operator-sidecar-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v7.1.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v7.1.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/minio/operator-sidecar:v7.1.0 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/minio/operator-sidecar:v7.1.0";
+    "io.nix-containers.image.upstream" = "quay.io/minio/operator-sidecar";
   };
 }

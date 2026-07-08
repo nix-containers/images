@@ -1,38 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# redis-operator-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# redis-operator-fips — UPSTREAM REFERENCE (not built/hosted). Use quay.io/spotahome/redis-operator:v1.2.4 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "redis-operator-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "redis-operator-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "redis operator fips";
-      "org.opencontainers.image.description" = "redis-operator-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.2.4";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.2.4";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/spotahome/redis-operator:v1.2.4 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/spotahome/redis-operator:v1.2.4";
+    "io.nix-containers.image.upstream" = "quay.io/spotahome/redis-operator";
   };
 }

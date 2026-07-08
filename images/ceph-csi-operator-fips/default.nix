@@ -1,38 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# ceph-csi-operator-fips
-# Container image
-
-let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# ceph-csi-operator-fips — UPSTREAM REFERENCE (not built/hosted). Use quay.io/cephcsi/ceph-csi-operator:v1.0.4 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "ceph-csi-operator-fips";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "ceph-csi-operator-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "ceph csi operator fips";
-      "org.opencontainers.image.description" = "ceph-csi-operator-fips container image";
-      "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v1.0.4";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v1.0.4";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/cephcsi/ceph-csi-operator:v1.0.4 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/cephcsi/ceph-csi-operator:v1.0.4";
+    "io.nix-containers.image.upstream" = "quay.io/cephcsi/ceph-csi-operator";
   };
 }
