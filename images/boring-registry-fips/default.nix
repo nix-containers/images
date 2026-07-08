@@ -2,28 +2,30 @@
 
 # boring-registry - open source Terraform/OpenTofu module and provider registry
 # https://github.com/boring-registry/boring-registry
+# -fips variant packages the upstream boring-registry binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 let
   version = "0.18.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "boring-registry";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/boring-registry/boring-registry/releases/download/v${version}/boring-registry_${version}_Linux_x86_64.tar.gz";
-      hash = "sha256-W+kVmjpxKTN/VEhacJNKSHQhMMOHnbGP0tPyo1Lvhdk=";
+    src = pkgs.fetchFromGitHub {
+      owner = "boring-registry";
+      repo = "boring-registry";
+      rev = "v${version}";
+      hash = "sha256-ytbc0lZEqS+xKXmrEASAna622zfl0UlBd/QK+vayI14=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 boring-registry $out/bin/boring-registry
-      runHook postInstall
-    '';
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -34,6 +36,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "boring-registry";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
