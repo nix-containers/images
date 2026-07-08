@@ -1,22 +1,27 @@
 { mkImage, fetchFromGitHub, buildGoModule, pkgs, lib, ... }:
 
-# Crossplane Provider - gcp-container
-# https://github.com/crossplane-contrib/provider-gcp-container
+# Crossplane Provider — provider-gcp-container
+# https://github.com/crossplane-contrib/provider-upjet-gcp
+#
+# The legacy per-service crossplane-contrib/provider-<svc> repos no longer
+# exist. Modern Crossplane packages all GCP services from a single
+# monorepo (upjet family) that produces one `provider` binary.
 
 let
-  version = "0.1.0";
-  provider-gcp-container = buildGoModule {
-    pname = "provider-gcp-container";
+  version = "2.6.0";
+  provider = buildGoModule {
+    pname = "provider-upjet-gcp";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "crossplane-contrib";
-      repo = "provider-gcp-container";
+      repo = "provider-upjet-gcp";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-zdCbUs5QEb6T3SGja7twBLXOyd7GbpIrXNH7uMmJFd8=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    proxyVendor = true;
+    vendorHash = "sha256-osE/n4zoJZ2x8KNwQvLXqeyXz2o2Km/DUMyrmIXa6cc=";
 
     subPackages = [ "cmd/provider" ];
 
@@ -26,25 +31,25 @@ let
     doCheck = false;
 
     meta = with lib; {
-      description = "Crossplane provider for gcp-container";
-      homepage = "https://github.com/crossplane-contrib/provider-gcp-container";
+      description = "Crossplane provider for GCP (upjet family)";
+      homepage = "https://github.com/crossplane-contrib/provider-upjet-gcp";
       license = licenses.asl20;
     };
   };
 
 in
 mkImage {
-  drv = provider-gcp-container;
+  drv = provider;
   name = "crossplane-provider-gcp-container";
   tag = "v${version}";
-  entrypoint = [ "${provider-gcp-container}/bin/provider" ];
+  entrypoint = [ "${provider}/bin/provider" ];
   cmd = [];
 
   extraPkgs = with pkgs; [ cacert ];
 
   labels = {
-    "org.opencontainers.image.title" = "Crossplane Provider gcp container";
-    "org.opencontainers.image.description" = "Crossplane provider for gcp-container";
+    "org.opencontainers.image.title" = "crossplane-provider-gcp-container";
+    "org.opencontainers.image.description" = "Crossplane GCP provider (from provider-upjet-gcp monorepo)";
     "org.opencontainers.image.version" = version;
     "io.nix-containers.chart" = "crossplane";
   };

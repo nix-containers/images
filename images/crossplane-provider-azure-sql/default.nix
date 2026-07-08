@@ -1,22 +1,27 @@
 { mkImage, fetchFromGitHub, buildGoModule, pkgs, lib, ... }:
 
-# Crossplane Provider - azure-sql
-# https://github.com/crossplane-contrib/provider-azure-sql
+# Crossplane Provider — provider-azure-sql
+# https://github.com/crossplane-contrib/provider-upjet-azure
+#
+# The legacy per-service crossplane-contrib/provider-<svc> repos no longer
+# exist. Modern Crossplane packages all AZURE services from a single
+# monorepo (upjet family) that produces one `provider` binary.
 
 let
-  version = "0.1.0";
-  provider-azure-sql = buildGoModule {
-    pname = "provider-azure-sql";
+  version = "2.6.0";
+  provider = buildGoModule {
+    pname = "provider-upjet-azure";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "crossplane-contrib";
-      repo = "provider-azure-sql";
+      repo = "provider-upjet-azure";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-BwmM9nCFYFRzCAcmDDBn6mYgfr3IvzAQrqPdan0RnDM=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    proxyVendor = true;
+    vendorHash = "sha256-3aU9sFkbYNdfLLR8fL4/osb1eiZAZVbCojUMIWby1ZA=";
 
     subPackages = [ "cmd/provider" ];
 
@@ -26,25 +31,25 @@ let
     doCheck = false;
 
     meta = with lib; {
-      description = "Crossplane provider for azure-sql";
-      homepage = "https://github.com/crossplane-contrib/provider-azure-sql";
+      description = "Crossplane provider for AZURE (upjet family)";
+      homepage = "https://github.com/crossplane-contrib/provider-upjet-azure";
       license = licenses.asl20;
     };
   };
 
 in
 mkImage {
-  drv = provider-azure-sql;
+  drv = provider;
   name = "crossplane-provider-azure-sql";
   tag = "v${version}";
-  entrypoint = [ "${provider-azure-sql}/bin/provider" ];
+  entrypoint = [ "${provider}/bin/provider" ];
   cmd = [];
 
   extraPkgs = with pkgs; [ cacert ];
 
   labels = {
-    "org.opencontainers.image.title" = "Crossplane Provider azure sql";
-    "org.opencontainers.image.description" = "Crossplane provider for azure-sql";
+    "org.opencontainers.image.title" = "crossplane-provider-azure-sql";
+    "org.opencontainers.image.description" = "Crossplane AZURE provider (from provider-upjet-azure monorepo)";
     "org.opencontainers.image.version" = version;
     "io.nix-containers.chart" = "crossplane";
   };
