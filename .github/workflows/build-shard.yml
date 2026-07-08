@@ -21,6 +21,11 @@ on:
         description: 'Image name prefix to build, e.g. "r", "ca", "argo". Empty = ERROR (would be the whole catalog).'
         required: true
         type: string
+      runner:
+        description: 'Runner for the build leg. ubuntu-latest (default) or self-hosted (Talos) — for the GHCR republish, self-hosted is free + off GitHub minutes.'
+        required: false
+        default: 'ubuntu-latest'
+        type: string
       mode:
         description: 'What to run for the shard'
         required: true
@@ -110,4 +115,5 @@ jobs:
     uses: ./.github/workflows/build-and-push.yml
     with:
       matrix: ${{ needs.shard-matrix.outputs.matrix }}
+      runner: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
     secrets: inherit
