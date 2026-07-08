@@ -2,27 +2,37 @@
 
 # azcopy - Azure Storage data transfer command-line utility
 # https://github.com/Azure/azure-storage-azcopy
+# -fips variant packages the upstream azcopy binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 let
   version = "10.32.5";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "azcopy";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/Azure/azure-storage-azcopy/releases/download/v${version}/azcopy_linux_amd64_${version}.tar.gz";
-      hash = "sha256-hvp92zb7SRm+a/sa7BHpgyoG8nh9H9FPJnKIRzE4fGU=";
+    src = pkgs.fetchFromGitHub {
+      owner = "Azure";
+      repo = "azure-storage-azcopy";
+      rev = "v${version}";
+      hash = "sha256-wcJhKqc5MXUT8EWjmVoVAOwAc9alao9ReWE0LMVkt2g=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-4SY1u66BEG9xG/j2Ul+0f+UGEMkX9rkN8L0JVwrAjFQ=";
 
-    sourceRoot = "azcopy_linux_amd64_${version}";
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 azcopy $out/bin/azcopy
-      runHook postInstall
+    postInstall = ''
+      # buildGoModule installs from module name (azure-storage-azcopy)
+      if [ -e $out/bin/azure-storage-azcopy ]; then
+        mv $out/bin/azure-storage-azcopy $out/bin/azcopy
+      fi
     '';
   };
 in mkImage {
@@ -34,6 +44,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "azcopy";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
