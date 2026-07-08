@@ -72,35 +72,17 @@ jobs:
             echo "Attic not available on this runner; skipping (expected on ubuntu-latest)"
           fi
 
-      - name: Setup Docker
-        run: |
-          # ubuntu-latest: docker is a systemd service → start it.
-          # self-hosted (ARC dind): no systemd — docker comes from the dind
-          # sidecar via DOCKER_HOST, so `systemctl start docker` errors and
-          # kills the build. Only systemctl where it exists, then wait for the
-          # daemon (dind may still be coming up) and verify it's reachable.
-          if command -v systemctl >/dev/null 2>&1 && systemctl list-unit-files docker.service >/dev/null 2>&1; then
-            sudo systemctl start docker || true
-          fi
-          for i in $(seq 1 30); do
-            docker info >/dev/null 2>&1 && break
-            sleep 2
-          done
-          docker info >/dev/null 2>&1 || { echo "::error::Docker daemon not reachable"; exit 1; }
-          echo "Docker ready: $(docker version --format '{{.Server.Version}}' 2>/dev/null)"
-
-      - name: Login to Container Registry
-        # PR events (esp. from feature branches) can't push to GHCR — the token
-        # doesn't have write access to packages it didn't create. Skip login on
-        # PR so the whole push chain no-ops instead of failing 100% of the time
-        # with `denied: permission_denied: write_package`. Push happens on the
-        # subsequent main-branch push after merge.
+      # No docker/dind: nix2container's copyTo pushes straight to the registry
+      # via skopeo, which reads ~/.docker/config.json. Write that auth file
+      # directly (replaces docker/login-action, which needs a docker daemon).
+      # Skip on PR — the token can't push packages it didn't create.
+      - name: Registry auth for skopeo (nix2container)
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v4
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p ~/.docker
+          auth=$(printf '%s:%s' '${{ github.actor }}' '${{ secrets.GITHUB_TOKEN }}' | base64 -w0)
+          printf '{"auths":{"%s":{"auth":"%s"}}}' '${{ env.REGISTRY }}' "$auth" > ~/.docker/config.json
+          echo "wrote registry auth for ${{ env.REGISTRY }}"
 
       - name: Build nix2container image
         if: env.NIX_INSTALLED == 'true'
@@ -123,154 +105,37 @@ jobs:
             && echo "pushed ${{ matrix.name }} closure to Attic" \
             || echo "attic push skipped/failed (non-fatal)"
 
-      - name: Load and push image to registry
-        # See "Login to Container Registry" above — PR runs skip the push
-        # entirely. The `Build nix2container image` step above still runs on
-        # PRs and validates the Nix build; only registry side-effects are
-        # gated to main-branch pushes.
+      - name: Push image to registry (nix2container copyTo)
+        # copyTo pushes the OCI image straight to the registry via skopeo — no
+        # docker daemon, no dind. Each extra tag is a cheap re-copy (existing
+        # blobs are skipped). PR runs skip the push (see auth step above).
         if: env.NIX_INSTALLED == 'true' && env.BUILD_SUCCESS == 'true' && github.event_name != 'pull_request'
         run: |
-          # Load the nix2container image and push directly to registry
-          if [ -f ./result ]; then
-            echo "Loading nix2container image..."
-            # Check what nix2container actually created
-            ls -la ./result* || true
-            
-            # The result is a JSON file, we need to load it using Docker
-            echo "Reading nix2container JSON manifest..."
-            cat ./result | head -20
-            
-            # Use nix2container's copyTo function or load the JSON directly
-            # Source Nix environment first
-            . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
-            
-            # Load using nix2container copyTo function
-            echo "Loading image using nix2container..."
-            nix --extra-experimental-features "nix-command flakes" run .#"${{ matrix.name }}".copyTo -- docker-daemon:${{ matrix.name }}:latest
-            
-            # Get the loaded image details
-            echo "=== Available Docker images ==="
-            docker images
-            
-            # Find the most recently created image (should be ours)
-            IMAGE_ID=$(docker images --format "{{.ID}}" | head -1)
-            if [ -z "$IMAGE_ID" ]; then
-              echo "Error: No image found after loading"
-              exit 1
-            fi
-            echo "Found image ID: $IMAGE_ID"
-            
-            # Generate the target registry URL
-            REGISTRY_URL="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.name }}"
-            
-            # Extract package version for version tagging.
-            #
-            # Resolution order:
-            #   1. `.config.Labels."org.opencontainers.image.version"` — what
-            #      images built via `lib/mkImage.nix` expose. Tells us the
-            #      upstream version (e.g. `8.0.5`), independent of registry tag.
-            #   2. `.imageTag` — the tag the derivation itself declares (e.g.
-            #      `v1.36.1-dev` for kubectl-dev). nix2container outputs from
-            #      hand-written `default.nix` don't expose `.config` as a
-            #      direct attribute, so the eval in (1) silently fails for
-            #      them; without this fallback, the tag never gets pushed.
-            #   3. `latest` — last resort, suppresses the version-tag push.
-            echo "Extracting package version..."
-            . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
-            nix_eval() {
-              nix --extra-experimental-features "nix-command flakes" eval --raw "$@" 2>/dev/null
-            }
-            # Primary source: getPackageVersion (lib/versions.nix) — the same
-            # map that produces the versioned image variants. The old paths
-            # below don't work for these images: nix2container doesn't expose
-            # `.config` as an evaluable attr (so the Labels lookup errors), and
-            # the base image's `.imageTag` is hard-coded "latest" — so without
-            # this the version-tag push never happened.
-            PACKAGE_VERSION=$(nix --extra-experimental-features "nix-command flakes" eval --raw --impure --expr \
-              "(import ./lib/versions.nix { pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs { system = builtins.currentSystem; config.allowUnfree = true; }; }) \"${{ matrix.name }}\"" 2>/dev/null)
-            # Fallback to the legacy label/imageTag path, then "latest".
-            if [ -z "$PACKAGE_VERSION" ] || [ "$PACKAGE_VERSION" = "latest" ]; then
-              PACKAGE_VERSION=$(nix_eval ".#\"${{ matrix.name }}\".config.Labels.\"org.opencontainers.image.version\"" \
-                || nix_eval ".#\"${{ matrix.name }}\".imageTag" \
-                || echo "latest")
-            fi
-            echo "Package version: $PACKAGE_VERSION"
-            # Docker tags allow only [A-Za-z0-9_.-]; nixpkgs versions can carry
-            # '+' (e.g. jdk 21.0.12+2, or +git…). Sanitize so the version-tag
-            # push doesn't fail with "invalid reference format".
-            PACKAGE_VERSION="${PACKAGE_VERSION//+/-}"
-            
-            # Calculate compressed size and add as label
-            echo "Calculating compressed image size..."
-            COMPRESSED_SIZE=$(docker save "${{ matrix.name }}:latest" | gzip | wc -c)
-            echo "Compressed size: $COMPRESSED_SIZE bytes"
-            
-            # Create new image with size label
-            echo "FROM ${{ matrix.name }}:latest" > Dockerfile.temp
-            echo "LABEL org.opencontainers.image.size=\"$COMPRESSED_SIZE\"" >> Dockerfile.temp
-            docker build -t "${{ matrix.name }}:temp" -f Dockerfile.temp .
-            rm Dockerfile.temp
-            
-            # Replace the original image
-            docker tag "${{ matrix.name }}:temp" "${{ matrix.name }}:latest"
-            docker rmi "${{ matrix.name }}:temp"
-            IMAGE_ID=$(docker images "${{ matrix.name }}:latest" --format "{{.ID}}")
-            
-            # Docker tags can't contain '/'; sanitize the branch name (e.g. feat/foo -> feat-foo).
-            REF_TAG="${{ github.ref_name }}"
-            REF_TAG="${REF_TAG//\//-}"
+          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+          set -euo pipefail
+          nix_run() { nix --extra-experimental-features "nix-command flakes" "$@"; }
+          nix_eval() { nix --extra-experimental-features "nix-command flakes" eval --raw "$@" 2>/dev/null; }
+          REGISTRY_URL="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ matrix.name }}"
 
-            # Tag with different versions
-            docker tag "$IMAGE_ID" "${REGISTRY_URL}:latest"
-            docker tag "$IMAGE_ID" "${REGISTRY_URL}:${{ github.sha }}"
-            if [ "$PACKAGE_VERSION" != "latest" ]; then
-              docker tag "$IMAGE_ID" "${REGISTRY_URL}:$PACKAGE_VERSION"
-            fi
-            if [ "${{ github.ref_name }}" != "main" ]; then
-              docker tag "$IMAGE_ID" "${REGISTRY_URL}:$REF_TAG"
-            fi
-
-            # Push all tags
-            echo "Pushing to registry..."
-            docker push "${REGISTRY_URL}:latest"
-            docker push "${REGISTRY_URL}:${{ github.sha }}"
-            if [ "$PACKAGE_VERSION" != "latest" ]; then
-              docker push "${REGISTRY_URL}:$PACKAGE_VERSION"
-            fi
-            if [ "${{ github.ref_name }}" != "main" ]; then
-              docker push "${REGISTRY_URL}:$REF_TAG"
-            fi
-
-            # Registry-side tag presence check. The version-tag push has
-            # silently failed in the past (e.g. when PACKAGE_VERSION
-            # resolution fell back to "latest"), leaving the registry
-            # without the :v<ver> tag callers reference. Operators only
-            # noticed when downstream pods went ImagePullBackOff hours
-            # later. Verify each tag we just attempted to push actually
-            # resolves on the registry before declaring success.
-            echo "Verifying tags on registry..."
-            verify_tag() {
-              local ref=$1
-              if ! docker manifest inspect "$ref" >/dev/null 2>&1; then
-                echo "❌ Registry verify FAILED: $ref is not resolvable" >&2
-                return 1
-              fi
-              echo "  ✓ $ref"
-            }
-            verify_tag "${REGISTRY_URL}:latest"
-            verify_tag "${REGISTRY_URL}:${{ github.sha }}"
-            if [ "$PACKAGE_VERSION" != "latest" ]; then
-              verify_tag "${REGISTRY_URL}:$PACKAGE_VERSION"
-            fi
-            if [ "${{ github.ref_name }}" != "main" ]; then
-              verify_tag "${REGISTRY_URL}:$REF_TAG"
-            fi
-
-            echo "✅ Successfully pushed ${{ matrix.name }} to registry"
-          else
-            echo "Error: Could not find nix2container result file"
-            exit 1
+          # Resolve the upstream version tag: getPackageVersion, then legacy
+          # Labels/imageTag, then "latest".
+          PACKAGE_VERSION=$(nix_run eval --raw --impure --expr \
+            "(import ./lib/versions.nix { pkgs = import (builtins.getFlake (toString ./.)).inputs.nixpkgs { system = builtins.currentSystem; config.allowUnfree = true; }; }) \"${{ matrix.name }}\"" 2>/dev/null || true)
+          if [ -z "${PACKAGE_VERSION:-}" ] || [ "$PACKAGE_VERSION" = "latest" ]; then
+            PACKAGE_VERSION=$(nix_eval ".#\"${{ matrix.name }}\".config.Labels.\"org.opencontainers.image.version\"" \
+              || nix_eval ".#\"${{ matrix.name }}\".imageTag" || echo "latest")
           fi
+          PACKAGE_VERSION="${PACKAGE_VERSION//+/-}"   # docker tags disallow '+'
+          echo "Package version: $PACKAGE_VERSION"
+          REF_TAG="${{ github.ref_name }}"; REF_TAG="${REF_TAG//\//-}"
+
+          copy() { echo "-> docker://$1"; nix_run run .#"${{ matrix.name }}".copyTo -- "docker://$1"; }
+          copy "${REGISTRY_URL}:latest"
+          copy "${REGISTRY_URL}:${{ github.sha }}"
+          if [ "$PACKAGE_VERSION" != "latest" ]; then copy "${REGISTRY_URL}:$PACKAGE_VERSION"; fi
+          if [ "${{ github.ref_name }}" != "main" ]; then copy "${REGISTRY_URL}:$REF_TAG"; fi
+          echo "pushed ${{ matrix.name }}"
+
 
       - name: Build Summary
         if: always()
