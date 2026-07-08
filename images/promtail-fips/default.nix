@@ -1,35 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
-
-# promtail-fips
-# Container image
-
-let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+{ mkImage, pkgs, lib, ... }:
+# promtail-fips — packaged from nixpkgs pkgs.promtail (#618).
+mkImage {
+  drv = pkgs.promtail;
   name = "promtail-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "promtail-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "promtail-fips";
-      "org.opencontainers.image.description" = "promtail-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = pkgs.promtail.version;
+  entrypoint = [ "${pkgs.promtail}/bin/promtail" ];
+  cmd = [];
+  extraPkgs = with pkgs; [ cacert tzdata ];
+  labels = {
+    "org.opencontainers.image.version" = pkgs.promtail.version;
+    "org.opencontainers.image.description" = "promtail-fips (nixpkgs promtail)";
   };
 }

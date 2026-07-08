@@ -1,41 +1,29 @@
-# jaeger
-# ======
-# Distributed tracing all-in-one — Jaeger agent + collector + query in a single binary (dev/testing)
-# https://github.com/jaegertracing/jaeger
-#
-# Build strategy: nix2container.pullImage (re-wrap upstream Docker image)
-# -----------------------------------------------------------------------
-# Jaeger all-in-one is a Go binary distributed as a Docker image.
-# We pull the upstream image and re-wrap it with our standard labels.
-#
-# sha256 is the NAR hash of the pulled image directory — refresh with:
-#   nix build --no-link .#jaeger 2>&1 | grep "got:"
+{ mkImage, pkgs, lib, ... }:
 
-{ nix2container, pkgs, lib, ... }:
-
+# jaeger — built from the upstream release artifact (#618).
 let
-  version = "latest";
-
-  upstreamImage = nix2container.pullImage {
-    imageName   = "jaegertracing/all-in-one";
-    imageDigest = "sha256:ab6f1a1f0fb49ea08bcd19f6b84f6081d0d44b364b6de148e1798eb5816bacac";
-    sha256      = "sha256-EtdbPm0qyE6ER+3bk2JwHVh38H+xAT3JkW9jt89j+hA=";
-  };
-
+  version = "1.76.0";
+  src = pkgs.fetchurl { url = "https://github.com/jaegertracing/jaeger/releases/download/v1.76.0/jaeger-1.76.0-linux-amd64.tar.gz"; hash = "sha256-yrPq0GqDfuUZwWpDlLMj5YtmtPL4+CwNsN+4EDXe9y4="; };
+  drv = pkgs.runCommand "jaeger-1.76.0" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
+    mkdir -p $out/bin extract
+    tar xzf ${src} -C extract
+    chmod -R +x extract 2>/dev/null || true
+    f=$(find extract -type f -name 'jaeger-all-in-one' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -name 'jaeger-all-in-one*' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -perm -u+x | head -1)
+    [ -z "$f" ] && f=$(find extract -type f | head -1)
+    install -m755 "$f" $out/bin/jaeger-all-in-one
+  '';
 in
-nix2container.buildImage {
-  name      = "jaeger";
-  tag       = version;
-  fromImage = upstreamImage;
-
-  config = {
-    Labels = {
-      "org.opencontainers.image.title"       = "Jaeger All-in-One";
-      "org.opencontainers.image.description" = "Distributed tracing all-in-one — Jaeger agent + collector + query in a single binary (dev/testing)";
-      "org.opencontainers.image.version"     = version;
-      "org.opencontainers.image.source"      = "https://github.com/jaegertracing/jaeger";
-      "io.nix-containers.build-strategy"     = "nix2container-pullImage";
-      "io.nix-containers.upstream-image"     = "docker.io/jaegertracing/all-in-one:latest";
-    };
+mkImage {
+  drv = drv;
+  name = "jaeger";
+  tag = "1.76.0";
+  entrypoint = [ "${drv}/bin/jaeger-all-in-one" ];
+  cmd = [];
+  extraPkgs = with pkgs; [ cacert tzdata ];
+  labels = {
+    "org.opencontainers.image.version" = "1.76.0";
+    "org.opencontainers.image.description" = "jaeger (built from upstream release 1.76.0)";
   };
 }

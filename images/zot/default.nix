@@ -1,37 +1,29 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ mkImage, pkgs, lib, ... }:
 
-# zot
-# Container image
-
+# zot — built from the upstream release artifact (#618).
 let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+  version = "2.1.18";
+  src = pkgs.fetchurl { url = "https://github.com/project-zot/zot/releases/download/v2.1.18/zot-linux-amd64"; hash = "sha256-o1mgrxWdtnWLJPjibWokSq6VyvP/OCxGKHX0LZ4IKJg="; };
+  drv = pkgs.runCommand "zot-2.1.18" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
+    mkdir -p $out/bin extract
+    cp ${src} extract/zot
+    chmod -R +x extract 2>/dev/null || true
+    f=$(find extract -type f -name 'zot' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -name 'zot*' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -perm -u+x | head -1)
+    [ -z "$f" ] && f=$(find extract -type f | head -1)
+    install -m755 "$f" $out/bin/zot
+  '';
+in
+mkImage {
+  drv = drv;
   name = "zot";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "zot-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "zot";
-      "org.opencontainers.image.description" = "zot container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "2.1.18";
+  entrypoint = [ "${drv}/bin/zot" ];
+  cmd = [];
+  extraPkgs = with pkgs; [ cacert tzdata ];
+  labels = {
+    "org.opencontainers.image.version" = "2.1.18";
+    "org.opencontainers.image.description" = "zot (built from upstream release v2.1.18)";
   };
 }

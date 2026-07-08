@@ -1,35 +1,29 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ mkImage, pkgs, lib, ... }:
 
-# kafka-exporter-fips
-# Container image
-
+# kafka-exporter-fips — built from the upstream release artifact (#618).
 let
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+  version = "1.9.0";
+  src = pkgs.fetchurl { url = "https://github.com/danielqsj/kafka_exporter/releases/download/v1.9.0/kafka_exporter-1.9.0.linux-amd64.tar.gz"; hash = "sha256-xyJRitccU7OYjqJq4r04e7WWznqY/GOdCL9jmlN2maE="; };
+  drv = pkgs.runCommand "kafka-exporter-fips-1.9.0" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
+    mkdir -p $out/bin extract
+    tar xzf ${src} -C extract
+    chmod -R +x extract 2>/dev/null || true
+    f=$(find extract -type f -name 'kafka_exporter' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -name 'kafka_exporter*' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -perm -u+x | head -1)
+    [ -z "$f" ] && f=$(find extract -type f | head -1)
+    install -m755 "$f" $out/bin/kafka_exporter
+  '';
+in
+mkImage {
+  drv = drv;
   name = "kafka-exporter-fips";
-  tag = "latest";
-  copyToRoot = [
-    (buildEnv {
-      name = "kafka-exporter-fips-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "kafka-exporter-fips";
-      "org.opencontainers.image.description" = "kafka-exporter-fips container image";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "1.9.0";
+  entrypoint = [ "${drv}/bin/kafka_exporter" ];
+  cmd = [];
+  extraPkgs = with pkgs; [ cacert tzdata ];
+  labels = {
+    "org.opencontainers.image.version" = "1.9.0";
+    "org.opencontainers.image.description" = "kafka-exporter-fips (built from upstream release v1.9.0)";
   };
 }

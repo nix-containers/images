@@ -1,37 +1,29 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ mkImage, pkgs, lib, ... }:
 
-# whereabouts
-# Container image
-
+# whereabouts — built from the upstream release artifact (#618).
 let
-  version = "latest";
-  
-  imagePkgs = with pkgs; [
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+  version = "0.6.1";
+  src = pkgs.fetchurl { url = "https://github.com/k8snetworkplumbingwg/whereabouts/releases/download/v0.6.1/whereabouts-amd64"; hash = "sha256-vcc0dofhWa9n+pTPpM+6K4CGxSNcCx2lCaxJ7yyrw+8="; };
+  drv = pkgs.runCommand "whereabouts-0.6.1" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
+    mkdir -p $out/bin extract
+    cp ${src} extract/whereabouts
+    chmod -R +x extract 2>/dev/null || true
+    f=$(find extract -type f -name 'whereabouts' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -name 'whereabouts*' | head -1)
+    [ -z "$f" ] && f=$(find extract -type f -perm -u+x | head -1)
+    [ -z "$f" ] && f=$(find extract -type f | head -1)
+    install -m755 "$f" $out/bin/whereabouts
+  '';
+in
+mkImage {
+  drv = drv;
   name = "whereabouts";
-  tag = version;
-  copyToRoot = [
-    (buildEnv {
-      name = "whereabouts-root";
-      paths = base.basePackages ++ imagePkgs ++ [ userEnv ];
-    })
-  ];
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "whereauouts";
-      "org.opencontainers.image.description" = "whereabouts container image";
-      "org.opencontainers.image.version" = version;
-    };
+  tag = "0.6.1";
+  entrypoint = [ "${drv}/bin/whereabouts" ];
+  cmd = [];
+  extraPkgs = with pkgs; [ cacert tzdata ];
+  labels = {
+    "org.opencontainers.image.version" = "0.6.1";
+    "org.opencontainers.image.description" = "whereabouts (built from upstream release v0.6.1)";
   };
 }
