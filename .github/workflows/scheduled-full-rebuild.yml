@@ -1,0 +1,64 @@
+name: Scheduled Full Rebuild
+
+# Rebuilds the ENTIRE catalog on a schedule so that nixpkgs CVE fixes (which
+# arrive via the daily flake.lock auto-update) actually land in the published
+# images. Most images are nixpkgs-composed (buildEnv + pkgs.*), so their CVE
+# posture only improves when they're rebuilt — this is that rebuild.
+#
+# Fans out build-shard.yml per alphabet prefix (the 256-job matrix cap means
+# there's no single "build everything" run). Big letters (c, k, p, s, …) are
+# sub-sharded by 2-char prefix. Runs on self-hosted (Talos/nixtop) so it's free
+# and off GitHub-hosted minutes.
+
+on:
+  schedule:
+    # Weekly, Sunday 05:00 UTC — after a week of daily flake.lock updates.
+    - cron: '0 5 * * 0'
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Runner for the shards (self-hosted default)'
+        required: false
+        default: 'self-hosted'
+        type: string
+      mode:
+        description: 'test | push | both'
+        required: false
+        default: 'push'
+        type: string
+
+permissions:
+  contents: read
+  actions: write   # to dispatch build-shard.yml
+
+jobs:
+  fan-out:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Dispatch build-shard per prefix
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUNNER: ${{ github.event.inputs.runner || 'self-hosted' }}
+          MODE: ${{ github.event.inputs.mode || 'push' }}
+        run: |
+          set -uo pipefail
+          # Build the prefix list: single letters that are <=256, else 2-char sub-prefixes.
+          mapfile -t names < <(find images -mindepth 2 -maxdepth 2 -name default.nix -printf '%h\n' | sed 's#images/##' | sort -u)
+          declare -A one two
+          for n in "${names[@]}"; do
+            c1=${n:0:1}; c2=${n:0:2}
+            one[$c1]=$(( ${one[$c1]:-0} + 1 ))
+            two[$c2]=$(( ${two[$c2]:-0} + 1 ))
+          done
+          prefixes=()
+          for c1 in "${!one[@]}"; do
+            if [ "${one[$c1]}" -le 256 ]; then prefixes+=("$c1")
+            else for c2 in "${!two[@]}"; do [ "${c2:0:1}" = "$c1" ] && prefixes+=("$c2"); done
+            fi
+          done
+          echo "Dispatching ${#prefixes[@]} shards on $RUNNER (mode=$MODE)"
+          for p in "${prefixes[@]}"; do
+            gh workflow run build-shard.yml -f prefix="$p" -f mode="$MODE" -f runner="$RUNNER" && echo "  -> $p" || echo "  FAILED $p"
+            sleep 6
+          done
