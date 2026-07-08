@@ -23,6 +23,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+      # For FlakeHub Cache (Determinate) — GitHub OIDC bearer.
+      id-token: write
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
@@ -47,6 +49,30 @@ jobs:
       # for the old curl-retry installer.
       - name: Mark Nix installed
         run: echo "NIX_INSTALLED=true" >> $GITHUB_ENV
+
+      # Public FlakeHub Cache — pulls prebuilt paths and pushes what we build,
+      # so shared closures across the ~3k images become cache hits over time.
+      # Best-effort: if the org isn't OIDC-linked to FlakeHub the action just
+      # warns, so it must NOT gate the build (continue-on-error).
+      - name: Enable FlakeHub Cache
+        continue-on-error: true
+        uses: DeterminateSystems/flakehub-cache-action@main
+
+      # Self-hosted (Talos) Attic cache — in-cluster, fast. The runner image
+      # ships attic-client and the ARC template sets ATTIC_SERVER_URL/ATTIC_TOKEN.
+      # `attic use` wires it as a nix substituter (pull); we push after the build.
+      # No-op on ubuntu runners (no attic client / no token) so it never breaks
+      # the GitHub-hosted path.
+      - name: Configure Attic cache (self-hosted)
+        run: |
+          if command -v attic >/dev/null 2>&1 && [ -n "${ATTIC_TOKEN:-}" ] && [ -n "${ATTIC_SERVER_URL:-}" ]; then
+            attic login nc "$ATTIC_SERVER_URL" "$ATTIC_TOKEN" 2>/dev/null \
+              && attic use nc:nixcontainers 2>/dev/null \
+              && { echo "ATTIC_READY=true" >> "$GITHUB_ENV"; echo "Attic substituter enabled (nc:nixcontainers)"; } \
+              || echo "Attic login/use failed; continuing without cache"
+          else
+            echo "Attic not available on this runner; skipping (expected on ubuntu-latest)"
+          fi
 
       - name: Setup Docker
         run: |
@@ -74,6 +100,18 @@ jobs:
           # Build image using Nix flakes with explicit experimental features
           nix --extra-experimental-features "nix-command flakes" build .#"${{ matrix.name }}" --print-build-logs
           echo "BUILD_SUCCESS=true" >> $GITHUB_ENV
+
+      # Push the freshly-built closure to Attic so sibling images sharing these
+      # store paths (base layers, common deps) skip rebuilding them next time.
+      # Best-effort — a cache push must never fail the build/publish.
+      - name: Push build closure to Attic
+        if: env.ATTIC_READY == 'true' && env.BUILD_SUCCESS == 'true'
+        continue-on-error: true
+        run: |
+          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+          attic push nc:nixcontainers ./result 2>/dev/null \
+            && echo "pushed ${{ matrix.name }} closure to Attic" \
+            || echo "attic push skipped/failed (non-fatal)"
 
       - name: Load and push image to registry
         # See "Login to Container Registry" above — PR runs skip the push
