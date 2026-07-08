@@ -12,13 +12,17 @@ name: Auto Update Inline Images
 
 on:
   schedule:
-    - cron: '37 7 * * *'   # after check-upstream-versions (06:42)
+    # Two runs a day. The nvcmp backlog (issue #590) typically sits north
+    # of 100 outdated upstreams; a single 20-image run per day left the
+    # queue growing. Two 50-image runs closes that faster.
+    - cron: '37 7 * * *'   # morning (after check-upstream-versions 06:42)
+    - cron: '37 19 * * *'  # evening
   workflow_dispatch:
     inputs:
       limit:
         description: 'Max images to bump in one run'
         required: false
-        default: '20'
+        default: '50'
         type: string
       runner:
         description: 'Runner label (e.g. ubuntu-latest, or an ARC/Talos self-hosted tag for more disk/capacity)'
