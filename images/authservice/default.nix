@@ -20,9 +20,9 @@ let
       hash = "sha256-6vB8SevG1RVxfcLtja41vS1u/6Srg9NTBv1PHVhzMqQ=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-AicD8/DGLHBO2QL8FxMOvV3OE0igvCrPNIUrwqu3Pu8=";
 
-    subPackages = [ "cmd/authservice" ];
+    subPackages = [ "cmd" ];
 
     env.CGO_ENABLED = 0;
 
@@ -32,6 +32,12 @@ let
     ];
 
     doCheck = false;
+
+    # Go names the output binary after the directory (`cmd`); rename to
+    # match the expected image entrypoint.
+    postInstall = ''
+      mv $out/bin/cmd $out/bin/authservice
+    '';
 
     meta = with lib; {
       description = "Istio Authservice - OIDC authentication for Istio/Envoy";
