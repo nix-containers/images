@@ -1,0 +1,118 @@
+name: Build Multi-Arch Images
+
+# Opt-in multi-arch publishing. The canonical build-and-push.yml stays amd64.
+# This builds each image for BOTH x86_64-linux (on the amd64 runner) and
+# aarch64-linux (on the arm64 runner — the Pi cluster's self-hosted-arm64 set),
+# then fuses per-arch tags into a manifest list. arm64 legs are best-effort:
+# images that pin an amd64-only prebuilt binary won't have an aarch64 build and
+# are skipped (continue-on-error), leaving a valid amd64-only :latest.
+
+on:
+  workflow_dispatch:
+    inputs:
+      images:
+        description: 'CSV of image names (e.g. "busybox,redis,vault"). Required.'
+        required: true
+        type: string
+      amd64_runner:
+        description: 'Runner for the amd64 leg'
+        required: false
+        default: 'self-hosted'
+        type: string
+      arm64_runner:
+        description: 'Runner for the arm64 leg (Pi cluster)'
+        required: false
+        default: 'self-hosted-arm64'
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: build-multiarch-${{ github.event.inputs.images }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      names: ${{ steps.split.outputs.names }}
+    steps:
+      - id: split
+        run: |
+          names=$(printf '%s' "${{ github.event.inputs.images }}" | jq -Rc \
+            'split(",") | map(gsub("^\\s+|\\s+$";"")) | map(select(length>0))')
+          echo "names=$names" >> "$GITHUB_OUTPUT"
+          echo "Images: $names"
+
+  build:
+    needs: resolve
+    # cross-product: every image × {amd64, arm64}
+    strategy:
+      fail-fast: false
+      matrix:
+        name: ${{ fromJSON(needs.resolve.outputs.names) }}
+        include:
+          - arch: amd64
+            system: x86_64-linux
+          - arch: arm64
+            system: aarch64-linux
+    runs-on: ${{ matrix.arch == 'arm64' && github.event.inputs.arm64_runner || github.event.inputs.amd64_runner }}
+    # arm64 build may not exist for prebuilt-amd64 images — don't fail the run.
+    continue-on-error: ${{ matrix.arch == 'arm64' }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build ${{ matrix.name }} (${{ matrix.arch }}) and push per-arch tag
+        run: |
+          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+          set -euo pipefail
+          REF="${REGISTRY}/${IMAGE_NAME}/${{ matrix.name }}:${{ github.sha }}-${{ matrix.arch }}"
+          echo "Building .#packages.${{ matrix.system }}.\"${{ matrix.name }}\""
+          nix --extra-experimental-features "nix-command flakes" \
+            run ".#packages.${{ matrix.system }}.\"${{ matrix.name }}\".copyTo" -- "docker://${REF}"
+          echo "pushed ${REF}"
+
+  manifest:
+    needs: build
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        name: ${{ fromJSON(needs.resolve.outputs.names) }}
+    steps:
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fuse per-arch tags into a manifest list
+        run: |
+          set -uo pipefail
+          BASE="${REGISTRY}/${IMAGE_NAME}/${{ matrix.name }}"
+          AMD="${BASE}:${{ github.sha }}-amd64"
+          ARM="${BASE}:${{ github.sha }}-arm64"
+          srcs=()
+          docker manifest inspect "$AMD" >/dev/null 2>&1 && srcs+=("$AMD")
+          docker manifest inspect "$ARM" >/dev/null 2>&1 && srcs+=("$ARM")
+          if [ "${#srcs[@]}" -eq 0 ]; then echo "no arch builds for ${{ matrix.name }}; skipping"; exit 0; fi
+          echo "manifest list from: ${srcs[*]}"
+          docker buildx imagetools create -t "${BASE}:latest" "${srcs[@]}"
+          docker buildx imagetools inspect "${BASE}:latest" | grep -E 'Platform|Name' | head
