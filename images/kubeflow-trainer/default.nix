@@ -1,7 +1,7 @@
 { mkImage, fetchFromGitHub, buildGoModule, lib, ... }:
 
 let
-  version = "2.1.0";
+  version = "2.2.1";
   kubeflow-trainer = buildGoModule {
     pname = "kubeflow-training-operator";
     inherit version;
@@ -10,11 +10,11 @@ let
       owner = "kubeflow";
       repo = "training-operator";
       rev = "v${version}";
-      hash = "sha256-l7wFgesFEig2ardiEmVqQgOjDRsFuayf2PU3lFJCsx8=";
+      hash = "sha256-lg1ttgGgj5PsxyR+pCKzbXTmWE5cdQQpWdUpDhSS/t4=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-M/fkEEu+hz0GY4fkbVsQkZVAXpedc6xUd77qZudUipI=";
+    vendorHash = "sha256-68DI4D+oDonKVFaB/zXstS28085o1ZWzGxtls9S1eCU=";
 
     env.CGO_ENABLED = 0;
     preBuild = "export GOTOOLCHAIN=local";

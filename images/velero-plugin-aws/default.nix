@@ -11,7 +11,7 @@
 #   pkgs.restic  # restic (0.18.1-r2)
 
 let
-  version = "1.10.1";
+  version = "1.14.2";
   velero-plugin-aws = buildGoModule {
     pname = "velero-plugin-for-aws";
     inherit version;
@@ -20,10 +20,10 @@ let
       owner = "vmware-tanzu";
       repo = "velero-plugin-for-aws";
       rev = "v${version}";
-      hash = "sha256-RzTbgQpTUWhH+ryCLPu2lUUncgXi7G6V8CnNHwyhAgI=";
+      hash = "sha256-6UgQ5LGYLiNVkkq0AdfUrJ+1+aefJAv1njgByw1BDjY=";
     };
 
-    vendorHash = "sha256-eC+pb6gp/q4KRRJ2Rk7CHkWn89Uztrrbdo6bU16I8bM=";
+    vendorHash = "sha256-SsCeNzUDGYXZ4OxXtfn/s6IabbIidhZt3bb1Bc6uYm8=";
 
     subPackages = [ "." ];
 

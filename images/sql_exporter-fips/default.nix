@@ -2,13 +2,13 @@
 
 # Prometheus SQL Exporter - https://github.com/burningalchemist/sql_exporter
 let
-  version = "0.24.1";
+  version = "0.24.2";
   drv = pkgs.stdenv.mkDerivation {
     pname = "sql_exporter";
     inherit version;
     src = pkgs.fetchurl {
       url = "https://github.com/burningalchemist/sql_exporter/releases/download/${version}/sql_exporter-${version}.linux-amd64.tar.gz";
-      hash = "sha256:19sxwpndskm7361bp7fhwz2vsb2zm4jlx52h13f5vbv5gyc2yw29";
+      hash = "sha256-rZLHMBm5tcWROyP6UJrYNHR0wPxoI06oy452LJBUmWc=";
     };
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
     buildInputs = [ pkgs.stdenv.cc.cc.lib ];

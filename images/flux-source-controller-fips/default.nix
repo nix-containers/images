@@ -4,7 +4,7 @@
 # Flux GitOps component
 
 let
-  version = "1.9.1";
+  version = "1.9.2";
   flux-component = buildGoModule {
     pname = "flux-source-controller-fips";
     inherit version;
@@ -13,7 +13,7 @@ let
       owner = "fluxcd";
       repo = "source-controller";
       rev = "v${version}";
-      hash = "sha256-Uir+Z0MuLvZLE38imAbAX6hV8AtohwFa1fafT+gN17Y=";
+      hash = "sha256-PJWw49sq4mhzAbxE6/AkxDoC6qAijBYDYuaiy6hwZbE=";
     };
 
     proxyVendor = true;

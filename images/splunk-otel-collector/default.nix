@@ -4,7 +4,7 @@
 # https://github.com/signalfx/splunk-otel-collector
 
 let
-  version = "0.154.2";
+  version = "0.155.0";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "splunk-otel-collector";
@@ -12,7 +12,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/signalfx/splunk-otel-collector/releases/download/v${version}/otelcol_linux_amd64";
-      hash = "sha256:19jq6mgkxklblz24svglj0wy7cw5qjj1h91k5zgag9dvspwb2zcr";
+      hash = "sha256-XJ2J+4EeCaMbmxTbNmFZZaayG+A5CiEgWduSL6Zeu7Q=";
     };
 
     dontUnpack = true;
