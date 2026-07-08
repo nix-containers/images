@@ -4,7 +4,7 @@
 # https://github.com/crossplane-contrib/provider-terraform
 
 let
-  version = "0.1.0";
+  version = "1.1.1";
   provider-terraform = buildGoModule {
     pname = "provider-terraform";
     inherit version;
@@ -13,10 +13,10 @@ let
       owner = "crossplane-contrib";
       repo = "provider-terraform";
       rev = "v${version}";
-      hash = "sha256-p7zkijkhnjOTRxBRPG5z5hrApvsGyP/vCYGPua8aQ+A=";
+      hash = "sha256-OJoXf3n9vlw8ndSu55qU8M2QbPZp17ualqT/1mZAjbs=";
     };
 
-    vendorHash = "sha256-olZNVpNH+bRMSqHxq7zU53WU9RPbkrkOtUVNdmMVBcQ=";
+    vendorHash = "sha256-ldx4sNovBVhnTYZNAIpUMHQNSQINAq+3bGT9YM3Agf8=";
 
     subPackages = [ "cmd/provider" ];
 

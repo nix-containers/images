@@ -4,7 +4,7 @@
 # AWS Kubernetes component
 
 let
-  version = "1.0.350";
+  version = "1.0.2292";
   aws-component = buildGoModule {
     pname = "aws-signer-notation-plugin-fips";
     inherit version;
@@ -13,10 +13,10 @@ let
       owner = "aws";
       repo = "aws-signer-notation-plugin";
       rev = "v${version}";
-      hash = "sha256-c+t+CJpdUDqHwZ938smOxaDIUfiCKWLErjU9iSMQlTg=";
+      hash = "sha256-2K2NxFozieoMUsW7I62QcoS0MWHuChpEEFFdloW114o=";
     };
 
-    vendorHash = "sha256-jpkqGUk0zJ+7rA7GRbruh00pvx1SwGKfGqevzgEFmDw=";
+    vendorHash = "sha256-8iX2Y7zDJRSLAw2Hrh7aqZVjtxv/O4jVTRTZedSLuuQ=";
     subPackages = [ "." ];
     
     env.CGO_ENABLED = 1;

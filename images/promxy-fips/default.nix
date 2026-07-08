@@ -4,7 +4,7 @@
 # https://github.com/jacksontj/promxy
 
 let
-  version = "0.0.95";
+  version = "0.0.96";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "promxy-fips";
@@ -12,7 +12,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/jacksontj/promxy/releases/download/v${version}/promxy-v${version}-linux-amd64";
-      hash = "sha256-cFvJiTU1M/esS04pyp7TiXo1doq0hd7Zbu4cLWN8apY=";
+      hash = "sha256-LNqJbWcgDnZ1LtaiujYH4fHgozYB7cf+5t0+HBaB+fE=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];

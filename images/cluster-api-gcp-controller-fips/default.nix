@@ -4,7 +4,7 @@
 # Cluster API component
 
 let
-  version = "1.9.0";
+  version = "1.13.3";
   component = buildGoModule {
     pname = "cluster-api-gcp-controller-fips";
     inherit version;
