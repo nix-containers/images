@@ -590,8 +590,11 @@ let
     "selenium-standalone-docker" = getVer "selenium-server-standalone";
     "selenium-standalone-firefox" = getVer "selenium-server-standalone";
     "sig-storage-local-static-provisioner" = getVer "util-linux";
-    "spire-agent-fips" = getVer "spire-agent";
-    "spire-server-fips" = getVer "spire-server";
+    # spire-agent/spire-server nixpkgs aliases are broken (spire.agent missing) —
+    # evaluating them throws "attribute 'agent' missing" and fails the website
+    # build. Left unmapped (fall through to "latest") until the alias is fixed.
+    # "spire-agent-fips" = getVer "spire-agent";
+    # "spire-server-fips" = getVer "spire-server";
     "steampipe" = getVer "steampipe";
   };
 
