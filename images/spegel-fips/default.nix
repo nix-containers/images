@@ -2,30 +2,32 @@
 
 # Spegel - stateless cluster local OCI registry mirror
 # https://github.com/spegel-org/spegel
-# Note: packages the upstream spegel binary (no FIPS claim made).
+# -fips variant packages the upstream spegel binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "0.7.2";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "spegel";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/spegel-org/spegel/releases/download/v${version}/spegel_${version}_linux_amd64.tar.gz";
-      hash = "sha256:0vgdffil1ql9kxakjsbqzq0cgd7ppymv3yh1vibncapi14qcssvh";
+    src = pkgs.fetchFromGitHub {
+      owner = "spegel-org";
+      repo = "spegel";
+      rev = "v${version}";
+      hash = "sha256-6U1DF6gy0L0m8tBcWQGPbIAEkiSSWBagYHgjPWfh9XQ=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-Brc5jR/2VYe07zmC/WUKBdtgz1AICvt7ORiCUN3Pfjg=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 spegel_linux_amd64/spegel $out/bin/spegel
-      runHook postInstall
-    '';
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -36,6 +38,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "spegel-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
