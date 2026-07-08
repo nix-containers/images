@@ -28,12 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchAutoUpdateCount();
 });
 
-// Populate the "Auto-updates today" homepage card. The card is a link to
-// /auto-updates/ — clicking navigates to a full-page view of every bumped
-// package. Just needs the count here.
+// Populate the "Auto-updates today" homepage card with two counts: number
+// of merged auto-update PRs, and the number of UNIQUE packages bumped
+// across those PRs (deduped — if a package appears in multiple PRs it
+// counts once). Card links to /auto-updates/ for the full breakdown.
 async function fetchAutoUpdateCount() {
-  const el = document.getElementById('auto-updates-count');
-  if (!el) return;
+  const prsEl = document.getElementById('auto-updates-count');
+  const bumpsEl = document.getElementById('auto-updates-bumps');
+  if (!prsEl) return;
   try {
     const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
     const url = 'https://api.github.com/search/issues?q=' +
@@ -45,9 +47,27 @@ async function fetchAutoUpdateCount() {
     const r = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
     if (!r.ok) throw new Error('gh api ' + r.status);
     const data = await r.json();
-    el.textContent = (data.items || []).length;
+    const prs = data.items || [];
+    prsEl.textContent = prs.length;
+
+    if (bumpsEl) {
+      // Same regex the /auto-updates/ page uses: "- `pkg` from → to" (or
+      // variants). GitHub search returns each PR with its body already
+      // populated, so this needs no extra API calls.
+      const bumpRe = /^\s*[-*]\s+`?([\w./+-]+)`?(?:\s+[\w.+-]+\s*(?:→|->|to)\s*[\w.+-]+)?\s*$/;
+      const uniq = new Set();
+      for (const pr of prs) {
+        const body = pr.body || '';
+        for (const line of body.split(/\r?\n/)) {
+          const m = line.match(bumpRe);
+          if (m) uniq.add(m[1]);
+        }
+      }
+      bumpsEl.textContent = uniq.size;
+    }
   } catch (e) {
-    el.textContent = '?';
+    prsEl.textContent = '?';
+    if (bumpsEl) bumpsEl.textContent = '?';
     console.warn('auto-updates fetch failed:', e);
   }
 }
