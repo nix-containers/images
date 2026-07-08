@@ -4,16 +4,16 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "1.21.2";
   prometheus-component = buildGoModule {
     pname = "prometheus-podman-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
-      owner = "prometheus";
-      repo = "podman-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      owner = "containers";
+      repo = "prometheus-podman-exporter";
+      rev = "v1.21.2";
+      hash = "sha256-7AU/LWRClwuPEEalhanglMlpXirzFELhdX+6lbu/6zA=";
     };
 
     vendorHash = null;

@@ -20,10 +20,10 @@ let
       owner = "kyverno";
       repo = "policy-reporter-kyverno-plugin";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+      hash = "sha256-m4uNzHamFVLYNyVNbq++W/h2aDqyxve9m+7ptgoGp1A=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-jTVuZsafWTodDGxQB3AY/H78e8oVhp80rU0+w7vT+y0=";  # TODO: Fix hash after first build
 
     subPackages = [ "." ];
 

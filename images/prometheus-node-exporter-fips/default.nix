@@ -4,16 +4,16 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "1.11.1";
   prometheus-component = buildGoModule {
     pname = "prometheus-node-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "prometheus";
-      repo = "node-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      repo = "node_exporter";
+      rev = "v1.11.1";
+      hash = "sha256-AoW4JO9V/sZDjonNT+Ar8saX/rlb1lB/+Vmu5qGtTlA=";
     };
 
     vendorHash = null;

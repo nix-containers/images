@@ -17,10 +17,10 @@ let
       owner = "kubeflow";
       repo = "katib";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+      hash = "sha256-P6rKDdk0tiWL9qotkC4bgWQyEiltiEymPYSJ9D12ISo=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-ywyKl/E7FASIERZGkhE9ArEJmzsnsKLvo/2Ic8I3fPo=";  # TODO: Fix hash after first build
 
     subPackages = [ "cmd/ui" ];
 

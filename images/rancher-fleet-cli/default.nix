@@ -4,20 +4,20 @@
 # Rancher component
 
 let
-  version = "2.10.0";
+  version = "0.15.4";
   rancher-component = buildGoModule {
     pname = "rancher-fleet-cli";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "rancher";
-      repo = "fleet-cli";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      repo = "fleet";
+      rev = "v0.15.4";
+      hash = "sha256-wyhLs1vZI8wtIu2rJZYT78GXe9t2VQqhM+MlNlNx6pU=";
     };
 
     vendorHash = null;
-    subPackages = [ "." ];
+    subPackages = [ "cmd/fleetcli" ];
     
     env.CGO_ENABLED = 0;
 

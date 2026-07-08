@@ -12,7 +12,7 @@ let
       owner = "rancher";
       repo = "rancher";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-XUpvpWUlb9xC5HhmVHDwZdhv/jKM17LlZDqhylJX09A=";
     };
     vendorHash = null;
     subPackages = [ "." ];

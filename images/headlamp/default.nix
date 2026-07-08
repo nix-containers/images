@@ -20,7 +20,7 @@ let
       hash = "sha256-n6yzHTayWyjbpUWnVgACQ7jkdTMoNGjKJrrFW/5HWE8=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-Ro/tgyoXobhn6sLe9Z5ucGqbgEiR+Pfyn6gWR6omvbU=";  # TODO: Fix hash after first build
 
     sourceRoot = "source/backend";
 

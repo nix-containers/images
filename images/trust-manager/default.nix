@@ -21,7 +21,7 @@ let
       hash = "sha256-Gnnz0GZVjSMqQu3ew7SiMjGzZSdjoY5Oixfgr3R6K9c=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix after first build
+    vendorHash = "sha256-D4JZrrYO6d5L5sQOGWCUJldtM+Gl/9iYpLEU8Jq2uK8=";  # TODO: Fix after first build
 
     env.CGO_ENABLED = 0;
 

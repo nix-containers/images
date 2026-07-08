@@ -20,7 +20,7 @@ let
       hash = "sha256-MCb0lN5Dr3J4QDB8VeMT01fBZSU5GmdTxV7I2FPegFk=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-Hp+oAsP8UAmLwDf04quoYUSr87yVh5ovYthjuxnF0hM=";  # TODO: Fix hash after first build
 
     subPackages = [ "backend/src/apiserver" ];
 

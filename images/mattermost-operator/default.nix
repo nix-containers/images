@@ -17,7 +17,7 @@ let
       owner = "mattermost";
       repo = "mattermost-operator";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+      hash = "sha256-h2v1e2dyh4N28Xp0Rk5pxciv+VlKKYTHkCEWPc8tW8A=";  # TODO: Fix hash after first build
     };
 
     vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build

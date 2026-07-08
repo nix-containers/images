@@ -16,7 +16,7 @@ let
       hash = "sha256-CZ6lqwji8CPlTWMxEYjf1MaQWTe22RPTo5gNjeDnOh8=";
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-6jwmJrfIJxb0Mg0OQqKqZibZLEx4bAM36eSbjiYNxPU=";  # TODO: Fix hash after first build
 
     subPackages = [ "cmd/manager" ];
 

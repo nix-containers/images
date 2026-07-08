@@ -17,10 +17,10 @@ let
       owner = "kubeflow";
       repo = "trainer";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+      hash = "sha256-l7wFgesFEig2ardiEmVqQgOjDRsFuayf2PU3lFJCsx8=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-L3D64kB305yIXTe+IrSt/ZdNpd3azJIG6tieI82iLUU=";  # TODO: Fix hash after first build
 
     subPackages = [ "cmd/trainer-controller-manager" ];
 

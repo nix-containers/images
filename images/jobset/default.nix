@@ -18,10 +18,10 @@ let
       owner = "kubernetes-sigs";
       repo = "jobset";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+      hash = "sha256-6jCiFhaUpGX11UtgA8Ng7mVk1lfvRUQek9TJgUuBbr0=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-ZcteOEsFclK3+mJQ6OkT5XHWOCqcJS+kJ0Zoypb8bGg=";  # TODO: Fix hash after first build
 
     subPackages = [ "." ];
 

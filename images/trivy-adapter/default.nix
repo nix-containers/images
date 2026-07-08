@@ -19,10 +19,10 @@ let
       owner = "aquasecurity";
       repo = "harbor-scanner-trivy";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+      hash = "sha256-J9kJ8QUTeDPMYYMZ/HM00NNDMWnXKT+DYL28DPE1xZc=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-1En/64DQCpR1F80pueTtBRhg7k76L3+WYBmnlf2Pz1Q=";  # TODO: Fix hash after first build
 
     subPackages = [ "cmd/scanner-trivy" ];
 

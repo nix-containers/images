@@ -4,20 +4,20 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "0.20.1";
   prometheus-component = buildGoModule {
     pname = "prometheus-postgres-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
-      owner = "prometheus";
-      repo = "postgres-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      owner = "prometheus-community";
+      repo = "postgres_exporter";
+      rev = "v0.20.1";
+      hash = "sha256-uTY26VyFjU7DLn/fseGG1jgIkUAO0cF4lyeFoZ+UC5o=";
     };
 
     vendorHash = null;
-    subPackages = [ "." ];
+    subPackages = [ "cmd/postgres_exporter" ];
     
     env.CGO_ENABLED = 1;
     env.GOEXPERIMENT = "boringcrypto";

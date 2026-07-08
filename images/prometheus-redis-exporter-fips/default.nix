@@ -4,16 +4,16 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "1.86.0";
   prometheus-component = buildGoModule {
     pname = "prometheus-redis-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
-      owner = "prometheus";
-      repo = "redis-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      owner = "oliver006";
+      repo = "redis_exporter";
+      rev = "v1.86.0";
+      hash = "sha256-N7IW1u/ifo8S0yRmdRYFAXfqke/GUVy5omrEqaCZ/3I=";
     };
 
     vendorHash = null;

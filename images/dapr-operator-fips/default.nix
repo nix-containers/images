@@ -12,7 +12,7 @@ let
       owner = "dapr";
       repo = "dapr";
       rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-gPWm6PLjOF6velnC2MuJSuVjOQzAqCGD8HRtQdJdhdw=";
     };
     vendorHash = null;
     subPackages = [ "." ];

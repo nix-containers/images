@@ -4,16 +4,16 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "0.19.0";
   prometheus-component = buildGoModule {
     pname = "prometheus-mysqld-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
       owner = "prometheus";
-      repo = "mysqld-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      repo = "mysqld_exporter";
+      rev = "v0.19.0";
+      hash = "sha256-1K0Xtj7VRAMQK5wgFGj7Yvzae6wVi9wWu1UcnEmpQJU=";
     };
 
     vendorHash = null;

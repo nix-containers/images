@@ -4,16 +4,16 @@
 # Prometheus ecosystem component
 
 let
-  version = "3.4.0";
+  version = "1.10.0";
   prometheus-component = buildGoModule {
     pname = "prometheus-elasticsearch-exporter-fips";
     inherit version;
 
     src = fetchFromGitHub {
-      owner = "prometheus";
-      repo = "elasticsearch-exporter";
-      rev = "v${version}";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      owner = "prometheus-community";
+      repo = "elasticsearch_exporter";
+      rev = "v1.10.0";
+      hash = "sha256-xVDqyYYwzxfFxZ3K2SMFfPoJw47SXS6czsWLC++LOOk=";
     };
 
     vendorHash = null;
