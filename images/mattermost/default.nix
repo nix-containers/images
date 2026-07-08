@@ -5,17 +5,19 @@
 
 { mkImage, pkgs, lib, ... }:
 
-# Chainguard SBOM packages for mattermost:
-# Packages available in nixpkgs:
-#   pkgs.mattermost  # mattermost-11.1 (11.1.1-r1)
-#   pkgs.bash  # bash (5.3-r3)
-#   pkgs.tzdata  # tzdata (2025b-r2)
+# Use pkgs.mattermostLatest (currently v11.8.2) rather than pkgs.mattermost
+# (11.7.x ESR line). Nixpkgs' own update script tracks the latest non-ESR
+# release for mattermostLatest, so our flake.lock bump workflow picks up
+# future 11.8.x → 11.9.x moves automatically.
 
+let
+  mm = pkgs.mattermostLatest;
+in
 mkImage {
-  drv = pkgs.mattermost;
+  drv = mm;
   name = "mattermost";
-  tag = pkgs.mattermost.version;
-  entrypoint = [ "${pkgs.mattermost}/bin/mattermost" ];
+  tag = mm.version;
+  entrypoint = [ "${mm}/bin/mattermost" ];
   cmd = [ "server" ];
 
   extraPkgs = with pkgs; [ bash tzdata cacert ];
@@ -28,7 +30,7 @@ mkImage {
   labels = {
     "org.opencontainers.image.title" = "Mattermost";
     "org.opencontainers.image.description" = "Open source platform for secure collaboration";
-    "org.opencontainers.image.version" = pkgs.mattermost.version;
+    "org.opencontainers.image.version" = mm.version;
     "io.nix-containers.chart" = "mattermost";
   };
 }
