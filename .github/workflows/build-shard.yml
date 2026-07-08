@@ -30,6 +30,11 @@ on:
           - test           # build + load + run per-image tests
           - push           # build + push to the registry
           - both
+      runner:
+        description: 'Runner label. ubuntu-latest (default) or arc-runners (Talos self-hosted) for faster fan-out.'
+        required: false
+        default: 'ubuntu-latest'
+        type: string
 
 permissions:
   contents: read
@@ -110,4 +115,5 @@ jobs:
     uses: ./.github/workflows/build-and-push.yml
     with:
       matrix: ${{ needs.shard-matrix.outputs.matrix }}
+      runner: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
     secrets: inherit
