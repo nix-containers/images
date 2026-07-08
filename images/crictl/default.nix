@@ -2,34 +2,31 @@
 
 # crictl - CLI for CRI-compatible container runtimes
 # https://github.com/kubernetes-sigs/cri-tools
+#
+# Prior revision consumed the upstream prebuilt release tarball whose Go
+# stdlib carries the accumulated CVEs from the version it was built with.
+# Build from source so the stdlib forward-fixes at each rebuild.
 
 let
   version = "1.36.0";
 
-  crictl = pkgs.stdenv.mkDerivation rec {
+  crictl = pkgs.buildGoModule {
     pname = "crictl";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/crictl-v${version}-linux-amd64.tar.gz";
-      hash = "sha256-g4VeEUVmqKjETFSNUVZw9R3jpeHaiy7/tZhw4vEMJaM=";
+    src = pkgs.fetchFromGitHub {
+      owner = "kubernetes-sigs";
+      repo = "cri-tools";
+      rev = "v${version}";
+      hash = "sha256-Ae0CL/BZdIBzZr+Tttg6sNhn1eS2E1odR6fGpbFRVjI=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    vendorHash = null;
 
-    buildInputs = with pkgs; [
-      stdenv.cc.cc.lib
-    ];
-
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/bin
-      cp crictl $out/bin/crictl
-      chmod +x $out/bin/crictl
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/crictl" ];
+    ldflags = [ "-s" "-w" "-X sigs.k8s.io/cri-tools/pkg/version.Version=v${version}" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
     meta = with lib; {
       description = "CLI for CRI-compatible container runtimes";
@@ -49,6 +46,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "crictl";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
