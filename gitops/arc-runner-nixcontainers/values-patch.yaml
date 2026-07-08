@@ -1,0 +1,37 @@
+# Right-sizing patch for the Talos runner scale set (HelmRelease
+# arc-runner-nixcontainers, chart gha-runner-scale-set, ns arc-systems).
+#
+# Merge these into the HelmRelease .spec.values in your gitops repo, then
+# un-suspend Flux:
+#   kubectl patch hr arc-runner-nixcontainers -n arc-systems \
+#     --type merge -p '{"spec":{"suspend":false}}'
+#
+# Why: unbounded runners (no requests/limits) at maxRunners 30 stressed the
+# control plane (repeated etcdserver timeouts) as ARC churned pods. Resource
+# requests let k8s schedule safely and cap concurrency NATURALLY — extra
+# runners stay Pending instead of overcommitting the 50 CPU / 160 GB cluster.
+
+# Ceiling. With the requests below, ~12-16 runners actually fit; the rest queue.
+maxRunners: 16
+minRunners: 0
+
+template:
+  spec:
+    containers:
+      - name: runner
+        # nix builds are CPU+RAM heavy for from-source images (Go/Rust/Rails).
+        resources:
+          requests:
+            cpu: "2"
+            memory: "6Gi"
+          limits:
+            cpu: "4"
+            memory: "10Gi"
+      - name: dind
+        resources:
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+          limits:
+            cpu: "2"
+            memory: "4Gi"
