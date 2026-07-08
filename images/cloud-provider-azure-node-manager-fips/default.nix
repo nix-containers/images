@@ -2,28 +2,35 @@
 
 # Azure cloud node manager - Kubernetes cloud-provider for Azure
 # https://github.com/kubernetes-sigs/cloud-provider-azure
-# (-fips image variant; packages the upstream binary)
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 let
   version = "1.36.3";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "cloud-provider-azure-node-manager-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/kubernetes-sigs/cloud-provider-azure/releases/download/v${version}/azure-cloud-node-manager-linux-amd64";
-      hash = "sha256-vy3Eh/GnMgDibZcuQ/zYxvY6J/GnBGL72jh+p8ogaS8=";
+    src = pkgs.fetchFromGitHub {
+      owner = "kubernetes-sigs";
+      repo = "cloud-provider-azure";
+      rev = "v${version}";
+      hash = "sha256-O/ekGUrHFeJlXibtXZHVREzTKf4dauIMIcFQoUrjGUM=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;
 
-    dontUnpack = true;
+    subPackages = [ "cmd/cloud-node-manager" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/azure-cloud-node-manager
-      runHook postInstall
+    postInstall = ''
+      if [ -e $out/bin/cloud-node-manager ]; then
+        mv $out/bin/cloud-node-manager $out/bin/azure-cloud-node-manager
+      fi
     '';
   };
 in mkImage {
@@ -35,6 +42,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "cloud-provider-azure-node-manager-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
