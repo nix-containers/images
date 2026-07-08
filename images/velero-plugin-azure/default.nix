@@ -10,7 +10,7 @@
 #   pkgs.velero  # velero (1.17.1-r2)
 
 let
-  version = "1.10.1";
+  version = "1.14.2";
   velero-plugin-azure = buildGoModule {
     pname = "velero-plugin-for-microsoft-azure";
     inherit version;
@@ -19,10 +19,10 @@ let
       owner = "vmware-tanzu";
       repo = "velero-plugin-for-microsoft-azure";
       rev = "v${version}";
-      hash = "sha256-D/ExM7/tnKoMIIPkgrVZ9Livg+cU+H3Y7NVHmXL9KR8=";
+      hash = "sha256-pZCp1WyP4RcZGk1c6kga5DtwzZwhzEWk2WNh/W+YjLE=";
     };
 
-    vendorHash = "sha256-ObvgHafHWHSSNPmrRP63eiiB9QZ01fIUFvgBZv3A5+s=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-2xmytTDUdawnd2O+Z30ZCO1PPeX3AZpwxvPXkbH8I7E=";  # TODO: Fix hash after first build
 
     subPackages = [ "." ];
 

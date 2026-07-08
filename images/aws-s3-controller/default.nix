@@ -4,7 +4,7 @@
 # AWS Kubernetes component
 
 let
-  version = "1.7.1";
+  version = "1.8.1";
   aws-component = buildGoModule {
     pname = "aws-s3-controller";
     inherit version;
@@ -13,11 +13,11 @@ let
       owner = "aws-controllers-k8s";
       repo = "s3-controller";
       rev = "v${version}";
-      hash = "sha256-Yta4eckXkaXnZYlHPEtjSGjGLp8LF+bJ40fe0zyPkVk=";
+      hash = "sha256-uEEI8wgqSsiYL1fCiX4qDr8O9oE5Hl2oN6fRg8QcrW0=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-xk2zxHWKkGFSmhBrRQY2gZpGUYpVD9grGKYmpnYzjNA=";
+    vendorHash = "sha256-U6fMbd+AOxu5CwBbFLvy23nU4h3KOHeAOz1rEe/T5wk=";
     subPackages = [ "." ];
     
     env.CGO_ENABLED = 0;

@@ -1,7 +1,7 @@
 { mkImage, fetchFromGitHub, buildGoModule, lib, ... }:
 
 let
-  version = "2.4.0";
+  version = "2.5.1";
   spark-operator = buildGoModule {
     pname = "spark-operator";
     inherit version;
@@ -10,11 +10,11 @@ let
       owner = "kubeflow";
       repo = "spark-operator";
       rev = "v${version}";
-      hash = "sha256-vQyOFREDwHjR6fh5puiQzcY5F0R6//ZXM6OQlRjQX8s=";
+      hash = "sha256-aDqzN98vEEQXnlPHGF2hKBssU5ls7YhmgHPt1Qa7g5A=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-gIofPv24TFb5SBGEUd2JctYaUcpBiryw6oBpCjZyYAI=";
+    vendorHash = "sha256-pZhxVUhQiiX8/bMlso6pVj9WoIxLtPrwiMSPdoHaCAU=";
 
     env.CGO_ENABLED = 0;
     preBuild = "export GOTOOLCHAIN=local";
