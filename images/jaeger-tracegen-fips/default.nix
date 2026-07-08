@@ -4,7 +4,7 @@
 # Jaeger distributed tracing
 
 let
-  version = "2.0.0";
+  version = "2.19.0";
   component = buildGoModule {
     pname = "jaeger-tracegen-fips";
     inherit version;
@@ -12,9 +12,9 @@ let
       owner = "jaegertracing";
       repo = "jaeger";
       rev = "v${version}";
-      hash = "sha256-DQa/BlMC9RECwLVAZ0kN2O5w1ppJbg5NuDhQ/zXXGuc=";
+      hash = "sha256-tgwKArEpOkfajuASakBjF4pMVXIJr71HYSNdigkgrzs=";
     };
-    vendorHash = "sha256-g1Rc+0XX7P6/PT7NNAuhFCLCyB7nykb+DkbSA6CMdXc=";
+    vendorHash = "sha256-g65r1xT70H0YPgmgIVxVEc19nAFBQQZTugRNEXLaqMM=";
     subPackages = [ "." ];
     env.CGO_ENABLED = 1;
     env.GOEXPERIMENT = "boringcrypto";

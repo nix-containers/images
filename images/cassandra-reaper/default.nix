@@ -5,7 +5,7 @@
 # Upstream prebuilt release tarball (noarch Java application).
 
 let
-  version = "4.2.5";
+  version = "5.0.0";
 
   cassandra-reaper = pkgs.stdenv.mkDerivation {
     pname = "cassandra-reaper";
@@ -13,7 +13,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/thelastpickle/cassandra-reaper/releases/download/${version}/cassandra-reaper-${version}-release.tar.gz";
-      hash = "sha256-hTElQPyYFbk0nRmWFdNh+MEamAkPaICmKDnTqsyIzvA=";
+      hash = "sha256-Lxi785FlwySJwHhT7reTJ2oTjMU68mGv6+rE54FDVrk=";
     };
 
     # Pure JVM application; autoPatchelfHook is a harmless no-op here.

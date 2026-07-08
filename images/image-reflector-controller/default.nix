@@ -10,7 +10,7 @@
 #   ld-linux (2.42-r4)
 
 let
-  version = "1.2.1";
+  version = "1.2.2";
   image-reflector-controller = buildGoModule {
     pname = "image-reflector-controller";
     inherit version;
@@ -19,7 +19,7 @@ let
       owner = "fluxcd";
       repo = "image-reflector-controller";
       rev = "v${version}";
-      hash = "sha256-Qq3oaLSk7hg1/zeIBavSfRofgvo5EI8hYz4fHtzPX4w=";
+      hash = "sha256-hKHJDT7psAQ0uJhaU9s6Nq1qGj+EJllReeFEd41mhCY=";
     };
 
     proxyVendor = true;
