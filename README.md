@@ -4,23 +4,6 @@ A collection of container images built with nix2container, featuring dynamic dis
 
 **Browse all images:** **[nix-containers.github.io/images](https://nix-containers.github.io/images/)** — searchable catalog with per-image pages showing descriptions, vulnerability scans, SBOMs, chart usage, and source.
 
-## Build Times
-
-*Generated: 2025-12-11 on x86_64-linux (NixOS)*
-
-| Build Time | Images |
-|-----------|--------|
-| **>5 min** | vault (5m 11s) |
-| **2-5 min** | nifi (2m 34s), cilium-agent (2m 19s), kyverno (2m 15s), cert-manager-acmesolver (2m 13s), crossplane (2m 11s), kyverno-cleanup-controller (2m 5s), kyverno-background-controller (2m 4s), apache-nifi (2m 2s), kyvernopre (2m 0s), kyverno-reports-controller (1m 52s), external-dns (1m 47s), spark (1m 44s), external-secrets (1m 38s), keda (1m 33s), istio-pilot (1m 32s), source-controller (1m 28s), cilium-operator-aws (1m 21s), kustomize-controller (1m 20s), ingress-nginx (1m 10s), notification-controller (1m 10s), cilium-operator (1m 8s), helm-controller (1m 5s), hubble-ui (1m 3s), nifi-registry (1m 2s), image-reflector-controller (1m 1s) |
-| **30s-2 min** | kubeflow-trainer (59s), image-automation-controller (59s), spegel (56s), prometheus-config-reloader (54s), prometheus-adapter (52s), metrics-server (51s), cloudnative-pg (50s), hubble-relay (49s), spark-operator (46s), dragonfly-operator (43s), reloader (40s), ceph (39s), hubble-certgen (33s), static (33s) |
-| **<30s** | 218 images build in under 30 seconds |
-
-**Total: 327 images, 192m 27s total build time**
-
-**Images requiring binary download (>5 min or complex builds):**
-- `mongodb` - 90+ minutes to compile from source (C++ via scons)
-- `envoy` - 14+ minutes to compile from source (C++ via Bazel)
-
 ## Architecture
 
 - **Auto-build latest images** - Multiple patterns to build latest images securely (nix pipeline and github actions) 
@@ -83,108 +66,6 @@ A collection of container images built with nix2container, featuring dynamic dis
 | **External (DNS/Secrets)** | 7 | External integrations |
 | **Trivy** | 5 | Vulnerability scanning |
 | **Other** | ~1,100+ | Base images, runtimes, databases, tools |
-
----
-## Available Images
-
-*Updated: 2025-08-24*
-
-### Content & Communication
-
-- **hugo** - Fast and modern static site generator
-- **maddy** - Modern mail server with SMTP, IMAP, and more
-
-### Runtime Environments
-
-- **cpp-runtime** - Minimal runtime for C++ and Rust binaries
-- **bash** - GNU Bash shell environment
-- **busybox** - Minimal Unix utilities in a single executable
-
-### Nix Ecosystem
-
-- **nix** - Nix package manager and build system
-- **nix-flakes** - Nix with flakes experimental feature enabled
-- **nix-unstable** - Nix unstable version with latest features
-- **nix-unstable-static** - Statically linked Nix unstable version
-- **attic** - Multi-tenant Nix binary cache client
-- **cachix** - Binary cache service for Nix packages
-- **cachix-flakes** - Binary cache service with Nix flakes support
-
-### Kubernetes & DevOps
-
-- **kubectl** - Kubernetes command-line tool
-- **kubernetes-helm** - Package manager for Kubernetes
-- **helm** - Kubernetes package manager (standalone)
-- **ko** - Build and deploy Go applications on Kubernetes
-- **dragonfly-operator** - Kubernetes operator for Dragonfly instances
-- **external-dns** - External DNS controller for Kubernetes
-- **docker-compose** - Tool for defining multi-container Docker applications
-- **crane** - Tool for interacting with remote images and registries
-- **dive** - Tool for exploring docker image layers and reducing size
-
-### Development Tools
-
-- **cpp-build-env** - Complete C++ development environment with GCC, CMake, GTest
-- **rust-build-env** - Complete Rust development environment with Cargo, Clippy, rust-analyzer
-- **devcontainer** - Development container with common tools
-- **devenv** - Fast, declarative, reproducible development environments
-- **git** - Git version control system with SSH and GPG support
-- **go** - Go programming language with development tools
-- **python** - Python programming language with pip and development tools
-- **node** - Node.js JavaScript runtime with npm and yarn
-- **rust** - Rust programming language with Cargo toolchain
-- **jdk** - OpenJDK Java Development Kit
-- **jre** - OpenJDK Java Runtime Environment
-- **gradle** - Gradle build automation tool for Java
-- **maven** - Apache Maven build automation tool for Java
-- **php** - PHP programming language with Composer
-- **ruby** - Ruby programming language with Bundler
-- **dotnet** - .NET SDK for building applications
-- **aspnet-runtime** - ASP.NET Core runtime environment
-
-### Security & Auth
-
-- **sops** - SOPS encryption tool with GPG support
-- **pocket-id** - Personal identity provider for OAuth2/OIDC
-- **cosign** - Container signing tool with support for OCI registry
-- **grype** - Vulnerability scanner for container images and filesystems
-
-### Databases & Data Stores
-
-- **postgres** - PostgreSQL relational database
-- **redis** - Redis key-value store
-- **mongodb** - MongoDB document database
-- **mariadb** - MariaDB relational database
-- **valkey** - High-performance data structure server (Redis fork)
-
-### Web Servers & Networking
-
-- **nginx** - High-performance HTTP server and reverse proxy
-- **caddy** - Modern HTTP/2 web server with automatic HTTPS
-- **haproxy** - High-performance TCP/HTTP load balancer
-- **curl** - Command line tool for transferring data with URLs
-
-### Base Images & Utilities
-
-- **static** - Statically linked base image with essential tools
-- **glibc-dynamic** - Dynamically linked glibc base image
-- **wait-for-it** - Wait for service dependencies before starting
-
-### Quick Build Commands
-
-```bash
-# Build and load specific images
-nix build .#load-<image-name>-to-docker
-
-# Examples:
-nix build .#load-nginx-to-docker        # Web server
-nix build .#load-cpp-build-env-to-docker  # C++ development
-nix build .#load-rust-build-env-to-docker # Rust development
-nix build .#load-kubectl-to-docker        # Kubernetes CLI
-
-# Build and load all images at once
-nix build .#load-all-to-docker && ./result/bin/load-all-to-docker
-```
 
 ---
 ## Local Development
@@ -351,20 +232,3 @@ in {
   }).packages;
 }
 ```
-
-## TODO
-
-- [ ] Simplify root readme with maximum valuable info
-- [ ] Add more chart tests
-- [ ] Add full chart tests instead of image chart tests that are triggered by the main image of a chart set of images
-- [x] ~~Finish all to-do packages~~ (completed: 0 remaining)
-- [x] ~~Finish all to-do images~~ (completed: 3,118 images)
-- [ ] Cleanup old scripts
-- [ ] Document image updates
-- [ ] Document time to every build of every image
-- [ ] Add way to develop list of input images from a config file - and add a bigbang image input as example
-- [ ] Add full trivy/grype results
-- [ ] Determine top 400 images from public metrics on dockerhub, etc and build those.
-- [ ] Add feature to allow building a set of images given a yaml input file or a text file - example from bigbang images
-- [ ] track local cache of build images and trigger builds if packages or upstream nix packages change.
-- track nix package in this repo
