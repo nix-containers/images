@@ -2,30 +2,33 @@
 
 # rpk - Redpanda CLI (Redpanda Keeper)
 # https://github.com/redpanda-data/redpanda
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild. The rpk Go module lives
+# under src/go/rpk/ in the redpanda monorepo.
 
 let
   version = "26.1.12";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "rpk";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/redpanda-data/redpanda/releases/download/v${version}/rpk-linux-amd64.zip";
-      hash = "sha256:09xsfvaqadkxdjaf881y9qv75c2p96h40x5f9npr5ng9y0b559fw";
+    src = pkgs.fetchFromGitHub {
+      owner = "redpanda-data";
+      repo = "redpanda";
+      rev = "v${version}";
+      hash = "sha256-ZF9YzRW1b40syRCV+a5NOsS/SDwstVs1mI++dTDcpWc=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook pkgs.unzip ];
+    modRoot = "src/go/rpk";
+    proxyVendor = true;
+    vendorHash = "sha256-PYEWP/9LYUrtmbmCsRrrRjwwRplrj3+3Udr6Ys5dTko=";
 
-    buildInputs = [ pkgs.stdenv.cc.cc.lib pkgs.zlib ];
-
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 rpk $out/bin/rpk
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/rpk" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
     meta = with lib; {
       description = "Redpanda CLI (rpk)";
@@ -46,6 +49,6 @@ in mkImage {
     "org.opencontainers.image.title" = "rpk";
     "org.opencontainers.image.description" = "Redpanda CLI";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
