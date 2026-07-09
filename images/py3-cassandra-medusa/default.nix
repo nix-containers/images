@@ -1,44 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# py3-cassandra-medusa - Apache Cassandra backup and restore tool
-# Python-based backup tool for Apache Cassandra
-
-let
-  pythonPackages = with pkgs; [
-    python3
-    python3Packages.pip
-    python3Packages.setuptools
-    python3Packages.wheel
-    bash
-    coreutils
-    cacert
-    tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in nix2container.buildImage {
+# py3-cassandra-medusa — UPSTREAM REFERENCE (not built/hosted). Use docker.io/k8ssandra/medusa:0.29.1 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "py3-cassandra-medusa";
-  tag = "latest";
-
-  copyToRoot = [
-    (buildEnv {
-      name = "py3-cassandra-medusa-root";
-      paths = base.basePackages ++ pythonPackages ++ [ userEnv ];
-    })
-  ];
-
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv ++ [
-      "PATH=${lib.makeBinPath pythonPackages}"
-      "PYTHONPATH=/home/nonroot/.local/lib/python3.12/site-packages"
-      "PIP_USER=1"
-    ];
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "py3-cassandra-medusa";
-      "org.opencontainers.image.description" = "Apache Cassandra backup and restore tool";
-    };
+  tag = "0.29.1";
+  config.Labels = {
+    "org.opencontainers.image.version" = "0.29.1";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/k8ssandra/medusa:0.29.1 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/k8ssandra/medusa:0.29.1";
+    "io.nix-containers.image.upstream" = "docker.io/k8ssandra/medusa";
   };
 }

@@ -1,24 +1,14 @@
-{ mkImage, pkgs, lib, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# Uses kube-rbac-proxy package from pkgs/kube-rbac-proxy
-# Built from wolfi-dev/os kube-rbac-proxy.yaml
-# https://github.com/brancz/kube-rbac-proxy
-
-let
-  kube-rbac-proxy = pkgs.kube-rbac-proxy;
-  version = kube-rbac-proxy.version;
-in
-mkImage {
-  drv = kube-rbac-proxy;
+# kube-rbac-proxy — UPSTREAM REFERENCE (not built/hosted). Use quay.io/brancz/kube-rbac-proxy:v0.9.0 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
+nix2container.buildImage {
   name = "kube-rbac-proxy";
-  tag = "v${version}";
-  entrypoint = [ "${kube-rbac-proxy}/bin/kube-rbac-proxy" ];
-  cmd = [];
-
-  labels = {
-    "org.opencontainers.image.title" = "kube-rbac-proxy";
-    "org.opencontainers.image.description" = "Kubernetes RBAC authorizing HTTP proxy";
-    "org.opencontainers.image.version" = version;
-    "io.nix-containers.chart" = "kube-prometheus-stack,dragonfly-operator";
+  tag = "v0.9.0";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v0.9.0";
+    "org.opencontainers.image.description" = "Upstream reference — pull quay.io/brancz/kube-rbac-proxy:v0.9.0 directly.";
+    "io.nix-containers.upstream-image" = "quay.io/brancz/kube-rbac-proxy:v0.9.0";
+    "io.nix-containers.image.upstream" = "quay.io/brancz/kube-rbac-proxy";
   };
 }
