@@ -12,8 +12,8 @@
   
   # Default labels for all containers
   defaultLabels = {
-    "org.opencontainers.image.source" = "https://github.com/drduker/nix-containers";
-    "org.label-schema.vcs-url" = "https://github.com/drduker/nix-containers";
+    "org.opencontainers.image.source" = "https://github.com/nix-containers/images";
+    "org.label-schema.vcs-url" = "https://github.com/nix-containers/images";
   };
   
   # Function to add compressed size label to any image
