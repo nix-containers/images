@@ -191,6 +191,21 @@
                   vendorHash = "sha256-9o0Tt6OZnoNO8iSLYmn1SMkQmZzC19uNmfHSkEqWzmA=";
                 });
               })
+              # elasticsearch 7.17.27 → 7.17.29: latest available 7.17 patch.
+              # 7.17 line is on extended maintenance; the patch bumps its
+              # bundled Bouncy Castle from 1.78.1 → newer (clears
+              # CVE-2025-14813 crit) and a handful of transitive deps.
+              # Applies to elasticsearch, elasticsearch-fips, and the
+              # elasticsearch-nixchart image (all use pkgs.elasticsearch).
+              (final: prev: {
+                elasticsearch = prev.elasticsearch.overrideAttrs (o: rec {
+                  version = "7.17.29";
+                  src = prev.fetchurl {
+                    url = "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${version}-linux-x86_64.tar.gz";
+                    hash = "sha256-9xdd46yMoWMmudvf9O9wvD2mQF7+YkZVREuiRkBz6o4=";
+                  };
+                });
+              })
               # cosign 3.0.6 → 3.1.1: newer deps (9 high + 18 -fips).
               (final: prev: {
                 cosign = prev.cosign.overrideAttrs (o: rec {
