@@ -2,29 +2,39 @@
 
 # NATS Server - high-performance messaging system
 # https://github.com/nats-io/nats-server
-# (nats-fips: packages the upstream nats-server release binary)
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "2.14.3";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "nats-server";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/nats-io/nats-server/releases/download/v${version}/nats-server-v${version}-linux-amd64.tar.gz";
-      hash = "sha256-89DIIMdJ+B1xcxD7ANSQORnnDj5msmi9NSoIi5eI65M=";
+    src = pkgs.fetchFromGitHub {
+      owner = "nats-io";
+      repo = "nats-server";
+      rev = "v${version}";
+      hash = "sha256-139eSr6ECC1vThHbdnDPg8wJS0FJuwDKpm4BupRdjSk=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-cyPB9faZbj+quu+tq+EBmmoU2qZOsoUQAWFLNICtutM=";
 
-    sourceRoot = "nats-server-v${version}-linux-amd64";
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 nats-server $out/bin/nats-server
-      runHook postInstall
+    postInstall = ''
+      if [ -e $out/bin/nats-server ]; then
+        :
+      elif [ -e $out/bin/nats-server_wrap ]; then
+        mv $out/bin/nats-server_wrap $out/bin/nats-server
+      fi
     '';
 
     meta = with lib; {
@@ -47,6 +57,6 @@ in mkImage {
     "org.opencontainers.image.title" = "nats-fips";
     "org.opencontainers.image.description" = "NATS messaging server";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
