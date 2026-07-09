@@ -1,0 +1,446 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2025-48924",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "commons-lang/commons-lang: org.apache.commons/commons-lang3: Uncontrolled Recursion vulnerability in Apache Commons Lang"
+              },
+              "fullDescription": {
+                "text": "Uncontrolled Recursion vulnerability in Apache Commons Lang.\n\nThis issue affects Apache Commons Lang: Starting with commons-lang:commons-lang 2.0 to 2.6, and, from org.apache.commons:commons-lang3 3.0 before 3.18.0.\n\nThe methods ClassUtils.getClass(...) can throw StackOverflowError on very long inputs. Because an Error is usually not handled by applications and libraries, a \nStackOverflowError could cause an application to stop.\n\nUsers are recommended to upgrade to version 3.18.0, which fixes the issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-48924",
+              "help": {
+                "text": "Vulnerability CVE-2025-48924\nSeverity: MEDIUM\nPackage: commons-lang:commons-lang\nFixed Version: \nLink: [CVE-2025-48924](https://avd.aquasec.com/nvd/cve-2025-48924)\nUncontrolled Recursion vulnerability in Apache Commons Lang.\n\nThis issue affects Apache Commons Lang: Starting with commons-lang:commons-lang 2.0 to 2.6, and, from org.apache.commons:commons-lang3 3.0 before 3.18.0.\n\nThe methods ClassUtils.getClass(...) can throw StackOverflowError on very long inputs. Because an Error is usually not handled by applications and libraries, a \nStackOverflowError could cause an application to stop.\n\nUsers are recommended to upgrade to version 3.18.0, which fixes the issue.",
+                "markdown": "**Vulnerability CVE-2025-48924**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|commons-lang:commons-lang||[CVE-2025-48924](https://avd.aquasec.com/nvd/cve-2025-48924)|\n\nUncontrolled Recursion vulnerability in Apache Commons Lang.\n\nThis issue affects Apache Commons Lang: Starting with commons-lang:commons-lang 2.0 to 2.6, and, from org.apache.commons:commons-lang3 3.0 before 3.18.0.\n\nThe methods ClassUtils.getClass(...) can throw StackOverflowError on very long inputs. Because an Error is usually not handled by applications and libraries, a \nStackOverflowError could cause an application to stop.\n\nUsers are recommended to upgrade to version 3.18.0, which fixes the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-53441",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jenkins: Jenkins: Stored Cross-Site Scripting (XSS) via unescaped user-provided description"
+              },
+              "fullDescription": {
+                "text": "Jenkins 2.483 through 2.567 (both inclusive), LTS 2.492.1 through 2.555.2 (both inclusive) does not escape the user-provided description of a generic offline cause that could be set through the `POST config.xml` API, resulting in a stored cross-site scripting (XSS) vulnerability exploitable by attackers with Agent/Configure permission."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-53441",
+              "help": {
+                "text": "Vulnerability CVE-2026-53441\nSeverity: HIGH\nPackage: org.jenkins-ci.main:jenkins-core\nFixed Version: 2.568\nLink: [CVE-2026-53441](https://avd.aquasec.com/nvd/cve-2026-53441)\nJenkins 2.483 through 2.567 (both inclusive), LTS 2.492.1 through 2.555.2 (both inclusive) does not escape the user-provided description of a generic offline cause that could be set through the `POST config.xml` API, resulting in a stored cross-site scripting (XSS) vulnerability exploitable by attackers with Agent/Configure permission.",
+                "markdown": "**Vulnerability CVE-2026-53441**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.jenkins-ci.main:jenkins-core|2.568|[CVE-2026-53441](https://avd.aquasec.com/nvd/cve-2026-53441)|\n\nJenkins 2.483 through 2.567 (both inclusive), LTS 2.492.1 through 2.555.2 (both inclusive) does not escape the user-provided description of a generic offline cause that could be set through the `POST config.xml` API, resulting in a stored cross-site scripting (XSS) vulnerability exploitable by attackers with Agent/Configure permission."
+              },
+              "properties": {
+                "cvssv3_baseScore": 8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-22751",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Spring Security: JdbcOneTimeTokenService: Spring Security: Authentication bypass due to race condition in One-Time Token login"
+              },
+              "fullDescription": {
+                "text": "Vulnerability in Spring Spring Security. Applications that explicitly configure One-Time Token login with JdbcOneTimeTokenService are vulnerable to a Time-of-check Time-of-use (TOCTOU) race condition. This issue affects Spring Security: from 6.4.0 through 6.4.15, from 6.5.0 through 6.5.9, from 7.0.0 through 7.0.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-22751",
+              "help": {
+                "text": "Vulnerability CVE-2026-22751\nSeverity: MEDIUM\nPackage: org.springframework.security:spring-security-core\nFixed Version: 6.5.10, 7.0.5\nLink: [CVE-2026-22751](https://avd.aquasec.com/nvd/cve-2026-22751)\nVulnerability in Spring Spring Security. Applications that explicitly configure One-Time Token login with JdbcOneTimeTokenService are vulnerable to a Time-of-check Time-of-use (TOCTOU) race condition. This issue affects Spring Security: from 6.4.0 through 6.4.15, from 6.5.0 through 6.5.9, from 7.0.0 through 7.0.4.",
+                "markdown": "**Vulnerability CVE-2026-22751**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.springframework.security:spring-security-core|6.5.10, 7.0.5|[CVE-2026-22751](https://avd.aquasec.com/nvd/cve-2026-22751)|\n\nVulnerability in Spring Spring Security. Applications that explicitly configure One-Time Token login with JdbcOneTimeTokenService are vulnerable to a Time-of-check Time-of-use (TOCTOU) race condition. This issue affects Spring Security: from 6.4.0 through 6.4.15, from 6.5.0 through 6.5.9, from 7.0.0 through 7.0.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 4.8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "4.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-22746",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Spring Security: Spring Security: Timing attack defense bypass allows information disclosure"
+              },
+              "fullDescription": {
+                "text": "Vulnerability in Spring Spring Security. If an application is using the UserDetails#isEnabled, #isAccountNonExpired, or #isAccountNonLocked user attributes, to enable, expire, or lock users, then DaoAuthenticationProvider's timing attack defense can be bypassed for users who are disabled, expired, or locked.This issue affects Spring Security: from 5.7.0 through 5.7.22, from 5.8.0 through 5.8.24, from 6.3.0 through 6.3.15, from 6.5.0 through 6.5.9, from 7.0.0 through 7.0.4."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-22746",
+              "help": {
+                "text": "Vulnerability CVE-2026-22746\nSeverity: LOW\nPackage: org.springframework.security:spring-security-core\nFixed Version: 6.5.10, 7.0.5\nLink: [CVE-2026-22746](https://avd.aquasec.com/nvd/cve-2026-22746)\nVulnerability in Spring Spring Security. If an application is using the UserDetails#isEnabled, #isAccountNonExpired, or #isAccountNonLocked user attributes, to enable, expire, or lock users, then DaoAuthenticationProvider's timing attack defense can be bypassed for users who are disabled, expired, or locked.This issue affects Spring Security: from 5.7.0 through 5.7.22, from 5.8.0 through 5.8.24, from 6.3.0 through 6.3.15, from 6.5.0 through 6.5.9, from 7.0.0 through 7.0.4.",
+                "markdown": "**Vulnerability CVE-2026-22746**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|org.springframework.security:spring-security-core|6.5.10, 7.0.5|[CVE-2026-22746](https://avd.aquasec.com/nvd/cve-2026-22746)|\n\nVulnerability in Spring Spring Security. If an application is using the UserDetails#isEnabled, #isAccountNonExpired, or #isAccountNonLocked user attributes, to enable, expire, or lock users, then DaoAuthenticationProvider's timing attack defense can be bypassed for users who are disabled, expired, or locked.This issue affects Spring Security: from 5.7.0 through 5.7.22, from 5.8.0 through 5.8.24, from 6.3.0 through 6.3.15, from 6.5.0 through 6.5.9, from 7.0.0 through 7.0.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.7,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "3.7",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-47838",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Spring Security Vulnerable to Unauthorized User Impersonation when Using X.509 Client Certificates"
+              },
+              "fullDescription": {
+                "text": "SubjectDnX509PrincipalExtractor does not correctly handle certain malformed X.509 certificate CN values, which can lead to reading the wrong value for the username. In a carefully crafted certificate, this can lead to an attacker impersonating another user.\n\nAffected versions:\nSpring Security 5.7.0 through 5.7.24; 5.8.0 through 5.8.26; 6.3.0 through 6.3.17; 6.4.0 through 6.4.17; 6.5.0 through 6.5.10."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-47838",
+              "help": {
+                "text": "Vulnerability CVE-2026-47838\nSeverity: MEDIUM\nPackage: org.springframework.security:spring-security-web\nFixed Version: 6.5.11\nLink: [CVE-2026-47838](https://avd.aquasec.com/nvd/cve-2026-47838)\nSubjectDnX509PrincipalExtractor does not correctly handle certain malformed X.509 certificate CN values, which can lead to reading the wrong value for the username. In a carefully crafted certificate, this can lead to an attacker impersonating another user.\n\nAffected versions:\nSpring Security 5.7.0 through 5.7.24; 5.8.0 through 5.8.26; 6.3.0 through 6.3.17; 6.4.0 through 6.4.17; 6.5.0 through 6.5.10.",
+                "markdown": "**Vulnerability CVE-2026-47838**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.springframework.security:spring-security-web|6.5.11|[CVE-2026-47838](https://avd.aquasec.com/nvd/cve-2026-47838)|\n\nSubjectDnX509PrincipalExtractor does not correctly handle certain malformed X.509 certificate CN values, which can lead to reading the wrong value for the username. In a carefully crafted certificate, this can lead to an attacker impersonating another user.\n\nAffected versions:\nSpring Security 5.7.0 through 5.7.24; 5.8.0 through 5.8.26; 6.3.0 through 6.3.17; 6.4.0 through 6.4.17; 6.5.0 through 6.5.10."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "6.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2025-48924",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: commons-lang:commons-lang\nInstalled Version: 2.6\nVulnerability CVE-2025-48924\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2025-48924](https://avd.aquasec.com/nvd/cve-2025-48924)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/commons-lang-2.6.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/commons-lang-2.6.jar: commons-lang:commons-lang@2.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-48924",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: commons-lang:commons-lang\nInstalled Version: 2.6\nVulnerability CVE-2025-48924\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2025-48924](https://avd.aquasec.com/nvd/cve-2025-48924)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webapps/jenkins.war/WEB-INF/lib/commons-lang-2.6.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "webapps/jenkins.war/WEB-INF/lib/commons-lang-2.6.jar: commons-lang:commons-lang@2.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-53441",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: org.jenkins-ci.main:jenkins-core\nInstalled Version: 2.555.3\nVulnerability CVE-2026-53441\nSeverity: HIGH\nFixed Version: 2.568\nLink: [CVE-2026-53441](https://avd.aquasec.com/nvd/cve-2026-53441)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/jenkins-core-2.555.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/jenkins-core-2.555.3.jar: org.jenkins-ci.main:jenkins-core@2.555.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-53441",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: org.jenkins-ci.main:jenkins-core\nInstalled Version: 2.555.3\nVulnerability CVE-2026-53441\nSeverity: HIGH\nFixed Version: 2.568\nLink: [CVE-2026-53441](https://avd.aquasec.com/nvd/cve-2026-53441)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webapps/jenkins.war/WEB-INF/lib/jenkins-core-2.555.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "webapps/jenkins.war/WEB-INF/lib/jenkins-core-2.555.3.jar: org.jenkins-ci.main:jenkins-core@2.555.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22751",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-core\nInstalled Version: 6.5.9\nVulnerability CVE-2026-22751\nSeverity: MEDIUM\nFixed Version: 6.5.10, 7.0.5\nLink: [CVE-2026-22751](https://avd.aquasec.com/nvd/cve-2026-22751)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/spring-security-core-6.5.9.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/spring-security-core-6.5.9.jar: org.springframework.security:spring-security-core@6.5.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22751",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-core\nInstalled Version: 6.5.9\nVulnerability CVE-2026-22751\nSeverity: MEDIUM\nFixed Version: 6.5.10, 7.0.5\nLink: [CVE-2026-22751](https://avd.aquasec.com/nvd/cve-2026-22751)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webapps/jenkins.war/WEB-INF/lib/spring-security-core-6.5.9.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "webapps/jenkins.war/WEB-INF/lib/spring-security-core-6.5.9.jar: org.springframework.security:spring-security-core@6.5.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22746",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-core\nInstalled Version: 6.5.9\nVulnerability CVE-2026-22746\nSeverity: LOW\nFixed Version: 6.5.10, 7.0.5\nLink: [CVE-2026-22746](https://avd.aquasec.com/nvd/cve-2026-22746)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/spring-security-core-6.5.9.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/spring-security-core-6.5.9.jar: org.springframework.security:spring-security-core@6.5.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22746",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-core\nInstalled Version: 6.5.9\nVulnerability CVE-2026-22746\nSeverity: LOW\nFixed Version: 6.5.10, 7.0.5\nLink: [CVE-2026-22746](https://avd.aquasec.com/nvd/cve-2026-22746)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webapps/jenkins.war/WEB-INF/lib/spring-security-core-6.5.9.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "webapps/jenkins.war/WEB-INF/lib/spring-security-core-6.5.9.jar: org.springframework.security:spring-security-core@6.5.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-47838",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-web\nInstalled Version: 6.5.9\nVulnerability CVE-2026-47838\nSeverity: MEDIUM\nFixed Version: 6.5.11\nLink: [CVE-2026-47838](https://avd.aquasec.com/nvd/cve-2026-47838)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/spring-security-web-6.5.9.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/y3n62vbpwapb3i0k19p2m1yn2fad5fg5-jenkins-2.555.3/webapps/jenkins.war/WEB-INF/lib/spring-security-web-6.5.9.jar: org.springframework.security:spring-security-web@6.5.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-47838",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-web\nInstalled Version: 6.5.9\nVulnerability CVE-2026-47838\nSeverity: MEDIUM\nFixed Version: 6.5.11\nLink: [CVE-2026-47838](https://avd.aquasec.com/nvd/cve-2026-47838)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webapps/jenkins.war/WEB-INF/lib/spring-security-web-6.5.9.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "webapps/jenkins.war/WEB-INF/lib/spring-security-web-6.5.9.jar: org.springframework.security:spring-security-web@6.5.9"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:964040647f1433f04ee9adcd7dbe99476d52fa71d8d38da0920add5f9b86185c",
+        "imageName": "ghcr.io/nix-containers/images/jenkins:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/jenkins@sha256:ed564cd33edc5c0899f0d5d10a56b8ea9000eef8b7b861990b7df6608e733cdc"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/jenkins:latest"
+        ]
+      }
+    }
+  ]
+}

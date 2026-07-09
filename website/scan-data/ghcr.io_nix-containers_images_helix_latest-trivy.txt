@@ -1,0 +1,69 @@
+2026-07-09T12:09:04Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:09:04Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:09:04Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:09:04Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:09:06Z	INFO	Number of language-specific files	num=1
+2026-07-09T12:09:06Z	INFO	[rustbinary] Detecting vulnerabilities...
+
+Report Summary
+
+┌───────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
+│                                  Target                                   │    Type    │ Vulnerabilities │ Secrets │
+├───────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/bd3xybmg4nyxksra4zvrjxb1992xhyj3-helix-unwrapped-25.07.1/bin/hx │ rustbinary │        7        │    -    │
+└───────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+nix/store/bd3xybmg4nyxksra4zvrjxb1992xhyj3-helix-unwrapped-25.07.1/bin/hx (rustbinary)
+======================================================================================
+Total: 7 (HIGH: 7, CRITICAL: 0)
+
+┌──────────────┬─────────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│   Library    │    Vulnerability    │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├──────────────┼─────────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ gix          │ CVE-2026-40034      │ HIGH     │ fixed  │ 0.72.1            │ 0.83.0        │ gix-submodule before 0.29.0 (gitoxide before 0.5.21, gix     │
+│              │                     │          │        │                   │               │ before 0.84.0 ...                                            │
+│              │                     │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-40034                   │
+│              ├─────────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│              │ GHSA-fr8x-3vfx-f45h │          │        │                   │               │ gix and gitoxide: unvalidated submodule name traverses out   │
+│              │                     │          │        │                   │               │ of .git/modules and redirects...                             │
+│              │                     │          │        │                   │               │ https://github.com/advisories/GHSA-fr8x-3vfx-f45h            │
+│              ├─────────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│              │ GHSA-p3hw-mv63-rf9w │          │        │                   │               │ gix's submodule name validation bypass + trust inheritance   │
+│              │                     │          │        │                   │               │ flaw enables path traversal...                               │
+│              │                     │          │        │                   │               │ https://github.com/advisories/GHSA-p3hw-mv63-rf9w            │
+│              ├─────────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│              │ GHSA-pg4w-g64p-qwhj │          │        │                   │               │ gix and gitoxide's symlinked .gitmodules are followed and    │
+│              │                     │          │        │                   │               │ parsed from outside of...                                    │
+│              │                     │          │        │                   │               │ https://github.com/advisories/GHSA-pg4w-g64p-qwhj            │
+├──────────────┼─────────────────────┤          │        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ gix-fs       │ CVE-2026-44471      │          │        │ 0.15.0            │ 0.21.1        │ gitoxide is an implementation of git written in Rust. Prior  │
+│              │                     │          │        │                   │               │ to 0.21.1,...                                                │
+│              │                     │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-44471                   │
+├──────────────┼─────────────────────┤          │        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ gix-pack     │ GHSA-x494-mj8g-cj27 │          │        │ 0.59.1            │ 0.69.0        │ gix-pack has multiple DoS vectors: unchecked indexing panics │
+│              │                     │          │        │                   │               │ and uncapped OOM allocations...                              │
+│              │                     │          │        │                   │               │ https://github.com/advisories/GHSA-x494-mj8g-cj27            │
+├──────────────┼─────────────────────┤          │        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ gix-validate │ GHSA-p3hw-mv63-rf9w │          │        │ 0.10.0            │ 0.11.1        │ gix's submodule name validation bypass + trust inheritance   │
+│              │                     │          │        │                   │               │ flaw enables path traversal...                               │
+│              │                     │          │        │                   │               │ https://github.com/advisories/GHSA-p3hw-mv63-rf9w            │
+└──────────────┴─────────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

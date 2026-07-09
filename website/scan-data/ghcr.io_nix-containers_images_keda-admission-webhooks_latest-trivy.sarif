@@ -1,0 +1,686 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-40179",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Prometheus has Stored XSS via metric names and label values in Prometheus web UI tooltips and metrics explorer"
+              },
+              "fullDescription": {
+                "text": "Prometheus is an open-source monitoring system and time series database. Versions 3.0 through 3.5.1 and 3.6.0 through 3.11.1 have stored cross-site scripting vulnerabilities in multiple components of the Prometheus web UI where metric names and label values are injected into innerHTML without escaping. In both the Mantine UI and old React UI, chart tooltips on the Graph page render metric names containing HTML/JavaScript without sanitization. In the old React UI, the Metric Explorer fuzzy search results use dangerouslySetInnerHTML without escaping, and heatmap cell tooltips interpolate le label values without sanitization. With Prometheus v3.x defaulting to UTF-8 metric and label name validation, characters like \u003c, \u003e, and \" are now valid in metric names and labels. An attacker who can inject metrics via a compromised scrape target, remote write, or OTLP receiver endpoint can execute arbitrary JavaScript in the browser of any Prometheus user who views the metric in the Graph UI, potentially enabling configuration exfiltration, data deletion, or Prometheus shutdown depending on enabled flags. This issue has been fixed in versions 3.5.2 and 3.11.2. If developers are unable to immediately update, the following workarounds are recommended: ensure that the remote write receiver (--web.enable-remote-write-receiver) and the OTLP receiver (--web.enable-otlp-receiver) are not exposed to untrusted sources; verify that all scrape targets are trusted and not under attacker control; avoid enabling admin or mutating API endpoints (e.g., --web.enable-admin-api or --web.enable-lifecycle) in environments where untrusted data may be ingested; and refrain from clicking untrusted links, particularly those containing functions such as label_replace, as they may generate poisoned label names and values."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-40179",
+              "help": {
+                "text": "Vulnerability CVE-2026-40179\nSeverity: MEDIUM\nPackage: github.com/prometheus/prometheus\nFixed Version: 0.311.2-0.20260410083055-07c6232d159b\nLink: [CVE-2026-40179](https://avd.aquasec.com/nvd/cve-2026-40179)\nPrometheus is an open-source monitoring system and time series database. Versions 3.0 through 3.5.1 and 3.6.0 through 3.11.1 have stored cross-site scripting vulnerabilities in multiple components of the Prometheus web UI where metric names and label values are injected into innerHTML without escaping. In both the Mantine UI and old React UI, chart tooltips on the Graph page render metric names containing HTML/JavaScript without sanitization. In the old React UI, the Metric Explorer fuzzy search results use dangerouslySetInnerHTML without escaping, and heatmap cell tooltips interpolate le label values without sanitization. With Prometheus v3.x defaulting to UTF-8 metric and label name validation, characters like \u003c, \u003e, and \" are now valid in metric names and labels. An attacker who can inject metrics via a compromised scrape target, remote write, or OTLP receiver endpoint can execute arbitrary JavaScript in the browser of any Prometheus user who views the metric in the Graph UI, potentially enabling configuration exfiltration, data deletion, or Prometheus shutdown depending on enabled flags. This issue has been fixed in versions 3.5.2 and 3.11.2. If developers are unable to immediately update, the following workarounds are recommended: ensure that the remote write receiver (--web.enable-remote-write-receiver) and the OTLP receiver (--web.enable-otlp-receiver) are not exposed to untrusted sources; verify that all scrape targets are trusted and not under attacker control; avoid enabling admin or mutating API endpoints (e.g., --web.enable-admin-api or --web.enable-lifecycle) in environments where untrusted data may be ingested; and refrain from clicking untrusted links, particularly those containing functions such as label_replace, as they may generate poisoned label names and values.",
+                "markdown": "**Vulnerability CVE-2026-40179**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|github.com/prometheus/prometheus|0.311.2-0.20260410083055-07c6232d159b|[CVE-2026-40179](https://avd.aquasec.com/nvd/cve-2026-40179)|\n\nPrometheus is an open-source monitoring system and time series database. Versions 3.0 through 3.5.1 and 3.6.0 through 3.11.1 have stored cross-site scripting vulnerabilities in multiple components of the Prometheus web UI where metric names and label values are injected into innerHTML without escaping. In both the Mantine UI and old React UI, chart tooltips on the Graph page render metric names containing HTML/JavaScript without sanitization. In the old React UI, the Metric Explorer fuzzy search results use dangerouslySetInnerHTML without escaping, and heatmap cell tooltips interpolate le label values without sanitization. With Prometheus v3.x defaulting to UTF-8 metric and label name validation, characters like \u003c, \u003e, and \" are now valid in metric names and labels. An attacker who can inject metrics via a compromised scrape target, remote write, or OTLP receiver endpoint can execute arbitrary JavaScript in the browser of any Prometheus user who views the metric in the Graph UI, potentially enabling configuration exfiltration, data deletion, or Prometheus shutdown depending on enabled flags. This issue has been fixed in versions 3.5.2 and 3.11.2. If developers are unable to immediately update, the following workarounds are recommended: ensure that the remote write receiver (--web.enable-remote-write-receiver) and the OTLP receiver (--web.enable-otlp-receiver) are not exposed to untrusted sources; verify that all scrape targets are trusted and not under attacker control; avoid enabling admin or mutating API endpoints (e.g., --web.enable-admin-api or --web.enable-lifecycle) in environments where untrusted data may be ingested; and refrain from clicking untrusted links, particularly those containing functions such as label_replace, as they may generate poisoned label names and values."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+                "cvssv40_baseScore": 5.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:N/VI:N/VA:N/SC:L/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "6.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44903",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Prometheus is an open-source monitoring system and time series databas ..."
+              },
+              "fullDescription": {
+                "text": "Prometheus is an open-source monitoring system and time series database. From 2.49.0 to before 3.5.3 and 3.11.3, in the Prometheus server's legacy web UI (enabled via the command-line flag --enable-feature=old-ui), the histogram heatmap chart view does not escape le label values when inserting them into the HTML for use as axis tick mark labels. An attacker who can inject crafted metrics can execute JavaScript in the browser of any Prometheus user who views the metric in the heatmap chart UI. This vulnerability is fixed in 3.5.3 and 3.11.3."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44903",
+              "help": {
+                "text": "Vulnerability CVE-2026-44903\nSeverity: MEDIUM\nPackage: github.com/prometheus/prometheus\nFixed Version: 0.311.3\nLink: [CVE-2026-44903](https://avd.aquasec.com/nvd/cve-2026-44903)\nPrometheus is an open-source monitoring system and time series database. From 2.49.0 to before 3.5.3 and 3.11.3, in the Prometheus server's legacy web UI (enabled via the command-line flag --enable-feature=old-ui), the histogram heatmap chart view does not escape le label values when inserting them into the HTML for use as axis tick mark labels. An attacker who can inject crafted metrics can execute JavaScript in the browser of any Prometheus user who views the metric in the heatmap chart UI. This vulnerability is fixed in 3.5.3 and 3.11.3.",
+                "markdown": "**Vulnerability CVE-2026-44903**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|github.com/prometheus/prometheus|0.311.3|[CVE-2026-44903](https://avd.aquasec.com/nvd/cve-2026-44903)|\n\nPrometheus is an open-source monitoring system and time series database. From 2.49.0 to before 3.5.3 and 3.11.3, in the Prometheus server's legacy web UI (enabled via the command-line flag --enable-feature=old-ui), the histogram heatmap chart view does not escape le label values when inserting them into the HTML for use as axis tick mark labels. An attacker who can inject crafted metrics can execute JavaScript in the browser of any Prometheus user who views the metric in the heatmap chart UI. This vulnerability is fixed in 3.5.3 and 3.11.3."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+                "cvssv40_baseScore": 5.1,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:P/VC:N/VI:N/VA:N/SC:L/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "6.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GO-2026-5932",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues"
+              },
+              "fullDescription": {
+                "text": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "help": {
+                "text": "Vulnerability GO-2026-5932\nSeverity: UNKNOWN\nPackage: golang.org/x/crypto\nFixed Version: \nLink: [GO-2026-5932]()\nThe golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+                "markdown": "**Vulnerability GO-2026-5932**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/crypto||[GO-2026-5932]()|\n\nThe golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39822",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symli ..."
+              },
+              "fullDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39822",
+              "help": {
+                "text": "Vulnerability CVE-2026-39822\nSeverity: UNKNOWN\nPackage: stdlib\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+                "markdown": "**Vulnerability CVE-2026-39822**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|stdlib|1.25.12, 1.26.5, 1.27.0-rc.2|[CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)|\n\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-40179",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/prometheus/prometheus\nInstalled Version: v0.304.2\nVulnerability CVE-2026-40179\nSeverity: MEDIUM\nFixed Version: 0.311.2-0.20260410083055-07c6232d159b\nLink: [CVE-2026-40179](https://avd.aquasec.com/nvd/cve-2026-40179)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda: github.com/prometheus/prometheus@v0.304.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44903",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/prometheus/prometheus\nInstalled Version: v0.304.2\nVulnerability CVE-2026-44903\nSeverity: MEDIUM\nFixed Version: 0.311.3\nLink: [CVE-2026-44903](https://avd.aquasec.com/nvd/cve-2026-44903)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda: github.com/prometheus/prometheus@v0.304.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.52.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda: golang.org/x/crypto@v0.52.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-40179",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/prometheus/prometheus\nInstalled Version: v0.304.2\nVulnerability CVE-2026-40179\nSeverity: MEDIUM\nFixed Version: 0.311.2-0.20260410083055-07c6232d159b\nLink: [CVE-2026-40179](https://avd.aquasec.com/nvd/cve-2026-40179)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda-adapter",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda-adapter: github.com/prometheus/prometheus@v0.304.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44903",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/prometheus/prometheus\nInstalled Version: v0.304.2\nVulnerability CVE-2026-44903\nSeverity: MEDIUM\nFixed Version: 0.311.3\nLink: [CVE-2026-44903](https://avd.aquasec.com/nvd/cve-2026-44903)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda-adapter",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda-adapter: github.com/prometheus/prometheus@v0.304.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.52.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda-adapter",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda-adapter: golang.org/x/crypto@v0.52.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda-adapter",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda-adapter: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.52.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda-admission-webhooks",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda-admission-webhooks: golang.org/x/crypto@v0.52.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/keda-admission-webhooks",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/keda-admission-webhooks: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-40179",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/prometheus/prometheus\nInstalled Version: v0.304.2\nVulnerability CVE-2026-40179\nSeverity: MEDIUM\nFixed Version: 0.311.2-0.20260410083055-07c6232d159b\nLink: [CVE-2026-40179](https://avd.aquasec.com/nvd/cve-2026-40179)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda: github.com/prometheus/prometheus@v0.304.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44903",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/prometheus/prometheus\nInstalled Version: v0.304.2\nVulnerability CVE-2026-44903\nSeverity: MEDIUM\nFixed Version: 0.311.3\nLink: [CVE-2026-44903](https://avd.aquasec.com/nvd/cve-2026-44903)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda: github.com/prometheus/prometheus@v0.304.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.52.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda: golang.org/x/crypto@v0.52.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-40179",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/prometheus/prometheus\nInstalled Version: v0.304.2\nVulnerability CVE-2026-40179\nSeverity: MEDIUM\nFixed Version: 0.311.2-0.20260410083055-07c6232d159b\nLink: [CVE-2026-40179](https://avd.aquasec.com/nvd/cve-2026-40179)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-adapter",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-adapter: github.com/prometheus/prometheus@v0.304.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44903",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/prometheus/prometheus\nInstalled Version: v0.304.2\nVulnerability CVE-2026-44903\nSeverity: MEDIUM\nFixed Version: 0.311.3\nLink: [CVE-2026-44903](https://avd.aquasec.com/nvd/cve-2026-44903)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-adapter",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-adapter: github.com/prometheus/prometheus@v0.304.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.52.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-adapter",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-adapter: golang.org/x/crypto@v0.52.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-adapter",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-adapter: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.52.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-admission-webhooks",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-admission-webhooks: golang.org/x/crypto@v0.52.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-admission-webhooks",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/2iw0cl5rx6y3hx5l5z2vspfwfwprhzwn-keda-2.20.1/bin/keda-admission-webhooks: stdlib@v1.26.4"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:bb8120acdef8bded7eb74b248087ddd5b9b19b85f98b9eae7583006acaa22116",
+        "imageName": "ghcr.io/nix-containers/images/keda-admission-webhooks:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/keda-admission-webhooks@sha256:864e0b65a57ae231f2aac187f005f3aeec7cde60b536ff541e71947af4ab7b13"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/keda-admission-webhooks:latest"
+        ]
+      }
+    }
+  ]
+}

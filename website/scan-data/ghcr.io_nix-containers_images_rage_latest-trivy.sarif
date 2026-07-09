@@ -1,0 +1,849 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "GHSA-2rxc-gjrp-vjhx",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Unsoundness in anstream"
+              },
+              "fullDescription": {
+                "text": "When given a valid UTF8 string \"ö\\x1b😀\", the function in crates/anstream/src/adapter/strip.rs will be confused. The UTF8 bytes are \\xc3\\xb6 then \\x1b then \\xf0\\x9f\\x98\\x80.\n\nWhen looping over \"non-printable bytes\" \\x1b\\xf0 will be considered as some non-printable sequence.\n\nThis will produce a broken str from the incorrectly segmented bytes via str::from_utf8_unchecked, and that should never happen.\n\nFull credit goes to @Ralith who reviewed this code and asked @burakemir to follow up."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-2rxc-gjrp-vjhx",
+              "help": {
+                "text": "Vulnerability GHSA-2rxc-gjrp-vjhx\nSeverity: MEDIUM\nPackage: anstream\nFixed Version: 0.6.8\nLink: [GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)\nWhen given a valid UTF8 string \"ö\\x1b😀\", the function in crates/anstream/src/adapter/strip.rs will be confused. The UTF8 bytes are \\xc3\\xb6 then \\x1b then \\xf0\\x9f\\x98\\x80.\n\nWhen looping over \"non-printable bytes\" \\x1b\\xf0 will be considered as some non-printable sequence.\n\nThis will produce a broken str from the incorrectly segmented bytes via str::from_utf8_unchecked, and that should never happen.\n\nFull credit goes to @Ralith who reviewed this code and asked @burakemir to follow up.",
+                "markdown": "**Vulnerability GHSA-2rxc-gjrp-vjhx**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|anstream|0.6.8|[GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)|\n\nWhen given a valid UTF8 string \"ö\\x1b😀\", the function in crates/anstream/src/adapter/strip.rs will be confused. The UTF8 bytes are \\xc3\\xb6 then \\x1b then \\xf0\\x9f\\x98\\x80.\n\nWhen looping over \"non-printable bytes\" \\x1b\\xf0 will be considered as some non-printable sequence.\n\nThis will produce a broken str from the incorrectly segmented bytes via str::from_utf8_unchecked, and that should never happen.\n\nFull credit goes to @Ralith who reviewed this code and asked @burakemir to follow up."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-cq8v-f236-94qc",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Rand is unsound with a custom logger using rand::rng()"
+              },
+              "fullDescription": {
+                "text": "It has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-cq8v-f236-94qc",
+              "help": {
+                "text": "Vulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nPackage: rand\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)\nIt has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict.",
+                "markdown": "**Vulnerability GHSA-cq8v-f236-94qc**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rand|0.9.3, 0.10.1, 0.8.6|[GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)|\n\nIt has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-2p6r-x3vv-xqm2",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rpassword affected by partial password reveal when input is interrupted "
+              },
+              "fullDescription": {
+                "text": "rpassword maintainers were made aware of a possible issue with a partial password reveal when input is interrupted.\n\nTo quote @squell:\n\n\u003e @conradkleinespel I've confirmed this problem with SequoiaPGP, which I think uses rpassword, e.g.:\n\u003e\n\u003e Suppose we use pkill -9 sq in a different terminal right after the password has been typed in:\n\u003e\n\u003e $ sq key generate --userid \"barf\" --with-password\n\u003e Enter password to protect the key: Killed\n\u003e $ hello^C\n\u003e\n\u003e Where the password I typed in is \"hello\".\n\nThis has been fixed in version v7.5.0 and above."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-2p6r-x3vv-xqm2",
+              "help": {
+                "text": "Vulnerability GHSA-2p6r-x3vv-xqm2\nSeverity: LOW\nPackage: rpassword\nFixed Version: 7.5.0\nLink: [GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)\nrpassword maintainers were made aware of a possible issue with a partial password reveal when input is interrupted.\n\nTo quote @squell:\n\n\u003e @conradkleinespel I've confirmed this problem with SequoiaPGP, which I think uses rpassword, e.g.:\n\u003e\n\u003e Suppose we use pkill -9 sq in a different terminal right after the password has been typed in:\n\u003e\n\u003e $ sq key generate --userid \"barf\" --with-password\n\u003e Enter password to protect the key: Killed\n\u003e $ hello^C\n\u003e\n\u003e Where the password I typed in is \"hello\".\n\nThis has been fixed in version v7.5.0 and above.",
+                "markdown": "**Vulnerability GHSA-2p6r-x3vv-xqm2**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rpassword|7.5.0|[GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)|\n\nrpassword maintainers were made aware of a possible issue with a partial password reveal when input is interrupted.\n\nTo quote @squell:\n\n\u003e @conradkleinespel I've confirmed this problem with SequoiaPGP, which I think uses rpassword, e.g.:\n\u003e\n\u003e Suppose we use pkill -9 sq in a different terminal right after the password has been typed in:\n\u003e\n\u003e $ sq key generate --userid \"barf\" --with-password\n\u003e Enter password to protect the key: Killed\n\u003e $ hello^C\n\u003e\n\u003e Where the password I typed in is \"hello\".\n\nThis has been fixed in version v7.5.0 and above."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.8,
+                "cvssv3_vector": "CVSS:3.1/AV:P/AC:H/PR:H/UI:R/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "3.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2023-49092",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "RustCrypto/RSA is a portable RSA implementation in pure Rust. Due to a ..."
+              },
+              "fullDescription": {
+                "text": "RustCrypto/RSA is a portable RSA implementation in pure Rust. Due to a non-constant-time implementation, information about the private key is leaked through timing information which is observable over the network. An attacker may be able to use that information to recover the key. There is currently no fix available. As a workaround, avoid using the RSA crate in settings where attackers are able to observe timing information, e.g. local use on a non-compromised computer."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2023-49092",
+              "help": {
+                "text": "Vulnerability CVE-2023-49092\nSeverity: MEDIUM\nPackage: rsa\nFixed Version: \nLink: [CVE-2023-49092](https://avd.aquasec.com/nvd/cve-2023-49092)\nRustCrypto/RSA is a portable RSA implementation in pure Rust. Due to a non-constant-time implementation, information about the private key is leaked through timing information which is observable over the network. An attacker may be able to use that information to recover the key. There is currently no fix available. As a workaround, avoid using the RSA crate in settings where attackers are able to observe timing information, e.g. local use on a non-compromised computer.",
+                "markdown": "**Vulnerability CVE-2023-49092**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|rsa||[CVE-2023-49092](https://avd.aquasec.com/nvd/cve-2023-49092)|\n\nRustCrypto/RSA is a portable RSA implementation in pure Rust. Due to a non-constant-time implementation, information about the private key is leaked through timing information which is observable over the network. An attacker may be able to use that information to recover the key. There is currently no fix available. As a workaround, avoid using the RSA crate in settings where attackers are able to observe timing information, e.g. local use on a non-compromised computer."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.9,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "5.9",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-4grx-2x9w-596c",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Marvin Attack: potential key recovery through timing sidechannels"
+              },
+              "fullDescription": {
+                "text": "The [Marvin Attack] is a timing sidechannel vulnerability which allows performing RSA decryption and signing operations as an attacker with the ability to observe only the time of the decryption operation performed withthe private key.\n\nA recent survey of RSA implementations found that the Rust `rsa` crate is one of many implementations vulnerable to this attack.\n\nNo fixed version is available at this time.\n\n[Marvin Attack]: https://people.redhat.com/~hkario/marvin/"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-4grx-2x9w-596c",
+              "help": {
+                "text": "Vulnerability GHSA-4grx-2x9w-596c\nSeverity: MEDIUM\nPackage: rsa\nFixed Version: \nLink: [GHSA-4grx-2x9w-596c](https://github.com/advisories/GHSA-4grx-2x9w-596c)\nThe [Marvin Attack] is a timing sidechannel vulnerability which allows performing RSA decryption and signing operations as an attacker with the ability to observe only the time of the decryption operation performed withthe private key.\n\nA recent survey of RSA implementations found that the Rust `rsa` crate is one of many implementations vulnerable to this attack.\n\nNo fixed version is available at this time.\n\n[Marvin Attack]: https://people.redhat.com/~hkario/marvin/",
+                "markdown": "**Vulnerability GHSA-4grx-2x9w-596c**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|rsa||[GHSA-4grx-2x9w-596c](https://github.com/advisories/GHSA-4grx-2x9w-596c)|\n\nThe [Marvin Attack] is a timing sidechannel vulnerability which allows performing RSA decryption and signing operations as an attacker with the ability to observe only the time of the decryption operation performed withthe private key.\n\nA recent survey of RSA implementations found that the Rust `rsa` crate is one of many implementations vulnerable to this attack.\n\nNo fixed version is available at this time.\n\n[Marvin Attack]: https://people.redhat.com/~hkario/marvin/"
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.9,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "5.9",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-21895",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "RSA: RSA crate: Denial of Service due to malformed prime in private key generation"
+              },
+              "fullDescription": {
+                "text": "The `rsa` crate is an RSA implementation written in rust. Prior to version 0.9.10, when creating a RSA private key from its components, the construction panics instead of returning an error when one of the primes is `1`. Version 0.9.10 fixes the issue."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-21895",
+              "help": {
+                "text": "Vulnerability CVE-2026-21895\nSeverity: LOW\nPackage: rsa\nFixed Version: 0.9.10\nLink: [CVE-2026-21895](https://avd.aquasec.com/nvd/cve-2026-21895)\nThe `rsa` crate is an RSA implementation written in rust. Prior to version 0.9.10, when creating a RSA private key from its components, the construction panics instead of returning an error when one of the primes is `1`. Version 0.9.10 fixes the issue.",
+                "markdown": "**Vulnerability CVE-2026-21895**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rsa|0.9.10|[CVE-2026-21895](https://avd.aquasec.com/nvd/cve-2026-21895)|\n\nThe `rsa` crate is an RSA implementation written in rust. Prior to version 0.9.10, when creating a RSA private key from its components, the construction panics instead of returning an error when one of the primes is `1`. Version 0.9.10 fixes the issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "GHSA-2rxc-gjrp-vjhx",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: anstream\nInstalled Version: 0.3.2\nVulnerability GHSA-2rxc-gjrp-vjhx\nSeverity: MEDIUM\nFixed Version: 0.6.8\nLink: [GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage: anstream@0.3.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2p6r-x3vv-xqm2",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: rpassword\nInstalled Version: 7.3.1\nVulnerability GHSA-2p6r-x3vv-xqm2\nSeverity: LOW\nFixed Version: 7.5.0\nLink: [GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage: rpassword@7.3.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-49092",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability CVE-2023-49092\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2023-49092](https://avd.aquasec.com/nvd/cve-2023-49092)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-4grx-2x9w-596c",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability GHSA-4grx-2x9w-596c\nSeverity: MEDIUM\nFixed Version: \nLink: [GHSA-4grx-2x9w-596c](https://github.com/advisories/GHSA-4grx-2x9w-596c)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-21895",
+          "ruleIndex": 5,
+          "level": "note",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability CVE-2026-21895\nSeverity: LOW\nFixed Version: 0.9.10\nLink: [CVE-2026-21895](https://avd.aquasec.com/nvd/cve-2026-21895)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2rxc-gjrp-vjhx",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: anstream\nInstalled Version: 0.3.2\nVulnerability GHSA-2rxc-gjrp-vjhx\nSeverity: MEDIUM\nFixed Version: 0.6.8\nLink: [GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage-keygen: anstream@0.3.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage-keygen: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2p6r-x3vv-xqm2",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: rpassword\nInstalled Version: 7.3.1\nVulnerability GHSA-2p6r-x3vv-xqm2\nSeverity: LOW\nFixed Version: 7.5.0\nLink: [GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage-keygen: rpassword@7.3.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-49092",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability CVE-2023-49092\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2023-49092](https://avd.aquasec.com/nvd/cve-2023-49092)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage-keygen: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-4grx-2x9w-596c",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability GHSA-4grx-2x9w-596c\nSeverity: MEDIUM\nFixed Version: \nLink: [GHSA-4grx-2x9w-596c](https://github.com/advisories/GHSA-4grx-2x9w-596c)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage-keygen: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-21895",
+          "ruleIndex": 5,
+          "level": "note",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability CVE-2026-21895\nSeverity: LOW\nFixed Version: 0.9.10\nLink: [CVE-2026-21895](https://avd.aquasec.com/nvd/cve-2026-21895)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/rage-keygen: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2rxc-gjrp-vjhx",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: anstream\nInstalled Version: 0.3.2\nVulnerability GHSA-2rxc-gjrp-vjhx\nSeverity: MEDIUM\nFixed Version: 0.6.8\nLink: [GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage: anstream@0.3.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2p6r-x3vv-xqm2",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: rpassword\nInstalled Version: 7.3.1\nVulnerability GHSA-2p6r-x3vv-xqm2\nSeverity: LOW\nFixed Version: 7.5.0\nLink: [GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage: rpassword@7.3.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-49092",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability CVE-2023-49092\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2023-49092](https://avd.aquasec.com/nvd/cve-2023-49092)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-4grx-2x9w-596c",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability GHSA-4grx-2x9w-596c\nSeverity: MEDIUM\nFixed Version: \nLink: [GHSA-4grx-2x9w-596c](https://github.com/advisories/GHSA-4grx-2x9w-596c)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-21895",
+          "ruleIndex": 5,
+          "level": "note",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability CVE-2026-21895\nSeverity: LOW\nFixed Version: 0.9.10\nLink: [CVE-2026-21895](https://avd.aquasec.com/nvd/cve-2026-21895)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2rxc-gjrp-vjhx",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: anstream\nInstalled Version: 0.3.2\nVulnerability GHSA-2rxc-gjrp-vjhx\nSeverity: MEDIUM\nFixed Version: 0.6.8\nLink: [GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen: anstream@0.3.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2p6r-x3vv-xqm2",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: rpassword\nInstalled Version: 7.3.1\nVulnerability GHSA-2p6r-x3vv-xqm2\nSeverity: LOW\nFixed Version: 7.5.0\nLink: [GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen: rpassword@7.3.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-49092",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability CVE-2023-49092\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2023-49092](https://avd.aquasec.com/nvd/cve-2023-49092)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-4grx-2x9w-596c",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability GHSA-4grx-2x9w-596c\nSeverity: MEDIUM\nFixed Version: \nLink: [GHSA-4grx-2x9w-596c](https://github.com/advisories/GHSA-4grx-2x9w-596c)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen: rsa@0.9.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-21895",
+          "ruleIndex": 5,
+          "level": "note",
+          "message": {
+            "text": "Package: rsa\nInstalled Version: 0.9.6\nVulnerability CVE-2026-21895\nSeverity: LOW\nFixed Version: 0.9.10\nLink: [CVE-2026-21895](https://avd.aquasec.com/nvd/cve-2026-21895)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/dvw0bk06ywnynpbhcz0nfpl5wykf1g45-rage-0.11.2/bin/rage-keygen: rsa@0.9.6"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:374fef7c8bbbb9d7f608b6933a00d57944f29c7ca92c2367da6377ec83f9e3b8",
+        "imageName": "ghcr.io/nix-containers/images/rage:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/rage@sha256:00b0cc5e1451f2cd5ea4632f53a87e35c320b0f315a3310ed6b562d6a8e21bb1"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/rage:latest"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1667 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-35611",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "addressable: Addressable: Denial of Service via crafted URI templates"
+              },
+              "fullDescription": {
+                "text": "Addressable is an alternative implementation to the URI implementation that is part of Ruby's standard library. From 2.3.0 to before 2.9.0, within the URI template implementation in Addressable, two classes of URI template generate regular expressions vulnerable to catastrophic backtracking. Templates using the * (explode) modifier with any expansion operator (e.g., {foo*}, {+var*}, {#var*}, {/var*}, {.var*}, {;var*}, {?var*}, {\u0026var*}) generate patterns with nested unbounded quantifiers that are O(2^n) when matched against a maliciously crafted URI. Templates using multiple variables with the + or # operators (e.g., {+v1,v2,v3}) generate patterns with O(n^k) complexity due to the comma separator being within the matched character class, causing ambiguous backtracking across k variables. When matched against a maliciously crafted URI, this can result in catastrophic backtracking and uncontrolled resource consumption, leading to denial of service. This vulnerability is fixed in 2.9.0."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-35611",
+              "help": {
+                "text": "Vulnerability CVE-2026-35611\nSeverity: HIGH\nPackage: addressable\nFixed Version: \u003e= 2.9.0\nLink: [CVE-2026-35611](https://avd.aquasec.com/nvd/cve-2026-35611)\nAddressable is an alternative implementation to the URI implementation that is part of Ruby's standard library. From 2.3.0 to before 2.9.0, within the URI template implementation in Addressable, two classes of URI template generate regular expressions vulnerable to catastrophic backtracking. Templates using the * (explode) modifier with any expansion operator (e.g., {foo*}, {+var*}, {#var*}, {/var*}, {.var*}, {;var*}, {?var*}, {\u0026var*}) generate patterns with nested unbounded quantifiers that are O(2^n) when matched against a maliciously crafted URI. Templates using multiple variables with the + or # operators (e.g., {+v1,v2,v3}) generate patterns with O(n^k) complexity due to the comma separator being within the matched character class, causing ambiguous backtracking across k variables. When matched against a maliciously crafted URI, this can result in catastrophic backtracking and uncontrolled resource consumption, leading to denial of service. This vulnerability is fixed in 2.9.0.",
+                "markdown": "**Vulnerability CVE-2026-35611**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|addressable|\u003e= 2.9.0|[CVE-2026-35611](https://avd.aquasec.com/nvd/cve-2026-35611)|\n\nAddressable is an alternative implementation to the URI implementation that is part of Ruby's standard library. From 2.3.0 to before 2.9.0, within the URI template implementation in Addressable, two classes of URI template generate regular expressions vulnerable to catastrophic backtracking. Templates using the * (explode) modifier with any expansion operator (e.g., {foo*}, {+var*}, {#var*}, {/var*}, {.var*}, {;var*}, {?var*}, {\u0026var*}) generate patterns with nested unbounded quantifiers that are O(2^n) when matched against a maliciously crafted URI. Templates using multiple variables with the + or # operators (e.g., {+v1,v2,v3}) generate patterns with O(n^k) complexity due to the comma separator being within the matched character class, causing ambiguous backtracking across k variables. When matched against a maliciously crafted URI, this can result in catastrophic backtracking and uncontrolled resource consumption, leading to denial of service. This vulnerability is fixed in 2.9.0."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-14762",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aws-sdk-ruby: AWS SDK for Ruby: Data integrity compromise via missing cryptographic key commitment"
+              },
+              "fullDescription": {
+                "text": "Missing cryptographic key commitment in the AWS SDK for Ruby may allow a user with write access to the S3 bucket to introduce a new EDK that decrypts to different plaintext when the encrypted data key is stored in an \"instruction file\" instead of S3's metadata record.\n\n\nTo mitigate this issue, upgrade AWS SDK for Ruby to version 1.208.0 or later."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-14762",
+              "help": {
+                "text": "Vulnerability CVE-2025-14762\nSeverity: MEDIUM\nPackage: aws-sdk-s3\nFixed Version: \u003e= 1.208.0\nLink: [CVE-2025-14762](https://avd.aquasec.com/nvd/cve-2025-14762)\nMissing cryptographic key commitment in the AWS SDK for Ruby may allow a user with write access to the S3 bucket to introduce a new EDK that decrypts to different plaintext when the encrypted data key is stored in an \"instruction file\" instead of S3's metadata record.\n\n\nTo mitigate this issue, upgrade AWS SDK for Ruby to version 1.208.0 or later.",
+                "markdown": "**Vulnerability CVE-2025-14762**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|aws-sdk-s3|\u003e= 1.208.0|[CVE-2025-14762](https://avd.aquasec.com/nvd/cve-2025-14762)|\n\nMissing cryptographic key commitment in the AWS SDK for Ruby may allow a user with write access to the S3 bucket to introduce a new EDK that decrypts to different plaintext when the encrypted data key is stored in an \"instruction file\" instead of S3's metadata record.\n\n\nTo mitigate this issue, upgrade AWS SDK for Ruby to version 1.208.0 or later."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54906",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "concurrent-ruby: rubygem-concurrent-ruby: concurrent-ruby: Synchronization flaw in ReadWriteLock allows unauthorized lock release and denial of service"
+              },
+              "fullDescription": {
+                "text": "concurrent-ruby is a modern concurrency tools for Ruby. Prior to 1.3.7, Concurrent::ReadWriteLock#release_write_lock does not verify that the calling thread acquired the write lock. Any thread with access to the lock object can release an active write lock held by another thread. A second writer can then enter its critical section while the first writer is still running. Concurrent::ReadWriteLock#release_read_lock also decrements the shared counter even when no read lock is held. Calling it on a fresh lock changes the counter from 0 to -1, after which normal read acquisition raises Concurrent::ResourceLimitError. This is a synchronization correctness issue in the public Concurrent::ReadWriteLock API. This vulnerability is fixed in 1.3.7."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54906",
+              "help": {
+                "text": "Vulnerability CVE-2026-54906\nSeverity: CRITICAL\nPackage: concurrent-ruby\nFixed Version: \u003e= 1.3.7\nLink: [CVE-2026-54906](https://avd.aquasec.com/nvd/cve-2026-54906)\nconcurrent-ruby is a modern concurrency tools for Ruby. Prior to 1.3.7, Concurrent::ReadWriteLock#release_write_lock does not verify that the calling thread acquired the write lock. Any thread with access to the lock object can release an active write lock held by another thread. A second writer can then enter its critical section while the first writer is still running. Concurrent::ReadWriteLock#release_read_lock also decrements the shared counter even when no read lock is held. Calling it on a fresh lock changes the counter from 0 to -1, after which normal read acquisition raises Concurrent::ResourceLimitError. This is a synchronization correctness issue in the public Concurrent::ReadWriteLock API. This vulnerability is fixed in 1.3.7.",
+                "markdown": "**Vulnerability CVE-2026-54906**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|concurrent-ruby|\u003e= 1.3.7|[CVE-2026-54906](https://avd.aquasec.com/nvd/cve-2026-54906)|\n\nconcurrent-ruby is a modern concurrency tools for Ruby. Prior to 1.3.7, Concurrent::ReadWriteLock#release_write_lock does not verify that the calling thread acquired the write lock. Any thread with access to the lock object can release an active write lock held by another thread. A second writer can then enter its critical section while the first writer is still running. Concurrent::ReadWriteLock#release_read_lock also decrements the shared counter even when no read lock is held. Calling it on a fresh lock changes the counter from 0 to -1, after which normal read acquisition raises Concurrent::ResourceLimitError. This is a synchronization correctness issue in the public Concurrent::ReadWriteLock API. This vulnerability is fixed in 1.3.7."
+              },
+              "properties": {
+                "cvssv3_baseScore": 9.8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54904",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "concurrent-ruby: rubygem-concurrent-ruby: concurrent-ruby: Denial of Service due to infinite loop in AtomicReference#update"
+              },
+              "fullDescription": {
+                "text": "concurrent-ruby is a modern concurrency tools for Ruby. Prior to 1.3.7, Concurrent::AtomicReference#update can enter a permanent busy retry loop when the current value is Float::NAN. The issue is caused by the interaction between AtomicReference#update, which retries until compare_and_set(old_value, new_value) succeeds; Numeric compare_and_set, which checks old == old_value before attempting the underlying atomic swap.; and Ruby NaN semantics, where Float::NAN == Float::NAN is always false. As a result, once an AtomicReference contains Float::NAN, calling #update repeatedly evaluates the caller's block and never returns. In services that store externally derived numeric values in an AtomicReference, this can cause CPU exhaustion or permanent request/job hangs. This vulnerability is fixed in 1.3.7."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54904",
+              "help": {
+                "text": "Vulnerability CVE-2026-54904\nSeverity: HIGH\nPackage: concurrent-ruby\nFixed Version: \u003e= 1.3.7\nLink: [CVE-2026-54904](https://avd.aquasec.com/nvd/cve-2026-54904)\nconcurrent-ruby is a modern concurrency tools for Ruby. Prior to 1.3.7, Concurrent::AtomicReference#update can enter a permanent busy retry loop when the current value is Float::NAN. The issue is caused by the interaction between AtomicReference#update, which retries until compare_and_set(old_value, new_value) succeeds; Numeric compare_and_set, which checks old == old_value before attempting the underlying atomic swap.; and Ruby NaN semantics, where Float::NAN == Float::NAN is always false. As a result, once an AtomicReference contains Float::NAN, calling #update repeatedly evaluates the caller's block and never returns. In services that store externally derived numeric values in an AtomicReference, this can cause CPU exhaustion or permanent request/job hangs. This vulnerability is fixed in 1.3.7.",
+                "markdown": "**Vulnerability CVE-2026-54904**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|concurrent-ruby|\u003e= 1.3.7|[CVE-2026-54904](https://avd.aquasec.com/nvd/cve-2026-54904)|\n\nconcurrent-ruby is a modern concurrency tools for Ruby. Prior to 1.3.7, Concurrent::AtomicReference#update can enter a permanent busy retry loop when the current value is Float::NAN. The issue is caused by the interaction between AtomicReference#update, which retries until compare_and_set(old_value, new_value) succeeds; Numeric compare_and_set, which checks old == old_value before attempting the underlying atomic swap.; and Ruby NaN semantics, where Float::NAN == Float::NAN is always false. As a result, once an AtomicReference contains Float::NAN, calling #update repeatedly evaluates the caller's block and never returns. In services that store externally derived numeric values in an AtomicReference, this can cause CPU exhaustion or permanent request/job hangs. This vulnerability is fixed in 1.3.7."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54905",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "concurrent-ruby: Concurrent-ruby: Incorrect write lock granting leading to broken mutual exclusion"
+              },
+              "fullDescription": {
+                "text": "concurrent-ruby is a modern concurrency tools for Ruby. Prior to 1.3.7, Concurrent::ReentrantReadWriteLock can incorrectly grant a write lock after one thread acquires the read lock 32,768 times. The lock stores a thread's local read and write hold counts in one integer. The low 15 bits are used for the read hold count, and bit 15 is used as WRITE_LOCK_HELD. After 32,768 reentrant read acquisitions, the local read count crosses into the write-lock bit. try_write_lock then treats the thread as already holding a write lock and returns true without setting the global RUNNING_WRITER bit. This breaks the core mutual-exclusion guarantee: the caller is told it has a write lock, but other threads can still hold or acquire read locks at the same time. This vulnerability is fixed in 1.3.7."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54905",
+              "help": {
+                "text": "Vulnerability CVE-2026-54905\nSeverity: MEDIUM\nPackage: concurrent-ruby\nFixed Version: \u003e= 1.3.7\nLink: [CVE-2026-54905](https://avd.aquasec.com/nvd/cve-2026-54905)\nconcurrent-ruby is a modern concurrency tools for Ruby. Prior to 1.3.7, Concurrent::ReentrantReadWriteLock can incorrectly grant a write lock after one thread acquires the read lock 32,768 times. The lock stores a thread's local read and write hold counts in one integer. The low 15 bits are used for the read hold count, and bit 15 is used as WRITE_LOCK_HELD. After 32,768 reentrant read acquisitions, the local read count crosses into the write-lock bit. try_write_lock then treats the thread as already holding a write lock and returns true without setting the global RUNNING_WRITER bit. This breaks the core mutual-exclusion guarantee: the caller is told it has a write lock, but other threads can still hold or acquire read locks at the same time. This vulnerability is fixed in 1.3.7.",
+                "markdown": "**Vulnerability CVE-2026-54905**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|concurrent-ruby|\u003e= 1.3.7|[CVE-2026-54905](https://avd.aquasec.com/nvd/cve-2026-54905)|\n\nconcurrent-ruby is a modern concurrency tools for Ruby. Prior to 1.3.7, Concurrent::ReentrantReadWriteLock can incorrectly grant a write lock after one thread acquires the read lock 32,768 times. The lock stores a thread's local read and write hold counts in one integer. The low 15 bits are used for the read hold count, and bit 15 is used as WRITE_LOCK_HELD. After 32,768 reentrant read acquisitions, the local read count crosses into the write-lock bit. try_write_lock then treats the thread as already holding a write lock and returns true without setting the global RUNNING_WRITER bit. This breaks the core mutual-exclusion guarantee: the caller is told it has a write lock, but other threads can still hold or acquire read locks at the same time. This vulnerability is fixed in 1.3.7."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.5,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41316",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "erb: ERB: Arbitrary code execution via deserialization bypass"
+              },
+              "fullDescription": {
+                "text": "ERB is a templating system for Ruby. Ruby 2.7.0 (before ERB 2.2.0 was published on rubygems.org) introduced an `@_init` instance variable guard in `ERB#result` and `ERB#run` to prevent code execution when an ERB object is reconstructed via `Marshal.load` (deserialization). However, three other public methods that also evaluate `@src` via `eval()` were not given the same guard: `ERB#def_method`, `ERB#def_module`, and `ERB#def_class`. An attacker who can trigger `Marshal.load` on untrusted data in a Ruby application that has `erb` loaded can use `ERB#def_module` (zero-arg, default parameters) as a code execution sink, bypassing the `@_init` protection entirely. ERB 4.0.3.1, 4.0.4.1, 6.0.1.1, and 6.0.4 patch the issue."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41316",
+              "help": {
+                "text": "Vulnerability CVE-2026-41316\nSeverity: HIGH\nPackage: erb\nFixed Version: ~\u003e 4.0.3.1, ~\u003e 4.0.4.1, ~\u003e 6.0.1.1, \u003e= 6.0.4\nLink: [CVE-2026-41316](https://avd.aquasec.com/nvd/cve-2026-41316)\nERB is a templating system for Ruby. Ruby 2.7.0 (before ERB 2.2.0 was published on rubygems.org) introduced an `@_init` instance variable guard in `ERB#result` and `ERB#run` to prevent code execution when an ERB object is reconstructed via `Marshal.load` (deserialization). However, three other public methods that also evaluate `@src` via `eval()` were not given the same guard: `ERB#def_method`, `ERB#def_module`, and `ERB#def_class`. An attacker who can trigger `Marshal.load` on untrusted data in a Ruby application that has `erb` loaded can use `ERB#def_module` (zero-arg, default parameters) as a code execution sink, bypassing the `@_init` protection entirely. ERB 4.0.3.1, 4.0.4.1, 6.0.1.1, and 6.0.4 patch the issue.",
+                "markdown": "**Vulnerability CVE-2026-41316**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|erb|~\u003e 4.0.3.1, ~\u003e 4.0.4.1, ~\u003e 6.0.1.1, \u003e= 6.0.4|[CVE-2026-41316](https://avd.aquasec.com/nvd/cve-2026-41316)|\n\nERB is a templating system for Ruby. Ruby 2.7.0 (before ERB 2.2.0 was published on rubygems.org) introduced an `@_init` instance variable guard in `ERB#result` and `ERB#run` to prevent code execution when an ERB object is reconstructed via `Marshal.load` (deserialization). However, three other public methods that also evaluate `@src` via `eval()` were not given the same guard: `ERB#def_method`, `ERB#def_module`, and `ERB#def_class`. An attacker who can trigger `Marshal.load` on untrusted data in a Ruby application that has `erb` loaded can use `ERB#def_module` (zero-arg, default parameters) as a code execution sink, bypassing the `@_init` protection entirely. ERB 4.0.3.1, 4.0.4.1, 6.0.1.1, and 6.0.4 patch the issue."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54171",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "redact additional sensitive/risky headers when following redirects"
+              },
+              "fullDescription": {
+                "text": "## Impact\n\nThe redirect follower middleware previously failed to strip a number of\nheaders that are known to be sensitive and did not provide a way to\nprovide a custom list of headers to strip.\n\n## What kind of vulnerability is it? Who is impacted?\n\nThis could cause inadvertent leakage of sensitive data for users of the\nRedirectFollower middleware in cases where the initial request includes\nheader information that is not intended for the new target.\n\n## Patches\n\nPatch exists and is released in v1.5.0\n\n## Workarounds\n\nUsers can backport the fix (commit below) to a custom\nredirect follower middleware.\n"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54171",
+              "help": {
+                "text": "Vulnerability CVE-2026-54171\nSeverity: MEDIUM\nPackage: excon\nFixed Version: \u003e= 1.5.0\nLink: [CVE-2026-54171](https://avd.aquasec.com/nvd/cve-2026-54171)\n## Impact\n\nThe redirect follower middleware previously failed to strip a number of\nheaders that are known to be sensitive and did not provide a way to\nprovide a custom list of headers to strip.\n\n## What kind of vulnerability is it? Who is impacted?\n\nThis could cause inadvertent leakage of sensitive data for users of the\nRedirectFollower middleware in cases where the initial request includes\nheader information that is not intended for the new target.\n\n## Patches\n\nPatch exists and is released in v1.5.0\n\n## Workarounds\n\nUsers can backport the fix (commit below) to a custom\nredirect follower middleware.\n",
+                "markdown": "**Vulnerability CVE-2026-54171**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|excon|\u003e= 1.5.0|[CVE-2026-54171](https://avd.aquasec.com/nvd/cve-2026-54171)|\n\n## Impact\n\nThe redirect follower middleware previously failed to strip a number of\nheaders that are known to be sensitive and did not provide a way to\nprovide a custom list of headers to strip.\n\n## What kind of vulnerability is it? Who is impacted?\n\nThis could cause inadvertent leakage of sensitive data for users of the\nRedirectFollower middleware in cases where the initial request includes\nheader information that is not intended for the new target.\n\n## Patches\n\nPatch exists and is released in v1.5.0\n\n## Workarounds\n\nUsers can backport the fix (commit below) to a custom\nredirect follower middleware.\n"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54297",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "faraday: Faraday: Denial of Service via crafted nested query strings"
+              },
+              "fullDescription": {
+                "text": "Faraday is an HTTP client library abstraction layer that provides a common interface over many adapters. From 1.0.0 until 1.10.6 and 2.14.3, Faraday::NestedParamsEncoder, the default nested query parameter encoder/decoder in Faraday, decodes nested query strings without enforcing a maximum nesting depth. A crafted query string causes Faraday to build a deeply nested Ruby Hash structure. The internal dehash routine then recursively walks this attacker-controlled structure without a depth limit. At sufficient depth, Ruby raises an uncaught SystemStackError (stack level too deep), crashing the calling thread or worker. This can lead to denial of service in applications that pass attacker-controlled query strings to Faraday's nested query parsing or URL-building paths. This vulnerability is fixed in 1.10.6 and 2.14.3."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54297",
+              "help": {
+                "text": "Vulnerability CVE-2026-54297\nSeverity: HIGH\nPackage: faraday\nFixed Version: ~\u003e 1.10.6, \u003e= 2.14.3\nLink: [CVE-2026-54297](https://avd.aquasec.com/nvd/cve-2026-54297)\nFaraday is an HTTP client library abstraction layer that provides a common interface over many adapters. From 1.0.0 until 1.10.6 and 2.14.3, Faraday::NestedParamsEncoder, the default nested query parameter encoder/decoder in Faraday, decodes nested query strings without enforcing a maximum nesting depth. A crafted query string causes Faraday to build a deeply nested Ruby Hash structure. The internal dehash routine then recursively walks this attacker-controlled structure without a depth limit. At sufficient depth, Ruby raises an uncaught SystemStackError (stack level too deep), crashing the calling thread or worker. This can lead to denial of service in applications that pass attacker-controlled query strings to Faraday's nested query parsing or URL-building paths. This vulnerability is fixed in 1.10.6 and 2.14.3.",
+                "markdown": "**Vulnerability CVE-2026-54297**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|faraday|~\u003e 1.10.6, \u003e= 2.14.3|[CVE-2026-54297](https://avd.aquasec.com/nvd/cve-2026-54297)|\n\nFaraday is an HTTP client library abstraction layer that provides a common interface over many adapters. From 1.0.0 until 1.10.6 and 2.14.3, Faraday::NestedParamsEncoder, the default nested query parameter encoder/decoder in Faraday, decodes nested query strings without enforcing a maximum nesting depth. A crafted query string causes Faraday to build a deeply nested Ruby Hash structure. The internal dehash routine then recursively walks this attacker-controlled structure without a depth limit. At sufficient depth, Ruby raises an uncaught SystemStackError (stack level too deep), crashing the calling thread or worker. This can lead to denial of service in applications that pass attacker-controlled query strings to Faraday's nested query parsing or URL-building paths. This vulnerability is fixed in 1.10.6 and 2.14.3."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-25765",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Faraday: Faraday: Server-Side Request Forgery via protocol-relative URLs"
+              },
+              "fullDescription": {
+                "text": "Faraday is an HTTP client library abstraction layer that provides a common interface over many adapters. Prior to 2.14.1, Faraday's build_exclusive_url method (in lib/faraday/connection.rb) uses Ruby's URI#merge to combine the connection's base URL with a user-supplied path. Per RFC 3986, protocol-relative URLs (e.g. //evil.com/path) are treated as network-path references that override the base URL's host/authority component. This means that if any application passes user-controlled input to Faraday's get(), post(), build_url(), or other request methods, an attacker can supply a protocol-relative URL like //attacker.com/endpoint to redirect the request to an arbitrary host, enabling Server-Side Request Forgery (SSRF). This vulnerability is fixed in 2.14.1."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-25765",
+              "help": {
+                "text": "Vulnerability CVE-2026-25765\nSeverity: MEDIUM\nPackage: faraday\nFixed Version: ~\u003e 1.10.5, \u003e= 2.14.1\nLink: [CVE-2026-25765](https://avd.aquasec.com/nvd/cve-2026-25765)\nFaraday is an HTTP client library abstraction layer that provides a common interface over many adapters. Prior to 2.14.1, Faraday's build_exclusive_url method (in lib/faraday/connection.rb) uses Ruby's URI#merge to combine the connection's base URL with a user-supplied path. Per RFC 3986, protocol-relative URLs (e.g. //evil.com/path) are treated as network-path references that override the base URL's host/authority component. This means that if any application passes user-controlled input to Faraday's get(), post(), build_url(), or other request methods, an attacker can supply a protocol-relative URL like //attacker.com/endpoint to redirect the request to an arbitrary host, enabling Server-Side Request Forgery (SSRF). This vulnerability is fixed in 2.14.1.",
+                "markdown": "**Vulnerability CVE-2026-25765**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|faraday|~\u003e 1.10.5, \u003e= 2.14.1|[CVE-2026-25765](https://avd.aquasec.com/nvd/cve-2026-25765)|\n\nFaraday is an HTTP client library abstraction layer that provides a common interface over many adapters. Prior to 2.14.1, Faraday's build_exclusive_url method (in lib/faraday/connection.rb) uses Ruby's URI#merge to combine the connection's base URL with a user-supplied path. Per RFC 3986, protocol-relative URLs (e.g. //evil.com/path) are treated as network-path references that override the base URL's host/authority component. This means that if any application passes user-controlled input to Faraday's get(), post(), build_url(), or other request methods, an attacker can supply a protocol-relative URL like //attacker.com/endpoint to redirect the request to an arbitrary host, enabling Server-Side Request Forgery (SSRF). This vulnerability is fixed in 2.14.1."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-33637",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "faraday: rubygem-faraday: Faraday: Off-host request forgery due to protocol-relative host override"
+              },
+              "fullDescription": {
+                "text": "Faraday is an HTTP client library abstraction layer that provides a common interface over many adapters. Versions 2.0.0 through 2.14.1 still allow protocol-relative host override when the request target is passed as a URI object (rather than a String) to Faraday::Connection#build_exclusive_url. This bypasses the February 2026 fix for GHSA-33mh-2634-fwr2 and enables off-host request forgery: a request built from a fixed-base Faraday::Connection can be redirected to an attacker-controlled host, forwarding connection-scoped values such as Authorization headers and default query parameters. This issue has been fixed in version 2.14.3."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-33637",
+              "help": {
+                "text": "Vulnerability CVE-2026-33637\nSeverity: MEDIUM\nPackage: faraday\nFixed Version: \u003e= 2.14.2\nLink: [CVE-2026-33637](https://avd.aquasec.com/nvd/cve-2026-33637)\nFaraday is an HTTP client library abstraction layer that provides a common interface over many adapters. Versions 2.0.0 through 2.14.1 still allow protocol-relative host override when the request target is passed as a URI object (rather than a String) to Faraday::Connection#build_exclusive_url. This bypasses the February 2026 fix for GHSA-33mh-2634-fwr2 and enables off-host request forgery: a request built from a fixed-base Faraday::Connection can be redirected to an attacker-controlled host, forwarding connection-scoped values such as Authorization headers and default query parameters. This issue has been fixed in version 2.14.3.",
+                "markdown": "**Vulnerability CVE-2026-33637**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|faraday|\u003e= 2.14.2|[CVE-2026-33637](https://avd.aquasec.com/nvd/cve-2026-33637)|\n\nFaraday is an HTTP client library abstraction layer that provides a common interface over many adapters. Versions 2.0.0 through 2.14.1 still allow protocol-relative host override when the request target is passed as a URI object (rather than a String) to Faraday::Connection#build_exclusive_url. This bypasses the February 2026 fix for GHSA-33mh-2634-fwr2 and enables off-host request forgery: a request built from a fixed-base Faraday::Connection can be redirected to an attacker-controlled host, forwarding connection-scoped values such as Authorization headers and default query parameters. This issue has been fixed in version 2.14.3."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44162",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "fluent-plugin-s3 Vulnerable to Denial of Service (DoS) via Decompression Bomb in `in_s3`"
+              },
+              "fullDescription": {
+                "text": "\"The `fluent-plugin-s3` plugin (specifically the `in_s3` input plugin)\nsupports reading and decompressing heavily compressed files (such as\n`gzip`, `lzma2`, and `lzop`) from Amazon S3. It was discovered that\nthe plugin read the entire decompressed payload into memory at once\nwithout enforcing a strict size limit.\n\nIf an attacker has sufficient permissions to upload files to the\nmonitored S3 bucket, they can upload a maliciously crafted, highly\ncompressed file. When Fluentd attempts to decompress this file, it\nwill expand to an excessive size and it will consume significant\nsystem resources.\n\n## Impact\n\nThis vulnerability allows for a **Denial of Service (DoS)** attack\nvia memory exhaustion. The rapid memory consumption during decompression\ncan lead to an Out-of-Memory kill of the Fluentd process by the\noperating system, This results in the disruption of all log collection\non the affected node.\n"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44162",
+              "help": {
+                "text": "Vulnerability CVE-2026-44162\nSeverity: LOW\nPackage: fluent-plugin-s3\nFixed Version: \u003e= 1.8.5\nLink: [CVE-2026-44162](https://avd.aquasec.com/nvd/cve-2026-44162)\n\"The `fluent-plugin-s3` plugin (specifically the `in_s3` input plugin)\nsupports reading and decompressing heavily compressed files (such as\n`gzip`, `lzma2`, and `lzop`) from Amazon S3. It was discovered that\nthe plugin read the entire decompressed payload into memory at once\nwithout enforcing a strict size limit.\n\nIf an attacker has sufficient permissions to upload files to the\nmonitored S3 bucket, they can upload a maliciously crafted, highly\ncompressed file. When Fluentd attempts to decompress this file, it\nwill expand to an excessive size and it will consume significant\nsystem resources.\n\n## Impact\n\nThis vulnerability allows for a **Denial of Service (DoS)** attack\nvia memory exhaustion. The rapid memory consumption during decompression\ncan lead to an Out-of-Memory kill of the Fluentd process by the\noperating system, This results in the disruption of all log collection\non the affected node.\n",
+                "markdown": "**Vulnerability CVE-2026-44162**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|fluent-plugin-s3|\u003e= 1.8.5|[CVE-2026-44162](https://avd.aquasec.com/nvd/cve-2026-44162)|\n\n\"The `fluent-plugin-s3` plugin (specifically the `in_s3` input plugin)\nsupports reading and decompressing heavily compressed files (such as\n`gzip`, `lzma2`, and `lzop`) from Amazon S3. It was discovered that\nthe plugin read the entire decompressed payload into memory at once\nwithout enforcing a strict size limit.\n\nIf an attacker has sufficient permissions to upload files to the\nmonitored S3 bucket, they can upload a maliciously crafted, highly\ncompressed file. When Fluentd attempts to decompress this file, it\nwill expand to an excessive size and it will consume significant\nsystem resources.\n\n## Impact\n\nThis vulnerability allows for a **Denial of Service (DoS)** attack\nvia memory exhaustion. The rapid memory consumption during decompression\ncan lead to an Out-of-Memory kill of the Fluentd process by the\noperating system, This results in the disruption of all log collection\non the affected node.\n"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44024",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Fluentd is Vulnerable to Remote Code Execution (RCE) via Arbitrary File Write in `${tag}` Placeholder"
+              },
+              "fullDescription": {
+                "text": "Fluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, Fluentd allows dynamically constructing file paths using the ${tag} placeholder, and insufficient validation of ${tag} in file configurations such as the path parameter of the out_file plugin allows attackers sending untrusted tags containing path traversal characters to write or overwrite arbitrary files and potentially achieve remote code execution. This issue is fixed in version 1.19.3."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44024",
+              "help": {
+                "text": "Vulnerability CVE-2026-44024\nSeverity: CRITICAL\nPackage: fluentd\nFixed Version: \u003e= 1.19.3\nLink: [CVE-2026-44024](https://avd.aquasec.com/nvd/cve-2026-44024)\nFluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, Fluentd allows dynamically constructing file paths using the ${tag} placeholder, and insufficient validation of ${tag} in file configurations such as the path parameter of the out_file plugin allows attackers sending untrusted tags containing path traversal characters to write or overwrite arbitrary files and potentially achieve remote code execution. This issue is fixed in version 1.19.3.",
+                "markdown": "**Vulnerability CVE-2026-44024**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|fluentd|\u003e= 1.19.3|[CVE-2026-44024](https://avd.aquasec.com/nvd/cve-2026-44024)|\n\nFluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, Fluentd allows dynamically constructing file paths using the ${tag} placeholder, and insufficient validation of ${tag} in file configurations such as the path parameter of the out_file plugin allows attackers sending untrusted tags containing path traversal characters to write or overwrite arbitrary files and potentially achieve remote code execution. This issue is fixed in version 1.19.3."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "9.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44025",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Fluentd is Vulnerable to Exposure of Sensitive Information via Monitor Agent API"
+              },
+              "fullDescription": {
+                "text": "Fluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, Fluentd's Monitor Agent plugin in_monitor_agent exposes internal metrics and plugin information via a REST API, and responses from /api/plugins.json and related endpoints unintentionally include internal instance variables that may contain database passwords, API keys, or cloud credentials. This issue is fixed in version 1.19.3."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44025",
+              "help": {
+                "text": "Vulnerability CVE-2026-44025\nSeverity: HIGH\nPackage: fluentd\nFixed Version: \u003e= 1.19.3\nLink: [CVE-2026-44025](https://avd.aquasec.com/nvd/cve-2026-44025)\nFluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, Fluentd's Monitor Agent plugin in_monitor_agent exposes internal metrics and plugin information via a REST API, and responses from /api/plugins.json and related endpoints unintentionally include internal instance variables that may contain database passwords, API keys, or cloud credentials. This issue is fixed in version 1.19.3.",
+                "markdown": "**Vulnerability CVE-2026-44025**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|fluentd|\u003e= 1.19.3|[CVE-2026-44025](https://avd.aquasec.com/nvd/cve-2026-44025)|\n\nFluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, Fluentd's Monitor Agent plugin in_monitor_agent exposes internal metrics and plugin information via a REST API, and responses from /api/plugins.json and related endpoints unintentionally include internal instance variables that may contain database passwords, API keys, or cloud credentials. This issue is fixed in version 1.19.3."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44160",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Fluentd is Vulnerable to Denial of Service (DoS) via Gzip Decompression Bomb in `in_http` and `in_forward`"
+              },
+              "fullDescription": {
+                "text": "Fluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, Fluentd's in_http and in_forward plugins support gzip-compressed data but enforce limits only on compressed payloads through settings such as body_size_limit and chunk_size_limit, allowing crafted compressed payloads to decompress in memory to an excessive size and cause denial of service through memory exhaustion. This issue is fixed in version 1.19.3."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44160",
+              "help": {
+                "text": "Vulnerability CVE-2026-44160\nSeverity: HIGH\nPackage: fluentd\nFixed Version: \u003e= 1.19.3\nLink: [CVE-2026-44160](https://avd.aquasec.com/nvd/cve-2026-44160)\nFluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, Fluentd's in_http and in_forward plugins support gzip-compressed data but enforce limits only on compressed payloads through settings such as body_size_limit and chunk_size_limit, allowing crafted compressed payloads to decompress in memory to an excessive size and cause denial of service through memory exhaustion. This issue is fixed in version 1.19.3.",
+                "markdown": "**Vulnerability CVE-2026-44160**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|fluentd|\u003e= 1.19.3|[CVE-2026-44160](https://avd.aquasec.com/nvd/cve-2026-44160)|\n\nFluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, Fluentd's in_http and in_forward plugins support gzip-compressed data but enforce limits only on compressed payloads through settings such as body_size_limit and chunk_size_limit, allowing crafted compressed payloads to decompress in memory to an excessive size and cause denial of service through memory exhaustion. This issue is fixed in version 1.19.3."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44161",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Fluentd is Vulnerable to Server-Side Request Forgery (SSRF) via Placeholder Expansion in `out_http`"
+              },
+              "fullDescription": {
+                "text": "Fluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, the Fluentd out_http output plugin allows placeholders such as ${tag} in the endpoint configuration parameter, and if a placeholder value is derived from untrusted input an attacker can control the destination hostname of outbound HTTP requests and force requests to arbitrary internal services. This issue is fixed in version 1.19.3."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44161",
+              "help": {
+                "text": "Vulnerability CVE-2026-44161\nSeverity: HIGH\nPackage: fluentd\nFixed Version: \u003e= 1.19.3\nLink: [CVE-2026-44161](https://avd.aquasec.com/nvd/cve-2026-44161)\nFluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, the Fluentd out_http output plugin allows placeholders such as ${tag} in the endpoint configuration parameter, and if a placeholder value is derived from untrusted input an attacker can control the destination hostname of outbound HTTP requests and force requests to arbitrary internal services. This issue is fixed in version 1.19.3.",
+                "markdown": "**Vulnerability CVE-2026-44161**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|fluentd|\u003e= 1.19.3|[CVE-2026-44161](https://avd.aquasec.com/nvd/cve-2026-44161)|\n\nFluentd collects events from various data sources and writes them to files, RDBMS, NoSQL, IaaS, SaaS, Hadoop and so on. Prior to 1.19.3, the Fluentd out_http output plugin allows placeholders such as ${tag} in the endpoint configuration parameter, and if a placeholder value is derived from untrusted input an attacker can control the destination hostname of outbound HTTP requests and force requests to arbitrary internal services. This issue is fixed in version 1.19.3."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-27788",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "json: Ruby JSON Parser has Out-of-bounds Read"
+              },
+              "fullDescription": {
+                "text": "JSON is a JSON implementation for Ruby. Starting in version 2.10.0 and prior to version 2.10.2, a specially crafted document could cause an out of bound read, most likely resulting in a crash. Versions prior to 2.10.0 are not vulnerable. Version 2.10.2 fixes the problem. No known workarounds are available."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-27788",
+              "help": {
+                "text": "Vulnerability CVE-2025-27788\nSeverity: HIGH\nPackage: json\nFixed Version: \u003e= 2.10.2\nLink: [CVE-2025-27788](https://avd.aquasec.com/nvd/cve-2025-27788)\nJSON is a JSON implementation for Ruby. Starting in version 2.10.0 and prior to version 2.10.2, a specially crafted document could cause an out of bound read, most likely resulting in a crash. Versions prior to 2.10.0 are not vulnerable. Version 2.10.2 fixes the problem. No known workarounds are available.",
+                "markdown": "**Vulnerability CVE-2025-27788**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|json|\u003e= 2.10.2|[CVE-2025-27788](https://avd.aquasec.com/nvd/cve-2025-27788)|\n\nJSON is a JSON implementation for Ruby. Starting in version 2.10.0 and prior to version 2.10.2, a specially crafted document could cause an out of bound read, most likely resulting in a crash. Versions prior to 2.10.0 are not vulnerable. Version 2.10.2 fixes the problem. No known workarounds are available."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54696",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Ruby JSON is a JSON implementation for Ruby. Versions 2.9.0 through 2. ..."
+              },
+              "fullDescription": {
+                "text": "Ruby JSON is a JSON implementation for Ruby. Versions 2.9.0 through 2.19.8 are vulnerable to heap buffer overflow when the JSON generator is provided with an oversized streamed object. When streaming to an IO JSON.dump(obj, io) and JSON::State#generate(obj, io) can write past the internal JSON generator buffer when a streamed object contains an\nattacker-controlled string near 16 KB. Exploitation would result in a reliable process crash/denial of service. This issue has been fixed in version 2.19.9."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54696",
+              "help": {
+                "text": "Vulnerability CVE-2026-54696\nSeverity: LOW\nPackage: json\nFixed Version: \u003e= 2.19.9\nLink: [CVE-2026-54696](https://avd.aquasec.com/nvd/cve-2026-54696)\nRuby JSON is a JSON implementation for Ruby. Versions 2.9.0 through 2.19.8 are vulnerable to heap buffer overflow when the JSON generator is provided with an oversized streamed object. When streaming to an IO JSON.dump(obj, io) and JSON::State#generate(obj, io) can write past the internal JSON generator buffer when a streamed object contains an\nattacker-controlled string near 16 KB. Exploitation would result in a reliable process crash/denial of service. This issue has been fixed in version 2.19.9.",
+                "markdown": "**Vulnerability CVE-2026-54696**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|json|\u003e= 2.19.9|[CVE-2026-54696](https://avd.aquasec.com/nvd/cve-2026-54696)|\n\nRuby JSON is a JSON implementation for Ruby. Versions 2.9.0 through 2.19.8 are vulnerable to heap buffer overflow when the JSON generator is provided with an oversized streamed object. When streaming to an IO JSON.dump(obj, io) and JSON::State#generate(obj, io) can write past the internal JSON generator buffer when a streamed object contains an\nattacker-controlled string near 16 KB. Exploitation would result in a reliable process crash/denial of service. This issue has been fixed in version 2.19.9."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54522",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "DFVULN-839 - Use-After-Free in MessagePack::Buffer#clear Enables Cross-Buffer Disclosure"
+              },
+              "fullDescription": {
+                "text": "## Summary\n\nMessagePack::Buffer#clear shifts out every chunk and returns its\n4 KiB rmem page to the shared pool, but does not reset the buffer's\nrmem cursor (rmem_last, rmem_end, rmem_owner). The next write sees\n\"unused rmem space\" left over from the freed page and hands back a\nslice of memory that has already been returned to the pool. A second\nMessagePack::Buffer then re-acquires that same page, so reading the\ncleared-and-rewritten buffer discloses the second buffer's bytes — a\nsame-process use-after-free with cross-buffer information\ndisclosure (and the symmetric write-corruption).\n"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54522",
+              "help": {
+                "text": "Vulnerability CVE-2026-54522\nSeverity: UNKNOWN\nPackage: msgpack\nFixed Version: \u003e= 1.8.2\nLink: [CVE-2026-54522](https://avd.aquasec.com/nvd/cve-2026-54522)\n## Summary\n\nMessagePack::Buffer#clear shifts out every chunk and returns its\n4 KiB rmem page to the shared pool, but does not reset the buffer's\nrmem cursor (rmem_last, rmem_end, rmem_owner). The next write sees\n\"unused rmem space\" left over from the freed page and hands back a\nslice of memory that has already been returned to the pool. A second\nMessagePack::Buffer then re-acquires that same page, so reading the\ncleared-and-rewritten buffer discloses the second buffer's bytes — a\nsame-process use-after-free with cross-buffer information\ndisclosure (and the symmetric write-corruption).\n",
+                "markdown": "**Vulnerability CVE-2026-54522**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|msgpack|\u003e= 1.8.2|[CVE-2026-54522](https://avd.aquasec.com/nvd/cve-2026-54522)|\n\n## Summary\n\nMessagePack::Buffer#clear shifts out every chunk and returns its\n4 KiB rmem page to the shared pool, but does not reset the buffer's\nrmem cursor (rmem_last, rmem_end, rmem_owner). The next write sees\n\"unused rmem space\" left over from the freed page and hands back a\nslice of memory that has already been returned to the pool. A second\nMessagePack::Buffer then re-acquires that same page, so reading the\ncleared-and-rewritten buffer discloses the second buffer's bytes — a\nsame-process use-after-free with cross-buffer information\ndisclosure (and the symmetric write-corruption).\n"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42257",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "net-imap: Net::IMAP: Arbitrary IMAP command injection via CRLF sequences in unvalidated input"
+              },
+              "fullDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, several Net::IMAP commands accept a raw string argument that is sent to the server without validation or escaping. If this string is derived from user-controlled input, it may contain contain CRLF sequences, which an attacker can use to inject arbitrary IMAP commands. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42257",
+              "help": {
+                "text": "Vulnerability CVE-2026-42257\nSeverity: CRITICAL\nPackage: net-imap\nFixed Version: ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42257](https://avd.aquasec.com/nvd/cve-2026-42257)\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, several Net::IMAP commands accept a raw string argument that is sent to the server without validation or escaping. If this string is derived from user-controlled input, it may contain contain CRLF sequences, which an attacker can use to inject arbitrary IMAP commands. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4.",
+                "markdown": "**Vulnerability CVE-2026-42257**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|net-imap|~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4|[CVE-2026-42257](https://avd.aquasec.com/nvd/cve-2026-42257)|\n\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, several Net::IMAP commands accept a raw string argument that is sent to the server without validation or escaping. If this string is derived from user-controlled input, it may contain contain CRLF sequences, which an attacker can use to inject arbitrary IMAP commands. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 9.8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42245",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "ruby: net-imap: Net::IMAP: Denial of Service via crafted IMAP responses"
+              },
+              "fullDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, Net::IMAP::ResponseReader has quadratic time complexity when reading large responses containing many string literals. A hostile server can send responses which are crafted to exhaust the client's CPU for a denial of service attack. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42245",
+              "help": {
+                "text": "Vulnerability CVE-2026-42245\nSeverity: HIGH\nPackage: net-imap\nFixed Version: ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42245](https://avd.aquasec.com/nvd/cve-2026-42245)\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, Net::IMAP::ResponseReader has quadratic time complexity when reading large responses containing many string literals. A hostile server can send responses which are crafted to exhaust the client's CPU for a denial of service attack. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4.",
+                "markdown": "**Vulnerability CVE-2026-42245**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|net-imap|~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4|[CVE-2026-42245](https://avd.aquasec.com/nvd/cve-2026-42245)|\n\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, Net::IMAP::ResponseReader has quadratic time complexity when reading large responses containing many string literals. A hostile server can send responses which are crafted to exhaust the client's CPU for a denial of service attack. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42246",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "net-imap: ruby: Net::IMAP: Information disclosure via man-in-the-middle attack bypassing TLS"
+              },
+              "fullDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.3.10, 0.4.24, 0.5.14, and 0.6.4, a man-in-the-middle attacker can cause Net::IMAP#starttls to return \"successfully\", without starting TLS. This issue has been patched in versions 0.3.10, 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42246",
+              "help": {
+                "text": "Vulnerability CVE-2026-42246\nSeverity: HIGH\nPackage: net-imap\nFixed Version: ~\u003e 0.3.10, ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42246](https://avd.aquasec.com/nvd/cve-2026-42246)\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.3.10, 0.4.24, 0.5.14, and 0.6.4, a man-in-the-middle attacker can cause Net::IMAP#starttls to return \"successfully\", without starting TLS. This issue has been patched in versions 0.3.10, 0.4.24, 0.5.14, and 0.6.4.",
+                "markdown": "**Vulnerability CVE-2026-42246**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|net-imap|~\u003e 0.3.10, ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4|[CVE-2026-42246](https://avd.aquasec.com/nvd/cve-2026-42246)|\n\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.3.10, 0.4.24, 0.5.14, and 0.6.4, a man-in-the-middle attacker can cause Net::IMAP#starttls to return \"successfully\", without starting TLS. This issue has been patched in versions 0.3.10, 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.4,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.4",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42256",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "ruby/net-imap: ruby: Net::IMAP: Denial of Service via large iteration count in SCRAM authentication"
+              },
+              "fullDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. From versions 0.4.0 to before 0.4.24, 0.5.0 to before 0.5.14, and 0.6.0 to before 0.6.4, when authenticating a connection with SCRAM-SHA1 or SCRAM-SHA256, a hostile server can perform a computational denial-of-service attack on the client process by sending a big iteration count value. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42256",
+              "help": {
+                "text": "Vulnerability CVE-2026-42256\nSeverity: MEDIUM\nPackage: net-imap\nFixed Version: ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42256](https://avd.aquasec.com/nvd/cve-2026-42256)\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. From versions 0.4.0 to before 0.4.24, 0.5.0 to before 0.5.14, and 0.6.0 to before 0.6.4, when authenticating a connection with SCRAM-SHA1 or SCRAM-SHA256, a hostile server can perform a computational denial-of-service attack on the client process by sending a big iteration count value. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4.",
+                "markdown": "**Vulnerability CVE-2026-42256**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|net-imap|~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4|[CVE-2026-42256](https://avd.aquasec.com/nvd/cve-2026-42256)|\n\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. From versions 0.4.0 to before 0.4.24, 0.5.0 to before 0.5.14, and 0.6.0 to before 0.6.4, when authenticating a connection with SCRAM-SHA1 or SCRAM-SHA256, a hostile server can perform a computational denial-of-service attack on the client process by sending a big iteration count value. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42258",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "ruby/net-imap: ruby: Net::IMAP: IMAP Command Injection via Symbol Arguments"
+              },
+              "fullDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, symbol arguments to commands are vulnerable to a CRLF Injection / IMAP Command injection via Symbol arguments passed to IMAP commands. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42258",
+              "help": {
+                "text": "Vulnerability CVE-2026-42258\nSeverity: MEDIUM\nPackage: net-imap\nFixed Version: ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42258](https://avd.aquasec.com/nvd/cve-2026-42258)\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, symbol arguments to commands are vulnerable to a CRLF Injection / IMAP Command injection via Symbol arguments passed to IMAP commands. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4.",
+                "markdown": "**Vulnerability CVE-2026-42258**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|net-imap|~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4|[CVE-2026-42258](https://avd.aquasec.com/nvd/cve-2026-42258)|\n\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, symbol arguments to commands are vulnerable to a CRLF Injection / IMAP Command injection via Symbol arguments passed to IMAP commands. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:N/I:H/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-47240",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client fu ..."
+              },
+              "fullDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, several Net::IMAP commands accept a \"raw data\" argument that is sent verbatim after validation to prevent command injection. However, if a server does not support non-synchronizing literals, it may still be possible to inject arbitrary IMAP commands inside non-synchronizing literals.  A server without support for non-synchronizing literals may interpret the \"+}\\r\\n\" as the end of a malformed command line and respond with a tagged BAD. In that case, the contents of the literal will be interpreted as one or more new pipelined commands, allowing a CRLF command injection attack to succeed. This affects criteria for #search and #uid_search; search_keys for #sort, #thread, #uid_sort, and #uid_thread; and attr for #fetch and #uid_fetch. This vulnerability is fixed in 0.6.5 and 0.5.15."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-47240",
+              "help": {
+                "text": "Vulnerability CVE-2026-47240\nSeverity: MEDIUM\nPackage: net-imap\nFixed Version: ~\u003e 0.5.15, \u003e= 0.6.4.1\nLink: [CVE-2026-47240](https://avd.aquasec.com/nvd/cve-2026-47240)\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, several Net::IMAP commands accept a \"raw data\" argument that is sent verbatim after validation to prevent command injection. However, if a server does not support non-synchronizing literals, it may still be possible to inject arbitrary IMAP commands inside non-synchronizing literals.  A server without support for non-synchronizing literals may interpret the \"+}\\r\\n\" as the end of a malformed command line and respond with a tagged BAD. In that case, the contents of the literal will be interpreted as one or more new pipelined commands, allowing a CRLF command injection attack to succeed. This affects criteria for #search and #uid_search; search_keys for #sort, #thread, #uid_sort, and #uid_thread; and attr for #fetch and #uid_fetch. This vulnerability is fixed in 0.6.5 and 0.5.15.",
+                "markdown": "**Vulnerability CVE-2026-47240**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|net-imap|~\u003e 0.5.15, \u003e= 0.6.4.1|[CVE-2026-47240](https://avd.aquasec.com/nvd/cve-2026-47240)|\n\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, several Net::IMAP commands accept a \"raw data\" argument that is sent verbatim after validation to prevent command injection. However, if a server does not support non-synchronizing literals, it may still be possible to inject arbitrary IMAP commands inside non-synchronizing literals.  A server without support for non-synchronizing literals may interpret the \"+}\\r\\n\" as the end of a malformed command line and respond with a tagged BAD. In that case, the contents of the literal will be interpreted as one or more new pipelined commands, allowing a CRLF command injection attack to succeed. This affects criteria for #search and #uid_search; search_keys for #sort, #thread, #uid_sort, and #uid_thread; and attr for #fetch and #uid_fetch. This vulnerability is fixed in 0.6.5 and 0.5.15."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-47242",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client fu ..."
+              },
+              "fullDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, when Net::IMAP#id is called with a hash argument, although the ID field value strings are correctly quoted (escaping quoted specials), they were not validated to prohibit CRLF sequences. While Net::IMAP#enable does process its arguments for aliases, it does not validate them as valid atoms (or as a list of valid atoms). The #to_s value is sent verbatim. Arguments to either command could be used by an attacker to inject arbitrary IMAP commands. This vulnerability is fixed in 0.6.5 and 0.5.15."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-47242",
+              "help": {
+                "text": "Vulnerability CVE-2026-47242\nSeverity: MEDIUM\nPackage: net-imap\nFixed Version: ~\u003e 0.5.15, \u003e= 0.6.4.1\nLink: [CVE-2026-47242](https://avd.aquasec.com/nvd/cve-2026-47242)\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, when Net::IMAP#id is called with a hash argument, although the ID field value strings are correctly quoted (escaping quoted specials), they were not validated to prohibit CRLF sequences. While Net::IMAP#enable does process its arguments for aliases, it does not validate them as valid atoms (or as a list of valid atoms). The #to_s value is sent verbatim. Arguments to either command could be used by an attacker to inject arbitrary IMAP commands. This vulnerability is fixed in 0.6.5 and 0.5.15.",
+                "markdown": "**Vulnerability CVE-2026-47242**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|net-imap|~\u003e 0.5.15, \u003e= 0.6.4.1|[CVE-2026-47242](https://avd.aquasec.com/nvd/cve-2026-47242)|\n\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, when Net::IMAP#id is called with a hash argument, although the ID field value strings are correctly quoted (escaping quoted specials), they were not validated to prohibit CRLF sequences. While Net::IMAP#enable does process its arguments for aliases, it does not validate them as valid atoms (or as a list of valid atoms). The #to_s value is sent verbatim. Arguments to either command could be used by an attacker to inject arbitrary IMAP commands. This vulnerability is fixed in 0.6.5 and 0.5.15."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-47241",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "net-imap: rubygem-net-imap: Net::IMAP: Denial of Service via malformed command input"
+              },
+              "fullDescription": {
+                "text": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, several Net::IMAP commands accept a raw string argument which is only validated to prevent CRLF injection and then sent verbatim. If this string is derived from user-controlled input, an attacker can force the next command to be absorbed as a continuation of the first command. This will cause the first command to eventually fail, but also prevents it from returning until another command is sent (from another thread). That other command will not return until the connection is closed. This vulnerability is fixed in 0.6.5 and 0.5.15."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-47241",
+              "help": {
+                "text": "Vulnerability CVE-2026-47241\nSeverity: LOW\nPackage: net-imap\nFixed Version: ~\u003e 0.5.15, \u003e= 0.6.4.1\nLink: [CVE-2026-47241](https://avd.aquasec.com/nvd/cve-2026-47241)\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, several Net::IMAP commands accept a raw string argument which is only validated to prevent CRLF injection and then sent verbatim. If this string is derived from user-controlled input, an attacker can force the next command to be absorbed as a continuation of the first command. This will cause the first command to eventually fail, but also prevents it from returning until another command is sent (from another thread). That other command will not return until the connection is closed. This vulnerability is fixed in 0.6.5 and 0.5.15.",
+                "markdown": "**Vulnerability CVE-2026-47241**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|net-imap|~\u003e 0.5.15, \u003e= 0.6.4.1|[CVE-2026-47241](https://avd.aquasec.com/nvd/cve-2026-47241)|\n\nNet::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, several Net::IMAP commands accept a raw string argument which is only validated to prevent CRLF injection and then sent verbatim. If this string is derived from user-controlled input, an attacker can force the next command to be absorbed as a continuation of the first command. This will cause the first command to eventually fail, but also prevents it from returning until another command is sent (from another thread). That other command will not return until the connection is closed. This vulnerability is fixed in 0.6.5 and 0.5.15."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-61594",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "uri: URI module: Credential exposure via URI + operator"
+              },
+              "fullDescription": {
+                "text": "URI is a module providing classes to handle Uniform Resource Identifiers. In versions 0.12.4 and earlier (bundled in Ruby 3.2 series) 0.13.2 and earlier (bundled in Ruby 3.3 series), 1.0.3 and earlier (bundled in Ruby 3.4 series), when using the + operator to combine URIs, sensitive information like passwords from the original URI can be leaked, violating RFC3986 and making applications vulnerable to credential exposure. This is a a bypass for the fix to CVE-2025-27221 that can expose user credentials. This issue has been fixed in versions 0.12.5, 0.13.3 and 1.0.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-61594",
+              "help": {
+                "text": "Vulnerability CVE-2025-61594\nSeverity: HIGH\nPackage: uri\nFixed Version: ~\u003e 0.12.5, ~\u003e 0.13.3, \u003e= 1.0.4\nLink: [CVE-2025-61594](https://avd.aquasec.com/nvd/cve-2025-61594)\nURI is a module providing classes to handle Uniform Resource Identifiers. In versions 0.12.4 and earlier (bundled in Ruby 3.2 series) 0.13.2 and earlier (bundled in Ruby 3.3 series), 1.0.3 and earlier (bundled in Ruby 3.4 series), when using the + operator to combine URIs, sensitive information like passwords from the original URI can be leaked, violating RFC3986 and making applications vulnerable to credential exposure. This is a a bypass for the fix to CVE-2025-27221 that can expose user credentials. This issue has been fixed in versions 0.12.5, 0.13.3 and 1.0.4.",
+                "markdown": "**Vulnerability CVE-2025-61594**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|uri|~\u003e 0.12.5, ~\u003e 0.13.3, \u003e= 1.0.4|[CVE-2025-61594](https://avd.aquasec.com/nvd/cve-2025-61594)|\n\nURI is a module providing classes to handle Uniform Resource Identifiers. In versions 0.12.4 and earlier (bundled in Ruby 3.2 series) 0.13.2 and earlier (bundled in Ruby 3.3 series), 1.0.3 and earlier (bundled in Ruby 3.4 series), when using the + operator to combine URIs, sensitive information like passwords from the original URI can be leaked, violating RFC3986 and making applications vulnerable to credential exposure. This is a a bypass for the fix to CVE-2025-27221 that can expose user credentials. This issue has been fixed in versions 0.12.5, 0.13.3 and 1.0.4."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "jwt-token",
+              "name": "Secret",
+              "shortDescription": {
+                "text": "JWT token"
+              },
+              "fullDescription": {
+                "text": "    #     id_token: \"********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************\", "
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/aquasecurity/trivy/blob/main/pkg/fanal/secret/builtin-rules.go",
+              "help": {
+                "text": "Secret JWT token\nSeverity: MEDIUM\nMatch:     #     id_token: \"********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************\", ",
+                "markdown": "**Secret JWT token**\n| Severity | Match |\n| --- | --- |\n|MEDIUM|    #     id_token: \"********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************\", |"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "secret",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-35611",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: addressable\nInstalled Version: 2.8.7\nVulnerability CVE-2026-35611\nSeverity: HIGH\nFixed Version: \u003e= 2.9.0\nLink: [CVE-2026-35611](https://avd.aquasec.com/nvd/cve-2026-35611)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/8cdcj3sbbsvnyxvwabp6hvjnf8r9yqxl-ruby3.4-addressable-2.8.7/lib/ruby/gems/3.4.0/specifications/addressable-2.8.7.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/8cdcj3sbbsvnyxvwabp6hvjnf8r9yqxl-ruby3.4-addressable-2.8.7/lib/ruby/gems/3.4.0/specifications/addressable-2.8.7.gemspec: addressable@2.8.7"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-14762",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: aws-sdk-s3\nInstalled Version: 1.182.0\nVulnerability CVE-2025-14762\nSeverity: MEDIUM\nFixed Version: \u003e= 1.208.0\nLink: [CVE-2025-14762](https://avd.aquasec.com/nvd/cve-2025-14762)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/r9nprpvrmckpsnl29dfxcbjjm5sphd9y-ruby3.4-aws-sdk-s3-1.182.0/lib/ruby/gems/3.4.0/specifications/aws-sdk-s3-1.182.0.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/r9nprpvrmckpsnl29dfxcbjjm5sphd9y-ruby3.4-aws-sdk-s3-1.182.0/lib/ruby/gems/3.4.0/specifications/aws-sdk-s3-1.182.0.gemspec: aws-sdk-s3@1.182.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54906",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: concurrent-ruby\nInstalled Version: 1.3.5\nVulnerability CVE-2026-54906\nSeverity: CRITICAL\nFixed Version: \u003e= 1.3.7\nLink: [CVE-2026-54906](https://avd.aquasec.com/nvd/cve-2026-54906)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qii17npj45cljyyqrkkalrx1lxl5kcwk-ruby3.4-concurrent-ruby-1.3.5/lib/ruby/gems/3.4.0/specifications/concurrent-ruby-1.3.5.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qii17npj45cljyyqrkkalrx1lxl5kcwk-ruby3.4-concurrent-ruby-1.3.5/lib/ruby/gems/3.4.0/specifications/concurrent-ruby-1.3.5.gemspec: concurrent-ruby@1.3.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54904",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: concurrent-ruby\nInstalled Version: 1.3.5\nVulnerability CVE-2026-54904\nSeverity: HIGH\nFixed Version: \u003e= 1.3.7\nLink: [CVE-2026-54904](https://avd.aquasec.com/nvd/cve-2026-54904)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qii17npj45cljyyqrkkalrx1lxl5kcwk-ruby3.4-concurrent-ruby-1.3.5/lib/ruby/gems/3.4.0/specifications/concurrent-ruby-1.3.5.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qii17npj45cljyyqrkkalrx1lxl5kcwk-ruby3.4-concurrent-ruby-1.3.5/lib/ruby/gems/3.4.0/specifications/concurrent-ruby-1.3.5.gemspec: concurrent-ruby@1.3.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54905",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: concurrent-ruby\nInstalled Version: 1.3.5\nVulnerability CVE-2026-54905\nSeverity: MEDIUM\nFixed Version: \u003e= 1.3.7\nLink: [CVE-2026-54905](https://avd.aquasec.com/nvd/cve-2026-54905)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qii17npj45cljyyqrkkalrx1lxl5kcwk-ruby3.4-concurrent-ruby-1.3.5/lib/ruby/gems/3.4.0/specifications/concurrent-ruby-1.3.5.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qii17npj45cljyyqrkkalrx1lxl5kcwk-ruby3.4-concurrent-ruby-1.3.5/lib/ruby/gems/3.4.0/specifications/concurrent-ruby-1.3.5.gemspec: concurrent-ruby@1.3.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41316",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: erb\nInstalled Version: 4.0.4\nVulnerability CVE-2026-41316\nSeverity: HIGH\nFixed Version: ~\u003e 4.0.3.1, ~\u003e 4.0.4.1, ~\u003e 6.0.1.1, \u003e= 6.0.4\nLink: [CVE-2026-41316](https://avd.aquasec.com/nvd/cve-2026-41316)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/default/erb-4.0.4.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/default/erb-4.0.4.gemspec: erb@4.0.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54171",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: excon\nInstalled Version: 1.2.5\nVulnerability CVE-2026-54171\nSeverity: MEDIUM\nFixed Version: \u003e= 1.5.0\nLink: [CVE-2026-54171](https://avd.aquasec.com/nvd/cve-2026-54171)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/nq5d8gmhr8dpk2g8flrx5sqyjc3py2w6-ruby3.4-excon-1.2.5/lib/ruby/gems/3.4.0/specifications/excon-1.2.5.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/nq5d8gmhr8dpk2g8flrx5sqyjc3py2w6-ruby3.4-excon-1.2.5/lib/ruby/gems/3.4.0/specifications/excon-1.2.5.gemspec: excon@1.2.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54297",
+          "ruleIndex": 7,
+          "level": "error",
+          "message": {
+            "text": "Package: faraday\nInstalled Version: 2.12.2\nVulnerability CVE-2026-54297\nSeverity: HIGH\nFixed Version: ~\u003e 1.10.6, \u003e= 2.14.3\nLink: [CVE-2026-54297](https://avd.aquasec.com/nvd/cve-2026-54297)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/d7p3abqs17v4397gww6r2lpbf2ligyk1-ruby3.4-faraday-2.12.2/lib/ruby/gems/3.4.0/specifications/faraday-2.12.2.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/d7p3abqs17v4397gww6r2lpbf2ligyk1-ruby3.4-faraday-2.12.2/lib/ruby/gems/3.4.0/specifications/faraday-2.12.2.gemspec: faraday@2.12.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25765",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: faraday\nInstalled Version: 2.12.2\nVulnerability CVE-2026-25765\nSeverity: MEDIUM\nFixed Version: ~\u003e 1.10.5, \u003e= 2.14.1\nLink: [CVE-2026-25765](https://avd.aquasec.com/nvd/cve-2026-25765)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/d7p3abqs17v4397gww6r2lpbf2ligyk1-ruby3.4-faraday-2.12.2/lib/ruby/gems/3.4.0/specifications/faraday-2.12.2.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/d7p3abqs17v4397gww6r2lpbf2ligyk1-ruby3.4-faraday-2.12.2/lib/ruby/gems/3.4.0/specifications/faraday-2.12.2.gemspec: faraday@2.12.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33637",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: faraday\nInstalled Version: 2.12.2\nVulnerability CVE-2026-33637\nSeverity: MEDIUM\nFixed Version: \u003e= 2.14.2\nLink: [CVE-2026-33637](https://avd.aquasec.com/nvd/cve-2026-33637)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/d7p3abqs17v4397gww6r2lpbf2ligyk1-ruby3.4-faraday-2.12.2/lib/ruby/gems/3.4.0/specifications/faraday-2.12.2.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/d7p3abqs17v4397gww6r2lpbf2ligyk1-ruby3.4-faraday-2.12.2/lib/ruby/gems/3.4.0/specifications/faraday-2.12.2.gemspec: faraday@2.12.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44162",
+          "ruleIndex": 10,
+          "level": "note",
+          "message": {
+            "text": "Package: fluent-plugin-s3\nInstalled Version: 1.8.3\nVulnerability CVE-2026-44162\nSeverity: LOW\nFixed Version: \u003e= 1.8.5\nLink: [CVE-2026-44162](https://avd.aquasec.com/nvd/cve-2026-44162)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ms291p4v6if8q5xdiczb4p49hm9ilbps-ruby3.4-fluent-plugin-s3-1.8.3/lib/ruby/gems/3.4.0/specifications/fluent-plugin-s3-1.8.3.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ms291p4v6if8q5xdiczb4p49hm9ilbps-ruby3.4-fluent-plugin-s3-1.8.3/lib/ruby/gems/3.4.0/specifications/fluent-plugin-s3-1.8.3.gemspec: fluent-plugin-s3@1.8.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44024",
+          "ruleIndex": 11,
+          "level": "error",
+          "message": {
+            "text": "Package: fluentd\nInstalled Version: 1.18.0\nVulnerability CVE-2026-44024\nSeverity: CRITICAL\nFixed Version: \u003e= 1.19.3\nLink: [CVE-2026-44024](https://avd.aquasec.com/nvd/cve-2026-44024)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/cs4d1w7a0r34pal04vcizxhcmlr0ph8h-ruby3.4-fluentd-1.18.0/lib/ruby/gems/3.4.0/specifications/fluentd-1.18.0.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/cs4d1w7a0r34pal04vcizxhcmlr0ph8h-ruby3.4-fluentd-1.18.0/lib/ruby/gems/3.4.0/specifications/fluentd-1.18.0.gemspec: fluentd@1.18.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44025",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Package: fluentd\nInstalled Version: 1.18.0\nVulnerability CVE-2026-44025\nSeverity: HIGH\nFixed Version: \u003e= 1.19.3\nLink: [CVE-2026-44025](https://avd.aquasec.com/nvd/cve-2026-44025)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/cs4d1w7a0r34pal04vcizxhcmlr0ph8h-ruby3.4-fluentd-1.18.0/lib/ruby/gems/3.4.0/specifications/fluentd-1.18.0.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/cs4d1w7a0r34pal04vcizxhcmlr0ph8h-ruby3.4-fluentd-1.18.0/lib/ruby/gems/3.4.0/specifications/fluentd-1.18.0.gemspec: fluentd@1.18.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44160",
+          "ruleIndex": 13,
+          "level": "error",
+          "message": {
+            "text": "Package: fluentd\nInstalled Version: 1.18.0\nVulnerability CVE-2026-44160\nSeverity: HIGH\nFixed Version: \u003e= 1.19.3\nLink: [CVE-2026-44160](https://avd.aquasec.com/nvd/cve-2026-44160)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/cs4d1w7a0r34pal04vcizxhcmlr0ph8h-ruby3.4-fluentd-1.18.0/lib/ruby/gems/3.4.0/specifications/fluentd-1.18.0.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/cs4d1w7a0r34pal04vcizxhcmlr0ph8h-ruby3.4-fluentd-1.18.0/lib/ruby/gems/3.4.0/specifications/fluentd-1.18.0.gemspec: fluentd@1.18.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44161",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: fluentd\nInstalled Version: 1.18.0\nVulnerability CVE-2026-44161\nSeverity: HIGH\nFixed Version: \u003e= 1.19.3\nLink: [CVE-2026-44161](https://avd.aquasec.com/nvd/cve-2026-44161)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/cs4d1w7a0r34pal04vcizxhcmlr0ph8h-ruby3.4-fluentd-1.18.0/lib/ruby/gems/3.4.0/specifications/fluentd-1.18.0.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/cs4d1w7a0r34pal04vcizxhcmlr0ph8h-ruby3.4-fluentd-1.18.0/lib/ruby/gems/3.4.0/specifications/fluentd-1.18.0.gemspec: fluentd@1.18.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-27788",
+          "ruleIndex": 15,
+          "level": "error",
+          "message": {
+            "text": "Package: json\nInstalled Version: 2.10.1\nVulnerability CVE-2025-27788\nSeverity: HIGH\nFixed Version: \u003e= 2.10.2\nLink: [CVE-2025-27788](https://avd.aquasec.com/nvd/cve-2025-27788)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vamfbrfg5n3z21pf63fpmkss0rlzjx38-ruby3.4-json-2.10.1/lib/ruby/gems/3.4.0/specifications/json-2.10.1.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vamfbrfg5n3z21pf63fpmkss0rlzjx38-ruby3.4-json-2.10.1/lib/ruby/gems/3.4.0/specifications/json-2.10.1.gemspec: json@2.10.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54696",
+          "ruleIndex": 16,
+          "level": "note",
+          "message": {
+            "text": "Package: json\nInstalled Version: 2.10.1\nVulnerability CVE-2026-54696\nSeverity: LOW\nFixed Version: \u003e= 2.19.9\nLink: [CVE-2026-54696](https://avd.aquasec.com/nvd/cve-2026-54696)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vamfbrfg5n3z21pf63fpmkss0rlzjx38-ruby3.4-json-2.10.1/lib/ruby/gems/3.4.0/specifications/json-2.10.1.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vamfbrfg5n3z21pf63fpmkss0rlzjx38-ruby3.4-json-2.10.1/lib/ruby/gems/3.4.0/specifications/json-2.10.1.gemspec: json@2.10.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54696",
+          "ruleIndex": 16,
+          "level": "note",
+          "message": {
+            "text": "Package: json\nInstalled Version: 2.9.1\nVulnerability CVE-2026-54696\nSeverity: LOW\nFixed Version: \u003e= 2.19.9\nLink: [CVE-2026-54696](https://avd.aquasec.com/nvd/cve-2026-54696)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/default/json-2.9.1.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/default/json-2.9.1.gemspec: json@2.9.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54522",
+          "ruleIndex": 17,
+          "level": "note",
+          "message": {
+            "text": "Package: msgpack\nInstalled Version: 1.8.0\nVulnerability CVE-2026-54522\nSeverity: UNKNOWN\nFixed Version: \u003e= 1.8.2\nLink: [CVE-2026-54522](https://avd.aquasec.com/nvd/cve-2026-54522)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/xqrxkr6chd7174jzqh2firrla9kypgfm-ruby3.4-msgpack-1.8.0/lib/ruby/gems/3.4.0/specifications/msgpack-1.8.0.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/xqrxkr6chd7174jzqh2firrla9kypgfm-ruby3.4-msgpack-1.8.0/lib/ruby/gems/3.4.0/specifications/msgpack-1.8.0.gemspec: msgpack@1.8.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42257",
+          "ruleIndex": 18,
+          "level": "error",
+          "message": {
+            "text": "Package: net-imap\nInstalled Version: 0.5.8\nVulnerability CVE-2026-42257\nSeverity: CRITICAL\nFixed Version: ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42257](https://avd.aquasec.com/nvd/cve-2026-42257)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec: net-imap@0.5.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42245",
+          "ruleIndex": 19,
+          "level": "error",
+          "message": {
+            "text": "Package: net-imap\nInstalled Version: 0.5.8\nVulnerability CVE-2026-42245\nSeverity: HIGH\nFixed Version: ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42245](https://avd.aquasec.com/nvd/cve-2026-42245)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec: net-imap@0.5.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42246",
+          "ruleIndex": 20,
+          "level": "error",
+          "message": {
+            "text": "Package: net-imap\nInstalled Version: 0.5.8\nVulnerability CVE-2026-42246\nSeverity: HIGH\nFixed Version: ~\u003e 0.3.10, ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42246](https://avd.aquasec.com/nvd/cve-2026-42246)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec: net-imap@0.5.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42256",
+          "ruleIndex": 21,
+          "level": "warning",
+          "message": {
+            "text": "Package: net-imap\nInstalled Version: 0.5.8\nVulnerability CVE-2026-42256\nSeverity: MEDIUM\nFixed Version: ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42256](https://avd.aquasec.com/nvd/cve-2026-42256)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec: net-imap@0.5.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42258",
+          "ruleIndex": 22,
+          "level": "warning",
+          "message": {
+            "text": "Package: net-imap\nInstalled Version: 0.5.8\nVulnerability CVE-2026-42258\nSeverity: MEDIUM\nFixed Version: ~\u003e 0.4.24, ~\u003e 0.5.14, \u003e= 0.6.4\nLink: [CVE-2026-42258](https://avd.aquasec.com/nvd/cve-2026-42258)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec: net-imap@0.5.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-47240",
+          "ruleIndex": 23,
+          "level": "warning",
+          "message": {
+            "text": "Package: net-imap\nInstalled Version: 0.5.8\nVulnerability CVE-2026-47240\nSeverity: MEDIUM\nFixed Version: ~\u003e 0.5.15, \u003e= 0.6.4.1\nLink: [CVE-2026-47240](https://avd.aquasec.com/nvd/cve-2026-47240)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec: net-imap@0.5.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-47242",
+          "ruleIndex": 24,
+          "level": "warning",
+          "message": {
+            "text": "Package: net-imap\nInstalled Version: 0.5.8\nVulnerability CVE-2026-47242\nSeverity: MEDIUM\nFixed Version: ~\u003e 0.5.15, \u003e= 0.6.4.1\nLink: [CVE-2026-47242](https://avd.aquasec.com/nvd/cve-2026-47242)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec: net-imap@0.5.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-47241",
+          "ruleIndex": 25,
+          "level": "note",
+          "message": {
+            "text": "Package: net-imap\nInstalled Version: 0.5.8\nVulnerability CVE-2026-47241\nSeverity: LOW\nFixed Version: ~\u003e 0.5.15, \u003e= 0.6.4.1\nLink: [CVE-2026-47241](https://avd.aquasec.com/nvd/cve-2026-47241)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ks57gbw6jia5ssk0rd407ic2r8qvw9nn-ruby-3.4.9/lib/ruby/gems/3.4.0/specifications/net-imap-0.5.8.gemspec: net-imap@0.5.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-61594",
+          "ruleIndex": 26,
+          "level": "error",
+          "message": {
+            "text": "Package: uri\nInstalled Version: 1.0.3\nVulnerability CVE-2025-61594\nSeverity: HIGH\nFixed Version: ~\u003e 0.12.5, ~\u003e 0.13.3, \u003e= 1.0.4\nLink: [CVE-2025-61594](https://avd.aquasec.com/nvd/cve-2025-61594)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/prggbd4b1ybq0m782b9n1m3ibxmnda98-ruby3.4-uri-1.0.3/lib/ruby/gems/3.4.0/specifications/uri-1.0.3.gemspec",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/prggbd4b1ybq0m782b9n1m3ibxmnda98-ruby3.4-uri-1.0.3/lib/ruby/gems/3.4.0/specifications/uri-1.0.3.gemspec: uri@1.0.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "jwt-token",
+          "ruleIndex": 27,
+          "level": "warning",
+          "message": {
+            "text": "Artifact: /nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb\nType: \nSecret JWT token\nSeverity: MEDIUM\nMatch:     #     id_token: \"****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************\", "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 731,
+                  "startColumn": 1,
+                  "endLine": 731,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "/nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "jwt-token",
+          "ruleIndex": 27,
+          "level": "warning",
+          "message": {
+            "text": "Artifact: /nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb\nType: \nSecret JWT token\nSeverity: MEDIUM\nMatch:     #     assertion: \"***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************\", "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 767,
+                  "startColumn": 1,
+                  "endLine": 767,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "/nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "jwt-token",
+          "ruleIndex": 27,
+          "level": "warning",
+          "message": {
+            "text": "Artifact: /nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb\nType: \nSecret JWT token\nSeverity: MEDIUM\nMatch:     #     id_token: \"****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************\", "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 776,
+                  "startColumn": 1,
+                  "endLine": 776,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "/nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "jwt-token",
+          "ruleIndex": 27,
+          "level": "warning",
+          "message": {
+            "text": "Artifact: /nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb\nType: \nSecret JWT token\nSeverity: MEDIUM\nMatch:     #     id_token: \"********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************\", "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 801,
+                  "startColumn": 1,
+                  "endLine": 801,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "/nix/store/5ngrdd9z0nx6mf9w0dh7m21lczkh7q42-ruby3.4-aws-sdk-core-3.220.1/lib/ruby/gems/3.4.0/gems/aws-sdk-core-3.220.1/lib/aws-sdk-ssooidc/client.rb"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:c15d39902bccf88a181c8949acdeae6c2bcc3d9fe2d6c6f5539a1006ce01536f",
+        "imageName": "ghcr.io/nix-containers/images/fluent-bit-plugin-loki:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/fluent-bit-plugin-loki@sha256:d9772a4fcd4556983dad43a68e1c072dfddc4912b7fb14996f3e8aff2622a276"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/fluent-bit-plugin-loki:latest"
+        ]
+      }
+    }
+  ]
+}

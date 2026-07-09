@@ -1,0 +1,69 @@
+2026-07-09T12:20:59Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:20:59Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:20:59Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:20:59Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:21:08Z	INFO	Number of language-specific files	num=2
+2026-07-09T12:21:08Z	INFO	[rustbinary] Detecting vulnerabilities...
+2026-07-09T12:21:09Z	INFO	Some vulnerabilities have been ignored/suppressed. Use the "--show-suppressed" flag to display them.
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
+│                                      Target                                      │    Type    │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/z8s1yrg6mvld9nlx8857wk5k6wc00cfq-devenv-2.1.2/bin/.devenv-run-tests-w- │ rustbinary │        2        │    -    │
+│ rapped                                                                           │            │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/z8s1yrg6mvld9nlx8857wk5k6wc00cfq-devenv-2.1.2/bin/.devenv-wrapped      │ rustbinary │        2        │    -    │
+└──────────────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+nix/store/z8s1yrg6mvld9nlx8857wk5k6wc00cfq-devenv-2.1.2/bin/.devenv-run-tests-wrapped (rustbinary)
+==================================================================================================
+Total: 2 (HIGH: 2, CRITICAL: 0)
+
+┌──────────────┬─────────────────────┬──────────┬────────┬───────────────────┬───────────────┬─────────────────────────────────────────────────────────────┐
+│   Library    │    Vulnerability    │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                            │
+├──────────────┼─────────────────────┼──────────┼────────┼───────────────────┼───────────────┼─────────────────────────────────────────────────────────────┤
+│ gix-fs       │ CVE-2026-44471      │ HIGH     │ fixed  │ 0.18.2            │ 0.21.1        │ gitoxide is an implementation of git written in Rust. Prior │
+│              │                     │          │        │                   │               │ to 0.21.1,...                                               │
+│              │                     │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-44471                  │
+├──────────────┼─────────────────────┤          │        ├───────────────────┼───────────────┼─────────────────────────────────────────────────────────────┤
+│ gix-validate │ GHSA-p3hw-mv63-rf9w │          │        │ 0.10.1            │ 0.11.1        │ gix's submodule name validation bypass + trust inheritance  │
+│              │                     │          │        │                   │               │ flaw enables path traversal...                              │
+│              │                     │          │        │                   │               │ https://github.com/advisories/GHSA-p3hw-mv63-rf9w           │
+└──────────────┴─────────────────────┴──────────┴────────┴───────────────────┴───────────────┴─────────────────────────────────────────────────────────────┘
+
+nix/store/z8s1yrg6mvld9nlx8857wk5k6wc00cfq-devenv-2.1.2/bin/.devenv-wrapped (rustbinary)
+========================================================================================
+Total: 2 (HIGH: 2, CRITICAL: 0)
+
+┌──────────────┬─────────────────────┬──────────┬────────┬───────────────────┬───────────────┬─────────────────────────────────────────────────────────────┐
+│   Library    │    Vulnerability    │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                            │
+├──────────────┼─────────────────────┼──────────┼────────┼───────────────────┼───────────────┼─────────────────────────────────────────────────────────────┤
+│ gix-fs       │ CVE-2026-44471      │ HIGH     │ fixed  │ 0.18.2            │ 0.21.1        │ gitoxide is an implementation of git written in Rust. Prior │
+│              │                     │          │        │                   │               │ to 0.21.1,...                                               │
+│              │                     │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-44471                  │
+├──────────────┼─────────────────────┤          │        ├───────────────────┼───────────────┼─────────────────────────────────────────────────────────────┤
+│ gix-validate │ GHSA-p3hw-mv63-rf9w │          │        │ 0.10.1            │ 0.11.1        │ gix's submodule name validation bypass + trust inheritance  │
+│              │                     │          │        │                   │               │ flaw enables path traversal...                              │
+│              │                     │          │        │                   │               │ https://github.com/advisories/GHSA-p3hw-mv63-rf9w           │
+└──────────────┴─────────────────────┴──────────┴────────┴───────────────────┴───────────────┴─────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

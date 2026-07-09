@@ -1,0 +1,133 @@
+2026-07-09T12:00:26Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:00:26Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:00:26Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:00:26Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:00:29Z	INFO	Number of language-specific files	num=4
+2026-07-09T12:00:29Z	INFO	[gobinary] Detecting vulnerabilities...
+2026-07-09T12:00:29Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.71/guide/scanner/vulnerability#severity-selection for details.
+2026-07-09T12:00:29Z	INFO	Some vulnerabilities have been ignored/suppressed. Use the "--show-suppressed" flag to display them.
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────────────────────────┬──────────┬─────────────────┬─────────┐
+│                                      Target                                      │   Type   │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/6qc24wqpqc3pwwfj1hzgl8r23x6fhr1i-cert-manager-webhook-1.20.2/bin/cert- │ gobinary │        4        │    -    │
+│ -manager-webhook                                                                 │          │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/7g8sv7mpw6gbrwca7rpjys3vys3wyypg-cert-manager-controller-1.20.2/bin/c- │ gobinary │        4        │    -    │
+│ ert-manager-controller                                                           │          │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/8dj2ck60nffv4b04kw84g5qq8ip0kgw6-cert-manager-cainjector-1.20.2/bin/c- │ gobinary │        4        │    -    │
+│ ert-manager-cainjector                                                           │          │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/jijacql3my93hq3jl7riskbia7vhrgv0-cert-manager-acmesolver-1.20.2/bin/c- │ gobinary │        2        │    -    │
+│ ert-manager-acmesolver                                                           │          │                 │         │
+└──────────────────────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+nix/store/6qc24wqpqc3pwwfj1hzgl8r23x6fhr1i-cert-manager-webhook-1.20.2/bin/cert-manager-webhook (gobinary)
+==========================================================================================================
+Total: 4 (HIGH: 4, CRITICAL: 0)
+
+┌─────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│       Library       │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├─────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto │ CVE-2026-39828 │ HIGH     │ fixed  │ v0.49.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                     │                │          │        │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                     ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2026-39835 │          │        │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                     │                │          │        │                   │               │ Denial of Service via crafted SSH certificate                │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+├─────────────────────┼────────────────┤          │        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/net    │ CVE-2026-25681 │          │        │ v0.52.0           │ 0.55.0        │ golang.org/x/net/html: golang.org/x/net/html: Arbitrary code │
+│                     │                │          │        │                   │               │ execution via Cross-Site Scripting                           │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-25681                   │
+│                     ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2026-27136 │          │        │                   │               │ golang.org/x/net/html: golang: golang.org/x/net/html:        │
+│                     │                │          │        │                   │               │ Cross-Site Scripting via HTML parsing bypass                 │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-27136                   │
+└─────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/7g8sv7mpw6gbrwca7rpjys3vys3wyypg-cert-manager-controller-1.20.2/bin/cert-manager-controller (gobinary)
+================================================================================================================
+Total: 4 (HIGH: 4, CRITICAL: 0)
+
+┌─────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│       Library       │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├─────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto │ CVE-2026-39828 │ HIGH     │ fixed  │ v0.49.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                     │                │          │        │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                     ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2026-39835 │          │        │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                     │                │          │        │                   │               │ Denial of Service via crafted SSH certificate                │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+├─────────────────────┼────────────────┤          │        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/net    │ CVE-2026-25681 │          │        │ v0.52.0           │ 0.55.0        │ golang.org/x/net/html: golang.org/x/net/html: Arbitrary code │
+│                     │                │          │        │                   │               │ execution via Cross-Site Scripting                           │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-25681                   │
+│                     ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2026-27136 │          │        │                   │               │ golang.org/x/net/html: golang: golang.org/x/net/html:        │
+│                     │                │          │        │                   │               │ Cross-Site Scripting via HTML parsing bypass                 │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-27136                   │
+└─────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/8dj2ck60nffv4b04kw84g5qq8ip0kgw6-cert-manager-cainjector-1.20.2/bin/cert-manager-cainjector (gobinary)
+================================================================================================================
+Total: 4 (HIGH: 4, CRITICAL: 0)
+
+┌─────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│       Library       │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├─────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto │ CVE-2026-39828 │ HIGH     │ fixed  │ v0.49.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                     │                │          │        │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                     ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2026-39835 │          │        │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                     │                │          │        │                   │               │ Denial of Service via crafted SSH certificate                │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+├─────────────────────┼────────────────┤          │        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/net    │ CVE-2026-25681 │          │        │ v0.52.0           │ 0.55.0        │ golang.org/x/net/html: golang.org/x/net/html: Arbitrary code │
+│                     │                │          │        │                   │               │ execution via Cross-Site Scripting                           │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-25681                   │
+│                     ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2026-27136 │          │        │                   │               │ golang.org/x/net/html: golang: golang.org/x/net/html:        │
+│                     │                │          │        │                   │               │ Cross-Site Scripting via HTML parsing bypass                 │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-27136                   │
+└─────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/jijacql3my93hq3jl7riskbia7vhrgv0-cert-manager-acmesolver-1.20.2/bin/cert-manager-acmesolver (gobinary)
+================================================================================================================
+Total: 2 (HIGH: 2, CRITICAL: 0)
+
+┌──────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│     Library      │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├──────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/net │ CVE-2026-25681 │ HIGH     │ fixed  │ v0.52.0           │ 0.55.0        │ golang.org/x/net/html: golang.org/x/net/html: Arbitrary code │
+│                  │                │          │        │                   │               │ execution via Cross-Site Scripting                           │
+│                  │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-25681                   │
+│                  ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                  │ CVE-2026-27136 │          │        │                   │               │ golang.org/x/net/html: golang: golang.org/x/net/html:        │
+│                  │                │          │        │                   │               │ Cross-Site Scripting via HTML parsing bypass                 │
+│                  │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-27136                   │
+└──────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

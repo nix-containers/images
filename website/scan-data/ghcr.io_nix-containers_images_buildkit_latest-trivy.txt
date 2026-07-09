@@ -1,0 +1,128 @@
+2026-07-09T12:16:58Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:16:58Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:16:58Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:16:58Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:17:01Z	INFO	Number of language-specific files	num=4
+2026-07-09T12:17:01Z	INFO	[gobinary] Detecting vulnerabilities...
+2026-07-09T12:17:01Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.71/guide/scanner/vulnerability#severity-selection for details.
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────────────────┬──────────┬─────────────────┬─────────┐
+│                                  Target                                  │   Type   │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ bin/buildctl                                                             │ gobinary │        3        │    -    │
+├──────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ bin/buildkitd                                                            │ gobinary │        3        │    -    │
+├──────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/3w0dgxc79z0nah344bbyjxkdwz1girja-buildkit-0.31.1/bin/buildctl  │ gobinary │        3        │    -    │
+├──────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/3w0dgxc79z0nah344bbyjxkdwz1girja-buildkit-0.31.1/bin/buildkitd │ gobinary │        3        │    -    │
+└──────────────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+bin/buildctl (gobinary)
+=======================
+Total: 3 (HIGH: 3, CRITICAL: 0)
+
+┌─────────────────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬─────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│               Library               │ Vulnerability  │ Severity │ Status │ Installed Version │        Fixed Version        │                            Title                             │
+├─────────────────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/containerd/containerd/v2 │ CVE-2026-53488 │ HIGH     │ fixed  │ v2.2.4            │ 2.0.10, 2.1.9, 2.2.5, 2.3.2 │ github.com/containerd/containerd: containerd: Host-root      │
+│                                     │                │          │        │                   │                             │ command execution via unvalidated image config labels in     │
+│                                     │                │          │        │                   │                             │ CRI...                                                       │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53488                   │
+│                                     ├────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53489 │          │        │                   │ 2.1.9, 2.2.5, 2.3.2         │ github.com/containerd/containerd: containerd: Arbitrary host │
+│                                     │                │          │        │                   │                             │ file read via symlink following in CRI checkpoint...         │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53489                   │
+│                                     ├────────────────┤          │        │                   │                             ├──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53492 │          │        │                   │                             │ github.com/containerd/containerd: containerd: Security       │
+│                                     │                │          │        │                   │                             │ bypass via Container Device Interface (CDI) annotation       │
+│                                     │                │          │        │                   │                             │ smuggling during...                                          │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53492                   │
+└─────────────────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴─────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+bin/buildkitd (gobinary)
+========================
+Total: 3 (HIGH: 3, CRITICAL: 0)
+
+┌─────────────────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬─────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│               Library               │ Vulnerability  │ Severity │ Status │ Installed Version │        Fixed Version        │                            Title                             │
+├─────────────────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/containerd/containerd/v2 │ CVE-2026-53488 │ HIGH     │ fixed  │ v2.2.4            │ 2.0.10, 2.1.9, 2.2.5, 2.3.2 │ github.com/containerd/containerd: containerd: Host-root      │
+│                                     │                │          │        │                   │                             │ command execution via unvalidated image config labels in     │
+│                                     │                │          │        │                   │                             │ CRI...                                                       │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53488                   │
+│                                     ├────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53489 │          │        │                   │ 2.1.9, 2.2.5, 2.3.2         │ github.com/containerd/containerd: containerd: Arbitrary host │
+│                                     │                │          │        │                   │                             │ file read via symlink following in CRI checkpoint...         │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53489                   │
+│                                     ├────────────────┤          │        │                   │                             ├──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53492 │          │        │                   │                             │ github.com/containerd/containerd: containerd: Security       │
+│                                     │                │          │        │                   │                             │ bypass via Container Device Interface (CDI) annotation       │
+│                                     │                │          │        │                   │                             │ smuggling during...                                          │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53492                   │
+└─────────────────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴─────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/3w0dgxc79z0nah344bbyjxkdwz1girja-buildkit-0.31.1/bin/buildctl (gobinary)
+==================================================================================
+Total: 3 (HIGH: 3, CRITICAL: 0)
+
+┌─────────────────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬─────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│               Library               │ Vulnerability  │ Severity │ Status │ Installed Version │        Fixed Version        │                            Title                             │
+├─────────────────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/containerd/containerd/v2 │ CVE-2026-53488 │ HIGH     │ fixed  │ v2.2.4            │ 2.0.10, 2.1.9, 2.2.5, 2.3.2 │ github.com/containerd/containerd: containerd: Host-root      │
+│                                     │                │          │        │                   │                             │ command execution via unvalidated image config labels in     │
+│                                     │                │          │        │                   │                             │ CRI...                                                       │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53488                   │
+│                                     ├────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53489 │          │        │                   │ 2.1.9, 2.2.5, 2.3.2         │ github.com/containerd/containerd: containerd: Arbitrary host │
+│                                     │                │          │        │                   │                             │ file read via symlink following in CRI checkpoint...         │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53489                   │
+│                                     ├────────────────┤          │        │                   │                             ├──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53492 │          │        │                   │                             │ github.com/containerd/containerd: containerd: Security       │
+│                                     │                │          │        │                   │                             │ bypass via Container Device Interface (CDI) annotation       │
+│                                     │                │          │        │                   │                             │ smuggling during...                                          │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53492                   │
+└─────────────────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴─────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/3w0dgxc79z0nah344bbyjxkdwz1girja-buildkit-0.31.1/bin/buildkitd (gobinary)
+===================================================================================
+Total: 3 (HIGH: 3, CRITICAL: 0)
+
+┌─────────────────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬─────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│               Library               │ Vulnerability  │ Severity │ Status │ Installed Version │        Fixed Version        │                            Title                             │
+├─────────────────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/containerd/containerd/v2 │ CVE-2026-53488 │ HIGH     │ fixed  │ v2.2.4            │ 2.0.10, 2.1.9, 2.2.5, 2.3.2 │ github.com/containerd/containerd: containerd: Host-root      │
+│                                     │                │          │        │                   │                             │ command execution via unvalidated image config labels in     │
+│                                     │                │          │        │                   │                             │ CRI...                                                       │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53488                   │
+│                                     ├────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53489 │          │        │                   │ 2.1.9, 2.2.5, 2.3.2         │ github.com/containerd/containerd: containerd: Arbitrary host │
+│                                     │                │          │        │                   │                             │ file read via symlink following in CRI checkpoint...         │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53489                   │
+│                                     ├────────────────┤          │        │                   │                             ├──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53492 │          │        │                   │                             │ github.com/containerd/containerd: containerd: Security       │
+│                                     │                │          │        │                   │                             │ bypass via Container Device Interface (CDI) annotation       │
+│                                     │                │          │        │                   │                             │ smuggling during...                                          │
+│                                     │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-53492                   │
+└─────────────────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴─────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

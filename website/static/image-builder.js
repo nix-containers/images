@@ -34,6 +34,13 @@
   const cveRows = $('cve-rows');
   const cveTotals = $('cve-totals');
   const cveCaveat = $('cve-caveat');
+  const extEnable = $('ext-enable');
+  const extFields = $('ext-fields');
+  const extName = $('ext-name');
+  const extVersion = $('ext-version');
+  const extUrl = $('ext-url');
+  const extHash = $('ext-hash');
+  const extInstallPath = $('ext-installpath');
 
   // Populate <datalist> for the base input (native browser autocomplete)
   for (const name of SUGGESTED_BASES) {
@@ -50,7 +57,7 @@
     .then((j) => { cveIndex = j || {}; render(); })
     .catch(() => { cveIndex = {}; });
 
-  // Restore state from ?base=&layers=&extra=  (or from sessionStorage)
+  // Restore state from ?base=&layers=&extra=&ext_*  (or from sessionStorage)
   function readState() {
     const q = new URLSearchParams(location.search);
     const stored = (() => {
@@ -64,21 +71,46 @@
     layersContainer.querySelectorAll('input[data-layer]').forEach((cb) => {
       cb.checked = layers.includes(cb.dataset.layer);
     });
+    // External-package state
+    const ext = stored.ext || {};
+    const on = q.get('ext_on') || ext.on || '';
+    extEnable.checked = on === '1' || on === 'true';
+    extName.value = q.get('ext_name') || ext.name || '';
+    extVersion.value = q.get('ext_version') || ext.version || '';
+    extUrl.value = q.get('ext_url') || ext.url || '';
+    extHash.value = q.get('ext_hash') || ext.hash || '';
+    extInstallPath.value = q.get('ext_installpath') || ext.installpath || '';
+    extFields.classList.toggle('hidden', !extEnable.checked);
   }
 
   function writeState() {
     const layers = [...layersContainer.querySelectorAll('input[data-layer]:checked')]
       .map((cb) => cb.dataset.layer);
+    const ext = {
+      on: extEnable.checked ? '1' : '',
+      name: extName.value.trim(),
+      version: extVersion.value.trim(),
+      url: extUrl.value.trim(),
+      hash: extHash.value.trim(),
+      installpath: extInstallPath.value.trim(),
+    };
     const state = {
       base: baseInput.value.trim(),
       extra: extraInput.value.trim(),
       layers: layers.join(','),
+      ext,
     };
     try { sessionStorage.setItem('imgb', JSON.stringify(state)); } catch {}
     const q = new URLSearchParams();
     if (state.base) q.set('base', state.base);
     if (state.extra) q.set('extra', state.extra);
     if (state.layers) q.set('layers', state.layers);
+    if (ext.on) {
+      q.set('ext_on', '1');
+      for (const k of ['name', 'version', 'url', 'hash', 'installpath']) {
+        if (ext[k]) q.set('ext_' + k, ext[k]);
+      }
+    }
     const qs = q.toString();
     const newUrl = location.pathname + (qs ? '?' + qs : '');
     history.replaceState(null, '', newUrl);
@@ -201,6 +233,43 @@
       return;
     }
 
+    // External-package snippet — turns into a `let external = mkDerivation …`
+    // binding used inside extraContents.
+    const ext = extEnable.checked ? {
+      name: extName.value.trim(),
+      version: extVersion.value.trim() || '0.0.0',
+      url: extUrl.value.trim(),
+      hash: extHash.value.trim() || 'sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
+      installPath: (extInstallPath.value.trim() || '/bin').replace(/^\/*/, '/'),
+    } : null;
+
+    let extBinding = '';
+    let extraContentsLine = '';
+    if (ext && ext.name && ext.url) {
+      const looksTarball = /\.(tar\.gz|tgz|tar\.xz|txz|tar\.bz2|tbz|zip)$/i.test(ext.url);
+      const installBody = looksTarball
+        ? `        # Extract-then-copy: sourceRoot="." keeps the extracted layout intact.
+        mkdir -p $out${ext.installPath}
+        cp -r . $out${ext.installPath}/
+        find $out${ext.installPath} -type f -exec chmod +x {} \\; 2>/dev/null || true`
+        : `        # Single-binary drop.
+        install -Dm755 $src $out${ext.installPath}/${ext.name}`;
+      extBinding = `    external = pkgs.stdenv.mkDerivation {
+      pname = "external-${ext.name}";
+      version = "${ext.version}";
+      src = pkgs.fetchurl {
+        url = "${ext.url}";
+        hash = "${ext.hash}";
+      };
+      ${looksTarball ? 'sourceRoot = ".";' : 'dontUnpack = true;'}
+      installPhase = ''
+${installBody}
+      '';
+    };
+`;
+      extraContentsLine = `      extraContents = [ external ];\n`;
+    }
+
     const imgName = `my-${base}`;
     const extraLine = extras.length
       ? `      extraPkgs = with pkgs; [ ${extras.join(' ')} ];\n`
@@ -216,13 +285,15 @@
       base = import \${flake}/lib/base.nix { inherit pkgs; };
       nix2container = flake.inputs.nix2container.packages.\${system}.nix2container;
     });
-  in mkImage {
+${extBinding}  in mkImage {
     name = "${imgName}";
     drv = pkgs.${base};
-${extraLine}  }
+${extraLine}${extraContentsLine}  }
 '
 # → ./result is the image; load into docker with:
-#   docker load < ./result   # nix2container writes a docker-loadable tar`;
+#   docker load < ./result   # nix2container writes a docker-loadable tar${ext ? `
+# If the sha256 was left blank, nix build will fail with the real hash on
+# stderr — copy the "got:" value into the "sha256:" field and re-run.` : ''}`;
 
     cmdOutput.textContent = cmd;
     cmdStatus.textContent = `base = pkgs.${base}${extras.length ? ` · ${extras.length} extra` : ''}`;
@@ -322,6 +393,15 @@ ${extraLine}  }
 
   baseInput.addEventListener('input', render);
   layersContainer.addEventListener('change', render);
+
+  // External-package section toggle + field wiring
+  extEnable.addEventListener('change', () => {
+    extFields.classList.toggle('hidden', !extEnable.checked);
+    render();
+  });
+  [extName, extVersion, extUrl, extHash, extInstallPath].forEach((el) => {
+    el.addEventListener('input', render);
+  });
 
   readState();
   render();

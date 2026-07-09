@@ -1,0 +1,836 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-54512",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Arbitrary code execution via PolymorphicTypeValidator bypass"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, jackson-databind's PolymorphicTypeValidator (PTV) is the primary safety mechanism guarding polymorphic deserialization. When polymorphic typing is enabled and a type identifier contains generic parameters (i.e. the type ID string contains \u003c), DatabindContext._resolveAndValidateGeneric() validates only the raw container class name (the substring before \u003c) against the configured PTV. If the container type is approved, the method parses the full canonical type string via TypeFactory.constructFromCanonical() and returns the fully parameterized type without ever validating the nested type arguments against the PTV. The nested type arguments are then resolved, instantiated, and populated as beans during deserialization. An attacker who controls the type ID can therefore place a denied class as a generic type parameter of an allowed container — for example java.util.ArrayList\u003ccom.evil.Gadget\u003e when only java.util.ArrayList is allow-listed. The container passes the PTV check; com.evil.Gadget is loaded via Class.forName(name, true, loader), instantiated, and its properties are set from attacker-controlled JSON. This completely bypasses an explicitly configured PTV allow-list. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54512",
+              "help": {
+                "text": "Vulnerability CVE-2026-54512\nSeverity: HIGH\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.18.8, 3.1.4, 2.21.4\nLink: [CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, jackson-databind's PolymorphicTypeValidator (PTV) is the primary safety mechanism guarding polymorphic deserialization. When polymorphic typing is enabled and a type identifier contains generic parameters (i.e. the type ID string contains \u003c), DatabindContext._resolveAndValidateGeneric() validates only the raw container class name (the substring before \u003c) against the configured PTV. If the container type is approved, the method parses the full canonical type string via TypeFactory.constructFromCanonical() and returns the fully parameterized type without ever validating the nested type arguments against the PTV. The nested type arguments are then resolved, instantiated, and populated as beans during deserialization. An attacker who controls the type ID can therefore place a denied class as a generic type parameter of an allowed container — for example java.util.ArrayList\u003ccom.evil.Gadget\u003e when only java.util.ArrayList is allow-listed. The container passes the PTV check; com.evil.Gadget is loaded via Class.forName(name, true, loader), instantiated, and its properties are set from attacker-controlled JSON. This completely bypasses an explicitly configured PTV allow-list. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54512**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|com.fasterxml.jackson.core:jackson-databind|2.18.8, 3.1.4, 2.21.4|[CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, jackson-databind's PolymorphicTypeValidator (PTV) is the primary safety mechanism guarding polymorphic deserialization. When polymorphic typing is enabled and a type identifier contains generic parameters (i.e. the type ID string contains \u003c), DatabindContext._resolveAndValidateGeneric() validates only the raw container class name (the substring before \u003c) against the configured PTV. If the container type is approved, the method parses the full canonical type string via TypeFactory.constructFromCanonical() and returns the fully parameterized type without ever validating the nested type arguments against the PTV. The nested type arguments are then resolved, instantiated, and populated as beans during deserialization. An attacker who controls the type ID can therefore place a denied class as a generic type parameter of an allowed container — for example java.util.ArrayList\u003ccom.evil.Gadget\u003e when only java.util.ArrayList is allow-listed. The container passes the PTV check; com.evil.Gadget is loaded via Class.forName(name, true, loader), instantiated, and its properties are set from attacker-controlled JSON. This completely bypasses an explicitly configured PTV allow-list. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 8.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "8.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54513",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: Jackson-databind: Security bypass allows arbitrary code execution"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, BasicPolymorphicTypeValidator.Builder.allowIfSubTypeIsArray() allowlists any array type based only on clazz.isArray(), without validating the array's component (element) type against the configured allowlist. A PTV built with allowIfSubTypeIsArray() plus an explicit concrete-type allowlist therefore still permits EvilType[] even though EvilType is not allowlisted. When Jackson deserializes the elements and no per-element type IDs are present, it instantiates the component type directly with no further PTV check, bypassing the allowlist. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54513",
+              "help": {
+                "text": "Vulnerability CVE-2026-54513\nSeverity: HIGH\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, BasicPolymorphicTypeValidator.Builder.allowIfSubTypeIsArray() allowlists any array type based only on clazz.isArray(), without validating the array's component (element) type against the configured allowlist. A PTV built with allowIfSubTypeIsArray() plus an explicit concrete-type allowlist therefore still permits EvilType[] even though EvilType is not allowlisted. When Jackson deserializes the elements and no per-element type IDs are present, it instantiates the component type directly with no further PTV check, bypassing the allowlist. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54513**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|com.fasterxml.jackson.core:jackson-databind|2.18.8, 2.21.4, 3.1.4|[CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, BasicPolymorphicTypeValidator.Builder.allowIfSubTypeIsArray() allowlists any array type based only on clazz.isArray(), without validating the array's component (element) type against the configured allowlist. A PTV built with allowIfSubTypeIsArray() plus an explicit concrete-type allowlist therefore still permits EvilType[] even though EvilType is not allowlisted. When Jackson deserializes the elements and no per-element type IDs are present, it instantiates the component type directly with no further PTV check, bypassing the allowlist. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 8.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "8.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54514",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Information Disclosure via Eager DNS Resolution"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.0.0 until 2.18.8, 2.21.4, and 3.1.4, JDKFromStringDeserializer constructed InetSocketAddress with new InetSocketAddress(host, port), which performs eager DNS name resolution for hostname inputs at deserialization time. An application that binds untrusted JSON into a type containing an InetSocketAddress field issues an attacker-chosen DNS query during readValue, before any application-level validation or connect logic. The fix uses InetSocketAddress.createUnresolved(host, port), deferring DNS to an explicit connect. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54514",
+              "help": {
+                "text": "Vulnerability CVE-2026-54514\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.0.0 until 2.18.8, 2.21.4, and 3.1.4, JDKFromStringDeserializer constructed InetSocketAddress with new InetSocketAddress(host, port), which performs eager DNS name resolution for hostname inputs at deserialization time. An application that binds untrusted JSON into a type containing an InetSocketAddress field issues an attacker-chosen DNS query during readValue, before any application-level validation or connect logic. The fix uses InetSocketAddress.createUnresolved(host, port), deferring DNS to an explicit connect. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54514**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|2.18.8, 2.21.4, 3.1.4|[CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.0.0 until 2.18.8, 2.21.4, and 3.1.4, JDKFromStringDeserializer constructed InetSocketAddress with new InetSocketAddress(host, port), which performs eager DNS name resolution for hostname inputs at deserialization time. An application that binds untrusted JSON into a type containing an InetSocketAddress field issues an attacker-chosen DNS query during readValue, before any application-level validation or connect logic. The fix uses InetSocketAddress.createUnresolved(host, port), deferring DNS to an explicit connect. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54515",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Ignored properties can be unexpectedly modified"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.8.0 until 2.18.9, 2.21.5, and 3.1.4, in BeanDeserializerBase.createContextual(), per-property @JsonIgnoreProperties exclusions are applied by _handleByNameInclusion(), producing a contextual deserializer whose BeanPropertyMap has the ignored properties removed. The subsequent per-property case-insensitivity block (triggered by @JsonFormat(ACCEPT_CASE_INSENSITIVE_PROPERTIES)) rebuilds from this._beanProperties (the original, unfiltered map) instead of contextual._beanProperties, then overwrites the filtered map — restoring every property _handleByNameInclusion had just removed. The ignored property becomes writable again. This vulnerability is fixed in 2.18.9, 2.21.5, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54515",
+              "help": {
+                "text": "Vulnerability CVE-2026-54515\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 3.1.4, 2.18.9, 2.21.5, 2.22.1\nLink: [CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.8.0 until 2.18.9, 2.21.5, and 3.1.4, in BeanDeserializerBase.createContextual(), per-property @JsonIgnoreProperties exclusions are applied by _handleByNameInclusion(), producing a contextual deserializer whose BeanPropertyMap has the ignored properties removed. The subsequent per-property case-insensitivity block (triggered by @JsonFormat(ACCEPT_CASE_INSENSITIVE_PROPERTIES)) rebuilds from this._beanProperties (the original, unfiltered map) instead of contextual._beanProperties, then overwrites the filtered map — restoring every property _handleByNameInclusion had just removed. The ignored property becomes writable again. This vulnerability is fixed in 2.18.9, 2.21.5, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54515**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|3.1.4, 2.18.9, 2.21.5, 2.22.1|[CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.8.0 until 2.18.9, 2.21.5, and 3.1.4, in BeanDeserializerBase.createContextual(), per-property @JsonIgnoreProperties exclusions are applied by _handleByNameInclusion(), producing a contextual deserializer whose BeanPropertyMap has the ignored properties removed. The subsequent per-property case-insensitivity block (triggered by @JsonFormat(ACCEPT_CASE_INSENSITIVE_PROPERTIES)) rebuilds from this._beanProperties (the original, unfiltered map) instead of contextual._beanProperties, then overwrites the filtered map — restoring every property _handleByNameInclusion had just removed. The ignored property becomes writable again. This vulnerability is fixed in 2.18.9, 2.21.5, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54516",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Security bypass due to improper handling of renamed properties"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, POJOPropertiesCollector._renameProperties() allows a property with @JsonProperty(\"renamed\") on the getter and @JsonIgnore on the setter to be renamed rather than dropped. With MapperFeature.INFER_PROPERTY_MUTATORS enabled (default), the private backing field is retained; during deserialization BeanDeserializerFactory.addBeanProps() sees hasField()==true, builds a FieldProperty, and makes the backing field writable. An attacker supplying the renamed JSON key writes the backing field directly, bypassing the @JsonIgnore on the setter. This vulnerability is fixed in 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54516",
+              "help": {
+                "text": "Vulnerability CVE-2026-54516\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54516](https://avd.aquasec.com/nvd/cve-2026-54516)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, POJOPropertiesCollector._renameProperties() allows a property with @JsonProperty(\"renamed\") on the getter and @JsonIgnore on the setter to be renamed rather than dropped. With MapperFeature.INFER_PROPERTY_MUTATORS enabled (default), the private backing field is retained; during deserialization BeanDeserializerFactory.addBeanProps() sees hasField()==true, builds a FieldProperty, and makes the backing field writable. An attacker supplying the renamed JSON key writes the backing field directly, bypassing the @JsonIgnore on the setter. This vulnerability is fixed in 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54516**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|2.21.4, 3.1.4|[CVE-2026-54516](https://avd.aquasec.com/nvd/cve-2026-54516)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, POJOPropertiesCollector._renameProperties() allows a property with @JsonProperty(\"renamed\") on the getter and @JsonIgnore on the setter to be renamed rather than dropped. With MapperFeature.INFER_PROPERTY_MUTATORS enabled (default), the private backing field is retained; during deserialization BeanDeserializerFactory.addBeanProps() sees hasField()==true, builds a FieldProperty, and makes the backing field writable. An attacker supplying the renamed JSON key writes the backing field directly, bypassing the @JsonIgnore on the setter. This vulnerability is fixed in 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54517",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Information disclosure via improper JsonView filter application"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, in BeanDeserializer._deserializeUsingPropertyBased, the active-view (@JsonView) filter was applied only to creator properties; the regular property-buffering branch performed no prop.visibleInView(activeView) check. A change making SetterlessProperty.isMerging() return true routed setterless Collection/Map properties through this unguarded path, so a setterless collection annotated with a restricted @JsonView is populated from attacker JSON even when the active view excludes it. This vulnerability is fixed in 2.21.4 and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54517",
+              "help": {
+                "text": "Vulnerability CVE-2026-54517\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54517](https://avd.aquasec.com/nvd/cve-2026-54517)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, in BeanDeserializer._deserializeUsingPropertyBased, the active-view (@JsonView) filter was applied only to creator properties; the regular property-buffering branch performed no prop.visibleInView(activeView) check. A change making SetterlessProperty.isMerging() return true routed setterless Collection/Map properties through this unguarded path, so a setterless collection annotated with a restricted @JsonView is populated from attacker JSON even when the active view excludes it. This vulnerability is fixed in 2.21.4 and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54517**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|2.21.4, 3.1.4|[CVE-2026-54517](https://avd.aquasec.com/nvd/cve-2026-54517)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, in BeanDeserializer._deserializeUsingPropertyBased, the active-view (@JsonView) filter was applied only to creator properties; the regular property-buffering branch performed no prop.visibleInView(activeView) check. A change making SetterlessProperty.isMerging() return true routed setterless Collection/Map properties through this unguarded path, so a setterless collection annotated with a restricted @JsonView is populated from attacker JSON even when the active view excludes it. This vulnerability is fixed in 2.21.4 and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54518",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Information disclosure and data manipulation via view-based access control bypass"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, UnwrappedPropertyHandler.processUnwrappedCreatorProperties() replays buffered JSON into creator parameters but never consults prop.visibleInView(activeView). The normal property-based creator path gates creator properties on the active view, but this unwrapped-creator replay path bypasses that check, so a constructor parameter annotated with both @JsonView(AdminView.class) and @JsonUnwrapped is populated from attacker JSON even when a more restrictive view is active. This vulnerability is fixed in 2.21.4 and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54518",
+              "help": {
+                "text": "Vulnerability CVE-2026-54518\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.21.4\nLink: [CVE-2026-54518](https://avd.aquasec.com/nvd/cve-2026-54518)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, UnwrappedPropertyHandler.processUnwrappedCreatorProperties() replays buffered JSON into creator parameters but never consults prop.visibleInView(activeView). The normal property-based creator path gates creator properties on the active view, but this unwrapped-creator replay path bypasses that check, so a constructor parameter annotated with both @JsonView(AdminView.class) and @JsonUnwrapped is populated from attacker JSON even when a more restrictive view is active. This vulnerability is fixed in 2.21.4 and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54518**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|2.21.4|[CVE-2026-54518](https://avd.aquasec.com/nvd/cve-2026-54518)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, UnwrappedPropertyHandler.processUnwrappedCreatorProperties() replays buffered JSON into creator parameters but never consults prop.visibleInView(activeView). The normal property-based creator path gates creator properties on the active view, but this unwrapped-creator replay path bypasses that check, so a constructor parameter annotated with both @JsonView(AdminView.class) and @JsonUnwrapped is populated from attacker JSON even when a more restrictive view is active. This vulnerability is fixed in 2.21.4 and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-45292",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "opentelemetry-java: opentelemetry-api: opentelemetry-extension-trace-propagators: OpenTelemetry Java: Denial of Service due to unbounded memory allocation when parsing oversized baggage"
+              },
+              "fullDescription": {
+                "text": "opentelemetry-java is the Java implementation of the OpenTelemetry API for recording telemetry, and SDK for managing telemetry recorded by the API. Prior to 1.62.0, a vulnerability affects the baggage propagation implementation in opentelemetry-api and opentelemetry-extension-trace-propagators. Parsing oversized baggage causes unbounded memory allocation and CPU consumption. Because baggage is automatically re-injected into every outgoing request, the effect can fan out to downstream services that never received the original malicious request. This vulnerability is fixed in 1.62.0."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-45292",
+              "help": {
+                "text": "Vulnerability CVE-2026-45292\nSeverity: MEDIUM\nPackage: io.opentelemetry:opentelemetry-api\nFixed Version: 1.62.0\nLink: [CVE-2026-45292](https://avd.aquasec.com/nvd/cve-2026-45292)\nopentelemetry-java is the Java implementation of the OpenTelemetry API for recording telemetry, and SDK for managing telemetry recorded by the API. Prior to 1.62.0, a vulnerability affects the baggage propagation implementation in opentelemetry-api and opentelemetry-extension-trace-propagators. Parsing oversized baggage causes unbounded memory allocation and CPU consumption. Because baggage is automatically re-injected into every outgoing request, the effect can fan out to downstream services that never received the original malicious request. This vulnerability is fixed in 1.62.0.",
+                "markdown": "**Vulnerability CVE-2026-45292**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|io.opentelemetry:opentelemetry-api|1.62.0|[CVE-2026-45292](https://avd.aquasec.com/nvd/cve-2026-45292)|\n\nopentelemetry-java is the Java implementation of the OpenTelemetry API for recording telemetry, and SDK for managing telemetry recorded by the API. Prior to 1.62.0, a vulnerability affects the baggage propagation implementation in opentelemetry-api and opentelemetry-extension-trace-propagators. Parsing oversized baggage causes unbounded memory allocation and CPU consumption. Because baggage is automatically re-injected into every outgoing request, the effect can fan out to downstream services that never received the original malicious request. This vulnerability is fixed in 1.62.0."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-9689",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "keycloak: org.keycloak.protocol.oidc: HTTP Parameter Pollution in OIDC redirect URI allows response parameter duplication - #GHI-604"
+              },
+              "fullDescription": {
+                "text": "A flaw was found in Keycloak, an open-source identity and access management solution. When a client application is configured to accept broad redirect Uniform Resource Identifiers (URIs), a remote attacker can manipulate the authentication process by crafting a special web address. If a user clicks this link, the client application might incorrectly prioritize attacker-controlled information over legitimate data. This vulnerability, known as HTTP parameter pollution, could allow an attacker to bypass security measures or gain unauthorized access to resources."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-9689",
+              "help": {
+                "text": "Vulnerability CVE-2026-9689\nSeverity: MEDIUM\nPackage: org.keycloak:keycloak-services\nFixed Version: \nLink: [CVE-2026-9689](https://avd.aquasec.com/nvd/cve-2026-9689)\nA flaw was found in Keycloak, an open-source identity and access management solution. When a client application is configured to accept broad redirect Uniform Resource Identifiers (URIs), a remote attacker can manipulate the authentication process by crafting a special web address. If a user clicks this link, the client application might incorrectly prioritize attacker-controlled information over legitimate data. This vulnerability, known as HTTP parameter pollution, could allow an attacker to bypass security measures or gain unauthorized access to resources.",
+                "markdown": "**Vulnerability CVE-2026-9689**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.keycloak:keycloak-services||[CVE-2026-9689](https://avd.aquasec.com/nvd/cve-2026-9689)|\n\nA flaw was found in Keycloak, an open-source identity and access management solution. When a client application is configured to accept broad redirect Uniform Resource Identifiers (URIs), a remote attacker can manipulate the authentication process by crafting a special web address. If a user clicks this link, the client application might incorrectly prioritize attacker-controlled information over legitimate data. This vulnerability, known as HTTP parameter pollution, could allow an attacker to bypass security measures or gain unauthorized access to resources."
+              },
+              "properties": {
+                "cvssv3_baseScore": 4.2,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "4.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-9793",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "keycloak: Keycloak: Security policy bypass in JWE-encrypted request object processing"
+              },
+              "fullDescription": {
+                "text": "A flaw was found in Keycloak. When a JSON Web Encryption (JWE) encrypted request object is submitted, Keycloak may incorrectly process unsigned claims if the decrypted content is raw JSON, bypassing the configured signature policy. This allows a remote attacker to submit unauthorized claims, leading to a compromise of data integrity within the OpenID Connect (OIDC) authorization flow. While a redirect URI allowlist acts as a compensating control, this vulnerability violates OIDC Core and Financial-grade API (FAPI) signing requirements."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-9793",
+              "help": {
+                "text": "Vulnerability CVE-2026-9793\nSeverity: MEDIUM\nPackage: org.keycloak:keycloak-services\nFixed Version: \nLink: [CVE-2026-9793](https://avd.aquasec.com/nvd/cve-2026-9793)\nA flaw was found in Keycloak. When a JSON Web Encryption (JWE) encrypted request object is submitted, Keycloak may incorrectly process unsigned claims if the decrypted content is raw JSON, bypassing the configured signature policy. This allows a remote attacker to submit unauthorized claims, leading to a compromise of data integrity within the OpenID Connect (OIDC) authorization flow. While a redirect URI allowlist acts as a compensating control, this vulnerability violates OIDC Core and Financial-grade API (FAPI) signing requirements.",
+                "markdown": "**Vulnerability CVE-2026-9793**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.keycloak:keycloak-services||[CVE-2026-9793](https://avd.aquasec.com/nvd/cve-2026-9793)|\n\nA flaw was found in Keycloak. When a JSON Web Encryption (JWE) encrypted request object is submitted, Keycloak may incorrectly process unsigned claims if the decrypted content is raw JSON, bypassing the configured signature policy. This allows a remote attacker to submit unauthorized claims, leading to a compromise of data integrity within the OpenID Connect (OIDC) authorization flow. While a redirect URI allowlist acts as a compensating control, this vulnerability violates OIDC Core and Financial-grade API (FAPI) signing requirements."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.9,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "5.9",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-9798",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "keycloak: Keycloak: Brute-force protection bypass in CIBA flow"
+              },
+              "fullDescription": {
+                "text": "A flaw was found in Keycloak, an open-source identity and access management solution. When a user account is temporarily locked due to repeated failed login attempts, an attacker with valid client credentials can exploit the Client-Initiated Backchannel Authentication (CIBA) flow to bypass this brute-force protection. This allows continued authentication attempts and token issuance even when the account should be locked, potentially enabling further unauthorized access attempts."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-9798",
+              "help": {
+                "text": "Vulnerability CVE-2026-9798\nSeverity: MEDIUM\nPackage: org.keycloak:keycloak-services\nFixed Version: \nLink: [CVE-2026-9798](https://avd.aquasec.com/nvd/cve-2026-9798)\nA flaw was found in Keycloak, an open-source identity and access management solution. When a user account is temporarily locked due to repeated failed login attempts, an attacker with valid client credentials can exploit the Client-Initiated Backchannel Authentication (CIBA) flow to bypass this brute-force protection. This allows continued authentication attempts and token issuance even when the account should be locked, potentially enabling further unauthorized access attempts.",
+                "markdown": "**Vulnerability CVE-2026-9798**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.keycloak:keycloak-services||[CVE-2026-9798](https://avd.aquasec.com/nvd/cve-2026-9798)|\n\nA flaw was found in Keycloak, an open-source identity and access management solution. When a user account is temporarily locked due to repeated failed login attempts, an attacker with valid client credentials can exploit the Client-Initiated Backchannel Authentication (CIBA) flow to bypass this brute-force protection. This allows continued authentication attempts and token issuance even when the account should be locked, potentially enabling further unauthorized access attempts."
+              },
+              "properties": {
+                "cvssv3_baseScore": 4.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "4.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-54512",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54512\nSeverity: HIGH\nFixed Version: 2.18.8, 3.1.4, 2.21.4\nLink: [CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54512",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54512\nSeverity: HIGH\nFixed Version: 2.18.8, 3.1.4, 2.21.4\nLink: [CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54513",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54513\nSeverity: HIGH\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54513",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54513\nSeverity: HIGH\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54514",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54514\nSeverity: MEDIUM\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54514",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54514\nSeverity: MEDIUM\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54515",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54515\nSeverity: MEDIUM\nFixed Version: 3.1.4, 2.18.9, 2.21.5, 2.22.1\nLink: [CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54515",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54515\nSeverity: MEDIUM\nFixed Version: 3.1.4, 2.18.9, 2.21.5, 2.22.1\nLink: [CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54516",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54516\nSeverity: MEDIUM\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54516](https://avd.aquasec.com/nvd/cve-2026-54516)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54516",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54516\nSeverity: MEDIUM\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54516](https://avd.aquasec.com/nvd/cve-2026-54516)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54517",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54517\nSeverity: MEDIUM\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54517](https://avd.aquasec.com/nvd/cve-2026-54517)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54517",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54517\nSeverity: MEDIUM\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54517](https://avd.aquasec.com/nvd/cve-2026-54517)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54518",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54518\nSeverity: MEDIUM\nFixed Version: 2.21.4\nLink: [CVE-2026-54518](https://avd.aquasec.com/nvd/cve-2026-54518)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/bin/client/keycloak-admin-cli-26.6.4.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54518",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.2\nVulnerability CVE-2026-54518\nSeverity: MEDIUM\nFixed Version: 2.21.4\nLink: [CVE-2026-54518](https://avd.aquasec.com/nvd/cve-2026-54518)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar: com.fasterxml.jackson.core:jackson-databind@2.21.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45292",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.opentelemetry:opentelemetry-api\nInstalled Version: 1.57.0\nVulnerability CVE-2026-45292\nSeverity: MEDIUM\nFixed Version: 1.62.0\nLink: [CVE-2026-45292](https://avd.aquasec.com/nvd/cve-2026-45292)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/io.opentelemetry.opentelemetry-api-1.57.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/io.opentelemetry.opentelemetry-api-1.57.0.jar: io.opentelemetry:opentelemetry-api@1.57.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-9689",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.keycloak:keycloak-services\nInstalled Version: 26.6.4\nVulnerability CVE-2026-9689\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2026-9689](https://avd.aquasec.com/nvd/cve-2026-9689)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/org.keycloak.keycloak-services-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/org.keycloak.keycloak-services-26.6.4.jar: org.keycloak:keycloak-services@26.6.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-9793",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.keycloak:keycloak-services\nInstalled Version: 26.6.4\nVulnerability CVE-2026-9793\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2026-9793](https://avd.aquasec.com/nvd/cve-2026-9793)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/org.keycloak.keycloak-services-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/org.keycloak.keycloak-services-26.6.4.jar: org.keycloak:keycloak-services@26.6.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-9798",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.keycloak:keycloak-services\nInstalled Version: 26.6.4\nVulnerability CVE-2026-9798\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2026-9798](https://avd.aquasec.com/nvd/cve-2026-9798)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/org.keycloak.keycloak-services-26.6.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/qbm75dca01y3wzyvidrbcvwz0wxyq4k4-keycloak-26.6.4/lib/lib/main/org.keycloak.keycloak-services-26.6.4.jar: org.keycloak:keycloak-services@26.6.4"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:592655d58c211d498c943bd74daaada083e4a9666043527d931ae38664e9a9a1",
+        "imageName": "ghcr.io/nix-containers/images/keycloak:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/keycloak@sha256:42241aafecbf36cc6ae3c72b045ce7cd173db0dfe6ffcc22cdba890d27473231"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/keycloak:latest"
+        ]
+      }
+    }
+  ]
+}
