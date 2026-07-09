@@ -1,29 +1,38 @@
 { mkImage, pkgs, lib, ... }:
 
-# LiveKit - open source WebRTC SFU server (fips variant of the same upstream binary)
+# LiveKit - open source WebRTC SFU server (-fips variant)
 # https://github.com/livekit/livekit
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.13.3";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "livekit-server-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/livekit/livekit/releases/download/v${version}/livekit_${version}_linux_amd64.tar.gz";
-      hash = "sha256-esk3KiKbPTGnFtY7WpkVrS/7fSiousxbpfwzoqR12KM=";
+    src = pkgs.fetchFromGitHub {
+      owner = "livekit";
+      repo = "livekit";
+      rev = "v${version}";
+      hash = "sha256-Xv3jOHXYQfmDeqEWzAZmuhkhva5+NcVIMilaPTyfHpw=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-kDLmLIc01zoiBVnPtRPNV7La2hxkcnI6k1r1t/hVQLQ=";
 
-    sourceRoot = ".";
+    subPackages = [ "cmd/server" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 livekit-server $out/bin/livekit-server
-      runHook postInstall
+    postInstall = ''
+      if [ -e $out/bin/server ]; then
+        mv $out/bin/server $out/bin/livekit-server
+      fi
     '';
   };
 in mkImage {
@@ -31,18 +40,11 @@ in mkImage {
   name = "livekit-server-fips";
   tag = "v${version}";
   entrypoint = [ "${drv}/bin/livekit-server" ];
-  # Was `--help` (a one-shot, so the kind-test pod CrashLoops). Run the SFU:
-  # --dev starts with built-in placeholder API keys (devkey/secret) so the bare
-  # image needs no config or mounted secret, and --bind 0.0.0.0 makes the HTTP/
-  # WebSocket signal server (:7880) + RTC TCP (:7881) reachable by the kind-test
-  # probe. Same binary as the sibling `livekit-server` image (identical version
-  # + fetchurl + hash), whose kind-test validates this exact cmd. Operators run
-  # production with their own --config / LIVEKIT_CONFIG (real keys, Redis, TURN).
   cmd = [ "--dev" "--bind" "0.0.0.0" ];
   labels = {
     "org.opencontainers.image.title" = "livekit-server-fips";
     "org.opencontainers.image.description" = "LiveKit open source WebRTC SFU server";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
