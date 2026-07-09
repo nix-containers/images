@@ -1,32 +1,33 @@
 { mkImage, pkgs, lib, ... }:
 
-# Falcosidekick (fips variant) - connect Falco to your ecosystem
+# Falcosidekick (-fips variant) - connect Falco to your ecosystem
 # https://github.com/falcosecurity/falcosidekick
-# Packages the upstream Falcosidekick release binary.
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "2.34.1";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "falcosidekick-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/falcosecurity/falcosidekick/releases/download/${version}/falcosidekick_${version}_linux_amd64.tar.gz";
-      hash = "sha256:17s2kizbrd3k895wfzjz4kxhydjggv9lmriljcyz05b3zyw3lyli";
+    src = pkgs.fetchFromGitHub {
+      owner = "falcosecurity";
+      repo = "falcosidekick";
+      rev = version;
+      hash = "sha256-EliSHEYJsgF3BroTIvBh6dL8Eec3F7Bf4PykGqSKa1Q=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    proxyVendor = true;
+    vendorHash = "sha256-i8Hj3zbpKt1btvaNEALz31XV4ki/359IxwGM7bQovv0=";
 
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 falcosidekick $out/bin/falcosidekick
-      runHook postInstall
-    '';
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
     meta = with lib; {
       description = "Connect Falco to your ecosystem";
@@ -47,6 +48,6 @@ in mkImage {
     "org.opencontainers.image.title" = "falcosidekick-fips";
     "org.opencontainers.image.description" = "Connect Falco to your ecosystem";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
