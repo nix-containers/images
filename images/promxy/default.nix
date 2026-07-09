@@ -2,29 +2,30 @@
 
 # promxy - Prometheus proxy that aggregates multiple Prometheus servers
 # https://github.com/jacksontj/promxy
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "0.0.96";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "promxy";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/jacksontj/promxy/releases/download/v${version}/promxy-v${version}-linux-amd64";
-      hash = "sha256-LNqJbWcgDnZ1LtaiujYH4fHgozYB7cf+5t0+HBaB+fE=";
+    src = pkgs.fetchFromGitHub {
+      owner = "jacksontj";
+      repo = "promxy";
+      rev = "v${version}";
+      hash = "sha256-qj9Sd4TdTD94VWnNB8/kIvHm+mYhfoRCqdsNeRNpoV0=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;
 
-    dontUnpack = true;
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/promxy
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/promxy" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 
   # The old cmd was `--help` (a one-shot -> the kind-test pod CrashLoops), and
@@ -50,6 +51,6 @@ in mkImage {
     "org.opencontainers.image.title" = "promxy";
     "org.opencontainers.image.description" = "Prometheus proxy aggregating multiple Prometheus servers";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
