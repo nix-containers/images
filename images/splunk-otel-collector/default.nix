@@ -2,29 +2,31 @@
 
 # Splunk OpenTelemetry Collector
 # https://github.com/signalfx/splunk-otel-collector
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "0.155.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "splunk-otel-collector";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/signalfx/splunk-otel-collector/releases/download/v${version}/otelcol_linux_amd64";
-      hash = "sha256-XJ2J+4EeCaMbmxTbNmFZZaayG+A5CiEgWduSL6Zeu7Q=";
+    src = pkgs.fetchFromGitHub {
+      owner = "signalfx";
+      repo = "splunk-otel-collector";
+      rev = "v${version}";
+      hash = "sha256-nEDeNZchzeoinK9VPGL6k0+iGWiKkKLMk9YvEbZFooU=";
     };
 
-    dontUnpack = true;
+    proxyVendor = true;
+    vendorHash = "sha256-JQkrotVGnqcq23gyVfF32mXpS2BcduOLPdYmHPDanXc=";
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/otelcol
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/otelcol" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 
   # The old cmd was `--help` (a one-shot -> the kind-test pod CrashLoops), and
@@ -66,6 +68,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "splunk-otel-collector";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
