@@ -1,0 +1,172 @@
+2026-07-09T12:49:50Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:49:50Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:49:50Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:49:50Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:50:00Z	INFO	Number of language-specific files	num=1
+2026-07-09T12:50:00Z	INFO	[jar] Detecting vulnerabilities...
+2026-07-09T12:50:00Z	INFO	Table result includes only package filenames. Use '--format json' option to get the full path to the package file.
+2026-07-09T12:50:00Z	INFO	Some vulnerabilities have been ignored/suppressed. Use the "--show-suppressed" flag to display them.
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────────────────────────┬──────┬─────────────────┬─────────┐
+│                                      Target                                      │ Type │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────────────────────────┼──────┼─────────────────┼─────────┤
+│ nix/store/s5z7yqfkn0jz9ny0gr8irhql5jkrn34g-zipkin-3.6.1/share/java/zipkin-serve- │ jar  │       15        │    -    │
+│ r.jar                                                                            │      │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼──────┼─────────────────┼─────────┤
+│ share/java/zipkin-server.jar                                                     │ jar  │       15        │    -    │
+└──────────────────────────────────────────────────────────────────────────────────┴──────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+Java (jar)
+==========
+Total: 30 (HIGH: 26, CRITICAL: 4)
+
+┌───────────────────────────────────────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬─────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│                          Library                          │ Vulnerability  │ Severity │ Status │ Installed Version │        Fixed Version        │                            Title                             │
+├───────────────────────────────────────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ com.fasterxml.jackson.core:jackson-databind               │ CVE-2026-54512 │ HIGH     │ fixed  │ 2.21.2            │ 2.18.8, 3.1.4, 2.21.4       │ jackson-databind: jackson-databind: Arbitrary code execution │
+│ (zipkin-server.jar)                                       │                │          │        │                   │                             │ via PolymorphicTypeValidator bypass                          │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-54512                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           ├────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                                           │ CVE-2026-54513 │          │        │                   │ 2.18.8, 2.21.4, 3.1.4       │ jackson-databind: Jackson-databind: Security bypass allows   │
+│                                                           │                │          │        │                   │                             │ arbitrary code execution                                     │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-54513                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-codec-compression (zipkin-server.jar)      │ CVE-2026-42583 │          │        │ 4.2.12.Final      │ 4.2.13.Final                │ netty: io.netty/netty-codec-compression:                     │
+│                                                           │                │          │        │                   │                             │ io.netty/netty-codec: Netty: Denial of Service via excessive │
+│                                                           │                │          │        │                   │                             │ memory allocation in...                                      │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42583                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┼────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-codec-dns (zipkin-server.jar)              │ CVE-2026-42579 │          │        │                   │ 4.2.13.Final, 4.1.133.Final │ netty: Netty: High integrity impact due to improper DNS      │
+│                                                           │                │          │        │                   │                             │ domain name constraint...                                    │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42579                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┼────────────────┤          │        │                   │                             ├──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-codec-http (zipkin-server.jar)             │ CVE-2026-42584 │          │        │                   │                             │ netty: io.netty/netty-codec-http: Netty: Incorrect HTTP      │
+│                                                           │                │          │        │                   │                             │ response parsing leads to data confusion                     │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42584                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           ├────────────────┤          │        │                   │                             ├──────────────────────────────────────────────────────────────┤
+│                                                           │ CVE-2026-42587 │          │        │                   │                             │ netty: io.netty/netty-codec-http:                            │
+│                                                           │                │          │        │                   │                             │ io.netty/netty-codec-http2: Netty: Denial of Service via     │
+│                                                           │                │          │        │                   │                             │ unbounded memory allocation in...                            │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42587                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┤                │          │        │                   │                             │                                                              │
+│ io.netty:netty-codec-http2 (zipkin-server.jar)            │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┼────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-handler (zipkin-server.jar)                │ CVE-2026-50010 │          │        │                   │ 4.2.15.Final, 4.1.135.Final │ netty-handler: Netty: Improper trust manager handling leads  │
+│                                                           │                │          │        │                   │                             │ to hostname verification bypass                              │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-50010                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┼────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-transport-native-epoll (zipkin-server.jar) │ CVE-2026-42577 │          │        │                   │ 4.2.13.Final                │ Netty is an asynchronous, event-driven network application   │
+│                                                           │                │          │        │                   │                             │ framework. ...                                               │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42577                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.apache.activemq:activemq-client (zipkin-server.jar)   │ CVE-2026-39304 │          │        │ 5.19.2            │ 5.19.4, 6.2.4               │ Apache ActiveMQ Client: Apache ActiveMQ Broker: Apache       │
+│                                                           │                │          │        │                   │                             │ ActiveMQ: Apache ActiveMQ: Denial of...                      │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-39304                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.apache.thrift:libthrift (zipkin-server.jar)           │ CVE-2026-43869 │          │        │ 0.18.1            │ 0.23.0                      │ Apache Thrift: Apache Thrift: Security bypass due to         │
+│                                                           │                │          │        │                   │                             │ improper certificate validation                              │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-43869                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┼────────────────┼──────────┤        ├───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.bouncycastle:bcprov-jdk18on (zipkin-server.jar)       │ CVE-2025-14813 │ CRITICAL │        │ 1.78.1            │ 1.80.2, 1.81.1, 1.84        │ bouncycastle: BC-JAVA: GOSTCTR implementation unable to      │
+│                                                           │                │          │        │                   │                             │ process more than 255 blocks correctly...                    │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2025-14813                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        ├───────────────────┤                             │                                                              │
+│                                                           │                │          │        │ 1.81              │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+├───────────────────────────────────────────────────────────┼────────────────┼──────────┤        ├───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.springframework.boot:spring-boot (zipkin-server.jar)  │ CVE-2026-40973 │ HIGH     │        │ 3.5.12            │ 4.0.6, 3.5.14               │ Spring Boot: Spring Boot: Arbitrary Code Execution and       │
+│                                                           │                │          │        │                   │                             │ Session Hijacking via predictable...                         │
+│                                                           │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-40973                   │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+│                                                           │                │          │        │                   │                             │                                                              │
+└───────────────────────────────────────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴─────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

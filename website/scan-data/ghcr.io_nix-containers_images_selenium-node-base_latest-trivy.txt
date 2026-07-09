@@ -1,0 +1,105 @@
+2026-07-09T12:49:09Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:49:09Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:49:09Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:49:09Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:49:45Z	INFO	Number of language-specific files	num=4
+2026-07-09T12:49:45Z	INFO	[jar] Detecting vulnerabilities...
+2026-07-09T12:49:45Z	INFO	[python-pkg] Detecting vulnerabilities...
+2026-07-09T12:49:45Z	INFO	[rustbinary] Detecting vulnerabilities...
+2026-07-09T12:49:45Z	INFO	Table result includes only package filenames. Use '--format json' option to get the full path to the package file.
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
+│                                      Target                                      │    Type    │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/9fn62fmccdvm6ihlx4bkq4r3c8agnr4c-selenium-server-standalone-3.141.59/- │    jar     │        7        │    -    │
+│ share/lib/selenium-server-standalone-3.141.59/selenium-server-standalone-3.141.- │            │                 │         │
+│ 59.jar                                                                           │            │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/cyxadvnmqhbxdr171mwcmvg4l8wvx9g4-htmlunit-driver-standalone-2.27/shar- │    jar     │        6        │    -    │
+│ e/lib/htmlunit-driver-standalone-2.27/htmlunit-driver-standalone-2.27.jar        │            │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/xrnir0r9asp1gyf5qali282gg3l36hlf-libapparmor-4.1.7/lib/python3.13/sit- │ python-pkg │        0        │    -    │
+│ e-packages/LibAppArmor-4.1.7-py3.13.egg-info/PKG-INFO                            │            │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/na21ka09652cgigpv9wlw904wpq8bnvz-librsvg-2.62.1/bin/rsvg-convert       │ rustbinary │        0        │    -    │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/na21ka09652cgigpv9wlw904wpq8bnvz-librsvg-2.62.1/lib/gdk-pixbuf-2.0/2.- │ rustbinary │        0        │    -    │
+│ 10.0/loaders/libpixbufloader_svg.so                                              │            │                 │         │
+└──────────────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+Java (jar)
+==========
+Total: 13 (HIGH: 12, CRITICAL: 1)
+
+┌──────────────────────────────────────────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬────────────────────────┬──────────────────────────────────────────────────────────────┐
+│                           Library                            │ Vulnerability  │ Severity │ Status │ Installed Version │     Fixed Version      │                            Title                             │
+├──────────────────────────────────────────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ com.google.code.gson:gson                                    │ CVE-2022-25647 │ HIGH     │ fixed  │ 2.8.0             │ 2.8.9                  │ com.google.code.gson-gson: Deserialization of Untrusted Data │
+│ (htmlunit-driver-standalone-2.27.jar)                        │                │          │        │                   │                        │ in com.google.code.gson-gson                                 │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2022-25647                   │
+├──────────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ com.squareup.okhttp3:okhttp                                  │ CVE-2021-0341  │          │        │ 3.11.0            │ 4.9.2                  │ okhttp: information disclosure via improperly used           │
+│ (selenium-server-standalone-3.141.59.jar)                    │                │          │        │                   │                        │ cryptographic function                                       │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2021-0341                    │
+├──────────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ commons-io:commons-io (htmlunit-driver-standalone-2.27.jar)  │ CVE-2024-47554 │          │        │ 2.5               │ 2.14.0                 │ apache-commons-io: Possible denial of service attack on      │
+│                                                              │                │          │        │                   │                        │ untrusted input to XmlStreamReader                           │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2024-47554                   │
+├──────────────────────────────────────────────────────────────┼────────────────┼──────────┤        ├───────────────────┼────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ net.sourceforge.htmlunit:htmlunit                            │ CVE-2023-26119 │ CRITICAL │        │ 2.27              │ 3.0.0                  │ HtmlUnit Code Injection vulnerability                        │
+│ (htmlunit-driver-standalone-2.27.jar)                        │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2023-26119                   │
+│                                                              ├────────────────┼──────────┤        │                   ├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                                              │ CVE-2020-5529  │ HIGH     │        │                   │ 2.37.0                 │ htmlunit: malicious JavaScript code leads to arbitrary java  │
+│                                                              │                │          │        │                   │                        │ code execution                                               │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2020-5529                    │
+├──────────────────────────────────────────────────────────────┼────────────────┤          │        │                   ├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ net.sourceforge.htmlunit:neko-htmlunit                       │ CVE-2022-29546 │          │        │                   │ 2.61.0                 │ OutOfMemory Exception by specifically crafted processing     │
+│ (htmlunit-driver-standalone-2.27.jar)                        │                │          │        │                   │                        │ instruction in NekoHtml Parser                               │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2022-29546                   │
+├──────────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.eclipse.jetty:jetty-http                                 │ CVE-2026-2332  │          │        │ 9.4.12.v20180830  │ 12.1.7, 12.0.33        │ org.eclipse.jetty/jetty-http: HTTP request smuggling via     │
+│ (selenium-server-standalone-3.141.59.jar)                    │                │          │        │                   │                        │ chunked extension quoted-string parsing                      │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2026-2332                    │
+├──────────────────────────────────────────────────────────────┤                │          │        ├───────────────────┤                        │                                                              │
+│ org.eclipse.jetty:jetty-http                                 │                │          │        │ 9.4.5.v20170502   │                        │                                                              │
+│ (htmlunit-driver-standalone-2.27.jar)                        │                │          │        │                   │                        │                                                              │
+│                                                              │                │          │        │                   │                        │                                                              │
+├──────────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.eclipse.jetty:jetty-server                               │ CVE-2021-28165 │          │        │ 9.4.12.v20180830  │ 9.4.39, 10.0.2, 11.0.2 │ jetty: Resource exhaustion when receiving an invalid large   │
+│ (selenium-server-standalone-3.141.59.jar)                    │                │          │        │                   │                        │ TLS frame                                                    │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2021-28165                   │
+│                                                              ├────────────────┤          │        │                   ├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                                              │ CVE-2024-13009 │          │        │                   │ 9.4.57.v20241219       │ jetty-server: Jetty: Gzip Request Body Buffer Corruption     │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2024-13009                   │
+├──────────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.yaml:snakeyaml (selenium-server-standalone-3.141.59.jar) │ CVE-2017-18640 │          │        │ 1.19              │ 1.26                   │ snakeyaml: Billion laughs attack via alias feature           │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2017-18640                   │
+│                                                              ├────────────────┤          │        │                   ├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                                              │ CVE-2022-1471  │          │        │                   │ 2.0                    │ SnakeYaml: Constructor Deserialization Remote Code Execution │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2022-1471                    │
+│                                                              ├────────────────┤          │        │                   ├────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                                              │ CVE-2022-25857 │          │        │                   │ 1.31                   │ snakeyaml: Denial of Service due to missing nested depth     │
+│                                                              │                │          │        │                   │                        │ limitation for collections...                                │
+│                                                              │                │          │        │                   │                        │ https://avd.aquasec.com/nvd/cve-2022-25857                   │
+└──────────────────────────────────────────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

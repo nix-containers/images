@@ -1,0 +1,766 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.71.2"
+  },
+  "ReportID": "019f46b4-7cdc-7648-965b-eb3de12d54f3",
+  "CreatedAt": "2026-07-09T11:47:41.404413476Z",
+  "ArtifactID": "sha256:22712964dd7969dd731370eca79522b034488fd3b605d741d17425312cff29c4",
+  "ArtifactName": "ghcr.io/nix-containers/images/prometheus-redis-exporter:latest",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 110167552,
+    "ImageID": "sha256:4c02c456adf1ae59bfddd32bce74e0f63f910596c91e002304daf8acf0b29a6a",
+    "DiffIDs": [
+      "sha256:6f984cb1851136514d370ed9e15fc97d0fac9da5842f4133bd1825579158d8b6",
+      "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc",
+      "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+    ],
+    "RepoTags": [
+      "ghcr.io/nix-containers/images/prometheus-redis-exporter:latest"
+    ],
+    "RepoDigests": [
+      "ghcr.io/nix-containers/images/prometheus-redis-exporter@sha256:f12387c6a8761375eb542b4026f758b7e20a33547b7e065212d0c2d6ebc71c13"
+    ],
+    "Reference": "ghcr.io/nix-containers/images/prometheus-redis-exporter:latest",
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "0001-01-01T00:00:00Z",
+      "history": [
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:6f984cb1851136514d370ed9e15fc97d0fac9da5842f4133bd1825579158d8b6",
+          "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc",
+          "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+        ]
+      },
+      "config": {
+        "Cmd": [
+          "--web.listen-address=0.0.0.0:9121"
+        ],
+        "Entrypoint": [
+          "/nix/store/1zj4f4viisdwsdda1h7n3656wz4ip7v9-redis_exporter-1.86.0/bin/redis_exporter"
+        ],
+        "Env": [
+          "SSL_CERT_FILE=/nix/store/zdl7dn1gmi1cxdw5a8hw6xsf4cz0rjmg-nss-cacert-3.123/etc/ssl/certs/ca-bundle.crt",
+          "PATH=/nix/store/z3j0v07sa6pnsbwq782a9cyjrmrisj1i-busybox-1.37.0/bin:/nix/store/1zj4f4viisdwsdda1h7n3656wz4ip7v9-redis_exporter-1.86.0/bin"
+        ],
+        "Labels": {
+          "io.nix-containers.build-method": "Built from source using Nix",
+          "io.nix-containers.build-type": "source",
+          "io.nix-containers.image.aliases": "redis-exporter,redis_exporter,prometheus",
+          "io.nix-containers.image.category": "monitoring",
+          "io.nix-containers.image.upstream": "https://github.com/oliver006/redis_exporter",
+          "org.label-schema.vcs-url": "https://github.com/drduker/nix-containers",
+          "org.opencontainers.image.description": "Prometheus exporter for Redis metrics",
+          "org.opencontainers.image.source": "https://github.com/drduker/nix-containers",
+          "org.opencontainers.image.title": "Prometheus Redis Exporter",
+          "org.opencontainers.image.version": "1.86.0"
+        },
+        "User": "65534:65534"
+      }
+    },
+    "Layers": [
+      {
+        "Size": 40483840,
+        "Digest": "sha256:cb5009502356cf66c863f2db5ba611b7e9e7187970158bfd661cee01ff5bd4fb",
+        "DiffID": "sha256:6f984cb1851136514d370ed9e15fc97d0fac9da5842f4133bd1825579158d8b6"
+      },
+      {
+        "Size": 54770176,
+        "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+        "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+      },
+      {
+        "Size": 14913536,
+        "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+        "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "bin/redis_exporter",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "github.com/oliver006/redis_exporter",
+          "Name": "github.com/oliver006/redis_exporter",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/oliver006/redis_exporter",
+            "UID": "f97ad5bf69bba046"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "github.com/beorn7/perks@v1.0.1",
+            "github.com/cespare/xxhash/v2@v2.3.0",
+            "github.com/gomodule/redigo@v1.9.3",
+            "github.com/klauspost/compress@v1.18.0",
+            "github.com/mna/redisc@v1.4.0",
+            "github.com/munnerz/goautoneg@v0.0.0-20191010083416-a7dc8b61c822",
+            "github.com/prometheus/client_golang@v1.23.2",
+            "github.com/prometheus/client_model@v0.6.2",
+            "github.com/prometheus/common@v0.66.1",
+            "github.com/prometheus/procfs@v0.16.1",
+            "github.com/sirupsen/logrus@v1.9.4",
+            "go.yaml.in/yaml/v2@v2.4.2",
+            "golang.org/x/crypto@v0.52.0",
+            "golang.org/x/sys@v0.45.0",
+            "google.golang.org/protobuf@v1.36.8",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "69d381fd921bcca5"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/beorn7/perks@v1.0.1",
+          "Name": "github.com/beorn7/perks",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/beorn7/perks@v1.0.1",
+            "UID": "c6d8f6ea7c22eee4"
+          },
+          "Version": "v1.0.1",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/cespare/xxhash/v2@v2.3.0",
+          "Name": "github.com/cespare/xxhash/v2",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/cespare/xxhash/v2@v2.3.0",
+            "UID": "b01a0022c86654e5"
+          },
+          "Version": "v2.3.0",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/gomodule/redigo@v1.9.3",
+          "Name": "github.com/gomodule/redigo",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/gomodule/redigo@v1.9.3",
+            "UID": "f3ff69f07026115a"
+          },
+          "Version": "v1.9.3",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/klauspost/compress@v1.18.0",
+          "Name": "github.com/klauspost/compress",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/klauspost/compress@v1.18.0",
+            "UID": "93d22ceb6ab5547"
+          },
+          "Version": "v1.18.0",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/mna/redisc@v1.4.0",
+          "Name": "github.com/mna/redisc",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/mna/redisc@v1.4.0",
+            "UID": "fad70fa807c5a33c"
+          },
+          "Version": "v1.4.0",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/munnerz/goautoneg@v0.0.0-20191010083416-a7dc8b61c822",
+          "Name": "github.com/munnerz/goautoneg",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/munnerz/goautoneg@v0.0.0-20191010083416-a7dc8b61c822",
+            "UID": "7f8b19344c41c1f0"
+          },
+          "Version": "v0.0.0-20191010083416-a7dc8b61c822",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/prometheus/client_golang@v1.23.2",
+          "Name": "github.com/prometheus/client_golang",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/prometheus/client_golang@v1.23.2",
+            "UID": "5f183da82644fb31"
+          },
+          "Version": "v1.23.2",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/prometheus/client_model@v0.6.2",
+          "Name": "github.com/prometheus/client_model",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/prometheus/client_model@v0.6.2",
+            "UID": "7059a80b1f847bd0"
+          },
+          "Version": "v0.6.2",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/prometheus/common@v0.66.1",
+          "Name": "github.com/prometheus/common",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/prometheus/common@v0.66.1",
+            "UID": "83eba694a14e566f"
+          },
+          "Version": "v0.66.1",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/prometheus/procfs@v0.16.1",
+          "Name": "github.com/prometheus/procfs",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/prometheus/procfs@v0.16.1",
+            "UID": "fd1d130b648bb73b"
+          },
+          "Version": "v0.16.1",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/sirupsen/logrus@v1.9.4",
+          "Name": "github.com/sirupsen/logrus",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/sirupsen/logrus@v1.9.4",
+            "UID": "da2acb6fbbc888f6"
+          },
+          "Version": "v1.9.4",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "go.yaml.in/yaml/v2@v2.4.2",
+          "Name": "go.yaml.in/yaml/v2",
+          "Identifier": {
+            "PURL": "pkg:golang/go.yaml.in/yaml/v2@v2.4.2",
+            "UID": "c9de876dadae567"
+          },
+          "Version": "v2.4.2",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/crypto@v0.52.0",
+          "Name": "golang.org/x/crypto",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.52.0",
+            "UID": "d2fbd64c2c566bfb"
+          },
+          "Version": "v0.52.0",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.45.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.45.0",
+            "UID": "87cc204e689143ad"
+          },
+          "Version": "v0.45.0",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "google.golang.org/protobuf@v1.36.8",
+          "Name": "google.golang.org/protobuf",
+          "Identifier": {
+            "PURL": "pkg:golang/google.golang.org/protobuf@v1.36.8",
+            "UID": "e70bb0ca0610fe5d"
+          },
+          "Version": "v1.36.8",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "GO-2026-5932",
+          "PkgID": "golang.org/x/crypto@v0.52.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.52.0",
+            "UID": "d2fbd64c2c566bfb"
+          },
+          "InstalledVersion": "v0.52.0",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:525c0eef57adca177dbb1318057fa2c0b402066e657a7954721d1ea2403b1a8f",
+          "Title": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues",
+          "Description": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+          "Severity": "UNKNOWN",
+          "References": [
+            "https://go.dev/issue/44226",
+            "https://pkg.go.dev/vuln/GO-2026-5932"
+          ]
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "69d381fd921bcca5"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:23b0a3122845b6e4b539f0e81a9c8ff8bb73ad24db357b9a615fe5a89ca61c76",
+            "DiffID": "sha256:37008b88dd88e934d4b709ad6d6b83826464693e392d5aa86aba9945a3a759dc"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:8c39ceaa6aaaf43400c52c0065423825c4fb1972d2b4a81f9a1293cfa8c344ba",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    },
+    {
+      "Target": "nix/store/1zj4f4viisdwsdda1h7n3656wz4ip7v9-redis_exporter-1.86.0/bin/redis_exporter",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "github.com/oliver006/redis_exporter",
+          "Name": "github.com/oliver006/redis_exporter",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/oliver006/redis_exporter",
+            "UID": "52ba7f96f49afab9"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "github.com/beorn7/perks@v1.0.1",
+            "github.com/cespare/xxhash/v2@v2.3.0",
+            "github.com/gomodule/redigo@v1.9.3",
+            "github.com/klauspost/compress@v1.18.0",
+            "github.com/mna/redisc@v1.4.0",
+            "github.com/munnerz/goautoneg@v0.0.0-20191010083416-a7dc8b61c822",
+            "github.com/prometheus/client_golang@v1.23.2",
+            "github.com/prometheus/client_model@v0.6.2",
+            "github.com/prometheus/common@v0.66.1",
+            "github.com/prometheus/procfs@v0.16.1",
+            "github.com/sirupsen/logrus@v1.9.4",
+            "go.yaml.in/yaml/v2@v2.4.2",
+            "golang.org/x/crypto@v0.52.0",
+            "golang.org/x/sys@v0.45.0",
+            "google.golang.org/protobuf@v1.36.8",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "1e9c164b12fc805a"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/beorn7/perks@v1.0.1",
+          "Name": "github.com/beorn7/perks",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/beorn7/perks@v1.0.1",
+            "UID": "f58fecd1f949cb"
+          },
+          "Version": "v1.0.1",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/cespare/xxhash/v2@v2.3.0",
+          "Name": "github.com/cespare/xxhash/v2",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/cespare/xxhash/v2@v2.3.0",
+            "UID": "c258d7241659e6be"
+          },
+          "Version": "v2.3.0",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/gomodule/redigo@v1.9.3",
+          "Name": "github.com/gomodule/redigo",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/gomodule/redigo@v1.9.3",
+            "UID": "88f70688b5f45ab5"
+          },
+          "Version": "v1.9.3",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/klauspost/compress@v1.18.0",
+          "Name": "github.com/klauspost/compress",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/klauspost/compress@v1.18.0",
+            "UID": "cd402d827a6b9c4"
+          },
+          "Version": "v1.18.0",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/mna/redisc@v1.4.0",
+          "Name": "github.com/mna/redisc",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/mna/redisc@v1.4.0",
+            "UID": "760b368b516b4a4f"
+          },
+          "Version": "v1.4.0",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/munnerz/goautoneg@v0.0.0-20191010083416-a7dc8b61c822",
+          "Name": "github.com/munnerz/goautoneg",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/munnerz/goautoneg@v0.0.0-20191010083416-a7dc8b61c822",
+            "UID": "f0c28d991ffaa9b7"
+          },
+          "Version": "v0.0.0-20191010083416-a7dc8b61c822",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/prometheus/client_golang@v1.23.2",
+          "Name": "github.com/prometheus/client_golang",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/prometheus/client_golang@v1.23.2",
+            "UID": "db0e9e3b204dc45e"
+          },
+          "Version": "v1.23.2",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/prometheus/client_model@v0.6.2",
+          "Name": "github.com/prometheus/client_model",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/prometheus/client_model@v0.6.2",
+            "UID": "875dbe3e31de8fb7"
+          },
+          "Version": "v0.6.2",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/prometheus/common@v0.66.1",
+          "Name": "github.com/prometheus/common",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/prometheus/common@v0.66.1",
+            "UID": "52e6a48aded83648"
+          },
+          "Version": "v0.66.1",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/prometheus/procfs@v0.16.1",
+          "Name": "github.com/prometheus/procfs",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/prometheus/procfs@v0.16.1",
+            "UID": "89a4e3de0b0dbac0"
+          },
+          "Version": "v0.16.1",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/sirupsen/logrus@v1.9.4",
+          "Name": "github.com/sirupsen/logrus",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/sirupsen/logrus@v1.9.4",
+            "UID": "2296ccaaf28f1685"
+          },
+          "Version": "v1.9.4",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "go.yaml.in/yaml/v2@v2.4.2",
+          "Name": "go.yaml.in/yaml/v2",
+          "Identifier": {
+            "PURL": "pkg:golang/go.yaml.in/yaml/v2@v2.4.2",
+            "UID": "736e2fc1f2431594"
+          },
+          "Version": "v2.4.2",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/crypto@v0.52.0",
+          "Name": "golang.org/x/crypto",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.52.0",
+            "UID": "b3678e4055b25534"
+          },
+          "Version": "v0.52.0",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.45.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.45.0",
+            "UID": "c8b9f23b737edb4e"
+          },
+          "Version": "v0.45.0",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "google.golang.org/protobuf@v1.36.8",
+          "Name": "google.golang.org/protobuf",
+          "Identifier": {
+            "PURL": "pkg:golang/google.golang.org/protobuf@v1.36.8",
+            "UID": "24477ec457ba2e1a"
+          },
+          "Version": "v1.36.8",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "GO-2026-5932",
+          "PkgID": "golang.org/x/crypto@v0.52.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.52.0",
+            "UID": "b3678e4055b25534"
+          },
+          "InstalledVersion": "v0.52.0",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:aaf3535862b95940e1a89da2647a3268ab108a064c3e1b334d8f83356679c137",
+          "Title": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues",
+          "Description": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+          "Severity": "UNKNOWN",
+          "References": [
+            "https://go.dev/issue/44226",
+            "https://pkg.go.dev/vuln/GO-2026-5932"
+          ]
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "1e9c164b12fc805a"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:cb8660188c9ce47c378698f67447854e3645bbda291b89a3936cb9ebaae14bc4",
+            "DiffID": "sha256:1973c0181e880f93e347a34dae25e046a94cd25153c423fd46a8bb6a4b4ef4bf"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:6ab77e8ad3eb7667b4a81ea27b11a9aaae6202e7d787d001e7731540cde37880",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    }
+  ]
+}

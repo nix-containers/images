@@ -1,0 +1,2148 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2024-25621",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "github.com/containerd/containerd: containerd local privilege escalation"
+              },
+              "fullDescription": {
+                "text": "containerd is an open-source container runtime. Versions 0.1.0 through 1.7.28, 2.0.0-beta.0 through 2.0.6, 2.1.0-beta.0 through 2.1.4 and 2.2.0-beta.0 through 2.2.0-rc.1 have an overly broad default permission vulnerability. Directory paths `/var/lib/containerd`, `/run/containerd/io.containerd.grpc.v1.cri` and `/run/containerd/io.containerd.sandbox.controller.v1.shim` were all created with incorrect permissions. This issue is fixed in versions 1.7.29, 2.0.7, 2.1.5 and 2.2.0. Workarounds include updating system administrator permissions so the host can manually chmod the directories to not have group or world accessible permissions, or to run containerd in rootless mode."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-25621",
+              "help": {
+                "text": "Vulnerability CVE-2024-25621\nSeverity: HIGH\nPackage: github.com/containerd/containerd\nFixed Version: 1.7.29\nLink: [CVE-2024-25621](https://avd.aquasec.com/nvd/cve-2024-25621)\ncontainerd is an open-source container runtime. Versions 0.1.0 through 1.7.28, 2.0.0-beta.0 through 2.0.6, 2.1.0-beta.0 through 2.1.4 and 2.2.0-beta.0 through 2.2.0-rc.1 have an overly broad default permission vulnerability. Directory paths `/var/lib/containerd`, `/run/containerd/io.containerd.grpc.v1.cri` and `/run/containerd/io.containerd.sandbox.controller.v1.shim` were all created with incorrect permissions. This issue is fixed in versions 1.7.29, 2.0.7, 2.1.5 and 2.2.0. Workarounds include updating system administrator permissions so the host can manually chmod the directories to not have group or world accessible permissions, or to run containerd in rootless mode.",
+                "markdown": "**Vulnerability CVE-2024-25621**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|github.com/containerd/containerd|1.7.29|[CVE-2024-25621](https://avd.aquasec.com/nvd/cve-2024-25621)|\n\ncontainerd is an open-source container runtime. Versions 0.1.0 through 1.7.28, 2.0.0-beta.0 through 2.0.6, 2.1.0-beta.0 through 2.1.4 and 2.2.0-beta.0 through 2.2.0-rc.1 have an overly broad default permission vulnerability. Directory paths `/var/lib/containerd`, `/run/containerd/io.containerd.grpc.v1.cri` and `/run/containerd/io.containerd.sandbox.controller.v1.shim` were all created with incorrect permissions. This issue is fixed in versions 1.7.29, 2.0.7, 2.1.5 and 2.2.0. Workarounds include updating system administrator permissions so the host can manually chmod the directories to not have group or world accessible permissions, or to run containerd in rootless mode."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.3,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "7.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-40635",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "containerd: containerd has an integer overflow in User ID handling"
+              },
+              "fullDescription": {
+                "text": "containerd is an open-source container runtime. A bug was found in containerd prior to versions 1.6.38, 1.7.27, and 2.0.4 where containers launched with a User set as a `UID:GID` larger than the maximum 32-bit signed integer can cause an overflow condition where the container ultimately runs as root (UID 0). This could cause unexpected behavior for environments that require containers to run as a non-root user. This bug has been fixed in containerd 1.6.38, 1.7.27, and 2.04. As a workaround, ensure that only trusted images are used and that only trusted users have permissions to import images."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-40635",
+              "help": {
+                "text": "Vulnerability CVE-2024-40635\nSeverity: MEDIUM\nPackage: github.com/containerd/containerd\nFixed Version: 1.7.27, 1.6.38\nLink: [CVE-2024-40635](https://avd.aquasec.com/nvd/cve-2024-40635)\ncontainerd is an open-source container runtime. A bug was found in containerd prior to versions 1.6.38, 1.7.27, and 2.0.4 where containers launched with a User set as a `UID:GID` larger than the maximum 32-bit signed integer can cause an overflow condition where the container ultimately runs as root (UID 0). This could cause unexpected behavior for environments that require containers to run as a non-root user. This bug has been fixed in containerd 1.6.38, 1.7.27, and 2.04. As a workaround, ensure that only trusted images are used and that only trusted users have permissions to import images.",
+                "markdown": "**Vulnerability CVE-2024-40635**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|github.com/containerd/containerd|1.7.27, 1.6.38|[CVE-2024-40635](https://avd.aquasec.com/nvd/cve-2024-40635)|\n\ncontainerd is an open-source container runtime. A bug was found in containerd prior to versions 1.6.38, 1.7.27, and 2.0.4 where containers launched with a User set as a `UID:GID` larger than the maximum 32-bit signed integer can cause an overflow condition where the container ultimately runs as root (UID 0). This could cause unexpected behavior for environments that require containers to run as a non-root user. This bug has been fixed in containerd 1.6.38, 1.7.27, and 2.04. As a workaround, ensure that only trusted images are used and that only trusted users have permissions to import images."
+              },
+              "properties": {
+                "cvssv3_baseScore": 4.6,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:C/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "4.6",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-64329",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "github.com/containerd/containerd: containerd: Memory exhaustion via CRI Attach implementation goroutine leaks"
+              },
+              "fullDescription": {
+                "text": "containerd is an open-source container runtime. Versions 1.7.28 and below, 2.0.0-beta.0 through 2.0.6, 2.1.0-beta.0 through 2.1.4, and 2.2.0-beta.0 through 2.2.0-rc.1 contain a bug in the CRI Attach implementation where a user can exhaust memory on the host due to goroutine leaks. This issue is fixed in versions 1.7.29, 2.0.7, 2.1.5 and 2.2.0. To workaround this vulnerability, users can set up an admission controller to control accesses to pods/attach resources."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-64329",
+              "help": {
+                "text": "Vulnerability CVE-2025-64329\nSeverity: MEDIUM\nPackage: github.com/containerd/containerd\nFixed Version: 1.7.29\nLink: [CVE-2025-64329](https://avd.aquasec.com/nvd/cve-2025-64329)\ncontainerd is an open-source container runtime. Versions 1.7.28 and below, 2.0.0-beta.0 through 2.0.6, 2.1.0-beta.0 through 2.1.4, and 2.2.0-beta.0 through 2.2.0-rc.1 contain a bug in the CRI Attach implementation where a user can exhaust memory on the host due to goroutine leaks. This issue is fixed in versions 1.7.29, 2.0.7, 2.1.5 and 2.2.0. To workaround this vulnerability, users can set up an admission controller to control accesses to pods/attach resources.",
+                "markdown": "**Vulnerability CVE-2025-64329**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|github.com/containerd/containerd|1.7.29|[CVE-2025-64329](https://avd.aquasec.com/nvd/cve-2025-64329)|\n\ncontainerd is an open-source container runtime. Versions 1.7.28 and below, 2.0.0-beta.0 through 2.0.6, 2.1.0-beta.0 through 2.1.4, and 2.2.0-beta.0 through 2.2.0-rc.1 contain a bug in the CRI Attach implementation where a user can exhaust memory on the host due to goroutine leaks. This issue is fixed in versions 1.7.29, 2.0.7, 2.1.5 and 2.2.0. To workaround this vulnerability, users can set up an admission controller to control accesses to pods/attach resources."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-7ww5-4wqc-m92c",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "containerd allows RAPL to be accessible to a container"
+              },
+              "fullDescription": {
+                "text": "# /sys/devices/virtual/powercap accessible by default to containers\n\nIntel's RAPL (Running Average Power Limit) feature, introduced by the Sandy Bridge microarchitecture, provides software insights into hardware energy consumption. To facilitate this, Intel introduced the powercap framework in Linux kernel 3.13, which reads values via relevant MSRs (model specific registers) and provides unprivileged userspace access via `sysfs`. As RAPL is an interface to access a hardware feature, it is only available when running on bare metal with the module compiled into the kernel.\n\nBy 2019, it was realized that in some cases unprivileged access to RAPL readings could be exploited as a power-based side-channel against security features including AES-NI (potentially inside a SGX enclave) and KASLR (kernel address space layout randomization). Also known as the [PLATYPUS attack](https://platypusattack.com/), Intel assigned [CVE-2020-8694](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8694) and [CVE-2020-8695](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8695), and AMD assigned [CVE-2020-12912](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-12912).\n\nSeveral mitigations were applied; Intel reduced the sampling resolution via a microcode update, and the Linux kernel [prevents access by non-root users](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=949dd0104c496fa7c14991a23c03c62e44637e71) since 5.10. However, this kernel-based mitigation does not apply to many container-based scenarios:\n* Unless using user namespaces, root inside a container has the same level of privilege as root outside the container, but with a slightly more narrow view of the system\n* `sysfs` is mounted inside containers read-only; however only read access is needed to carry out this attack on an unpatched CPU\n\nWhile this is not a direct vulnerability in container runtimes, defense in depth and safe defaults are valuable and preferred, especially as this poses a risk to multi-tenant container environments. This is provided by masking `/sys/devices/virtual/powercap` in the default mount configuration, and adding an additional set of rules to deny it in the default AppArmor profile.\n\nWhile `sysfs` is not the only way to read from the RAPL subsystem, other ways of accessing it require additional capabilities such as `CAP_SYS_RAWIO` which is not available to containers by default, or `perf` paranoia level less than 1, which is a non-default kernel tunable.\n\n## References\n\n* https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8694\n* https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8695\n* https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-12912\n* https://platypusattack.com/\n* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=949dd0104c496fa7c14991a23c03c62e44637e71\n* https://web.eece.maine.edu/~vweaver/projects/rapl/"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-7ww5-4wqc-m92c",
+              "help": {
+                "text": "Vulnerability GHSA-7ww5-4wqc-m92c\nSeverity: MEDIUM\nPackage: github.com/containerd/containerd\nFixed Version: 1.6.26, 1.7.11\nLink: [GHSA-7ww5-4wqc-m92c](https://github.com/advisories/GHSA-7ww5-4wqc-m92c)\n# /sys/devices/virtual/powercap accessible by default to containers\n\nIntel's RAPL (Running Average Power Limit) feature, introduced by the Sandy Bridge microarchitecture, provides software insights into hardware energy consumption. To facilitate this, Intel introduced the powercap framework in Linux kernel 3.13, which reads values via relevant MSRs (model specific registers) and provides unprivileged userspace access via `sysfs`. As RAPL is an interface to access a hardware feature, it is only available when running on bare metal with the module compiled into the kernel.\n\nBy 2019, it was realized that in some cases unprivileged access to RAPL readings could be exploited as a power-based side-channel against security features including AES-NI (potentially inside a SGX enclave) and KASLR (kernel address space layout randomization). Also known as the [PLATYPUS attack](https://platypusattack.com/), Intel assigned [CVE-2020-8694](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8694) and [CVE-2020-8695](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8695), and AMD assigned [CVE-2020-12912](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-12912).\n\nSeveral mitigations were applied; Intel reduced the sampling resolution via a microcode update, and the Linux kernel [prevents access by non-root users](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=949dd0104c496fa7c14991a23c03c62e44637e71) since 5.10. However, this kernel-based mitigation does not apply to many container-based scenarios:\n* Unless using user namespaces, root inside a container has the same level of privilege as root outside the container, but with a slightly more narrow view of the system\n* `sysfs` is mounted inside containers read-only; however only read access is needed to carry out this attack on an unpatched CPU\n\nWhile this is not a direct vulnerability in container runtimes, defense in depth and safe defaults are valuable and preferred, especially as this poses a risk to multi-tenant container environments. This is provided by masking `/sys/devices/virtual/powercap` in the default mount configuration, and adding an additional set of rules to deny it in the default AppArmor profile.\n\nWhile `sysfs` is not the only way to read from the RAPL subsystem, other ways of accessing it require additional capabilities such as `CAP_SYS_RAWIO` which is not available to containers by default, or `perf` paranoia level less than 1, which is a non-default kernel tunable.\n\n## References\n\n* https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8694\n* https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8695\n* https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-12912\n* https://platypusattack.com/\n* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=949dd0104c496fa7c14991a23c03c62e44637e71\n* https://web.eece.maine.edu/~vweaver/projects/rapl/",
+                "markdown": "**Vulnerability GHSA-7ww5-4wqc-m92c**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|github.com/containerd/containerd|1.6.26, 1.7.11|[GHSA-7ww5-4wqc-m92c](https://github.com/advisories/GHSA-7ww5-4wqc-m92c)|\n\n# /sys/devices/virtual/powercap accessible by default to containers\n\nIntel's RAPL (Running Average Power Limit) feature, introduced by the Sandy Bridge microarchitecture, provides software insights into hardware energy consumption. To facilitate this, Intel introduced the powercap framework in Linux kernel 3.13, which reads values via relevant MSRs (model specific registers) and provides unprivileged userspace access via `sysfs`. As RAPL is an interface to access a hardware feature, it is only available when running on bare metal with the module compiled into the kernel.\n\nBy 2019, it was realized that in some cases unprivileged access to RAPL readings could be exploited as a power-based side-channel against security features including AES-NI (potentially inside a SGX enclave) and KASLR (kernel address space layout randomization). Also known as the [PLATYPUS attack](https://platypusattack.com/), Intel assigned [CVE-2020-8694](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8694) and [CVE-2020-8695](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8695), and AMD assigned [CVE-2020-12912](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-12912).\n\nSeveral mitigations were applied; Intel reduced the sampling resolution via a microcode update, and the Linux kernel [prevents access by non-root users](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=949dd0104c496fa7c14991a23c03c62e44637e71) since 5.10. However, this kernel-based mitigation does not apply to many container-based scenarios:\n* Unless using user namespaces, root inside a container has the same level of privilege as root outside the container, but with a slightly more narrow view of the system\n* `sysfs` is mounted inside containers read-only; however only read access is needed to carry out this attack on an unpatched CPU\n\nWhile this is not a direct vulnerability in container runtimes, defense in depth and safe defaults are valuable and preferred, especially as this poses a risk to multi-tenant container environments. This is provided by masking `/sys/devices/virtual/powercap` in the default mount configuration, and adding an additional set of rules to deny it in the default AppArmor profile.\n\nWhile `sysfs` is not the only way to read from the RAPL subsystem, other ways of accessing it require additional capabilities such as `CAP_SYS_RAWIO` which is not available to containers by default, or `perf` paranoia level less than 1, which is a non-default kernel tunable.\n\n## References\n\n* https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8694\n* https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8695\n* https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-12912\n* https://platypusattack.com/\n* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=949dd0104c496fa7c14991a23c03c62e44637e71\n* https://web.eece.maine.edu/~vweaver/projects/rapl/"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-65637",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "github.com/sirupsen/logrus: github.com/sirupsen/logrus: Denial-of-Service due to large single-line payload"
+              },
+              "fullDescription": {
+                "text": "A denial-of-service vulnerability exists in github.com/sirupsen/logrus when using Entry.Writer() to log a single-line payload larger than 64KB without newline characters. Due to limitations in the internal bufio.Scanner, the read fails with \"token too long\" and the writer pipe is closed, leaving Writer() unusable and causing application unavailability (DoS). This affects versions \u003c 1.8.3, 1.9.0, and 1.9.2. The issue is fixed in 1.8.3, 1.9.1, and 1.9.3+, where the input is chunked and the writer continues to function even if an error is logged."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-65637",
+              "help": {
+                "text": "Vulnerability CVE-2025-65637\nSeverity: HIGH\nPackage: github.com/sirupsen/logrus\nFixed Version: 1.8.3, 1.9.1, 1.9.3\nLink: [CVE-2025-65637](https://avd.aquasec.com/nvd/cve-2025-65637)\nA denial-of-service vulnerability exists in github.com/sirupsen/logrus when using Entry.Writer() to log a single-line payload larger than 64KB without newline characters. Due to limitations in the internal bufio.Scanner, the read fails with \"token too long\" and the writer pipe is closed, leaving Writer() unusable and causing application unavailability (DoS). This affects versions \u003c 1.8.3, 1.9.0, and 1.9.2. The issue is fixed in 1.8.3, 1.9.1, and 1.9.3+, where the input is chunked and the writer continues to function even if an error is logged.",
+                "markdown": "**Vulnerability CVE-2025-65637**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|github.com/sirupsen/logrus|1.8.3, 1.9.1, 1.9.3|[CVE-2025-65637](https://avd.aquasec.com/nvd/cve-2025-65637)|\n\nA denial-of-service vulnerability exists in github.com/sirupsen/logrus when using Entry.Writer() to log a single-line payload larger than 64KB without newline characters. Due to limitations in the internal bufio.Scanner, the read fails with \"token too long\" and the writer pipe is closed, leaving Writer() unusable and causing application unavailability (DoS). This affects versions \u003c 1.8.3, 1.9.0, and 1.9.2. The issue is fixed in 1.8.3, 1.9.1, and 1.9.3+, where the input is chunked and the writer continues to function even if an error is logged."
+              },
+              "properties": {
+                "cvssv40_baseScore": 8.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-22869",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/crypto/ssh: Denial of Service in the Key Exchange of golang.org/x/crypto/ssh"
+              },
+              "fullDescription": {
+                "text": "SSH servers which implement file transfer protocols are vulnerable to a denial of service attack from clients which complete the key exchange slowly, or not at all, causing pending content to be read into memory, but never transmitted."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-22869",
+              "help": {
+                "text": "Vulnerability CVE-2025-22869\nSeverity: HIGH\nPackage: golang.org/x/crypto\nFixed Version: 0.35.0\nLink: [CVE-2025-22869](https://avd.aquasec.com/nvd/cve-2025-22869)\nSSH servers which implement file transfer protocols are vulnerable to a denial of service attack from clients which complete the key exchange slowly, or not at all, causing pending content to be read into memory, but never transmitted.",
+                "markdown": "**Vulnerability CVE-2025-22869**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/crypto|0.35.0|[CVE-2025-22869](https://avd.aquasec.com/nvd/cve-2025-22869)|\n\nSSH servers which implement file transfer protocols are vulnerable to a denial of service attack from clients which complete the key exchange slowly, or not at all, causing pending content to be read into memory, but never transmitted."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-47913",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/crypto/ssh/agent: golang.org/x/crypto/ssh/agent: SSH client panic due to unexpected SSH_AGENT_SUCCESS"
+              },
+              "fullDescription": {
+                "text": "SSH clients receiving SSH_AGENT_SUCCESS when expecting a typed response will panic and cause early termination of the client process."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-47913",
+              "help": {
+                "text": "Vulnerability CVE-2025-47913\nSeverity: HIGH\nPackage: golang.org/x/crypto\nFixed Version: 0.43.0\nLink: [CVE-2025-47913](https://avd.aquasec.com/nvd/cve-2025-47913)\nSSH clients receiving SSH_AGENT_SUCCESS when expecting a typed response will panic and cause early termination of the client process.",
+                "markdown": "**Vulnerability CVE-2025-47913**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/crypto|0.43.0|[CVE-2025-47913](https://avd.aquasec.com/nvd/cve-2025-47913)|\n\nSSH clients receiving SSH_AGENT_SUCCESS when expecting a typed response will panic and cause early termination of the client process."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39828",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/crypto/ssh: golang.org/x/crypto/ssh: Unauthorized command execution via discarded SSH permissions"
+              },
+              "fullDescription": {
+                "text": "When an SSH server authentication callback returned PartialSuccessError with non-nil Permissions, those permissions were silently discarded, potentially dropping certificate restrictions such as force-command after a second factor succeeded. Returning non-nil Permissions with PartialSuccessError now results in a connection error."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39828",
+              "help": {
+                "text": "Vulnerability CVE-2026-39828\nSeverity: HIGH\nPackage: golang.org/x/crypto\nFixed Version: 0.52.0\nLink: [CVE-2026-39828](https://avd.aquasec.com/nvd/cve-2026-39828)\nWhen an SSH server authentication callback returned PartialSuccessError with non-nil Permissions, those permissions were silently discarded, potentially dropping certificate restrictions such as force-command after a second factor succeeded. Returning non-nil Permissions with PartialSuccessError now results in a connection error.",
+                "markdown": "**Vulnerability CVE-2026-39828**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/crypto|0.52.0|[CVE-2026-39828](https://avd.aquasec.com/nvd/cve-2026-39828)|\n\nWhen an SSH server authentication callback returned PartialSuccessError with non-nil Permissions, those permissions were silently discarded, potentially dropping certificate restrictions such as force-command after a second factor succeeded. Returning non-nil Permissions with PartialSuccessError now results in a connection error."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39835",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via crafted SSH certificate"
+              },
+              "fullDescription": {
+                "text": "SSH servers which use CertChecker as a public key callback without setting IsUserAuthority or IsHostAuthority could be caused to panic by a client presenting a certificate. CertChecker now returns an error instead of panicking when these callbacks are nil."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39835",
+              "help": {
+                "text": "Vulnerability CVE-2026-39835\nSeverity: HIGH\nPackage: golang.org/x/crypto\nFixed Version: 0.52.0\nLink: [CVE-2026-39835](https://avd.aquasec.com/nvd/cve-2026-39835)\nSSH servers which use CertChecker as a public key callback without setting IsUserAuthority or IsHostAuthority could be caused to panic by a client presenting a certificate. CertChecker now returns an error instead of panicking when these callbacks are nil.",
+                "markdown": "**Vulnerability CVE-2026-39835**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/crypto|0.52.0|[CVE-2026-39835](https://avd.aquasec.com/nvd/cve-2026-39835)|\n\nSSH servers which use CertChecker as a public key callback without setting IsUserAuthority or IsHostAuthority could be caused to panic by a client presenting a certificate. CertChecker now returns an error instead of panicking when these callbacks are nil."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-47914",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/crypto/ssh/agent: SSH Agent servers: Denial of Service due to malformed messages"
+              },
+              "fullDescription": {
+                "text": "SSH Agent servers do not validate the size of messages when processing new identity requests, which may cause the program to panic if the message is malformed due to an out of bounds read."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-47914",
+              "help": {
+                "text": "Vulnerability CVE-2025-47914\nSeverity: MEDIUM\nPackage: golang.org/x/crypto\nFixed Version: 0.45.0\nLink: [CVE-2025-47914](https://avd.aquasec.com/nvd/cve-2025-47914)\nSSH Agent servers do not validate the size of messages when processing new identity requests, which may cause the program to panic if the message is malformed due to an out of bounds read.",
+                "markdown": "**Vulnerability CVE-2025-47914**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/crypto|0.45.0|[CVE-2025-47914](https://avd.aquasec.com/nvd/cve-2025-47914)|\n\nSSH Agent servers do not validate the size of messages when processing new identity requests, which may cause the program to panic if the message is malformed due to an out of bounds read."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-58181",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/crypto/ssh: golang.org/x/crypto/ssh: Denial of Service via unbounded memory consumption in GSSAPI authentication"
+              },
+              "fullDescription": {
+                "text": "SSH servers parsing GSSAPI authentication requests do not validate the number of mechanisms specified in the request, allowing an attacker to cause unbounded memory consumption."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-58181",
+              "help": {
+                "text": "Vulnerability CVE-2025-58181\nSeverity: MEDIUM\nPackage: golang.org/x/crypto\nFixed Version: 0.45.0\nLink: [CVE-2025-58181](https://avd.aquasec.com/nvd/cve-2025-58181)\nSSH servers parsing GSSAPI authentication requests do not validate the number of mechanisms specified in the request, allowing an attacker to cause unbounded memory consumption.",
+                "markdown": "**Vulnerability CVE-2025-58181**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/crypto|0.45.0|[CVE-2025-58181](https://avd.aquasec.com/nvd/cve-2025-58181)|\n\nSSH servers parsing GSSAPI authentication requests do not validate the number of mechanisms specified in the request, allowing an attacker to cause unbounded memory consumption."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39827",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via repeated rejected channel openings"
+              },
+              "fullDescription": {
+                "text": "An authenticated SSH client that repeatedly opened channels which were rejected by the server caused unbounded memory growth, eventually crashing the server process and affecting all connected users. Rejected channels are now properly removed from the connection's internal state and released for garbage collection."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39827",
+              "help": {
+                "text": "Vulnerability CVE-2026-39827\nSeverity: MEDIUM\nPackage: golang.org/x/crypto\nFixed Version: 0.52.0\nLink: [CVE-2026-39827](https://avd.aquasec.com/nvd/cve-2026-39827)\nAn authenticated SSH client that repeatedly opened channels which were rejected by the server caused unbounded memory growth, eventually crashing the server process and affecting all connected users. Rejected channels are now properly removed from the connection's internal state and released for garbage collection.",
+                "markdown": "**Vulnerability CVE-2026-39827**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/crypto|0.52.0|[CVE-2026-39827](https://avd.aquasec.com/nvd/cve-2026-39827)|\n\nAn authenticated SSH client that repeatedly opened channels which were rejected by the server caused unbounded memory growth, eventually crashing the server process and affecting all connected users. Rejected channels are now properly removed from the connection's internal state and released for garbage collection."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-46598",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/crypto/ssh/agent: golang: golang.org/x/crypto/ssh/agent: Denial of Service via malformed input"
+              },
+              "fullDescription": {
+                "text": "For certain crafted inputs, a 'ed25519.PrivateKey' was created by casting malformed wire bytes, leading to a panic when used."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-46598",
+              "help": {
+                "text": "Vulnerability CVE-2026-46598\nSeverity: MEDIUM\nPackage: golang.org/x/crypto\nFixed Version: 0.52.0\nLink: [CVE-2026-46598](https://avd.aquasec.com/nvd/cve-2026-46598)\nFor certain crafted inputs, a 'ed25519.PrivateKey' was created by casting malformed wire bytes, leading to a panic when used.",
+                "markdown": "**Vulnerability CVE-2026-46598**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/crypto|0.52.0|[CVE-2026-46598](https://avd.aquasec.com/nvd/cve-2026-46598)|\n\nFor certain crafted inputs, a 'ed25519.PrivateKey' was created by casting malformed wire bytes, leading to a panic when used."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GO-2026-5932",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues"
+              },
+              "fullDescription": {
+                "text": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "help": {
+                "text": "Vulnerability GO-2026-5932\nSeverity: UNKNOWN\nPackage: golang.org/x/crypto\nFixed Version: \nLink: [GO-2026-5932]()\nThe golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+                "markdown": "**Vulnerability GO-2026-5932**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/crypto||[GO-2026-5932]()|\n\nThe golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-45338",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: Non-linear parsing of case-insensitive content in golang.org/x/net/html"
+              },
+              "fullDescription": {
+                "text": "An attacker can craft an input to the Parse functions that would be processed non-linearly with respect to its length, resulting in extremely slow parsing. This could cause a denial of service."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-45338",
+              "help": {
+                "text": "Vulnerability CVE-2024-45338\nSeverity: HIGH\nPackage: golang.org/x/net\nFixed Version: 0.33.0\nLink: [CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)\nAn attacker can craft an input to the Parse functions that would be processed non-linearly with respect to its length, resulting in extremely slow parsing. This could cause a denial of service.",
+                "markdown": "**Vulnerability CVE-2024-45338**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/net|0.33.0|[CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)|\n\nAn attacker can craft an input to the Parse functions that would be processed non-linearly with respect to its length, resulting in extremely slow parsing. This could cause a denial of service."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-25681",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: golang.org/x/net/html: Arbitrary code execution via Cross-Site Scripting"
+              },
+              "fullDescription": {
+                "text": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-25681",
+              "help": {
+                "text": "Vulnerability CVE-2026-25681\nSeverity: HIGH\nPackage: golang.org/x/net\nFixed Version: 0.55.0\nLink: [CVE-2026-25681](https://avd.aquasec.com/nvd/cve-2026-25681)\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering.",
+                "markdown": "**Vulnerability CVE-2026-25681**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/net|0.55.0|[CVE-2026-25681](https://avd.aquasec.com/nvd/cve-2026-25681)|\n\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-27136",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: golang: golang.org/x/net/html: Cross-Site Scripting via HTML parsing bypass"
+              },
+              "fullDescription": {
+                "text": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-27136",
+              "help": {
+                "text": "Vulnerability CVE-2026-27136\nSeverity: HIGH\nPackage: golang.org/x/net\nFixed Version: 0.55.0\nLink: [CVE-2026-27136](https://avd.aquasec.com/nvd/cve-2026-27136)\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering.",
+                "markdown": "**Vulnerability CVE-2026-27136**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/net|0.55.0|[CVE-2026-27136](https://avd.aquasec.com/nvd/cve-2026-27136)|\n\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-22870",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/proxy: golang.org/x/net/http/httpproxy: HTTP Proxy bypass using IPv6 Zone IDs in golang.org/x/net"
+              },
+              "fullDescription": {
+                "text": "Matching of hosts against proxy patterns can improperly treat an IPv6 zone ID as a hostname component. For example, when the NO_PROXY environment variable is set to \"*.example.com\", a request to \"[::1%25.example.com]:80` will incorrectly match and not be proxied."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-22870",
+              "help": {
+                "text": "Vulnerability CVE-2025-22870\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.36.0\nLink: [CVE-2025-22870](https://avd.aquasec.com/nvd/cve-2025-22870)\nMatching of hosts against proxy patterns can improperly treat an IPv6 zone ID as a hostname component. For example, when the NO_PROXY environment variable is set to \"*.example.com\", a request to \"[::1%25.example.com]:80` will incorrectly match and not be proxied.",
+                "markdown": "**Vulnerability CVE-2025-22870**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.36.0|[CVE-2025-22870](https://avd.aquasec.com/nvd/cve-2025-22870)|\n\nMatching of hosts against proxy patterns can improperly treat an IPv6 zone ID as a hostname component. For example, when the NO_PROXY environment variable is set to \"*.example.com\", a request to \"[::1%25.example.com]:80` will incorrectly match and not be proxied."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-22872",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: Incorrect Neutralization of Input During Web Page Generation in x/net in golang.org/x/net"
+              },
+              "fullDescription": {
+                "text": "The tokenizer incorrectly interprets tags with unquoted attribute values that end with a solidus character (/) as self-closing. When directly using Tokenizer, this can result in such tags incorrectly being marked as self-closing, and when using the Parse functions, this can result in content following such tags as being placed in the wrong scope during DOM construction, but only when tags are in foreign content (e.g. \u003cmath\u003e, \u003csvg\u003e, etc contexts)."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-22872",
+              "help": {
+                "text": "Vulnerability CVE-2025-22872\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.38.0\nLink: [CVE-2025-22872](https://avd.aquasec.com/nvd/cve-2025-22872)\nThe tokenizer incorrectly interprets tags with unquoted attribute values that end with a solidus character (/) as self-closing. When directly using Tokenizer, this can result in such tags incorrectly being marked as self-closing, and when using the Parse functions, this can result in content following such tags as being placed in the wrong scope during DOM construction, but only when tags are in foreign content (e.g. \u003cmath\u003e, \u003csvg\u003e, etc contexts).",
+                "markdown": "**Vulnerability CVE-2025-22872**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.38.0|[CVE-2025-22872](https://avd.aquasec.com/nvd/cve-2025-22872)|\n\nThe tokenizer incorrectly interprets tags with unquoted attribute values that end with a solidus character (/) as self-closing. When directly using Tokenizer, this can result in such tags incorrectly being marked as self-closing, and when using the Parse functions, this can result in content following such tags as being placed in the wrong scope during DOM construction, but only when tags are in foreign content (e.g. \u003cmath\u003e, \u003csvg\u003e, etc contexts)."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-47911",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: Quadratic parsing complexity in golang.org/x/net/html"
+              },
+              "fullDescription": {
+                "text": "The html.Parse function in golang.org/x/net/html has quadratic parsing complexity when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-47911",
+              "help": {
+                "text": "Vulnerability CVE-2025-47911\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.45.0\nLink: [CVE-2025-47911](https://avd.aquasec.com/nvd/cve-2025-47911)\nThe html.Parse function in golang.org/x/net/html has quadratic parsing complexity when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content.",
+                "markdown": "**Vulnerability CVE-2025-47911**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.45.0|[CVE-2025-47911](https://avd.aquasec.com/nvd/cve-2025-47911)|\n\nThe html.Parse function in golang.org/x/net/html has quadratic parsing complexity when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-58190",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: Infinite parsing loop in golang.org/x/net"
+              },
+              "fullDescription": {
+                "text": "The html.Parse function in golang.org/x/net/html has an infinite parsing loop when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-58190",
+              "help": {
+                "text": "Vulnerability CVE-2025-58190\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.45.0\nLink: [CVE-2025-58190](https://avd.aquasec.com/nvd/cve-2025-58190)\nThe html.Parse function in golang.org/x/net/html has an infinite parsing loop when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content.",
+                "markdown": "**Vulnerability CVE-2025-58190**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.45.0|[CVE-2025-58190](https://avd.aquasec.com/nvd/cve-2025-58190)|\n\nThe html.Parse function in golang.org/x/net/html has an infinite parsing loop when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-25680",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: golang.org/x/net/html: Denial of Service due to excessive HTML parsing"
+              },
+              "fullDescription": {
+                "text": "Parsing arbitrary HTML can consume excessive CPU time, possibly leading to denial of service."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-25680",
+              "help": {
+                "text": "Vulnerability CVE-2026-25680\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.55.0\nLink: [CVE-2026-25680](https://avd.aquasec.com/nvd/cve-2026-25680)\nParsing arbitrary HTML can consume excessive CPU time, possibly leading to denial of service.",
+                "markdown": "**Vulnerability CVE-2026-25680**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.55.0|[CVE-2026-25680](https://avd.aquasec.com/nvd/cve-2026-25680)|\n\nParsing arbitrary HTML can consume excessive CPU time, possibly leading to denial of service."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42502",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: golang: golang.org/x/net/html: Cross-Site Scripting via unexpected HTML tree rendering"
+              },
+              "fullDescription": {
+                "text": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42502",
+              "help": {
+                "text": "Vulnerability CVE-2026-42502\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.55.0\nLink: [CVE-2026-42502](https://avd.aquasec.com/nvd/cve-2026-42502)\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering.",
+                "markdown": "**Vulnerability CVE-2026-42502**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.55.0|[CVE-2026-42502](https://avd.aquasec.com/nvd/cve-2026-42502)|\n\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-22868",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/oauth2/jws: Unexpected memory consumption during token parsing in golang.org/x/oauth2/jws"
+              },
+              "fullDescription": {
+                "text": "An attacker can pass a malicious malformed token which causes unexpected memory to be consumed during parsing."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-22868",
+              "help": {
+                "text": "Vulnerability CVE-2025-22868\nSeverity: HIGH\nPackage: golang.org/x/oauth2\nFixed Version: 0.27.0\nLink: [CVE-2025-22868](https://avd.aquasec.com/nvd/cve-2025-22868)\nAn attacker can pass a malicious malformed token which causes unexpected memory to be consumed during parsing.",
+                "markdown": "**Vulnerability CVE-2025-22868**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/oauth2|0.27.0|[CVE-2025-22868](https://avd.aquasec.com/nvd/cve-2025-22868)|\n\nAn attacker can pass a malicious malformed token which causes unexpected memory to be consumed during parsing."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39824",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows"
+              },
+              "fullDescription": {
+                "text": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39824",
+              "help": {
+                "text": "Vulnerability CVE-2026-39824\nSeverity: UNKNOWN\nPackage: golang.org/x/sys\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)\nNewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error.",
+                "markdown": "**Vulnerability CVE-2026-39824**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/sys|0.44.0|[CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)|\n\nNewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39822",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symli ..."
+              },
+              "fullDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39822",
+              "help": {
+                "text": "Vulnerability CVE-2026-39822\nSeverity: UNKNOWN\nPackage: stdlib\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+                "markdown": "**Vulnerability CVE-2026-39822**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|stdlib|1.25.12, 1.26.5, 1.27.0-rc.2|[CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)|\n\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2024-25621",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/containerd/containerd\nInstalled Version: v1.5.18\nVulnerability CVE-2024-25621\nSeverity: HIGH\nFixed Version: 1.7.29\nLink: [CVE-2024-25621](https://avd.aquasec.com/nvd/cve-2024-25621)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: github.com/containerd/containerd@v1.5.18"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-40635",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/containerd/containerd\nInstalled Version: v1.5.18\nVulnerability CVE-2024-40635\nSeverity: MEDIUM\nFixed Version: 1.7.27, 1.6.38\nLink: [CVE-2024-40635](https://avd.aquasec.com/nvd/cve-2024-40635)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: github.com/containerd/containerd@v1.5.18"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-64329",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/containerd/containerd\nInstalled Version: v1.5.18\nVulnerability CVE-2025-64329\nSeverity: MEDIUM\nFixed Version: 1.7.29\nLink: [CVE-2025-64329](https://avd.aquasec.com/nvd/cve-2025-64329)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: github.com/containerd/containerd@v1.5.18"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-7ww5-4wqc-m92c",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/containerd/containerd\nInstalled Version: v1.5.18\nVulnerability GHSA-7ww5-4wqc-m92c\nSeverity: MEDIUM\nFixed Version: 1.6.26, 1.7.11\nLink: [GHSA-7ww5-4wqc-m92c](https://github.com/advisories/GHSA-7ww5-4wqc-m92c)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: github.com/containerd/containerd@v1.5.18"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-65637",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/sirupsen/logrus\nInstalled Version: v1.8.1\nVulnerability CVE-2025-65637\nSeverity: HIGH\nFixed Version: 1.8.3, 1.9.1, 1.9.3\nLink: [CVE-2025-65637](https://avd.aquasec.com/nvd/cve-2025-65637)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: github.com/sirupsen/logrus@v1.8.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22869",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2025-22869\nSeverity: HIGH\nFixed Version: 0.35.0\nLink: [CVE-2025-22869](https://avd.aquasec.com/nvd/cve-2025-22869)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-47913",
+          "ruleIndex": 6,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2025-47913\nSeverity: HIGH\nFixed Version: 0.43.0\nLink: [CVE-2025-47913](https://avd.aquasec.com/nvd/cve-2025-47913)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39828",
+          "ruleIndex": 7,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2026-39828\nSeverity: HIGH\nFixed Version: 0.52.0\nLink: [CVE-2026-39828](https://avd.aquasec.com/nvd/cve-2026-39828)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39835",
+          "ruleIndex": 8,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2026-39835\nSeverity: HIGH\nFixed Version: 0.52.0\nLink: [CVE-2026-39835](https://avd.aquasec.com/nvd/cve-2026-39835)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-47914",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2025-47914\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-47914](https://avd.aquasec.com/nvd/cve-2025-47914)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-58181",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2025-58181\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-58181](https://avd.aquasec.com/nvd/cve-2025-58181)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39827",
+          "ruleIndex": 11,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2026-39827\nSeverity: MEDIUM\nFixed Version: 0.52.0\nLink: [CVE-2026-39827](https://avd.aquasec.com/nvd/cve-2026-39827)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-46598",
+          "ruleIndex": 12,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2026-46598\nSeverity: MEDIUM\nFixed Version: 0.52.0\nLink: [CVE-2026-46598](https://avd.aquasec.com/nvd/cve-2026-46598)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 13,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-45338",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2024-45338\nSeverity: HIGH\nFixed Version: 0.33.0\nLink: [CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25681",
+          "ruleIndex": 15,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2026-25681\nSeverity: HIGH\nFixed Version: 0.55.0\nLink: [CVE-2026-25681](https://avd.aquasec.com/nvd/cve-2026-25681)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27136",
+          "ruleIndex": 16,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2026-27136\nSeverity: HIGH\nFixed Version: 0.55.0\nLink: [CVE-2026-27136](https://avd.aquasec.com/nvd/cve-2026-27136)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22870",
+          "ruleIndex": 17,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2025-22870\nSeverity: MEDIUM\nFixed Version: 0.36.0\nLink: [CVE-2025-22870](https://avd.aquasec.com/nvd/cve-2025-22870)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22872",
+          "ruleIndex": 18,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2025-22872\nSeverity: MEDIUM\nFixed Version: 0.38.0\nLink: [CVE-2025-22872](https://avd.aquasec.com/nvd/cve-2025-22872)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-47911",
+          "ruleIndex": 19,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2025-47911\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-47911](https://avd.aquasec.com/nvd/cve-2025-47911)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-58190",
+          "ruleIndex": 20,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2025-58190\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-58190](https://avd.aquasec.com/nvd/cve-2025-58190)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25680",
+          "ruleIndex": 21,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2026-25680\nSeverity: MEDIUM\nFixed Version: 0.55.0\nLink: [CVE-2026-25680](https://avd.aquasec.com/nvd/cve-2026-25680)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42502",
+          "ruleIndex": 22,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2026-42502\nSeverity: MEDIUM\nFixed Version: 0.55.0\nLink: [CVE-2026-42502](https://avd.aquasec.com/nvd/cve-2026-42502)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22868",
+          "ruleIndex": 23,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/oauth2\nInstalled Version: v0.18.0\nVulnerability CVE-2025-22868\nSeverity: HIGH\nFixed Version: 0.27.0\nLink: [CVE-2025-22868](https://avd.aquasec.com/nvd/cve-2025-22868)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/oauth2@v0.18.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39824",
+          "ruleIndex": 24,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/sys\nInstalled Version: v0.28.0\nVulnerability CVE-2026-39824\nSeverity: UNKNOWN\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: golang.org/x/sys@v0.28.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 25,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/heartbeat: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-25621",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/containerd/containerd\nInstalled Version: v1.5.18\nVulnerability CVE-2024-25621\nSeverity: HIGH\nFixed Version: 1.7.29\nLink: [CVE-2024-25621](https://avd.aquasec.com/nvd/cve-2024-25621)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: github.com/containerd/containerd@v1.5.18"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-40635",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/containerd/containerd\nInstalled Version: v1.5.18\nVulnerability CVE-2024-40635\nSeverity: MEDIUM\nFixed Version: 1.7.27, 1.6.38\nLink: [CVE-2024-40635](https://avd.aquasec.com/nvd/cve-2024-40635)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: github.com/containerd/containerd@v1.5.18"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-64329",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/containerd/containerd\nInstalled Version: v1.5.18\nVulnerability CVE-2025-64329\nSeverity: MEDIUM\nFixed Version: 1.7.29\nLink: [CVE-2025-64329](https://avd.aquasec.com/nvd/cve-2025-64329)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: github.com/containerd/containerd@v1.5.18"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-7ww5-4wqc-m92c",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/containerd/containerd\nInstalled Version: v1.5.18\nVulnerability GHSA-7ww5-4wqc-m92c\nSeverity: MEDIUM\nFixed Version: 1.6.26, 1.7.11\nLink: [GHSA-7ww5-4wqc-m92c](https://github.com/advisories/GHSA-7ww5-4wqc-m92c)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: github.com/containerd/containerd@v1.5.18"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-65637",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/sirupsen/logrus\nInstalled Version: v1.8.1\nVulnerability CVE-2025-65637\nSeverity: HIGH\nFixed Version: 1.8.3, 1.9.1, 1.9.3\nLink: [CVE-2025-65637](https://avd.aquasec.com/nvd/cve-2025-65637)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: github.com/sirupsen/logrus@v1.8.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22869",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2025-22869\nSeverity: HIGH\nFixed Version: 0.35.0\nLink: [CVE-2025-22869](https://avd.aquasec.com/nvd/cve-2025-22869)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-47913",
+          "ruleIndex": 6,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2025-47913\nSeverity: HIGH\nFixed Version: 0.43.0\nLink: [CVE-2025-47913](https://avd.aquasec.com/nvd/cve-2025-47913)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39828",
+          "ruleIndex": 7,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2026-39828\nSeverity: HIGH\nFixed Version: 0.52.0\nLink: [CVE-2026-39828](https://avd.aquasec.com/nvd/cve-2026-39828)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39835",
+          "ruleIndex": 8,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2026-39835\nSeverity: HIGH\nFixed Version: 0.52.0\nLink: [CVE-2026-39835](https://avd.aquasec.com/nvd/cve-2026-39835)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-47914",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2025-47914\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-47914](https://avd.aquasec.com/nvd/cve-2025-47914)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-58181",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2025-58181\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-58181](https://avd.aquasec.com/nvd/cve-2025-58181)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39827",
+          "ruleIndex": 11,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2026-39827\nSeverity: MEDIUM\nFixed Version: 0.52.0\nLink: [CVE-2026-39827](https://avd.aquasec.com/nvd/cve-2026-39827)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-46598",
+          "ruleIndex": 12,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability CVE-2026-46598\nSeverity: MEDIUM\nFixed Version: 0.52.0\nLink: [CVE-2026-46598](https://avd.aquasec.com/nvd/cve-2026-46598)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 13,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.31.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/crypto@v0.31.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-45338",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2024-45338\nSeverity: HIGH\nFixed Version: 0.33.0\nLink: [CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25681",
+          "ruleIndex": 15,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2026-25681\nSeverity: HIGH\nFixed Version: 0.55.0\nLink: [CVE-2026-25681](https://avd.aquasec.com/nvd/cve-2026-25681)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27136",
+          "ruleIndex": 16,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2026-27136\nSeverity: HIGH\nFixed Version: 0.55.0\nLink: [CVE-2026-27136](https://avd.aquasec.com/nvd/cve-2026-27136)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22870",
+          "ruleIndex": 17,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2025-22870\nSeverity: MEDIUM\nFixed Version: 0.36.0\nLink: [CVE-2025-22870](https://avd.aquasec.com/nvd/cve-2025-22870)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22872",
+          "ruleIndex": 18,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2025-22872\nSeverity: MEDIUM\nFixed Version: 0.38.0\nLink: [CVE-2025-22872](https://avd.aquasec.com/nvd/cve-2025-22872)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-47911",
+          "ruleIndex": 19,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2025-47911\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-47911](https://avd.aquasec.com/nvd/cve-2025-47911)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-58190",
+          "ruleIndex": 20,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2025-58190\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-58190](https://avd.aquasec.com/nvd/cve-2025-58190)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25680",
+          "ruleIndex": 21,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2026-25680\nSeverity: MEDIUM\nFixed Version: 0.55.0\nLink: [CVE-2026-25680](https://avd.aquasec.com/nvd/cve-2026-25680)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42502",
+          "ruleIndex": 22,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.26.0\nVulnerability CVE-2026-42502\nSeverity: MEDIUM\nFixed Version: 0.55.0\nLink: [CVE-2026-42502](https://avd.aquasec.com/nvd/cve-2026-42502)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/net@v0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22868",
+          "ruleIndex": 23,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/oauth2\nInstalled Version: v0.18.0\nVulnerability CVE-2025-22868\nSeverity: HIGH\nFixed Version: 0.27.0\nLink: [CVE-2025-22868](https://avd.aquasec.com/nvd/cve-2025-22868)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/oauth2@v0.18.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39824",
+          "ruleIndex": 24,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/sys\nInstalled Version: v0.28.0\nVulnerability CVE-2026-39824\nSeverity: UNKNOWN\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: golang.org/x/sys@v0.28.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 25,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/p0hrbnhicksmr80pwmwyfxhcm2vnwrlk-heartbeat-7.17.27/bin/heartbeat: stdlib@v1.26.4"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:427193c6284df8fa64a915ac8bc28ebe0d365e95b1ae79d5af0d834f68d55640",
+        "imageName": "ghcr.io/nix-containers/images/heartbeat:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/heartbeat@sha256:40fb2dab4fa12fbb7fc709aea18458f4edcaeded57b7487311a39ae30228565b"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/heartbeat:latest"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-27145",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "crypto/x509: golang: golang crypto/x509: Denial of Service via excessive processing of DNS SAN entries"
+              },
+              "fullDescription": {
+                "text": "(*x509.Certificate).VerifyHostname previously called matchHostnames in a loop over all DNS Subject Alternative Name (SAN) entries. This caused strings.Split(host, \".\") to execute repeatedly on the same input hostname. With a large DNS SAN list, verification costs scaled quadratically based on the number of SAN entries multiplied by the hostname's label count. Because x509.Verify validates hostnames before building the certificate chain, this overhead occurred even for untrusted certificates."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-27145",
+              "help": {
+                "text": "Vulnerability CVE-2026-27145\nSeverity: HIGH\nPackage: stdlib\nFixed Version: 1.25.11, 1.26.4\nLink: [CVE-2026-27145](https://avd.aquasec.com/nvd/cve-2026-27145)\n(*x509.Certificate).VerifyHostname previously called matchHostnames in a loop over all DNS Subject Alternative Name (SAN) entries. This caused strings.Split(host, \".\") to execute repeatedly on the same input hostname. With a large DNS SAN list, verification costs scaled quadratically based on the number of SAN entries multiplied by the hostname's label count. Because x509.Verify validates hostnames before building the certificate chain, this overhead occurred even for untrusted certificates.",
+                "markdown": "**Vulnerability CVE-2026-27145**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|stdlib|1.25.11, 1.26.4|[CVE-2026-27145](https://avd.aquasec.com/nvd/cve-2026-27145)|\n\n(*x509.Certificate).VerifyHostname previously called matchHostnames in a loop over all DNS Subject Alternative Name (SAN) entries. This caused strings.Split(host, \".\") to execute repeatedly on the same input hostname. With a large DNS SAN list, verification costs scaled quadratically based on the number of SAN entries multiplied by the hostname's label count. Because x509.Verify validates hostnames before building the certificate chain, this overhead occurred even for untrusted certificates."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39822",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symli ..."
+              },
+              "fullDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39822",
+              "help": {
+                "text": "Vulnerability CVE-2026-39822\nSeverity: UNKNOWN\nPackage: stdlib\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+                "markdown": "**Vulnerability CVE-2026-39822**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|stdlib|1.25.12, 1.26.5, 1.27.0-rc.2|[CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)|\n\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-27145",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.3\nVulnerability CVE-2026-27145\nSeverity: HIGH\nFixed Version: 1.25.11, 1.26.4\nLink: [CVE-2026-27145](https://avd.aquasec.com/nvd/cve-2026-27145)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/reloader",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/reloader: stdlib@v1.26.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.3\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/reloader",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/reloader: stdlib@v1.26.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27145",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.3\nVulnerability CVE-2026-27145\nSeverity: HIGH\nFixed Version: 1.25.11, 1.26.4\nLink: [CVE-2026-27145](https://avd.aquasec.com/nvd/cve-2026-27145)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7znh12xqxiw1dm6w75vqq66rsl38lv3m-reloader-1.4.17/bin/reloader",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7znh12xqxiw1dm6w75vqq66rsl38lv3m-reloader-1.4.17/bin/reloader: stdlib@v1.26.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.3\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7znh12xqxiw1dm6w75vqq66rsl38lv3m-reloader-1.4.17/bin/reloader",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7znh12xqxiw1dm6w75vqq66rsl38lv3m-reloader-1.4.17/bin/reloader: stdlib@v1.26.3"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:5bf94e861b10d856245b3d147406238f64b03715910faa7dcda5b8d43a1d026f",
+        "imageName": "ghcr.io/nix-containers/images/stakater-reloader-fips:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/stakater-reloader-fips@sha256:228a92b810818baae58357f9b78e0c6944ccd1bb6c4e4fe0474118efe5f0ff2e"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/stakater-reloader-fips:latest"
+        ]
+      }
+    }
+  ]
+}

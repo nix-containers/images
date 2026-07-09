@@ -1,0 +1,483 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-41205",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "mako: Mako: Information disclosure via path traversal vulnerability"
+              },
+              "fullDescription": {
+                "text": "Mako is a template library written in Python. Prior to 1.3.11, TemplateLookup.get_template() is vulnerable to path traversal when a URI starts with // (e.g., //../../../secret.txt). The root cause is an inconsistency between two slash-stripping implementations. Any file readable by the process can be returned as rendered template content when an application passes untrusted input directly to TemplateLookup.get_template(). This vulnerability is fixed in 1.3.11."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41205",
+              "help": {
+                "text": "Vulnerability CVE-2026-41205\nSeverity: HIGH\nPackage: Mako\nFixed Version: 1.3.11\nLink: [CVE-2026-41205](https://avd.aquasec.com/nvd/cve-2026-41205)\nMako is a template library written in Python. Prior to 1.3.11, TemplateLookup.get_template() is vulnerable to path traversal when a URI starts with // (e.g., //../../../secret.txt). The root cause is an inconsistency between two slash-stripping implementations. Any file readable by the process can be returned as rendered template content when an application passes untrusted input directly to TemplateLookup.get_template(). This vulnerability is fixed in 1.3.11.",
+                "markdown": "**Vulnerability CVE-2026-41205**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|Mako|1.3.11|[CVE-2026-41205](https://avd.aquasec.com/nvd/cve-2026-41205)|\n\nMako is a template library written in Python. Prior to 1.3.11, TemplateLookup.get_template() is vulnerable to path traversal when a URI starts with // (e.g., //../../../secret.txt). The root cause is an inconsistency between two slash-stripping implementations. Any file readable by the process can be returned as rendered template content when an application passes untrusted input directly to TemplateLookup.get_template(). This vulnerability is fixed in 1.3.11."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "cvssv40_baseScore": 7.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N/E:P",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44307",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "mako: Mako: Information disclosure via directory traversal"
+              },
+              "fullDescription": {
+                "text": "Mako is a template library written in Python. Prior to 1.3.12, on Windows, a URI using backslash traversal (e.g. \\..\\..\\ secret.txt) bypasses the directory traversal check in Template.__init__ and the posixpath-based normalization in TemplateLookup.get_template(), allowing reads of files outside the configured template directory. This vulnerability is fixed in 1.3.12."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44307",
+              "help": {
+                "text": "Vulnerability CVE-2026-44307\nSeverity: HIGH\nPackage: Mako\nFixed Version: 1.3.12\nLink: [CVE-2026-44307](https://avd.aquasec.com/nvd/cve-2026-44307)\nMako is a template library written in Python. Prior to 1.3.12, on Windows, a URI using backslash traversal (e.g. \\..\\..\\ secret.txt) bypasses the directory traversal check in Template.__init__ and the posixpath-based normalization in TemplateLookup.get_template(), allowing reads of files outside the configured template directory. This vulnerability is fixed in 1.3.12.",
+                "markdown": "**Vulnerability CVE-2026-44307**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|Mako|1.3.12|[CVE-2026-44307](https://avd.aquasec.com/nvd/cve-2026-44307)|\n\nMako is a template library written in Python. Prior to 1.3.12, on Windows, a URI using backslash traversal (e.g. \\..\\..\\ secret.txt) bypasses the directory traversal check in Template.__init__ and the posixpath-based normalization in TemplateLookup.get_template(), allowing reads of files outside the configured template directory. This vulnerability is fixed in 1.3.12."
+              },
+              "properties": {
+                "cvssv40_baseScore": 8.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44889",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "webob: python-webob: WebOb: Open Redirect vulnerability via HTTP Location header normalization"
+              },
+              "fullDescription": {
+                "text": "WebOb provides objects for HTTP requests and responses. Prior to 1.8.10, the normalization of the HTTP Location header during a redirect is vulnerable to an open redirect: WebOb joins the redirect target to the request URI using Python's urljoin, and since Python 3.10 the underlying urlsplit strips ASCII tab, carriage return, and newline characters before parsing, so a redirect target containing such characters can be reinterpreted as a protocol-relative URL whose authority is an attacker-controlled host. This bypasses the CVE-2024-42353 fix that escaped a leading double slash, allowing an attacker who influences the redirect location to send users to an arbitrary external site instead of the intended one. This vulnerability is fixed in 1.8.10."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44889",
+              "help": {
+                "text": "Vulnerability CVE-2026-44889\nSeverity: MEDIUM\nPackage: WebOb\nFixed Version: 1.8.10\nLink: [CVE-2026-44889](https://avd.aquasec.com/nvd/cve-2026-44889)\nWebOb provides objects for HTTP requests and responses. Prior to 1.8.10, the normalization of the HTTP Location header during a redirect is vulnerable to an open redirect: WebOb joins the redirect target to the request URI using Python's urljoin, and since Python 3.10 the underlying urlsplit strips ASCII tab, carriage return, and newline characters before parsing, so a redirect target containing such characters can be reinterpreted as a protocol-relative URL whose authority is an attacker-controlled host. This bypasses the CVE-2024-42353 fix that escaped a leading double slash, allowing an attacker who influences the redirect location to send users to an arbitrary external site instead of the intended one. This vulnerability is fixed in 1.8.10.",
+                "markdown": "**Vulnerability CVE-2026-44889**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|WebOb|1.8.10|[CVE-2026-44889](https://avd.aquasec.com/nvd/cve-2026-44889)|\n\nWebOb provides objects for HTTP requests and responses. Prior to 1.8.10, the normalization of the HTTP Location header during a redirect is vulnerable to an open redirect: WebOb joins the redirect target to the request URI using Python's urljoin, and since Python 3.10 the underlying urlsplit strips ASCII tab, carriage return, and newline characters before parsing, so a redirect target containing such characters can be reinterpreted as a protocol-relative URL whose authority is an attacker-controlled host. This bypasses the CVE-2024-42353 fix that escaped a leading double slash, allowing an attacker who influences the redirect location to send users to an arbitrary external site instead of the intended one. This vulnerability is fixed in 1.8.10."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "6.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-537c-gmf6-5ccf",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Vulnerable OpenSSL included in cryptography wheels"
+              },
+              "fullDescription": {
+                "text": "pyca/cryptography's wheels include a statically linked copy of OpenSSL. The versions of OpenSSL included in wheels prior to cryptograph 48.01 are vulnerable to a security issue. More details about the vulnerability itself can be found in https://openssl-library.org/news/secadv/20260609.txt.\n\nIf you are building cryptography source (\"sdist\") then you are responsible for upgrading your copy of OpenSSL. Only users installing from wheels built by the cryptography project (i.e., those distributed on PyPI) need to update their cryptography versions."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-537c-gmf6-5ccf",
+              "help": {
+                "text": "Vulnerability GHSA-537c-gmf6-5ccf\nSeverity: HIGH\nPackage: cryptography\nFixed Version: 48.0.1\nLink: [GHSA-537c-gmf6-5ccf](https://github.com/advisories/GHSA-537c-gmf6-5ccf)\npyca/cryptography's wheels include a statically linked copy of OpenSSL. The versions of OpenSSL included in wheels prior to cryptograph 48.01 are vulnerable to a security issue. More details about the vulnerability itself can be found in https://openssl-library.org/news/secadv/20260609.txt.\n\nIf you are building cryptography source (\"sdist\") then you are responsible for upgrading your copy of OpenSSL. Only users installing from wheels built by the cryptography project (i.e., those distributed on PyPI) need to update their cryptography versions.",
+                "markdown": "**Vulnerability GHSA-537c-gmf6-5ccf**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|cryptography|48.0.1|[GHSA-537c-gmf6-5ccf](https://github.com/advisories/GHSA-537c-gmf6-5ccf)|\n\npyca/cryptography's wheels include a statically linked copy of OpenSSL. The versions of OpenSSL included in wheels prior to cryptograph 48.01 are vulnerable to a security issue. More details about the vulnerability itself can be found in https://openssl-library.org/news/secadv/20260609.txt.\n\nIf you are building cryptography source (\"sdist\") then you are responsible for upgrading your copy of OpenSSL. Only users installing from wheels built by the cryptography project (i.e., those distributed on PyPI) need to update their cryptography versions."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-45409",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Internationalized Domain Names in Applications (IDNA) for Python provi ..."
+              },
+              "fullDescription": {
+                "text": "Internationalized Domain Names in Applications (IDNA) for Python provides support for Internationalized Domain Names in Applications (IDNA) and Unicode IDNA Compatibility Processing. In versions prior to 3.15, payloads such as `\"\\u0660\" * N` or `\"\\u30fb\" * N + \"\\u6f22\"` utilize the `valid_contexto` function prior to length rejection, and for high values of `N` will take a long time to process. This is the same issue as CVE-2024-3651, however the original remediation in 2024 was not a complete fix. A specially crafted argument to the `idna.encode()` function could consume significant resources. This may lead to a denial-of-service. Starting in version 3.14, the function rejects long inputs as soon as practicable prior to any further processing to minimize resource consumption. In version 3.15, this approach was extended to lesser used alternate functions (i.e. per-label conversions and codec support). A workaround is available. Domain names cannot exceed 253 characters in length. If this length limit is enforced prior to passing the domain to the `idna.encode()` function, it should no longer consume significant resources. This is triggered by arbitrarily large inputs that would not occur in normal usage, but may be passed to the library assuming there is no preliminary input validation by the higher-level application."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-45409",
+              "help": {
+                "text": "Vulnerability CVE-2026-45409\nSeverity: MEDIUM\nPackage: idna\nFixed Version: 3.15\nLink: [CVE-2026-45409](https://avd.aquasec.com/nvd/cve-2026-45409)\nInternationalized Domain Names in Applications (IDNA) for Python provides support for Internationalized Domain Names in Applications (IDNA) and Unicode IDNA Compatibility Processing. In versions prior to 3.15, payloads such as `\"\\u0660\" * N` or `\"\\u30fb\" * N + \"\\u6f22\"` utilize the `valid_contexto` function prior to length rejection, and for high values of `N` will take a long time to process. This is the same issue as CVE-2024-3651, however the original remediation in 2024 was not a complete fix. A specially crafted argument to the `idna.encode()` function could consume significant resources. This may lead to a denial-of-service. Starting in version 3.14, the function rejects long inputs as soon as practicable prior to any further processing to minimize resource consumption. In version 3.15, this approach was extended to lesser used alternate functions (i.e. per-label conversions and codec support). A workaround is available. Domain names cannot exceed 253 characters in length. If this length limit is enforced prior to passing the domain to the `idna.encode()` function, it should no longer consume significant resources. This is triggered by arbitrarily large inputs that would not occur in normal usage, but may be passed to the library assuming there is no preliminary input validation by the higher-level application.",
+                "markdown": "**Vulnerability CVE-2026-45409**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|idna|3.15|[CVE-2026-45409](https://avd.aquasec.com/nvd/cve-2026-45409)|\n\nInternationalized Domain Names in Applications (IDNA) for Python provides support for Internationalized Domain Names in Applications (IDNA) and Unicode IDNA Compatibility Processing. In versions prior to 3.15, payloads such as `\"\\u0660\" * N` or `\"\\u30fb\" * N + \"\\u6f22\"` utilize the `valid_contexto` function prior to length rejection, and for high values of `N` will take a long time to process. This is the same issue as CVE-2024-3651, however the original remediation in 2024 was not a complete fix. A specially crafted argument to the `idna.encode()` function could consume significant resources. This may lead to a denial-of-service. Starting in version 3.14, the function rejects long inputs as soon as practicable prior to any further processing to minimize resource consumption. In version 3.15, this approach was extended to lesser used alternate functions (i.e. per-label conversions and codec support). A workaround is available. Domain names cannot exceed 253 characters in length. If this length limit is enforced prior to passing the domain to the `idna.encode()` function, it should no longer consume significant resources. This is triggered by arbitrarily large inputs that would not occur in normal usage, but may be passed to the library assuming there is no preliminary input validation by the higher-level application."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41066",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "lxml: python: lxml: Information disclosure via untrusted XML input leading to local file read"
+              },
+              "fullDescription": {
+                "text": "lxml is a library for processing XML and HTML in the Python language. Prior to 6.1.0, using either of the two parsers in the default configuration (with resolve_entities=True) allows untrusted XML input to read local files. Setting the resolve_entities option explicitly to resolve_entities='internal' or resolve_entities=False disables the local file access. This vulnerability is fixed in 6.1.0."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41066",
+              "help": {
+                "text": "Vulnerability CVE-2026-41066\nSeverity: HIGH\nPackage: lxml\nFixed Version: 6.1.0\nLink: [CVE-2026-41066](https://avd.aquasec.com/nvd/cve-2026-41066)\nlxml is a library for processing XML and HTML in the Python language. Prior to 6.1.0, using either of the two parsers in the default configuration (with resolve_entities=True) allows untrusted XML input to read local files. Setting the resolve_entities option explicitly to resolve_entities='internal' or resolve_entities=False disables the local file access. This vulnerability is fixed in 6.1.0.",
+                "markdown": "**Vulnerability CVE-2026-41066**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|lxml|6.1.0|[CVE-2026-41066](https://avd.aquasec.com/nvd/cve-2026-41066)|\n\nlxml is a library for processing XML and HTML in the Python language. Prior to 6.1.0, using either of the two parsers in the default configuration (with resolve_entities=True) allows untrusted XML input to read local files. Setting the resolve_entities option explicitly to resolve_entities='internal' or resolve_entities=False disables the local file access. This vulnerability is fixed in 6.1.0."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-6v7p-g79w-8964",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "MessagePack for Python: Out-of-bounds read / crash on Unpacker reuse after a caught error"
+              },
+              "fullDescription": {
+                "text": "### Impact\n\nIf the Unpacker is used repeatedly after an error occurs, the process may crash with a SEGV.\n\nIf the Unpacker is used repeatedly to unpack untrusted input from external sources, it may be vulnerable to a DoS attack.\n\n### Patches\n\nv1.2.1\n\n### Workarounds\n\nUsers should create a new Unpacker instead of reusing the same Unpacker after an error occurs.\n\nApplying the above patch can prevent SEGV, but reusing the Streaming Unpacker after it has encountered an error will not yield correct data. If an error occurs during Streaming Unpacking, the Stream and Streaming Unpacker should be discarded.\n\nTherefore, this is not just a workaround but the correct solution. The above patch only prevents crashes from incorrect usage."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-6v7p-g79w-8964",
+              "help": {
+                "text": "Vulnerability GHSA-6v7p-g79w-8964\nSeverity: HIGH\nPackage: msgpack\nFixed Version: 1.2.1\nLink: [GHSA-6v7p-g79w-8964](https://github.com/advisories/GHSA-6v7p-g79w-8964)\n### Impact\n\nIf the Unpacker is used repeatedly after an error occurs, the process may crash with a SEGV.\n\nIf the Unpacker is used repeatedly to unpack untrusted input from external sources, it may be vulnerable to a DoS attack.\n\n### Patches\n\nv1.2.1\n\n### Workarounds\n\nUsers should create a new Unpacker instead of reusing the same Unpacker after an error occurs.\n\nApplying the above patch can prevent SEGV, but reusing the Streaming Unpacker after it has encountered an error will not yield correct data. If an error occurs during Streaming Unpacking, the Stream and Streaming Unpacker should be discarded.\n\nTherefore, this is not just a workaround but the correct solution. The above patch only prevents crashes from incorrect usage.",
+                "markdown": "**Vulnerability GHSA-6v7p-g79w-8964**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|msgpack|1.2.1|[GHSA-6v7p-g79w-8964](https://github.com/advisories/GHSA-6v7p-g79w-8964)|\n\n### Impact\n\nIf the Unpacker is used repeatedly after an error occurs, the process may crash with a SEGV.\n\nIf the Unpacker is used repeatedly to unpack untrusted input from external sources, it may be vulnerable to a DoS attack.\n\n### Patches\n\nv1.2.1\n\n### Workarounds\n\nUsers should create a new Unpacker instead of reusing the same Unpacker after an error occurs.\n\nApplying the above patch can prevent SEGV, but reusing the Streaming Unpacker after it has encountered an error will not yield correct data. If an error occurs during Streaming Unpacking, the Stream and Streaming Unpacker should be discarded.\n\nTherefore, this is not just a workaround but the correct solution. The above patch only prevents crashes from incorrect usage."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-24049",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "wheel: wheel: Privilege Escalation or Arbitrary Code Execution via malicious wheel file unpacking"
+              },
+              "fullDescription": {
+                "text": "wheel is a command line tool for manipulating Python wheel files, as defined in PEP 427. In versions 0.40.0 through 0.46.1, the unpack function is vulnerable to file permission modification through mishandling of file permissions after extraction. The logic blindly trusts the filename from the archive header for the chmod operation, even though the extraction process itself might have sanitized the path. Attackers can craft a malicious wheel file that, when unpacked, changes the permissions of critical system files (e.g., /etc/passwd, SSH keys, config files), allowing for Privilege Escalation or arbitrary code execution by modifying now-writable scripts. This issue has been fixed in version 0.46.2."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-24049",
+              "help": {
+                "text": "Vulnerability CVE-2026-24049\nSeverity: HIGH\nPackage: wheel\nFixed Version: 0.46.2\nLink: [CVE-2026-24049](https://avd.aquasec.com/nvd/cve-2026-24049)\nwheel is a command line tool for manipulating Python wheel files, as defined in PEP 427. In versions 0.40.0 through 0.46.1, the unpack function is vulnerable to file permission modification through mishandling of file permissions after extraction. The logic blindly trusts the filename from the archive header for the chmod operation, even though the extraction process itself might have sanitized the path. Attackers can craft a malicious wheel file that, when unpacked, changes the permissions of critical system files (e.g., /etc/passwd, SSH keys, config files), allowing for Privilege Escalation or arbitrary code execution by modifying now-writable scripts. This issue has been fixed in version 0.46.2.",
+                "markdown": "**Vulnerability CVE-2026-24049**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|wheel|0.46.2|[CVE-2026-24049](https://avd.aquasec.com/nvd/cve-2026-24049)|\n\nwheel is a command line tool for manipulating Python wheel files, as defined in PEP 427. In versions 0.40.0 through 0.46.1, the unpack function is vulnerable to file permission modification through mishandling of file permissions after extraction. The logic blindly trusts the filename from the archive header for the chmod operation, even though the extraction process itself might have sanitized the path. Attackers can craft a malicious wheel file that, when unpacked, changes the permissions of critical system files (e.g., /etc/passwd, SSH keys, config files), allowing for Privilege Escalation or arbitrary code execution by modifying now-writable scripts. This issue has been fixed in version 0.46.2."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.1,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "7.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-41205",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: Mako\nInstalled Version: 1.3.10.dev0\nVulnerability CVE-2026-41205\nSeverity: HIGH\nFixed Version: 1.3.11\nLink: [CVE-2026-41205](https://avd.aquasec.com/nvd/cve-2026-41205)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6d63b0cr7r51crj45ld1p2082q1b0dpc-python3.12-mako-1.3.10/lib/python3.12/site-packages/mako-1.3.10.dev0.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6d63b0cr7r51crj45ld1p2082q1b0dpc-python3.12-mako-1.3.10/lib/python3.12/site-packages/mako-1.3.10.dev0.dist-info/METADATA: Mako@1.3.10.dev0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44307",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: Mako\nInstalled Version: 1.3.10.dev0\nVulnerability CVE-2026-44307\nSeverity: HIGH\nFixed Version: 1.3.12\nLink: [CVE-2026-44307](https://avd.aquasec.com/nvd/cve-2026-44307)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6d63b0cr7r51crj45ld1p2082q1b0dpc-python3.12-mako-1.3.10/lib/python3.12/site-packages/mako-1.3.10.dev0.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6d63b0cr7r51crj45ld1p2082q1b0dpc-python3.12-mako-1.3.10/lib/python3.12/site-packages/mako-1.3.10.dev0.dist-info/METADATA: Mako@1.3.10.dev0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44889",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: WebOb\nInstalled Version: 1.8.9\nVulnerability CVE-2026-44889\nSeverity: MEDIUM\nFixed Version: 1.8.10\nLink: [CVE-2026-44889](https://avd.aquasec.com/nvd/cve-2026-44889)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/hkap5zkdbwr8qfc2zm1j8c868517bi7i-python3.12-webob-1.8.9/lib/python3.12/site-packages/webob-1.8.9.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/hkap5zkdbwr8qfc2zm1j8c868517bi7i-python3.12-webob-1.8.9/lib/python3.12/site-packages/webob-1.8.9.dist-info/METADATA: WebOb@1.8.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-537c-gmf6-5ccf",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: cryptography\nInstalled Version: 48.0.0\nVulnerability GHSA-537c-gmf6-5ccf\nSeverity: HIGH\nFixed Version: 48.0.1\nLink: [GHSA-537c-gmf6-5ccf](https://github.com/advisories/GHSA-537c-gmf6-5ccf)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/q9hdwyal9ihyril0bvzc9cyyh1q86kfh-python3.12-cryptography-48.0.0/lib/python3.12/site-packages/cryptography-48.0.0.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/q9hdwyal9ihyril0bvzc9cyyh1q86kfh-python3.12-cryptography-48.0.0/lib/python3.12/site-packages/cryptography-48.0.0.dist-info/METADATA: cryptography@48.0.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45409",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: idna\nInstalled Version: 3.13\nVulnerability CVE-2026-45409\nSeverity: MEDIUM\nFixed Version: 3.15\nLink: [CVE-2026-45409](https://avd.aquasec.com/nvd/cve-2026-45409)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/8m1j2x302sjqpwv2ymnrcr4n6s498sj1-python3.12-idna-3.13/lib/python3.12/site-packages/idna-3.13.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/8m1j2x302sjqpwv2ymnrcr4n6s498sj1-python3.12-idna-3.13/lib/python3.12/site-packages/idna-3.13.dist-info/METADATA: idna@3.13"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41066",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: lxml\nInstalled Version: 6.0.2\nVulnerability CVE-2026-41066\nSeverity: HIGH\nFixed Version: 6.1.0\nLink: [CVE-2026-41066](https://avd.aquasec.com/nvd/cve-2026-41066)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/bcs54iz1wfiyx2igcmgr266wqwad0bn0-python3.12-lxml-6.0.2/lib/python3.12/site-packages/lxml-6.0.2.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/bcs54iz1wfiyx2igcmgr266wqwad0bn0-python3.12-lxml-6.0.2/lib/python3.12/site-packages/lxml-6.0.2.dist-info/METADATA: lxml@6.0.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-6v7p-g79w-8964",
+          "ruleIndex": 6,
+          "level": "error",
+          "message": {
+            "text": "Package: msgpack\nInstalled Version: 1.1.2\nVulnerability GHSA-6v7p-g79w-8964\nSeverity: HIGH\nFixed Version: 1.2.1\nLink: [GHSA-6v7p-g79w-8964](https://github.com/advisories/GHSA-6v7p-g79w-8964)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/xkikmwpr7xym5a1gbli51fxh9wm9xys2-python3.12-msgpack-1.1.2/lib/python3.12/site-packages/msgpack-1.1.2.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/xkikmwpr7xym5a1gbli51fxh9wm9xys2-python3.12-msgpack-1.1.2/lib/python3.12/site-packages/msgpack-1.1.2.dist-info/METADATA: msgpack@1.1.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-24049",
+          "ruleIndex": 7,
+          "level": "error",
+          "message": {
+            "text": "Package: wheel\nInstalled Version: 0.45.1\nVulnerability CVE-2026-24049\nSeverity: HIGH\nFixed Version: 0.46.2\nLink: [CVE-2026-24049](https://avd.aquasec.com/nvd/cve-2026-24049)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/c3b7rlj709hv6rhjpqblbak7jcd07vf0-python3.12-setuptools-80.10.1/lib/python3.12/site-packages/setuptools/_vendor/wheel-0.45.1.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/c3b7rlj709hv6rhjpqblbak7jcd07vf0-python3.12-setuptools-80.10.1/lib/python3.12/site-packages/setuptools/_vendor/wheel-0.45.1.dist-info/METADATA: wheel@0.45.1"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:5b703abf41d50dcc7fbdd61ff1ef7fa47151fc1f6ba1fe9d653db69279b8f755",
+        "imageName": "ghcr.io/nix-containers/images/ceph:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/ceph@sha256:8951b8a232c8bf2feb8cefb3c83a1c6d94867fd1ea67697194eacf13b833aba4"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/ceph:latest"
+        ]
+      }
+    }
+  ]
+}

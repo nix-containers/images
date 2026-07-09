@@ -1,0 +1,60 @@
+2026-07-09T12:37:30Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:37:30Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:37:30Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:37:30Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:37:33Z	INFO	Number of language-specific files	num=2
+2026-07-09T12:37:33Z	INFO	[gobinary] Detecting vulnerabilities...
+2026-07-09T12:37:33Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.71/guide/scanner/vulnerability#severity-selection for details.
+
+Report Summary
+
+┌────────────────────────────────────────────────────────────────────┬──────────┬─────────────────┬─────────┐
+│                               Target                               │   Type   │ Vulnerabilities │ Secrets │
+├────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ bin/weed                                                           │ gobinary │        1        │    -    │
+├────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/cnmp7xak892xnpy61f7vvkfmdpnhdg9f-seaweedfs-4.36/bin/weed │ gobinary │        1        │    -    │
+└────────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+bin/weed (gobinary)
+===================
+Total: 1 (HIGH: 1, CRITICAL: 0)
+
+┌──────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│         Library          │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├──────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/apache/thrift │ CVE-2026-41602 │ HIGH     │ fixed  │ v0.22.0           │ 0.23.0        │ github.com/apache/thrift: Apache Thrift: Integer Overflow in │
+│                          │                │          │        │                   │               │ TFramedTransport Go implementation                           │
+│                          │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-41602                   │
+└──────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/cnmp7xak892xnpy61f7vvkfmdpnhdg9f-seaweedfs-4.36/bin/weed (gobinary)
+=============================================================================
+Total: 1 (HIGH: 1, CRITICAL: 0)
+
+┌──────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│         Library          │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├──────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/apache/thrift │ CVE-2026-41602 │ HIGH     │ fixed  │ v0.22.0           │ 0.23.0        │ github.com/apache/thrift: Apache Thrift: Integer Overflow in │
+│                          │                │          │        │                   │               │ TFramedTransport Go implementation                           │
+│                          │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-41602                   │
+└──────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

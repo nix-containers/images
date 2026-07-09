@@ -1,0 +1,2081 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.71.2"
+  },
+  "ReportID": "019f46cd-21b8-7d9c-8548-9795af3ca01a",
+  "CreatedAt": "2026-07-09T12:14:36.472893739Z",
+  "ArtifactID": "sha256:023730de352451055dc8c91cffb5258b3540b493ab0e45a8163cbed57068163b",
+  "ArtifactName": "ghcr.io/nix-containers/images/age-fips:latest",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 106806784,
+    "ImageID": "sha256:d1c7c5fcc6a08a7dd100b75939b0c8e5a85b767f7568ab36bf9654da3187803c",
+    "DiffIDs": [
+      "sha256:6f984cb1851136514d370ed9e15fc97d0fac9da5842f4133bd1825579158d8b6",
+      "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec",
+      "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+    ],
+    "RepoTags": [
+      "ghcr.io/nix-containers/images/age-fips:latest"
+    ],
+    "RepoDigests": [
+      "ghcr.io/nix-containers/images/age-fips@sha256:964dbf06657a9d5324d90e1f764ae69815bcae78334ab249308cc7aa2a064c58"
+    ],
+    "Reference": "ghcr.io/nix-containers/images/age-fips:latest",
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "0001-01-01T00:00:00Z",
+      "history": [
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:6f984cb1851136514d370ed9e15fc97d0fac9da5842f4133bd1825579158d8b6",
+          "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec",
+          "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+        ]
+      },
+      "config": {
+        "Cmd": [
+          "--help"
+        ],
+        "Entrypoint": [
+          "/nix/store/4yk77mj36c62l1zsm61cailm82xb0dz2-age-fips-1.3.1/bin/age"
+        ],
+        "Env": [
+          "SSL_CERT_FILE=/nix/store/zdl7dn1gmi1cxdw5a8hw6xsf4cz0rjmg-nss-cacert-3.123/etc/ssl/certs/ca-bundle.crt",
+          "PATH=/nix/store/z3j0v07sa6pnsbwq782a9cyjrmrisj1i-busybox-1.37.0/bin:/nix/store/4yk77mj36c62l1zsm61cailm82xb0dz2-age-fips-1.3.1/bin"
+        ],
+        "Labels": {
+          "io.nix-containers.build-method": "Built from source using Nix",
+          "io.nix-containers.build-type": "source",
+          "io.nix-containers.chart": "age-fips",
+          "io.nix-containers.compliance": "FIPS-140-2",
+          "org.label-schema.vcs-url": "https://github.com/nix-containers/images",
+          "org.opencontainers.image.description": "Modern encryption tool with small explicit keys (FIPS-compliant)",
+          "org.opencontainers.image.source": "https://github.com/nix-containers/images",
+          "org.opencontainers.image.title": "age-fips",
+          "org.opencontainers.image.version": "1.3.1"
+        },
+        "User": "65534:65534"
+      }
+    },
+    "Layers": [
+      {
+        "Size": 40483840,
+        "Digest": "sha256:cb5009502356cf66c863f2db5ba611b7e9e7187970158bfd661cee01ff5bd4fb",
+        "DiffID": "sha256:6f984cb1851136514d370ed9e15fc97d0fac9da5842f4133bd1825579158d8b6"
+      },
+      {
+        "Size": 53027840,
+        "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+        "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+      },
+      {
+        "Size": 13295104,
+        "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+        "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "bin/age",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "filippo.io/age",
+          "Name": "filippo.io/age",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/age",
+            "UID": "a9454aad0eba3a30"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "filippo.io/edwards25519@v1.1.0",
+            "filippo.io/hpke@v0.4.0",
+            "filippo.io/nistec@v0.0.4",
+            "golang.org/x/crypto@v0.45.0",
+            "golang.org/x/sys@v0.38.0",
+            "golang.org/x/term@v0.37.0",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "2f67d296defa2b3e"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "filippo.io/edwards25519@v1.1.0",
+          "Name": "filippo.io/edwards25519",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/edwards25519@v1.1.0",
+            "UID": "d26011fb7e3070e7"
+          },
+          "Version": "v1.1.0",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "filippo.io/hpke@v0.4.0",
+          "Name": "filippo.io/hpke",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/hpke@v0.4.0",
+            "UID": "658bdb0ad51bf98c"
+          },
+          "Version": "v0.4.0",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "filippo.io/nistec@v0.0.4",
+          "Name": "filippo.io/nistec",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/nistec@v0.0.4",
+            "UID": "3c1e281ced4751ea"
+          },
+          "Version": "v0.0.4",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/crypto@v0.45.0",
+          "Name": "golang.org/x/crypto",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "104746c025184120"
+          },
+          "Version": "v0.45.0",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.38.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.38.0",
+            "UID": "4dd09b86fd6f1c60"
+          },
+          "Version": "v0.38.0",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/term@v0.37.0",
+          "Name": "golang.org/x/term",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/term@v0.37.0",
+            "UID": "bb12008d6d383b51"
+          },
+          "Version": "v0.37.0",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-26958",
+          "VendorIDs": [
+            "GHSA-fw7p-63qq-7hpr"
+          ],
+          "PkgID": "filippo.io/edwards25519@v1.1.0",
+          "PkgName": "filippo.io/edwards25519",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/filippo.io/edwards25519@v1.1.0",
+            "UID": "d26011fb7e3070e7"
+          },
+          "InstalledVersion": "v1.1.0",
+          "FixedVersion": "1.1.1",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-26958",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory Go",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Ago"
+          },
+          "Fingerprint": "sha256:f353ac9dec17a269c07ec8c4d7427c578782866a45c8970992e0dd47aa778a20",
+          "Title": "filippo.io/edwards25519: filippo.io/edwards25519: Cryptographic integrity bypass due to incorrect MultiScalarMult results",
+          "Description": "filippo.io/edwards25519 is a Go library implementing the edwards25519 elliptic curve with APIs for building cryptographic primitives. In versions 1.1.0 and earlier, MultiScalarMult produces invalid results or undefined behavior if the receiver is not the identity point. If (*Point).MultiScalarMult is called on an initialized point that is not the identity point, it returns an incorrect result. If the method is called on an uninitialized point, the behavior is undefined. In particular, if the receiver is the zero value, MultiScalarMult returns an invalid point that compares Equal to every other point. Note that MultiScalarMult is a rarely used, advanced API. For example, users who depend on filippo.io/edwards25519 only through github.com/go-sql-driver/mysql are not affected. This issue has been fixed in version 1.1.1.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-665"
+          ],
+          "VendorSeverity": {
+            "ghsa": 1,
+            "redhat": 1
+          },
+          "CVSS": {
+            "ghsa": {
+              "V40Vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N/E:U",
+              "V40Score": 1.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 3.7
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-26958",
+            "https://github.com/FiloSottile/edwards25519",
+            "https://github.com/FiloSottile/edwards25519/commit/d1c650afb95fad0742b98d95f2eb2cf031393abb",
+            "https://github.com/FiloSottile/edwards25519/releases/tag/v1.1.1",
+            "https://github.com/FiloSottile/edwards25519/security/advisories/GHSA-fw7p-63qq-7hpr",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-26958",
+            "https://www.cve.org/CVERecord?id=CVE-2026-26958"
+          ],
+          "PublishedDate": "2026-02-19T23:16:26.577Z",
+          "LastModifiedDate": "2026-06-17T10:26:26.987Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39828",
+          "VendorIDs": [
+            "GO-2026-5014"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "104746c025184120"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39828",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:37486412b7939fdeb82248861f1352ccae4672ba32e11a2edd7f5369904f527f",
+          "Title": "golang.org/x/crypto/ssh: golang.org/x/crypto/ssh: Unauthorized command execution via discarded SSH permissions",
+          "Description": "When an SSH server authentication callback returned PartialSuccessError with non-nil Permissions, those permissions were silently discarded, potentially dropping certificate restrictions such as force-command after a second factor succeeded. Returning non-nil Permissions with PartialSuccessError now results in a connection error.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-295",
+            "CWE-281"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:26546",
+            "https://access.redhat.com/errata/RHSA-2026:26547",
+            "https://access.redhat.com/errata/RHSA-2026:36105",
+            "https://access.redhat.com/errata/RHSA-2026:36167",
+            "https://access.redhat.com/errata/RHSA-2026:36207",
+            "https://access.redhat.com/errata/RHSA-2026:36319",
+            "https://access.redhat.com/errata/RHSA-2026:36625",
+            "https://access.redhat.com/errata/RHSA-2026:36648",
+            "https://access.redhat.com/security/cve/CVE-2026-39828",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2480687",
+            "https://go.dev/cl/781621",
+            "https://go.dev/issue/79562",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39828",
+            "https://pkg.go.dev/vuln/GO-2026-5014",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-39828.json",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39828"
+          ],
+          "PublishedDate": "2026-05-22T04:16:22.19Z",
+          "LastModifiedDate": "2026-07-08T13:16:40.1Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39835",
+          "VendorIDs": [
+            "GO-2026-5015"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "104746c025184120"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39835",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:6d5d1ceb8ae13962ed26fd4e0bfe9355335ed88ad4501a6b86b48bb520c54152",
+          "Title": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via crafted SSH certificate",
+          "Description": "SSH servers which use CertChecker as a public key callback without setting IsUserAuthority or IsHostAuthority could be caused to panic by a client presenting a certificate. CertChecker now returns an error instead of panicking when these callbacks are nil.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-295",
+            "CWE-476"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:26546",
+            "https://access.redhat.com/errata/RHSA-2026:26547",
+            "https://access.redhat.com/errata/RHSA-2026:36199",
+            "https://access.redhat.com/errata/RHSA-2026:36207",
+            "https://access.redhat.com/errata/RHSA-2026:36319",
+            "https://access.redhat.com/errata/RHSA-2026:36625",
+            "https://access.redhat.com/errata/RHSA-2026:36648",
+            "https://access.redhat.com/security/cve/CVE-2026-39835",
+            "https://bugzilla.redhat.com/2480680",
+            "https://bugzilla.redhat.com/2480681",
+            "https://bugzilla.redhat.com/2480684",
+            "https://bugzilla.redhat.com/2480685",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2480680",
+            "https://errata.almalinux.org/10/ALSA-2026-36199.html",
+            "https://go.dev/cl/781660",
+            "https://go.dev/issue/79563",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39835",
+            "https://pkg.go.dev/vuln/GO-2026-5015",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-39835.json",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39835"
+          ],
+          "PublishedDate": "2026-05-22T04:16:24.53Z",
+          "LastModifiedDate": "2026-07-08T13:16:41.093Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39827",
+          "VendorIDs": [
+            "GO-2026-5016"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "104746c025184120"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39827",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:18ebd17cf18e7de99f505017ce272e968bad39e4568e20af23c25d5e2482d4c3",
+          "Title": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via repeated rejected channel openings",
+          "Description": "An authenticated SSH client that repeatedly opened channels which were rejected by the server caused unbounded memory growth, eventually crashing the server process and affecting all connected users. Rejected channels are now properly removed from the connection's internal state and released for garbage collection.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-924"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 6.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-39827",
+            "https://go.dev/cl/781320",
+            "https://go.dev/issue/35127",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39827",
+            "https://pkg.go.dev/vuln/GO-2026-5016",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39827"
+          ],
+          "PublishedDate": "2026-05-22T04:16:21.497Z",
+          "LastModifiedDate": "2026-06-17T10:42:39.063Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-46598",
+          "VendorIDs": [
+            "GO-2026-5033"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "104746c025184120"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-46598",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:532269491a9b11795ec0404895b7418847fd64ffb9cddc0a184334d25af9ec4a",
+          "Title": "golang.org/x/crypto/ssh/agent: golang: golang.org/x/crypto/ssh/agent: Denial of Service via malformed input",
+          "Description": "For certain crafted inputs, a 'ed25519.PrivateKey' was created by casting malformed wire bytes, leading to a panic when used.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-129"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-46598",
+            "https://go.dev/cl/781360",
+            "https://go.dev/issue/79596",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-46598",
+            "https://pkg.go.dev/vuln/GO-2026-5033",
+            "https://www.cve.org/CVERecord?id=CVE-2026-46598"
+          ],
+          "PublishedDate": "2026-05-22T04:16:26.537Z",
+          "LastModifiedDate": "2026-06-17T10:53:47.52Z"
+        },
+        {
+          "VulnerabilityID": "GO-2026-5932",
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "104746c025184120"
+          },
+          "InstalledVersion": "v0.45.0",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:505b0116c5aabf2dd1ac4cf4e1f9fd8882c65c0bd9883fdc8e5e1079f61d7d95",
+          "Title": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues",
+          "Description": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+          "Severity": "UNKNOWN",
+          "References": [
+            "https://go.dev/issue/44226",
+            "https://pkg.go.dev/vuln/GO-2026-5932"
+          ]
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39824",
+          "VendorIDs": [
+            "GO-2026-5024"
+          ],
+          "PkgID": "golang.org/x/sys@v0.38.0",
+          "PkgName": "golang.org/x/sys",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.38.0",
+            "UID": "4dd09b86fd6f1c60"
+          },
+          "InstalledVersion": "v0.38.0",
+          "FixedVersion": "0.44.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39824",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:560cddb3f9ea59863b47926700c0473ba1beb8ad5da1b2fe8bda88c399665cb7",
+          "Title": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows",
+          "Description": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-190"
+          ],
+          "References": [
+            "https://go.dev/cl/770080",
+            "https://go.dev/issue/78916",
+            "https://groups.google.com/g/golang-announce/c/6MMI8Lj-Atg",
+            "https://pkg.go.dev/vuln/GO-2026-5024"
+          ],
+          "PublishedDate": "2026-05-22T20:16:33.057Z",
+          "LastModifiedDate": "2026-06-17T10:42:38.62Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "2f67d296defa2b3e"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:5921333879d620efc5f11376875b332f892788d65143c1432685e530c4ddd345",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    },
+    {
+      "Target": "bin/age-keygen",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "filippo.io/age",
+          "Name": "filippo.io/age",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/age",
+            "UID": "2bdd1aaa9dca20f"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "filippo.io/hpke@v0.4.0",
+            "golang.org/x/crypto@v0.45.0",
+            "golang.org/x/sys@v0.38.0",
+            "golang.org/x/term@v0.37.0",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "d02f971de1ec4729"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "filippo.io/hpke@v0.4.0",
+          "Name": "filippo.io/hpke",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/hpke@v0.4.0",
+            "UID": "690ff540f2b85b4f"
+          },
+          "Version": "v0.4.0",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/crypto@v0.45.0",
+          "Name": "golang.org/x/crypto",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "aed8c70c888590c3"
+          },
+          "Version": "v0.45.0",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.38.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.38.0",
+            "UID": "ec8d2c9d36dc484f"
+          },
+          "Version": "v0.38.0",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/term@v0.37.0",
+          "Name": "golang.org/x/term",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/term@v0.37.0",
+            "UID": "9dde44fe8c959e4a"
+          },
+          "Version": "v0.37.0",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-39828",
+          "VendorIDs": [
+            "GO-2026-5014"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "aed8c70c888590c3"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39828",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:cfee3415a317f18bab80ebd52650e48aae05735ca51a2738d42511e649d79450",
+          "Title": "golang.org/x/crypto/ssh: golang.org/x/crypto/ssh: Unauthorized command execution via discarded SSH permissions",
+          "Description": "When an SSH server authentication callback returned PartialSuccessError with non-nil Permissions, those permissions were silently discarded, potentially dropping certificate restrictions such as force-command after a second factor succeeded. Returning non-nil Permissions with PartialSuccessError now results in a connection error.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-295",
+            "CWE-281"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:26546",
+            "https://access.redhat.com/errata/RHSA-2026:26547",
+            "https://access.redhat.com/errata/RHSA-2026:36105",
+            "https://access.redhat.com/errata/RHSA-2026:36167",
+            "https://access.redhat.com/errata/RHSA-2026:36207",
+            "https://access.redhat.com/errata/RHSA-2026:36319",
+            "https://access.redhat.com/errata/RHSA-2026:36625",
+            "https://access.redhat.com/errata/RHSA-2026:36648",
+            "https://access.redhat.com/security/cve/CVE-2026-39828",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2480687",
+            "https://go.dev/cl/781621",
+            "https://go.dev/issue/79562",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39828",
+            "https://pkg.go.dev/vuln/GO-2026-5014",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-39828.json",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39828"
+          ],
+          "PublishedDate": "2026-05-22T04:16:22.19Z",
+          "LastModifiedDate": "2026-07-08T13:16:40.1Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39835",
+          "VendorIDs": [
+            "GO-2026-5015"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "aed8c70c888590c3"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39835",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:0569801bc9e854b4c17fc681f31406f876575f59df4c13d178169153fd6199a2",
+          "Title": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via crafted SSH certificate",
+          "Description": "SSH servers which use CertChecker as a public key callback without setting IsUserAuthority or IsHostAuthority could be caused to panic by a client presenting a certificate. CertChecker now returns an error instead of panicking when these callbacks are nil.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-295",
+            "CWE-476"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:26546",
+            "https://access.redhat.com/errata/RHSA-2026:26547",
+            "https://access.redhat.com/errata/RHSA-2026:36199",
+            "https://access.redhat.com/errata/RHSA-2026:36207",
+            "https://access.redhat.com/errata/RHSA-2026:36319",
+            "https://access.redhat.com/errata/RHSA-2026:36625",
+            "https://access.redhat.com/errata/RHSA-2026:36648",
+            "https://access.redhat.com/security/cve/CVE-2026-39835",
+            "https://bugzilla.redhat.com/2480680",
+            "https://bugzilla.redhat.com/2480681",
+            "https://bugzilla.redhat.com/2480684",
+            "https://bugzilla.redhat.com/2480685",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2480680",
+            "https://errata.almalinux.org/10/ALSA-2026-36199.html",
+            "https://go.dev/cl/781660",
+            "https://go.dev/issue/79563",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39835",
+            "https://pkg.go.dev/vuln/GO-2026-5015",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-39835.json",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39835"
+          ],
+          "PublishedDate": "2026-05-22T04:16:24.53Z",
+          "LastModifiedDate": "2026-07-08T13:16:41.093Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39827",
+          "VendorIDs": [
+            "GO-2026-5016"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "aed8c70c888590c3"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39827",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:bbade0e1e3f0d84ec618865b885185a15fbda35a09fea92806497f2a86d40c2c",
+          "Title": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via repeated rejected channel openings",
+          "Description": "An authenticated SSH client that repeatedly opened channels which were rejected by the server caused unbounded memory growth, eventually crashing the server process and affecting all connected users. Rejected channels are now properly removed from the connection's internal state and released for garbage collection.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-924"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 6.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-39827",
+            "https://go.dev/cl/781320",
+            "https://go.dev/issue/35127",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39827",
+            "https://pkg.go.dev/vuln/GO-2026-5016",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39827"
+          ],
+          "PublishedDate": "2026-05-22T04:16:21.497Z",
+          "LastModifiedDate": "2026-06-17T10:42:39.063Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-46598",
+          "VendorIDs": [
+            "GO-2026-5033"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "aed8c70c888590c3"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-46598",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:60b5b5d6b124220c842ae78c82d307dfef11ead902588bb7b3cfd45af9f7e29b",
+          "Title": "golang.org/x/crypto/ssh/agent: golang: golang.org/x/crypto/ssh/agent: Denial of Service via malformed input",
+          "Description": "For certain crafted inputs, a 'ed25519.PrivateKey' was created by casting malformed wire bytes, leading to a panic when used.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-129"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-46598",
+            "https://go.dev/cl/781360",
+            "https://go.dev/issue/79596",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-46598",
+            "https://pkg.go.dev/vuln/GO-2026-5033",
+            "https://www.cve.org/CVERecord?id=CVE-2026-46598"
+          ],
+          "PublishedDate": "2026-05-22T04:16:26.537Z",
+          "LastModifiedDate": "2026-06-17T10:53:47.52Z"
+        },
+        {
+          "VulnerabilityID": "GO-2026-5932",
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "aed8c70c888590c3"
+          },
+          "InstalledVersion": "v0.45.0",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:252cb15372a99c5b6565232b099628b567a3f9236a066c2759448b137908eeed",
+          "Title": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues",
+          "Description": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+          "Severity": "UNKNOWN",
+          "References": [
+            "https://go.dev/issue/44226",
+            "https://pkg.go.dev/vuln/GO-2026-5932"
+          ]
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39824",
+          "VendorIDs": [
+            "GO-2026-5024"
+          ],
+          "PkgID": "golang.org/x/sys@v0.38.0",
+          "PkgName": "golang.org/x/sys",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.38.0",
+            "UID": "ec8d2c9d36dc484f"
+          },
+          "InstalledVersion": "v0.38.0",
+          "FixedVersion": "0.44.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39824",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:18e90550ae778d639a3372e382ead0deddd209a0bf2c1ff1f1c60d1325731d70",
+          "Title": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows",
+          "Description": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-190"
+          ],
+          "References": [
+            "https://go.dev/cl/770080",
+            "https://go.dev/issue/78916",
+            "https://groups.google.com/g/golang-announce/c/6MMI8Lj-Atg",
+            "https://pkg.go.dev/vuln/GO-2026-5024"
+          ],
+          "PublishedDate": "2026-05-22T20:16:33.057Z",
+          "LastModifiedDate": "2026-06-17T10:42:38.62Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "d02f971de1ec4729"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:eda0e4a6f2480c3db5fcd5607261343542291af584b5e72dde5d6b90260a3bde",
+            "DiffID": "sha256:5ad9bbe9590b9f9855bcd992ffa1f6e0f51c375515be2c6558e90cf3d2b1bdec"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:7c1aa2389d5be3542cbb85ba037838cdfc2330cfc4a7c04b8aa6a0f1ea8ae16a",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    },
+    {
+      "Target": "nix/store/4yk77mj36c62l1zsm61cailm82xb0dz2-age-fips-1.3.1/bin/age",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "filippo.io/age",
+          "Name": "filippo.io/age",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/age",
+            "UID": "55c6337946f5fe0b"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "filippo.io/edwards25519@v1.1.0",
+            "filippo.io/hpke@v0.4.0",
+            "filippo.io/nistec@v0.0.4",
+            "golang.org/x/crypto@v0.45.0",
+            "golang.org/x/sys@v0.38.0",
+            "golang.org/x/term@v0.37.0",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "8843c38ea213b265"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "filippo.io/edwards25519@v1.1.0",
+          "Name": "filippo.io/edwards25519",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/edwards25519@v1.1.0",
+            "UID": "7a5653f5ae1545d8"
+          },
+          "Version": "v1.1.0",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "filippo.io/hpke@v0.4.0",
+          "Name": "filippo.io/hpke",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/hpke@v0.4.0",
+            "UID": "ddf407797d9411f"
+          },
+          "Version": "v0.4.0",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "filippo.io/nistec@v0.0.4",
+          "Name": "filippo.io/nistec",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/nistec@v0.0.4",
+            "UID": "bb08b50b07ede8f1"
+          },
+          "Version": "v0.0.4",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/crypto@v0.45.0",
+          "Name": "golang.org/x/crypto",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "ec8078db4dc56613"
+          },
+          "Version": "v0.45.0",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.38.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.38.0",
+            "UID": "88cb93fdee4bedeb"
+          },
+          "Version": "v0.38.0",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/term@v0.37.0",
+          "Name": "golang.org/x/term",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/term@v0.37.0",
+            "UID": "c91841c7b71b352e"
+          },
+          "Version": "v0.37.0",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-26958",
+          "VendorIDs": [
+            "GHSA-fw7p-63qq-7hpr"
+          ],
+          "PkgID": "filippo.io/edwards25519@v1.1.0",
+          "PkgName": "filippo.io/edwards25519",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/filippo.io/edwards25519@v1.1.0",
+            "UID": "7a5653f5ae1545d8"
+          },
+          "InstalledVersion": "v1.1.0",
+          "FixedVersion": "1.1.1",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "SeveritySource": "ghsa",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-26958",
+          "DataSource": {
+            "ID": "ghsa",
+            "Name": "GitHub Security Advisory Go",
+            "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Ago"
+          },
+          "Fingerprint": "sha256:ee8519254236a92ee6016697143eafb9b433e6aedd1654600e13ac18cb3975a2",
+          "Title": "filippo.io/edwards25519: filippo.io/edwards25519: Cryptographic integrity bypass due to incorrect MultiScalarMult results",
+          "Description": "filippo.io/edwards25519 is a Go library implementing the edwards25519 elliptic curve with APIs for building cryptographic primitives. In versions 1.1.0 and earlier, MultiScalarMult produces invalid results or undefined behavior if the receiver is not the identity point. If (*Point).MultiScalarMult is called on an initialized point that is not the identity point, it returns an incorrect result. If the method is called on an uninitialized point, the behavior is undefined. In particular, if the receiver is the zero value, MultiScalarMult returns an invalid point that compares Equal to every other point. Note that MultiScalarMult is a rarely used, advanced API. For example, users who depend on filippo.io/edwards25519 only through github.com/go-sql-driver/mysql are not affected. This issue has been fixed in version 1.1.1.",
+          "Severity": "LOW",
+          "CweIDs": [
+            "CWE-665"
+          ],
+          "VendorSeverity": {
+            "ghsa": 1,
+            "redhat": 1
+          },
+          "CVSS": {
+            "ghsa": {
+              "V40Vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N/E:U",
+              "V40Score": 1.7
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 3.7
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-26958",
+            "https://github.com/FiloSottile/edwards25519",
+            "https://github.com/FiloSottile/edwards25519/commit/d1c650afb95fad0742b98d95f2eb2cf031393abb",
+            "https://github.com/FiloSottile/edwards25519/releases/tag/v1.1.1",
+            "https://github.com/FiloSottile/edwards25519/security/advisories/GHSA-fw7p-63qq-7hpr",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-26958",
+            "https://www.cve.org/CVERecord?id=CVE-2026-26958"
+          ],
+          "PublishedDate": "2026-02-19T23:16:26.577Z",
+          "LastModifiedDate": "2026-06-17T10:26:26.987Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39828",
+          "VendorIDs": [
+            "GO-2026-5014"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "ec8078db4dc56613"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39828",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:37650369446324e014996ab67486524365284330b604c2ea9a6132283c5398bc",
+          "Title": "golang.org/x/crypto/ssh: golang.org/x/crypto/ssh: Unauthorized command execution via discarded SSH permissions",
+          "Description": "When an SSH server authentication callback returned PartialSuccessError with non-nil Permissions, those permissions were silently discarded, potentially dropping certificate restrictions such as force-command after a second factor succeeded. Returning non-nil Permissions with PartialSuccessError now results in a connection error.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-295",
+            "CWE-281"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:26546",
+            "https://access.redhat.com/errata/RHSA-2026:26547",
+            "https://access.redhat.com/errata/RHSA-2026:36105",
+            "https://access.redhat.com/errata/RHSA-2026:36167",
+            "https://access.redhat.com/errata/RHSA-2026:36207",
+            "https://access.redhat.com/errata/RHSA-2026:36319",
+            "https://access.redhat.com/errata/RHSA-2026:36625",
+            "https://access.redhat.com/errata/RHSA-2026:36648",
+            "https://access.redhat.com/security/cve/CVE-2026-39828",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2480687",
+            "https://go.dev/cl/781621",
+            "https://go.dev/issue/79562",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39828",
+            "https://pkg.go.dev/vuln/GO-2026-5014",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-39828.json",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39828"
+          ],
+          "PublishedDate": "2026-05-22T04:16:22.19Z",
+          "LastModifiedDate": "2026-07-08T13:16:40.1Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39835",
+          "VendorIDs": [
+            "GO-2026-5015"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "ec8078db4dc56613"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39835",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:e69c00734ce0c21a0a73f4739bdcbdafb9d2ac125e789081f5b2829eda834101",
+          "Title": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via crafted SSH certificate",
+          "Description": "SSH servers which use CertChecker as a public key callback without setting IsUserAuthority or IsHostAuthority could be caused to panic by a client presenting a certificate. CertChecker now returns an error instead of panicking when these callbacks are nil.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-295",
+            "CWE-476"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:26546",
+            "https://access.redhat.com/errata/RHSA-2026:26547",
+            "https://access.redhat.com/errata/RHSA-2026:36199",
+            "https://access.redhat.com/errata/RHSA-2026:36207",
+            "https://access.redhat.com/errata/RHSA-2026:36319",
+            "https://access.redhat.com/errata/RHSA-2026:36625",
+            "https://access.redhat.com/errata/RHSA-2026:36648",
+            "https://access.redhat.com/security/cve/CVE-2026-39835",
+            "https://bugzilla.redhat.com/2480680",
+            "https://bugzilla.redhat.com/2480681",
+            "https://bugzilla.redhat.com/2480684",
+            "https://bugzilla.redhat.com/2480685",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2480680",
+            "https://errata.almalinux.org/10/ALSA-2026-36199.html",
+            "https://go.dev/cl/781660",
+            "https://go.dev/issue/79563",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39835",
+            "https://pkg.go.dev/vuln/GO-2026-5015",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-39835.json",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39835"
+          ],
+          "PublishedDate": "2026-05-22T04:16:24.53Z",
+          "LastModifiedDate": "2026-07-08T13:16:41.093Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39827",
+          "VendorIDs": [
+            "GO-2026-5016"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "ec8078db4dc56613"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39827",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:244f55e384834227b31781ff4c18b73dc79ab448a3d84b3778f5657c0623d556",
+          "Title": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via repeated rejected channel openings",
+          "Description": "An authenticated SSH client that repeatedly opened channels which were rejected by the server caused unbounded memory growth, eventually crashing the server process and affecting all connected users. Rejected channels are now properly removed from the connection's internal state and released for garbage collection.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-924"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 6.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-39827",
+            "https://go.dev/cl/781320",
+            "https://go.dev/issue/35127",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39827",
+            "https://pkg.go.dev/vuln/GO-2026-5016",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39827"
+          ],
+          "PublishedDate": "2026-05-22T04:16:21.497Z",
+          "LastModifiedDate": "2026-06-17T10:42:39.063Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-46598",
+          "VendorIDs": [
+            "GO-2026-5033"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "ec8078db4dc56613"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-46598",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:ff54926b3b414e1737a0005110d74f0d154a6855a2a40375c275ffa50de7e15c",
+          "Title": "golang.org/x/crypto/ssh/agent: golang: golang.org/x/crypto/ssh/agent: Denial of Service via malformed input",
+          "Description": "For certain crafted inputs, a 'ed25519.PrivateKey' was created by casting malformed wire bytes, leading to a panic when used.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-129"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-46598",
+            "https://go.dev/cl/781360",
+            "https://go.dev/issue/79596",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-46598",
+            "https://pkg.go.dev/vuln/GO-2026-5033",
+            "https://www.cve.org/CVERecord?id=CVE-2026-46598"
+          ],
+          "PublishedDate": "2026-05-22T04:16:26.537Z",
+          "LastModifiedDate": "2026-06-17T10:53:47.52Z"
+        },
+        {
+          "VulnerabilityID": "GO-2026-5932",
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "ec8078db4dc56613"
+          },
+          "InstalledVersion": "v0.45.0",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:cf18059720e181b14fe92d36bef1a8fae332b106de31b9196679cd20e5f75f06",
+          "Title": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues",
+          "Description": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+          "Severity": "UNKNOWN",
+          "References": [
+            "https://go.dev/issue/44226",
+            "https://pkg.go.dev/vuln/GO-2026-5932"
+          ]
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39824",
+          "VendorIDs": [
+            "GO-2026-5024"
+          ],
+          "PkgID": "golang.org/x/sys@v0.38.0",
+          "PkgName": "golang.org/x/sys",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.38.0",
+            "UID": "88cb93fdee4bedeb"
+          },
+          "InstalledVersion": "v0.38.0",
+          "FixedVersion": "0.44.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39824",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:dde123102413e7f220ba428a845d47c2a9337ed6eec554ac10a935cf9a1d9712",
+          "Title": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows",
+          "Description": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-190"
+          ],
+          "References": [
+            "https://go.dev/cl/770080",
+            "https://go.dev/issue/78916",
+            "https://groups.google.com/g/golang-announce/c/6MMI8Lj-Atg",
+            "https://pkg.go.dev/vuln/GO-2026-5024"
+          ],
+          "PublishedDate": "2026-05-22T20:16:33.057Z",
+          "LastModifiedDate": "2026-06-17T10:42:38.62Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "8843c38ea213b265"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:ce03cafd79492861069c7583f36519844ed85028210f2dddc4023952a6cbfbb4",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    },
+    {
+      "Target": "nix/store/4yk77mj36c62l1zsm61cailm82xb0dz2-age-fips-1.3.1/bin/age-keygen",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "filippo.io/age",
+          "Name": "filippo.io/age",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/age",
+            "UID": "eb618f4e767c4f4"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "filippo.io/hpke@v0.4.0",
+            "golang.org/x/crypto@v0.45.0",
+            "golang.org/x/sys@v0.38.0",
+            "golang.org/x/term@v0.37.0",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "b3bc93f1b6189de2"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "filippo.io/hpke@v0.4.0",
+          "Name": "filippo.io/hpke",
+          "Identifier": {
+            "PURL": "pkg:golang/filippo.io/hpke@v0.4.0",
+            "UID": "624fefdeac33d48c"
+          },
+          "Version": "v0.4.0",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/crypto@v0.45.0",
+          "Name": "golang.org/x/crypto",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "75eb6cb854f3c88"
+          },
+          "Version": "v0.45.0",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.38.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.38.0",
+            "UID": "5ac8f02122dd084"
+          },
+          "Version": "v0.38.0",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/term@v0.37.0",
+          "Name": "golang.org/x/term",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/term@v0.37.0",
+            "UID": "42c67d74f408a4e5"
+          },
+          "Version": "v0.37.0",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-39828",
+          "VendorIDs": [
+            "GO-2026-5014"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "75eb6cb854f3c88"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39828",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:e398b154d69e12db7084b758de5241c7002c33f6ffcc7b4d8a72d33c811c5aa9",
+          "Title": "golang.org/x/crypto/ssh: golang.org/x/crypto/ssh: Unauthorized command execution via discarded SSH permissions",
+          "Description": "When an SSH server authentication callback returned PartialSuccessError with non-nil Permissions, those permissions were silently discarded, potentially dropping certificate restrictions such as force-command after a second factor succeeded. Returning non-nil Permissions with PartialSuccessError now results in a connection error.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-295",
+            "CWE-281"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:26546",
+            "https://access.redhat.com/errata/RHSA-2026:26547",
+            "https://access.redhat.com/errata/RHSA-2026:36105",
+            "https://access.redhat.com/errata/RHSA-2026:36167",
+            "https://access.redhat.com/errata/RHSA-2026:36207",
+            "https://access.redhat.com/errata/RHSA-2026:36319",
+            "https://access.redhat.com/errata/RHSA-2026:36625",
+            "https://access.redhat.com/errata/RHSA-2026:36648",
+            "https://access.redhat.com/security/cve/CVE-2026-39828",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2480687",
+            "https://go.dev/cl/781621",
+            "https://go.dev/issue/79562",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39828",
+            "https://pkg.go.dev/vuln/GO-2026-5014",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-39828.json",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39828"
+          ],
+          "PublishedDate": "2026-05-22T04:16:22.19Z",
+          "LastModifiedDate": "2026-07-08T13:16:40.1Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39835",
+          "VendorIDs": [
+            "GO-2026-5015"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "75eb6cb854f3c88"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39835",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:3a3bee3d0287c210feae69885a364714bbc769dc7e36685bf6b5112ebc402876",
+          "Title": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via crafted SSH certificate",
+          "Description": "SSH servers which use CertChecker as a public key callback without setting IsUserAuthority or IsHostAuthority could be caused to panic by a client presenting a certificate. CertChecker now returns an error instead of panicking when these callbacks are nil.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-295",
+            "CWE-476"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 7.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:26546",
+            "https://access.redhat.com/errata/RHSA-2026:26547",
+            "https://access.redhat.com/errata/RHSA-2026:36199",
+            "https://access.redhat.com/errata/RHSA-2026:36207",
+            "https://access.redhat.com/errata/RHSA-2026:36319",
+            "https://access.redhat.com/errata/RHSA-2026:36625",
+            "https://access.redhat.com/errata/RHSA-2026:36648",
+            "https://access.redhat.com/security/cve/CVE-2026-39835",
+            "https://bugzilla.redhat.com/2480680",
+            "https://bugzilla.redhat.com/2480681",
+            "https://bugzilla.redhat.com/2480684",
+            "https://bugzilla.redhat.com/2480685",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2480680",
+            "https://errata.almalinux.org/10/ALSA-2026-36199.html",
+            "https://go.dev/cl/781660",
+            "https://go.dev/issue/79563",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39835",
+            "https://pkg.go.dev/vuln/GO-2026-5015",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-39835.json",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39835"
+          ],
+          "PublishedDate": "2026-05-22T04:16:24.53Z",
+          "LastModifiedDate": "2026-07-08T13:16:41.093Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39827",
+          "VendorIDs": [
+            "GO-2026-5016"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "75eb6cb854f3c88"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39827",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:1c735528108c814f7540422abababe95ff873b5fc3cfd97cf3fe3f13b88399f9",
+          "Title": "golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh: Denial of Service via repeated rejected channel openings",
+          "Description": "An authenticated SSH client that repeatedly opened channels which were rejected by the server caused unbounded memory growth, eventually crashing the server process and affecting all connected users. Rejected channels are now properly removed from the connection's internal state and released for garbage collection.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-924"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+              "V3Score": 6.5
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-39827",
+            "https://go.dev/cl/781320",
+            "https://go.dev/issue/35127",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-39827",
+            "https://pkg.go.dev/vuln/GO-2026-5016",
+            "https://www.cve.org/CVERecord?id=CVE-2026-39827"
+          ],
+          "PublishedDate": "2026-05-22T04:16:21.497Z",
+          "LastModifiedDate": "2026-06-17T10:42:39.063Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-46598",
+          "VendorIDs": [
+            "GO-2026-5033"
+          ],
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "75eb6cb854f3c88"
+          },
+          "InstalledVersion": "v0.45.0",
+          "FixedVersion": "0.52.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-46598",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:27a590d0427108d292a640ef2a1933548087660e03bfea0d4b076e5490a74463",
+          "Title": "golang.org/x/crypto/ssh/agent: golang: golang.org/x/crypto/ssh/agent: Denial of Service via malformed input",
+          "Description": "For certain crafted inputs, a 'ed25519.PrivateKey' was created by casting malformed wire bytes, leading to a panic when used.",
+          "Severity": "MEDIUM",
+          "CweIDs": [
+            "CWE-129"
+          ],
+          "VendorSeverity": {
+            "amazon": 3,
+            "azure": 2,
+            "redhat": 2
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+              "V3Score": 5.3
+            }
+          },
+          "References": [
+            "https://access.redhat.com/security/cve/CVE-2026-46598",
+            "https://go.dev/cl/781360",
+            "https://go.dev/issue/79596",
+            "https://groups.google.com/g/golang-announce/c/a082jnz-LvI",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-46598",
+            "https://pkg.go.dev/vuln/GO-2026-5033",
+            "https://www.cve.org/CVERecord?id=CVE-2026-46598"
+          ],
+          "PublishedDate": "2026-05-22T04:16:26.537Z",
+          "LastModifiedDate": "2026-06-17T10:53:47.52Z"
+        },
+        {
+          "VulnerabilityID": "GO-2026-5932",
+          "PkgID": "golang.org/x/crypto@v0.45.0",
+          "PkgName": "golang.org/x/crypto",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/crypto@v0.45.0",
+            "UID": "75eb6cb854f3c88"
+          },
+          "InstalledVersion": "v0.45.0",
+          "Status": "affected",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:98b5a4e36d895e27cfb871fb8c4a3abea9b8a092d5599ca62293cd4a9276fe1f",
+          "Title": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues",
+          "Description": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+          "Severity": "UNKNOWN",
+          "References": [
+            "https://go.dev/issue/44226",
+            "https://pkg.go.dev/vuln/GO-2026-5932"
+          ]
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39824",
+          "VendorIDs": [
+            "GO-2026-5024"
+          ],
+          "PkgID": "golang.org/x/sys@v0.38.0",
+          "PkgName": "golang.org/x/sys",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.38.0",
+            "UID": "5ac8f02122dd084"
+          },
+          "InstalledVersion": "v0.38.0",
+          "FixedVersion": "0.44.0",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39824",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:00bba59cac817a37082755aecedadb6c77bef0be5ba802333113630998320f6b",
+          "Title": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows",
+          "Description": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-190"
+          ],
+          "References": [
+            "https://go.dev/cl/770080",
+            "https://go.dev/issue/78916",
+            "https://groups.google.com/g/golang-announce/c/6MMI8Lj-Atg",
+            "https://pkg.go.dev/vuln/GO-2026-5024"
+          ],
+          "PublishedDate": "2026-05-22T20:16:33.057Z",
+          "LastModifiedDate": "2026-06-17T10:42:38.62Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "b3bc93f1b6189de2"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:367f945bd549f2c53691ca00aeb0368c2f1a2349894e955bc58b09f744e085b0",
+            "DiffID": "sha256:261dd3cb9eaebdd097398c64be108af77b4b1d03507fb2f19f2fb5cae943d304"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:701b40efff6c5e5b17e1d67054e8a14cbf22149a52abafbe74538c319540fa25",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    }
+  ]
+}

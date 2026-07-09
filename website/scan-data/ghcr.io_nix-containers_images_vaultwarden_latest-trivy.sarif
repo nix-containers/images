@@ -1,0 +1,695 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-44662",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming langua ..."
+              },
+              "fullDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming language. From 0.10.0 to before 0.10.79, CipherCtxRef::cipher_update, CipherCtxRef::cipher_update_vec, and symm::Crypter::update incorrectly sized output buffers when used with AES key-wrap-with-padding ciphers (EVP_aes_{128,192,256}_wrap_pad). For a non-multiple-of-8 input, OpenSSL writes up to 7 bytes past the end of the caller's buffer or Vec, producing attacker-controllable heap corruption when the plaintext length is attacker-influenced. This only impacts users using AES key-wrap-with-padding ciphers. This vulnerability is fixed in 0.10.79."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44662",
+              "help": {
+                "text": "Vulnerability CVE-2026-44662\nSeverity: MEDIUM\nPackage: openssl\nFixed Version: 0.10.79\nLink: [CVE-2026-44662](https://avd.aquasec.com/nvd/cve-2026-44662)\nrust-openssl provides OpenSSL bindings for the Rust programming language. From 0.10.0 to before 0.10.79, CipherCtxRef::cipher_update, CipherCtxRef::cipher_update_vec, and symm::Crypter::update incorrectly sized output buffers when used with AES key-wrap-with-padding ciphers (EVP_aes_{128,192,256}_wrap_pad). For a non-multiple-of-8 input, OpenSSL writes up to 7 bytes past the end of the caller's buffer or Vec, producing attacker-controllable heap corruption when the plaintext length is attacker-influenced. This only impacts users using AES key-wrap-with-padding ciphers. This vulnerability is fixed in 0.10.79.",
+                "markdown": "**Vulnerability CVE-2026-44662**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|openssl|0.10.79|[CVE-2026-44662](https://avd.aquasec.com/nvd/cve-2026-44662)|\n\nrust-openssl provides OpenSSL bindings for the Rust programming language. From 0.10.0 to before 0.10.79, CipherCtxRef::cipher_update, CipherCtxRef::cipher_update_vec, and symm::Crypter::update incorrectly sized output buffers when used with AES key-wrap-with-padding ciphers (EVP_aes_{128,192,256}_wrap_pad). For a non-multiple-of-8 input, OpenSSL writes up to 7 bytes past the end of the caller's buffer or Vec, producing attacker-controllable heap corruption when the plaintext length is attacker-influenced. This only impacts users using AES key-wrap-with-padding ciphers. This vulnerability is fixed in 0.10.79."
+              },
+              "properties": {
+                "cvssv40_baseScore": 5.1,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-45784",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl: Potential out-of-bounds write in `CipherCtxRef::cipher_update_inplace` for AES-KW-PAD ciphers"
+              },
+              "fullDescription": {
+                "text": "`CipherCtxRef::cipher_update_inplace` incorrectly sized output buffers when used with AES key-wrap-with-padding ciphers (EVP_aes_{128,192,256}_wrap_pad). For a non-multiple-of-8 input, OpenSSL writes up to 7 bytes past the end of the caller's buffer or Vec, producing attacker-controllable heap corruption when the plaintext length is attacker-influenced.\n\nThis only impacts users using AES key-wrap-with-padding ciphers.\n\nThis method was missed in the fix for GHSA-xv59-967r-8726"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-45784",
+              "help": {
+                "text": "Vulnerability CVE-2026-45784\nSeverity: MEDIUM\nPackage: openssl\nFixed Version: 0.10.80\nLink: [CVE-2026-45784](https://avd.aquasec.com/nvd/cve-2026-45784)\n`CipherCtxRef::cipher_update_inplace` incorrectly sized output buffers when used with AES key-wrap-with-padding ciphers (EVP_aes_{128,192,256}_wrap_pad). For a non-multiple-of-8 input, OpenSSL writes up to 7 bytes past the end of the caller's buffer or Vec, producing attacker-controllable heap corruption when the plaintext length is attacker-influenced.\n\nThis only impacts users using AES key-wrap-with-padding ciphers.\n\nThis method was missed in the fix for GHSA-xv59-967r-8726",
+                "markdown": "**Vulnerability CVE-2026-45784**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|openssl|0.10.80|[CVE-2026-45784](https://avd.aquasec.com/nvd/cve-2026-45784)|\n\n`CipherCtxRef::cipher_update_inplace` incorrectly sized output buffers when used with AES key-wrap-with-padding ciphers (EVP_aes_{128,192,256}_wrap_pad). For a non-multiple-of-8 input, OpenSSL writes up to 7 bytes past the end of the caller's buffer or Vec, producing attacker-controllable heap corruption when the plaintext length is attacker-influenced.\n\nThis only impacts users using AES key-wrap-with-padding ciphers.\n\nThis method was missed in the fix for GHSA-xv59-967r-8726"
+              },
+              "properties": {
+                "cvssv40_baseScore": 5.1,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-965h-392x-2mh5",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "webpki: Name constraints for URI names were incorrectly accepted"
+              },
+              "fullDescription": {
+                "text": "Name constraints for URI names were ignored and therefore accepted.\n\nNote this library does not provide an API for asserting URI names, and URI name constraints are otherwise not implemented.  URI name constraints are now rejected unconditionally.\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-965h-392x-2mh5",
+              "help": {
+                "text": "Vulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nPackage: rustls-webpki\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)\nName constraints for URI names were ignored and therefore accepted.\n\nNote this library does not provide an API for asserting URI names, and URI name constraints are otherwise not implemented.  URI name constraints are now rejected unconditionally.\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit.",
+                "markdown": "**Vulnerability GHSA-965h-392x-2mh5**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rustls-webpki|0.103.12, 0.104.0-alpha.6|[GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)|\n\nName constraints for URI names were ignored and therefore accepted.\n\nNote this library does not provide an API for asserting URI names, and URI name constraints are otherwise not implemented.  URI name constraints are now rejected unconditionally.\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "properties": {
+                "cvssv3_baseScore": 2.2,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "2.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-xgp8-3hg3-c2mh",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "webpki: Name constraints were accepted for certificates asserting a wildcard name"
+              },
+              "fullDescription": {
+                "text": "Permitted subtree name constraints for DNS names were accepted for certificates asserting a wildcard name.\n\nThis was incorrect because, given a name constraint of `accept.example.com`, `*.example.com` could feasibly allow a name of `reject.example.com` which is outside the constraint.\nThis is very similar to [CVE-2025-61727](https://go.dev/issue/76442).\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-xgp8-3hg3-c2mh",
+              "help": {
+                "text": "Vulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nPackage: rustls-webpki\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)\nPermitted subtree name constraints for DNS names were accepted for certificates asserting a wildcard name.\n\nThis was incorrect because, given a name constraint of `accept.example.com`, `*.example.com` could feasibly allow a name of `reject.example.com` which is outside the constraint.\nThis is very similar to [CVE-2025-61727](https://go.dev/issue/76442).\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit.",
+                "markdown": "**Vulnerability GHSA-xgp8-3hg3-c2mh**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rustls-webpki|0.103.12, 0.104.0-alpha.6|[GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)|\n\nPermitted subtree name constraints for DNS names were accepted for certificates asserting a wildcard name.\n\nThis was incorrect because, given a name constraint of `accept.example.com`, `*.example.com` could feasibly allow a name of `reject.example.com` which is outside the constraint.\nThis is very similar to [CVE-2025-61727](https://go.dev/issue/76442).\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "properties": {
+                "cvssv3_baseScore": 2.2,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "2.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-27801",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "vaultwarden: Vaultwarden: Two-factor authentication bypass allows unauthorized access and data deletion."
+              },
+              "fullDescription": {
+                "text": "Vaultwarden is an unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs. Vaultwarden versions 1.34.3 and prior are susceptible to a 2FA bypass when performing protected actions. An attacker who gains authenticated access to a user’s account can exploit this bypass to perform protected actions such as accessing the user’s API key or deleting the user’s vault and organisations the user is an admin/owner of . This issue has been patched in version 1.35.0."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-27801",
+              "help": {
+                "text": "Vulnerability CVE-2026-27801\nSeverity: MEDIUM\nPackage: vaultwarden\nFixed Version: 1.35.0\nLink: [CVE-2026-27801](https://avd.aquasec.com/nvd/cve-2026-27801)\nVaultwarden is an unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs. Vaultwarden versions 1.34.3 and prior are susceptible to a 2FA bypass when performing protected actions. An attacker who gains authenticated access to a user’s account can exploit this bypass to perform protected actions such as accessing the user’s API key or deleting the user’s vault and organisations the user is an admin/owner of . This issue has been patched in version 1.35.0.",
+                "markdown": "**Vulnerability CVE-2026-27801**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|vaultwarden|1.35.0|[CVE-2026-27801](https://avd.aquasec.com/nvd/cve-2026-27801)|\n\nVaultwarden is an unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs. Vaultwarden versions 1.34.3 and prior are susceptible to a 2FA bypass when performing protected actions. An attacker who gains authenticated access to a user’s account can exploit this bypass to perform protected actions such as accessing the user’s API key or deleting the user’s vault and organisations the user is an admin/owner of . This issue has been patched in version 1.35.0."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:L/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-27898",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "vaultwarden: Vaultwarden: Information disclosure via API partial update"
+              },
+              "fullDescription": {
+                "text": "Vaultwarden is an unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs. Prior to version 1.35.4, an authenticated regular user can specify another user’s cipher_id and call \"PUT /api/ciphers/{id}/partial\" Even though the standard retrieval API correctly denies access to that cipher, the partial update endpoint returns 200 OK and exposes cipherDetails (including name, notes, data, secureNote, etc.). This issue has been patched in version 1.35.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-27898",
+              "help": {
+                "text": "Vulnerability CVE-2026-27898\nSeverity: MEDIUM\nPackage: vaultwarden\nFixed Version: 1.35.4\nLink: [CVE-2026-27898](https://avd.aquasec.com/nvd/cve-2026-27898)\nVaultwarden is an unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs. Prior to version 1.35.4, an authenticated regular user can specify another user’s cipher_id and call \"PUT /api/ciphers/{id}/partial\" Even though the standard retrieval API correctly denies access to that cipher, the partial update endpoint returns 200 OK and exposes cipherDetails (including name, notes, data, secureNote, etc.). This issue has been patched in version 1.35.4.",
+                "markdown": "**Vulnerability CVE-2026-27898**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|vaultwarden|1.35.4|[CVE-2026-27898](https://avd.aquasec.com/nvd/cve-2026-27898)|\n\nVaultwarden is an unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs. Prior to version 1.35.4, an authenticated regular user can specify another user’s cipher_id and call \"PUT /api/ciphers/{id}/partial\" Even though the standard retrieval API correctly denies access to that cipher, the partial update endpoint returns 200 OK and exposes cipherDetails (including name, notes, data, secureNote, etc.). This issue has been patched in version 1.35.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.4,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.4",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-55224",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Vaultwarden HTML injection vulnerability"
+              },
+              "fullDescription": {
+                "text": "An HTML injection vulnerability in Vaultwarden prior to v1.32.5 allows attackers to execute arbitrary code via injecting a crafted payload into the username field of an e-mail message."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-55224",
+              "help": {
+                "text": "Vulnerability CVE-2024-55224\nSeverity: LOW\nPackage: vaultwarden\nFixed Version: 1.32.5\nLink: [CVE-2024-55224](https://avd.aquasec.com/nvd/cve-2024-55224)\nAn HTML injection vulnerability in Vaultwarden prior to v1.32.5 allows attackers to execute arbitrary code via injecting a crafted payload into the username field of an e-mail message.",
+                "markdown": "**Vulnerability CVE-2024-55224**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|vaultwarden|1.32.5|[CVE-2024-55224](https://avd.aquasec.com/nvd/cve-2024-55224)|\n\nAn HTML injection vulnerability in Vaultwarden prior to v1.32.5 allows attackers to execute arbitrary code via injecting a crafted payload into the username field of an e-mail message."
+              },
+              "properties": {
+                "cvssv40_baseScore": 1.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:N/VI:N/VA:N/SC:L/SI:L/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-55226",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Vaultwarden authenticated reflected cross-site scripting (XSS) vulnerability"
+              },
+              "fullDescription": {
+                "text": "Vaultwarden v1.32.5 was discovered to contain an authenticated reflected cross-site scripting (XSS) vulnerability via the component /api/core/mod.rs."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-55226",
+              "help": {
+                "text": "Vulnerability CVE-2024-55226\nSeverity: LOW\nPackage: vaultwarden\nFixed Version: 1.32.5\nLink: [CVE-2024-55226](https://avd.aquasec.com/nvd/cve-2024-55226)\nVaultwarden v1.32.5 was discovered to contain an authenticated reflected cross-site scripting (XSS) vulnerability via the component /api/core/mod.rs.",
+                "markdown": "**Vulnerability CVE-2024-55226**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|vaultwarden|1.32.5|[CVE-2024-55226](https://avd.aquasec.com/nvd/cve-2024-55226)|\n\nVaultwarden v1.32.5 was discovered to contain an authenticated reflected cross-site scripting (XSS) vulnerability via the component /api/core/mod.rs."
+              },
+              "properties": {
+                "cvssv40_baseScore": 1.1,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:A/VC:N/VI:N/VA:N/SC:L/SI:L/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-44662",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.78\nVulnerability CVE-2026-44662\nSeverity: MEDIUM\nFixed Version: 0.10.79\nLink: [CVE-2026-44662](https://avd.aquasec.com/nvd/cve-2026-44662)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/vaultwarden: openssl@0.10.78"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45784",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.78\nVulnerability CVE-2026-45784\nSeverity: MEDIUM\nFixed Version: 0.10.80\nLink: [CVE-2026-45784](https://avd.aquasec.com/nvd/cve-2026-45784)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/vaultwarden: openssl@0.10.78"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-965h-392x-2mh5",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.101.7\nVulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/vaultwarden: rustls-webpki@0.101.7"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xgp8-3hg3-c2mh",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.101.7\nVulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/vaultwarden: rustls-webpki@0.101.7"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27801",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: vaultwarden\nInstalled Version: 1.0.0\nVulnerability CVE-2026-27801\nSeverity: MEDIUM\nFixed Version: 1.35.0\nLink: [CVE-2026-27801](https://avd.aquasec.com/nvd/cve-2026-27801)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/vaultwarden: vaultwarden@1.0.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27898",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: vaultwarden\nInstalled Version: 1.0.0\nVulnerability CVE-2026-27898\nSeverity: MEDIUM\nFixed Version: 1.35.4\nLink: [CVE-2026-27898](https://avd.aquasec.com/nvd/cve-2026-27898)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/vaultwarden: vaultwarden@1.0.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-55224",
+          "ruleIndex": 6,
+          "level": "note",
+          "message": {
+            "text": "Package: vaultwarden\nInstalled Version: 1.0.0\nVulnerability CVE-2024-55224\nSeverity: LOW\nFixed Version: 1.32.5\nLink: [CVE-2024-55224](https://avd.aquasec.com/nvd/cve-2024-55224)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/vaultwarden: vaultwarden@1.0.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-55226",
+          "ruleIndex": 7,
+          "level": "note",
+          "message": {
+            "text": "Package: vaultwarden\nInstalled Version: 1.0.0\nVulnerability CVE-2024-55226\nSeverity: LOW\nFixed Version: 1.32.5\nLink: [CVE-2024-55226](https://avd.aquasec.com/nvd/cve-2024-55226)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/vaultwarden: vaultwarden@1.0.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44662",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.78\nVulnerability CVE-2026-44662\nSeverity: MEDIUM\nFixed Version: 0.10.79\nLink: [CVE-2026-44662](https://avd.aquasec.com/nvd/cve-2026-44662)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden: openssl@0.10.78"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45784",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.78\nVulnerability CVE-2026-45784\nSeverity: MEDIUM\nFixed Version: 0.10.80\nLink: [CVE-2026-45784](https://avd.aquasec.com/nvd/cve-2026-45784)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden: openssl@0.10.78"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-965h-392x-2mh5",
+          "ruleIndex": 2,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.101.7\nVulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden: rustls-webpki@0.101.7"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xgp8-3hg3-c2mh",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.101.7\nVulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden: rustls-webpki@0.101.7"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27801",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: vaultwarden\nInstalled Version: 1.0.0\nVulnerability CVE-2026-27801\nSeverity: MEDIUM\nFixed Version: 1.35.0\nLink: [CVE-2026-27801](https://avd.aquasec.com/nvd/cve-2026-27801)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden: vaultwarden@1.0.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27898",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: vaultwarden\nInstalled Version: 1.0.0\nVulnerability CVE-2026-27898\nSeverity: MEDIUM\nFixed Version: 1.35.4\nLink: [CVE-2026-27898](https://avd.aquasec.com/nvd/cve-2026-27898)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden: vaultwarden@1.0.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-55224",
+          "ruleIndex": 6,
+          "level": "note",
+          "message": {
+            "text": "Package: vaultwarden\nInstalled Version: 1.0.0\nVulnerability CVE-2024-55224\nSeverity: LOW\nFixed Version: 1.32.5\nLink: [CVE-2024-55224](https://avd.aquasec.com/nvd/cve-2024-55224)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden: vaultwarden@1.0.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-55226",
+          "ruleIndex": 7,
+          "level": "note",
+          "message": {
+            "text": "Package: vaultwarden\nInstalled Version: 1.0.0\nVulnerability CVE-2024-55226\nSeverity: LOW\nFixed Version: 1.32.5\nLink: [CVE-2024-55226](https://avd.aquasec.com/nvd/cve-2024-55226)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/13wlx3f2vlil14mxg6vzkzvfgxybfm2n-vaultwarden-1.36.0/bin/vaultwarden: vaultwarden@1.0.0"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:abc5c3785cd2c89d2b5b1cd6f70f338469cc6438b3cc4571240a14e914b49422",
+        "imageName": "ghcr.io/nix-containers/images/vaultwarden:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/vaultwarden@sha256:9b00e73b7b1590f1aa3394dc8fd7d1af25134dbd6963439a3f6cb452010934bf"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/vaultwarden:latest"
+        ]
+      }
+    }
+  ]
+}

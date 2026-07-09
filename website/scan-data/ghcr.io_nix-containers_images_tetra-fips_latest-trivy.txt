@@ -1,0 +1,77 @@
+2026-07-09T12:14:33Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:14:33Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:14:33Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:14:33Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:14:35Z	INFO	Number of language-specific files	num=2
+2026-07-09T12:14:35Z	INFO	[gobinary] Detecting vulnerabilities...
+2026-07-09T12:14:35Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.71/guide/scanner/vulnerability#severity-selection for details.
+2026-07-09T12:14:35Z	INFO	Some vulnerabilities have been ignored/suppressed. Use the "--show-suppressed" flag to display them.
+
+Report Summary
+
+┌───────────────────────────────────────────────────────────────────────┬──────────┬─────────────────┬─────────┐
+│                                Target                                 │   Type   │ Vulnerabilities │ Secrets │
+├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ bin/tetra                                                             │ gobinary │        3        │    -    │
+├───────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/x5ax0mqr39y1c1wzr7hrlb6m3c866nyx-tetra-fips-1.7.0/bin/tetra │ gobinary │        3        │    -    │
+└───────────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+bin/tetra (gobinary)
+====================
+Total: 3 (HIGH: 3, CRITICAL: 0)
+
+┌──────────────────┬────────────────┬──────────┬────────┬───────────────────┬─────────────────┬──────────────────────────────────────────────────────────────┐
+│     Library      │ Vulnerability  │ Severity │ Status │ Installed Version │  Fixed Version  │                            Title                             │
+├──────────────────┼────────────────┼──────────┼────────┼───────────────────┼─────────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/net │ CVE-2026-25681 │ HIGH     │ fixed  │ v0.52.0           │ 0.55.0          │ golang.org/x/net/html: golang.org/x/net/html: Arbitrary code │
+│                  │                │          │        │                   │                 │ execution via Cross-Site Scripting                           │
+│                  │                │          │        │                   │                 │ https://avd.aquasec.com/nvd/cve-2026-25681                   │
+│                  ├────────────────┤          │        │                   │                 ├──────────────────────────────────────────────────────────────┤
+│                  │ CVE-2026-27136 │          │        │                   │                 │ golang.org/x/net/html: golang: golang.org/x/net/html:        │
+│                  │                │          │        │                   │                 │ Cross-Site Scripting via HTML parsing bypass                 │
+│                  │                │          │        │                   │                 │ https://avd.aquasec.com/nvd/cve-2026-27136                   │
+├──────────────────┼────────────────┤          │        ├───────────────────┼─────────────────┼──────────────────────────────────────────────────────────────┤
+│ stdlib           │ CVE-2026-27145 │          │        │ v1.26.2           │ 1.25.11, 1.26.4 │ crypto/x509: golang: golang crypto/x509: Denial of Service   │
+│                  │                │          │        │                   │                 │ via excessive processing of DNS...                           │
+│                  │                │          │        │                   │                 │ https://avd.aquasec.com/nvd/cve-2026-27145                   │
+└──────────────────┴────────────────┴──────────┴────────┴───────────────────┴─────────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/x5ax0mqr39y1c1wzr7hrlb6m3c866nyx-tetra-fips-1.7.0/bin/tetra (gobinary)
+================================================================================
+Total: 3 (HIGH: 3, CRITICAL: 0)
+
+┌──────────────────┬────────────────┬──────────┬────────┬───────────────────┬─────────────────┬──────────────────────────────────────────────────────────────┐
+│     Library      │ Vulnerability  │ Severity │ Status │ Installed Version │  Fixed Version  │                            Title                             │
+├──────────────────┼────────────────┼──────────┼────────┼───────────────────┼─────────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/net │ CVE-2026-25681 │ HIGH     │ fixed  │ v0.52.0           │ 0.55.0          │ golang.org/x/net/html: golang.org/x/net/html: Arbitrary code │
+│                  │                │          │        │                   │                 │ execution via Cross-Site Scripting                           │
+│                  │                │          │        │                   │                 │ https://avd.aquasec.com/nvd/cve-2026-25681                   │
+│                  ├────────────────┤          │        │                   │                 ├──────────────────────────────────────────────────────────────┤
+│                  │ CVE-2026-27136 │          │        │                   │                 │ golang.org/x/net/html: golang: golang.org/x/net/html:        │
+│                  │                │          │        │                   │                 │ Cross-Site Scripting via HTML parsing bypass                 │
+│                  │                │          │        │                   │                 │ https://avd.aquasec.com/nvd/cve-2026-27136                   │
+├──────────────────┼────────────────┤          │        ├───────────────────┼─────────────────┼──────────────────────────────────────────────────────────────┤
+│ stdlib           │ CVE-2026-27145 │          │        │ v1.26.2           │ 1.25.11, 1.26.4 │ crypto/x509: golang: golang crypto/x509: Denial of Service   │
+│                  │                │          │        │                   │                 │ via excessive processing of DNS...                           │
+│                  │                │          │        │                   │                 │ https://avd.aquasec.com/nvd/cve-2026-27145                   │
+└──────────────────┴────────────────┴──────────┴────────┴───────────────────┴─────────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

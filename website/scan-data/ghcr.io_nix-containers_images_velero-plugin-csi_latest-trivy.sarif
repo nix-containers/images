@@ -1,0 +1,1438 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "GO-2026-5932",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues"
+              },
+              "fullDescription": {
+                "text": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "help": {
+                "text": "Vulnerability GO-2026-5932\nSeverity: UNKNOWN\nPackage: golang.org/x/crypto\nFixed Version: \nLink: [GO-2026-5932]()\nThe golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+                "markdown": "**Vulnerability GO-2026-5932**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/crypto||[GO-2026-5932]()|\n\nThe golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39822",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symli ..."
+              },
+              "fullDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39822",
+              "help": {
+                "text": "Vulnerability CVE-2026-39822\nSeverity: UNKNOWN\nPackage: stdlib\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+                "markdown": "**Vulnerability CVE-2026-39822**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|stdlib|1.25.12, 1.26.5, 1.27.0-rc.2|[CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)|\n\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2023-45288",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang: net/http, x/net/http2: unlimited number of CONTINUATION frames causes DoS"
+              },
+              "fullDescription": {
+                "text": "An attacker may cause an HTTP/2 endpoint to read arbitrary amounts of header data by sending an excessive number of CONTINUATION frames. Maintaining HPACK state requires parsing and processing all HEADERS and CONTINUATION frames on a connection. When a request's headers exceed MaxHeaderBytes, no memory is allocated to store the excess headers, but they are still parsed. This permits an attacker to cause an HTTP/2 endpoint to read arbitrary amounts of header data, all associated with a request which is going to be rejected. These headers can include Huffman-encoded data which is significantly more expensive for the receiver to decode than for an attacker to send. The fix sets a limit on the amount of excess header frames we will process before closing a connection."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2023-45288",
+              "help": {
+                "text": "Vulnerability CVE-2023-45288\nSeverity: HIGH\nPackage: golang.org/x/net\nFixed Version: 0.23.0\nLink: [CVE-2023-45288](https://avd.aquasec.com/nvd/cve-2023-45288)\nAn attacker may cause an HTTP/2 endpoint to read arbitrary amounts of header data by sending an excessive number of CONTINUATION frames. Maintaining HPACK state requires parsing and processing all HEADERS and CONTINUATION frames on a connection. When a request's headers exceed MaxHeaderBytes, no memory is allocated to store the excess headers, but they are still parsed. This permits an attacker to cause an HTTP/2 endpoint to read arbitrary amounts of header data, all associated with a request which is going to be rejected. These headers can include Huffman-encoded data which is significantly more expensive for the receiver to decode than for an attacker to send. The fix sets a limit on the amount of excess header frames we will process before closing a connection.",
+                "markdown": "**Vulnerability CVE-2023-45288**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/net|0.23.0|[CVE-2023-45288](https://avd.aquasec.com/nvd/cve-2023-45288)|\n\nAn attacker may cause an HTTP/2 endpoint to read arbitrary amounts of header data by sending an excessive number of CONTINUATION frames. Maintaining HPACK state requires parsing and processing all HEADERS and CONTINUATION frames on a connection. When a request's headers exceed MaxHeaderBytes, no memory is allocated to store the excess headers, but they are still parsed. This permits an attacker to cause an HTTP/2 endpoint to read arbitrary amounts of header data, all associated with a request which is going to be rejected. These headers can include Huffman-encoded data which is significantly more expensive for the receiver to decode than for an attacker to send. The fix sets a limit on the amount of excess header frames we will process before closing a connection."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-45338",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: Non-linear parsing of case-insensitive content in golang.org/x/net/html"
+              },
+              "fullDescription": {
+                "text": "An attacker can craft an input to the Parse functions that would be processed non-linearly with respect to its length, resulting in extremely slow parsing. This could cause a denial of service."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-45338",
+              "help": {
+                "text": "Vulnerability CVE-2024-45338\nSeverity: HIGH\nPackage: golang.org/x/net\nFixed Version: 0.33.0\nLink: [CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)\nAn attacker can craft an input to the Parse functions that would be processed non-linearly with respect to its length, resulting in extremely slow parsing. This could cause a denial of service.",
+                "markdown": "**Vulnerability CVE-2024-45338**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/net|0.33.0|[CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)|\n\nAn attacker can craft an input to the Parse functions that would be processed non-linearly with respect to its length, resulting in extremely slow parsing. This could cause a denial of service."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-25681",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: golang.org/x/net/html: Arbitrary code execution via Cross-Site Scripting"
+              },
+              "fullDescription": {
+                "text": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-25681",
+              "help": {
+                "text": "Vulnerability CVE-2026-25681\nSeverity: HIGH\nPackage: golang.org/x/net\nFixed Version: 0.55.0\nLink: [CVE-2026-25681](https://avd.aquasec.com/nvd/cve-2026-25681)\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering.",
+                "markdown": "**Vulnerability CVE-2026-25681**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/net|0.55.0|[CVE-2026-25681](https://avd.aquasec.com/nvd/cve-2026-25681)|\n\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-27136",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: golang: golang.org/x/net/html: Cross-Site Scripting via HTML parsing bypass"
+              },
+              "fullDescription": {
+                "text": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-27136",
+              "help": {
+                "text": "Vulnerability CVE-2026-27136\nSeverity: HIGH\nPackage: golang.org/x/net\nFixed Version: 0.55.0\nLink: [CVE-2026-27136](https://avd.aquasec.com/nvd/cve-2026-27136)\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering.",
+                "markdown": "**Vulnerability CVE-2026-27136**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/net|0.55.0|[CVE-2026-27136](https://avd.aquasec.com/nvd/cve-2026-27136)|\n\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-22870",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/proxy: golang.org/x/net/http/httpproxy: HTTP Proxy bypass using IPv6 Zone IDs in golang.org/x/net"
+              },
+              "fullDescription": {
+                "text": "Matching of hosts against proxy patterns can improperly treat an IPv6 zone ID as a hostname component. For example, when the NO_PROXY environment variable is set to \"*.example.com\", a request to \"[::1%25.example.com]:80` will incorrectly match and not be proxied."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-22870",
+              "help": {
+                "text": "Vulnerability CVE-2025-22870\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.36.0\nLink: [CVE-2025-22870](https://avd.aquasec.com/nvd/cve-2025-22870)\nMatching of hosts against proxy patterns can improperly treat an IPv6 zone ID as a hostname component. For example, when the NO_PROXY environment variable is set to \"*.example.com\", a request to \"[::1%25.example.com]:80` will incorrectly match and not be proxied.",
+                "markdown": "**Vulnerability CVE-2025-22870**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.36.0|[CVE-2025-22870](https://avd.aquasec.com/nvd/cve-2025-22870)|\n\nMatching of hosts against proxy patterns can improperly treat an IPv6 zone ID as a hostname component. For example, when the NO_PROXY environment variable is set to \"*.example.com\", a request to \"[::1%25.example.com]:80` will incorrectly match and not be proxied."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-22872",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: Incorrect Neutralization of Input During Web Page Generation in x/net in golang.org/x/net"
+              },
+              "fullDescription": {
+                "text": "The tokenizer incorrectly interprets tags with unquoted attribute values that end with a solidus character (/) as self-closing. When directly using Tokenizer, this can result in such tags incorrectly being marked as self-closing, and when using the Parse functions, this can result in content following such tags as being placed in the wrong scope during DOM construction, but only when tags are in foreign content (e.g. \u003cmath\u003e, \u003csvg\u003e, etc contexts)."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-22872",
+              "help": {
+                "text": "Vulnerability CVE-2025-22872\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.38.0\nLink: [CVE-2025-22872](https://avd.aquasec.com/nvd/cve-2025-22872)\nThe tokenizer incorrectly interprets tags with unquoted attribute values that end with a solidus character (/) as self-closing. When directly using Tokenizer, this can result in such tags incorrectly being marked as self-closing, and when using the Parse functions, this can result in content following such tags as being placed in the wrong scope during DOM construction, but only when tags are in foreign content (e.g. \u003cmath\u003e, \u003csvg\u003e, etc contexts).",
+                "markdown": "**Vulnerability CVE-2025-22872**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.38.0|[CVE-2025-22872](https://avd.aquasec.com/nvd/cve-2025-22872)|\n\nThe tokenizer incorrectly interprets tags with unquoted attribute values that end with a solidus character (/) as self-closing. When directly using Tokenizer, this can result in such tags incorrectly being marked as self-closing, and when using the Parse functions, this can result in content following such tags as being placed in the wrong scope during DOM construction, but only when tags are in foreign content (e.g. \u003cmath\u003e, \u003csvg\u003e, etc contexts)."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-47911",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: Quadratic parsing complexity in golang.org/x/net/html"
+              },
+              "fullDescription": {
+                "text": "The html.Parse function in golang.org/x/net/html has quadratic parsing complexity when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-47911",
+              "help": {
+                "text": "Vulnerability CVE-2025-47911\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.45.0\nLink: [CVE-2025-47911](https://avd.aquasec.com/nvd/cve-2025-47911)\nThe html.Parse function in golang.org/x/net/html has quadratic parsing complexity when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content.",
+                "markdown": "**Vulnerability CVE-2025-47911**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.45.0|[CVE-2025-47911](https://avd.aquasec.com/nvd/cve-2025-47911)|\n\nThe html.Parse function in golang.org/x/net/html has quadratic parsing complexity when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-58190",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: Infinite parsing loop in golang.org/x/net"
+              },
+              "fullDescription": {
+                "text": "The html.Parse function in golang.org/x/net/html has an infinite parsing loop when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-58190",
+              "help": {
+                "text": "Vulnerability CVE-2025-58190\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.45.0\nLink: [CVE-2025-58190](https://avd.aquasec.com/nvd/cve-2025-58190)\nThe html.Parse function in golang.org/x/net/html has an infinite parsing loop when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content.",
+                "markdown": "**Vulnerability CVE-2025-58190**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.45.0|[CVE-2025-58190](https://avd.aquasec.com/nvd/cve-2025-58190)|\n\nThe html.Parse function in golang.org/x/net/html has an infinite parsing loop when processing certain inputs, which can lead to denial of service (DoS) if an attacker provides specially crafted HTML content."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-25680",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: golang.org/x/net/html: Denial of Service due to excessive HTML parsing"
+              },
+              "fullDescription": {
+                "text": "Parsing arbitrary HTML can consume excessive CPU time, possibly leading to denial of service."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-25680",
+              "help": {
+                "text": "Vulnerability CVE-2026-25680\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.55.0\nLink: [CVE-2026-25680](https://avd.aquasec.com/nvd/cve-2026-25680)\nParsing arbitrary HTML can consume excessive CPU time, possibly leading to denial of service.",
+                "markdown": "**Vulnerability CVE-2026-25680**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.55.0|[CVE-2026-25680](https://avd.aquasec.com/nvd/cve-2026-25680)|\n\nParsing arbitrary HTML can consume excessive CPU time, possibly leading to denial of service."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42502",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: golang: golang.org/x/net/html: Cross-Site Scripting via unexpected HTML tree rendering"
+              },
+              "fullDescription": {
+                "text": "Parsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42502",
+              "help": {
+                "text": "Vulnerability CVE-2026-42502\nSeverity: MEDIUM\nPackage: golang.org/x/net\nFixed Version: 0.55.0\nLink: [CVE-2026-42502](https://avd.aquasec.com/nvd/cve-2026-42502)\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering.",
+                "markdown": "**Vulnerability CVE-2026-42502**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/net|0.55.0|[CVE-2026-42502](https://avd.aquasec.com/nvd/cve-2026-42502)|\n\nParsing arbitrary HTML which is then rendered using Render can result in an unexpected HTML tree. This can be leveraged to execute XSS attacks in applications that attempt to sanitize input HTML before rendering."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-22868",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/oauth2/jws: Unexpected memory consumption during token parsing in golang.org/x/oauth2/jws"
+              },
+              "fullDescription": {
+                "text": "An attacker can pass a malicious malformed token which causes unexpected memory to be consumed during parsing."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-22868",
+              "help": {
+                "text": "Vulnerability CVE-2025-22868\nSeverity: HIGH\nPackage: golang.org/x/oauth2\nFixed Version: 0.27.0\nLink: [CVE-2025-22868](https://avd.aquasec.com/nvd/cve-2025-22868)\nAn attacker can pass a malicious malformed token which causes unexpected memory to be consumed during parsing.",
+                "markdown": "**Vulnerability CVE-2025-22868**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/oauth2|0.27.0|[CVE-2025-22868](https://avd.aquasec.com/nvd/cve-2025-22868)|\n\nAn attacker can pass a malicious malformed token which causes unexpected memory to be consumed during parsing."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39824",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows"
+              },
+              "fullDescription": {
+                "text": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39824",
+              "help": {
+                "text": "Vulnerability CVE-2026-39824\nSeverity: UNKNOWN\nPackage: golang.org/x/sys\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)\nNewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error.",
+                "markdown": "**Vulnerability CVE-2026-39824**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/sys|0.44.0|[CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)|\n\nNewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-33813",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/image: golang: golang.org/x/image: Denial of Service via malformed WEBP image parsing"
+              },
+              "fullDescription": {
+                "text": "Parsing a WEBP image with an invalid, large size panics on 32-bit platforms."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-33813",
+              "help": {
+                "text": "Vulnerability CVE-2026-33813\nSeverity: MEDIUM\nPackage: golang.org/x/image\nFixed Version: 0.42.0\nLink: [CVE-2026-33813](https://avd.aquasec.com/nvd/cve-2026-33813)\nParsing a WEBP image with an invalid, large size panics on 32-bit platforms.",
+                "markdown": "**Vulnerability CVE-2026-33813**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/image|0.42.0|[CVE-2026-33813](https://avd.aquasec.com/nvd/cve-2026-33813)|\n\nParsing a WEBP image with an invalid, large size panics on 32-bit platforms."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-46601",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/image/webp: golang.org/x/image/webp: Denial of Service via malformed VP8 chunk in WebP images"
+              },
+              "fullDescription": {
+                "text": "The webp decoder can panic when processing a VP8 chunk with dimensions that do not match the canvas size."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-46601",
+              "help": {
+                "text": "Vulnerability CVE-2026-46601\nSeverity: MEDIUM\nPackage: golang.org/x/image\nFixed Version: 0.43.0\nLink: [CVE-2026-46601](https://avd.aquasec.com/nvd/cve-2026-46601)\nThe webp decoder can panic when processing a VP8 chunk with dimensions that do not match the canvas size.",
+                "markdown": "**Vulnerability CVE-2026-46601**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|golang.org/x/image|0.43.0|[CVE-2026-46601](https://avd.aquasec.com/nvd/cve-2026-46601)|\n\nThe webp decoder can panic when processing a VP8 chunk with dimensions that do not match the canvas size."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-46602",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "The TIFF decoder does not set a limit on the size of tiles in tiled im ..."
+              },
+              "fullDescription": {
+                "text": "The TIFF decoder does not set a limit on the size of tiles in tiled images, permitting a malicious or corrupt image containing a very large tile to cause unbounded memory consumption."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-46602",
+              "help": {
+                "text": "Vulnerability CVE-2026-46602\nSeverity: UNKNOWN\nPackage: golang.org/x/image\nFixed Version: 0.43.0\nLink: [CVE-2026-46602](https://avd.aquasec.com/nvd/cve-2026-46602)\nThe TIFF decoder does not set a limit on the size of tiles in tiled images, permitting a malicious or corrupt image containing a very large tile to cause unbounded memory consumption.",
+                "markdown": "**Vulnerability CVE-2026-46602**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/image|0.43.0|[CVE-2026-46602](https://avd.aquasec.com/nvd/cve-2026-46602)|\n\nThe TIFF decoder does not set a limit on the size of tiles in tiled images, permitting a malicious or corrupt image containing a very large tile to cause unbounded memory consumption."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-46604",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "The TIFF decoder can panic when decoding an invalid image with an out- ..."
+              },
+              "fullDescription": {
+                "text": "The TIFF decoder can panic when decoding an invalid image with an out-of-bounds strip offset."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-46604",
+              "help": {
+                "text": "Vulnerability CVE-2026-46604\nSeverity: UNKNOWN\nPackage: golang.org/x/image\nFixed Version: 0.43.0\nLink: [CVE-2026-46604](https://avd.aquasec.com/nvd/cve-2026-46604)\nThe TIFF decoder can panic when decoding an invalid image with an out-of-bounds strip offset.",
+                "markdown": "**Vulnerability CVE-2026-46604**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/image|0.43.0|[CVE-2026-46604](https://avd.aquasec.com/nvd/cve-2026-46604)|\n\nThe TIFF decoder can panic when decoding an invalid image with an out-of-bounds strip offset."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.52.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/.restic-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/.restic-wrapped: golang.org/x/crypto@v0.52.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/.restic-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/.restic-wrapped: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-45288",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2023-45288\nSeverity: HIGH\nFixed Version: 0.23.0\nLink: [CVE-2023-45288](https://avd.aquasec.com/nvd/cve-2023-45288)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-45338",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2024-45338\nSeverity: HIGH\nFixed Version: 0.33.0\nLink: [CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25681",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2026-25681\nSeverity: HIGH\nFixed Version: 0.55.0\nLink: [CVE-2026-25681](https://avd.aquasec.com/nvd/cve-2026-25681)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27136",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2026-27136\nSeverity: HIGH\nFixed Version: 0.55.0\nLink: [CVE-2026-27136](https://avd.aquasec.com/nvd/cve-2026-27136)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22870",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2025-22870\nSeverity: MEDIUM\nFixed Version: 0.36.0\nLink: [CVE-2025-22870](https://avd.aquasec.com/nvd/cve-2025-22870)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22872",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2025-22872\nSeverity: MEDIUM\nFixed Version: 0.38.0\nLink: [CVE-2025-22872](https://avd.aquasec.com/nvd/cve-2025-22872)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-47911",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2025-47911\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-47911](https://avd.aquasec.com/nvd/cve-2025-47911)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-58190",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2025-58190\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-58190](https://avd.aquasec.com/nvd/cve-2025-58190)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25680",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2026-25680\nSeverity: MEDIUM\nFixed Version: 0.55.0\nLink: [CVE-2026-25680](https://avd.aquasec.com/nvd/cve-2026-25680)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42502",
+          "ruleIndex": 11,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2026-42502\nSeverity: MEDIUM\nFixed Version: 0.55.0\nLink: [CVE-2026-42502](https://avd.aquasec.com/nvd/cve-2026-42502)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22868",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/oauth2\nInstalled Version: v0.13.0\nVulnerability CVE-2025-22868\nSeverity: HIGH\nFixed Version: 0.27.0\nLink: [CVE-2025-22868](https://avd.aquasec.com/nvd/cve-2025-22868)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/oauth2@v0.13.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39824",
+          "ruleIndex": 13,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/sys\nInstalled Version: v0.15.0\nVulnerability CVE-2026-39824\nSeverity: UNKNOWN\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: golang.org/x/sys@v0.15.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/velero-plugin-for-csi: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-45288",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2023-45288\nSeverity: HIGH\nFixed Version: 0.23.0\nLink: [CVE-2023-45288](https://avd.aquasec.com/nvd/cve-2023-45288)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-45338",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2024-45338\nSeverity: HIGH\nFixed Version: 0.33.0\nLink: [CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25681",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2026-25681\nSeverity: HIGH\nFixed Version: 0.55.0\nLink: [CVE-2026-25681](https://avd.aquasec.com/nvd/cve-2026-25681)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27136",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2026-27136\nSeverity: HIGH\nFixed Version: 0.55.0\nLink: [CVE-2026-27136](https://avd.aquasec.com/nvd/cve-2026-27136)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22870",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2025-22870\nSeverity: MEDIUM\nFixed Version: 0.36.0\nLink: [CVE-2025-22870](https://avd.aquasec.com/nvd/cve-2025-22870)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22872",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2025-22872\nSeverity: MEDIUM\nFixed Version: 0.38.0\nLink: [CVE-2025-22872](https://avd.aquasec.com/nvd/cve-2025-22872)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-47911",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2025-47911\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-47911](https://avd.aquasec.com/nvd/cve-2025-47911)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-58190",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2025-58190\nSeverity: MEDIUM\nFixed Version: 0.45.0\nLink: [CVE-2025-58190](https://avd.aquasec.com/nvd/cve-2025-58190)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25680",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2026-25680\nSeverity: MEDIUM\nFixed Version: 0.55.0\nLink: [CVE-2026-25680](https://avd.aquasec.com/nvd/cve-2026-25680)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42502",
+          "ruleIndex": 11,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: v0.17.0\nVulnerability CVE-2026-42502\nSeverity: MEDIUM\nFixed Version: 0.55.0\nLink: [CVE-2026-42502](https://avd.aquasec.com/nvd/cve-2026-42502)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/net@v0.17.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22868",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/oauth2\nInstalled Version: v0.13.0\nVulnerability CVE-2025-22868\nSeverity: HIGH\nFixed Version: 0.27.0\nLink: [CVE-2025-22868](https://avd.aquasec.com/nvd/cve-2025-22868)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/oauth2@v0.13.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39824",
+          "ruleIndex": 13,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/sys\nInstalled Version: v0.15.0\nVulnerability CVE-2026-39824\nSeverity: UNKNOWN\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: golang.org/x/sys@v0.15.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/7pvs1yv7znr3ry9b4izgzhwg12c9xhc6-velero-plugin-for-csi-0.7.1/bin/velero-plugin-for-csi: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.52.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped: golang.org/x/crypto@v0.52.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33813",
+          "ruleIndex": 14,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/image\nInstalled Version: v0.41.0\nVulnerability CVE-2026-33813\nSeverity: MEDIUM\nFixed Version: 0.42.0\nLink: [CVE-2026-33813](https://avd.aquasec.com/nvd/cve-2026-33813)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped: golang.org/x/image@v0.41.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-46601",
+          "ruleIndex": 15,
+          "level": "warning",
+          "message": {
+            "text": "Package: golang.org/x/image\nInstalled Version: v0.41.0\nVulnerability CVE-2026-46601\nSeverity: MEDIUM\nFixed Version: 0.43.0\nLink: [CVE-2026-46601](https://avd.aquasec.com/nvd/cve-2026-46601)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped: golang.org/x/image@v0.41.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-46602",
+          "ruleIndex": 16,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/image\nInstalled Version: v0.41.0\nVulnerability CVE-2026-46602\nSeverity: UNKNOWN\nFixed Version: 0.43.0\nLink: [CVE-2026-46602](https://avd.aquasec.com/nvd/cve-2026-46602)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped: golang.org/x/image@v0.41.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-46604",
+          "ruleIndex": 17,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/image\nInstalled Version: v0.41.0\nVulnerability CVE-2026-46604\nSeverity: UNKNOWN\nFixed Version: 0.43.0\nLink: [CVE-2026-46604](https://avd.aquasec.com/nvd/cve-2026-46604)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped: golang.org/x/image@v0.41.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/m9sbm4jgjrh20wx3jpxiczpa5ml74gc9-rclone-1.74.3/bin/.rclone-wrapped: stdlib@v1.26.4"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:00a8a7c81cdf82228d6143a83747a80edc718e83288db4960efe51886f5f1779",
+        "imageName": "ghcr.io/nix-containers/images/velero-plugin-csi:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/velero-plugin-csi@sha256:c7fc48473b00dd571aabe4225f3d946dd92e6db4081e46f113ed06844951a283"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/velero-plugin-csi:latest"
+        ]
+      }
+    }
+  ]
+}

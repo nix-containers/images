@@ -1,0 +1,705 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-34993",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aiohttp: AIOHTTP: Arbitrary code execution via untrusted input to CookieJar.load()"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to version 3.14.0, using ``CookieJar.load()`` with untrusted input may allow arbitrary code execution. Most applications using this function will be doing so with the user's own data, so this is unlikely to affect many applications. Version 3.14.0 patches the issue. If an application does allow attacker controlled files to be loaded, a workaround on older releases would be to sanitize the files before loading."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34993",
+              "help": {
+                "text": "Vulnerability CVE-2026-34993\nSeverity: MEDIUM\nPackage: aiohttp\nFixed Version: 3.14.0\nLink: [CVE-2026-34993](https://avd.aquasec.com/nvd/cve-2026-34993)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to version 3.14.0, using ``CookieJar.load()`` with untrusted input may allow arbitrary code execution. Most applications using this function will be doing so with the user's own data, so this is unlikely to affect many applications. Version 3.14.0 patches the issue. If an application does allow attacker controlled files to be loaded, a workaround on older releases would be to sanitize the files before loading.",
+                "markdown": "**Vulnerability CVE-2026-34993**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|aiohttp|3.14.0|[CVE-2026-34993](https://avd.aquasec.com/nvd/cve-2026-34993)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to version 3.14.0, using ``CookieJar.load()`` with untrusted input may allow arbitrary code execution. Most applications using this function will be doing so with the user's own data, so this is unlikely to affect many applications. Version 3.14.0 patches the issue. If an application does allow attacker controlled files to be loaded, a workaround on older releases would be to sanitize the files before loading."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.4,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:C/C:L/I:H/A:L",
+                "precision": "very-high",
+                "security-severity": "6.4",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-47265",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "python-aiohttp: AIOHTTP: Information disclosure via improper handling of cookies during cross-origin redirects"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to version 3.14.0, cookies set with the `cookies` parameter on requests are sent after following a cross-origin redirect. If a developer uses the `cookies` parameter on a per-request basis then sensitive data might be leaked to an attacker if they manage to control a redirect. Version 3.14.0 patches the issue. If unable to upgrade, using a `Cookie` header in the `headers` parameter is not vulnerable."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-47265",
+              "help": {
+                "text": "Vulnerability CVE-2026-47265\nSeverity: MEDIUM\nPackage: aiohttp\nFixed Version: 3.14.0\nLink: [CVE-2026-47265](https://avd.aquasec.com/nvd/cve-2026-47265)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to version 3.14.0, cookies set with the `cookies` parameter on requests are sent after following a cross-origin redirect. If a developer uses the `cookies` parameter on a per-request basis then sensitive data might be leaked to an attacker if they manage to control a redirect. Version 3.14.0 patches the issue. If unable to upgrade, using a `Cookie` header in the `headers` parameter is not vulnerable.",
+                "markdown": "**Vulnerability CVE-2026-47265**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|aiohttp|3.14.0|[CVE-2026-47265](https://avd.aquasec.com/nvd/cve-2026-47265)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to version 3.14.0, cookies set with the `cookies` parameter on requests are sent after following a cross-origin redirect. If a developer uses the `cookies` parameter on a per-request basis then sensitive data might be leaked to an attacker if they manage to control a redirect. Version 3.14.0 patches the issue. If unable to upgrade, using a `Cookie` header in the `headers` parameter is not vulnerable."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.6,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54273",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aiohttp: AIOHTTP: Denial of Service via excessive pipelined requests"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, no limit was present on the number of pipelined requests that could be queued. An attacker may be able to use pipelined requests to use excessive amounts of memory, potentially leading to DoS. This vulnerability is fixed in 3.14.1."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54273",
+              "help": {
+                "text": "Vulnerability CVE-2026-54273\nSeverity: MEDIUM\nPackage: aiohttp\nFixed Version: 3.14.1\nLink: [CVE-2026-54273](https://avd.aquasec.com/nvd/cve-2026-54273)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, no limit was present on the number of pipelined requests that could be queued. An attacker may be able to use pipelined requests to use excessive amounts of memory, potentially leading to DoS. This vulnerability is fixed in 3.14.1.",
+                "markdown": "**Vulnerability CVE-2026-54273**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|aiohttp|3.14.1|[CVE-2026-54273](https://avd.aquasec.com/nvd/cve-2026-54273)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, no limit was present on the number of pipelined requests that could be queued. An attacker may be able to use pipelined requests to use excessive amounts of memory, potentially leading to DoS. This vulnerability is fixed in 3.14.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.6,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54274",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aiohttp: aiohttp: Denial of Service via incomplete websocket frame payloads"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, if an attacker sends large incomplete websocket frame payloads, it may be possible to bypass the usual size limits on memory use. This vulnerability is fixed in 3.14.1."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54274",
+              "help": {
+                "text": "Vulnerability CVE-2026-54274\nSeverity: MEDIUM\nPackage: aiohttp\nFixed Version: 3.14.1\nLink: [CVE-2026-54274](https://avd.aquasec.com/nvd/cve-2026-54274)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, if an attacker sends large incomplete websocket frame payloads, it may be possible to bypass the usual size limits on memory use. This vulnerability is fixed in 3.14.1.",
+                "markdown": "**Vulnerability CVE-2026-54274**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|aiohttp|3.14.1|[CVE-2026-54274](https://avd.aquasec.com/nvd/cve-2026-54274)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, if an attacker sends large incomplete websocket frame payloads, it may be possible to bypass the usual size limits on memory use. This vulnerability is fixed in 3.14.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.6,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54276",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aiohttp: aiohttp: Information disclosure via DigestAuthMiddleware after cross-origin redirect"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, DigestAuthMiddleware can send an authentication response after following a cross-origin redirect. This likely requires an open redirect vulnerability or similar on the target domain for an attacker to be able to execute. Further, the attacker is only receiving the digest, so should only be able to extract the user's credentials if the cryptography is weak or there is some kind of password reuse. This vulnerability is fixed in 3.14.1."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54276",
+              "help": {
+                "text": "Vulnerability CVE-2026-54276\nSeverity: MEDIUM\nPackage: aiohttp\nFixed Version: 3.14.1\nLink: [CVE-2026-54276](https://avd.aquasec.com/nvd/cve-2026-54276)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, DigestAuthMiddleware can send an authentication response after following a cross-origin redirect. This likely requires an open redirect vulnerability or similar on the target domain for an attacker to be able to execute. Further, the attacker is only receiving the digest, so should only be able to extract the user's credentials if the cryptography is weak or there is some kind of password reuse. This vulnerability is fixed in 3.14.1.",
+                "markdown": "**Vulnerability CVE-2026-54276**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|aiohttp|3.14.1|[CVE-2026-54276](https://avd.aquasec.com/nvd/cve-2026-54276)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, DigestAuthMiddleware can send an authentication response after following a cross-origin redirect. This likely requires an open redirect vulnerability or similar on the target domain for an attacker to be able to execute. Further, the attacker is only receiving the digest, so should only be able to extract the user's credentials if the cryptography is weak or there is some kind of password reuse. This vulnerability is fixed in 3.14.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54277",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aiohttp: aiohttp: Denial of Service via oversized HTTP request lines bypassing max_line_size check"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, it is possible to bypass the max_line_size check in parts of an HTTP request in the C parser. If using the optimised C parser (the default in pre-built wheels), then an attacker may be able to send oversized lines through the HTTP parser and use an excessive amount of memory, potentially leading to DoS. This vulnerability is fixed in 3.14.1."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54277",
+              "help": {
+                "text": "Vulnerability CVE-2026-54277\nSeverity: MEDIUM\nPackage: aiohttp\nFixed Version: 3.14.1\nLink: [CVE-2026-54277](https://avd.aquasec.com/nvd/cve-2026-54277)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, it is possible to bypass the max_line_size check in parts of an HTTP request in the C parser. If using the optimised C parser (the default in pre-built wheels), then an attacker may be able to send oversized lines through the HTTP parser and use an excessive amount of memory, potentially leading to DoS. This vulnerability is fixed in 3.14.1.",
+                "markdown": "**Vulnerability CVE-2026-54277**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|aiohttp|3.14.1|[CVE-2026-54277](https://avd.aquasec.com/nvd/cve-2026-54277)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, it is possible to bypass the max_line_size check in parts of an HTTP request in the C parser. If using the optimised C parser (the default in pre-built wheels), then an attacker may be able to send oversized lines through the HTTP parser and use an excessive amount of memory, potentially leading to DoS. This vulnerability is fixed in 3.14.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.6,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54278",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aiohttp: aiohttp: Denial of Service due to excessive memory consumption from compressed request body"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, during cleanup it is possible for a compressed request body to be decompressed into memory in one chunk. An attacker may be able to send a compressed payload in specific situations that could be decompressed into memory, potentially leading to DoS (a zip bomb edge case). This vulnerability is fixed in 3.14.1."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54278",
+              "help": {
+                "text": "Vulnerability CVE-2026-54278\nSeverity: MEDIUM\nPackage: aiohttp\nFixed Version: 3.14.1\nLink: [CVE-2026-54278](https://avd.aquasec.com/nvd/cve-2026-54278)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, during cleanup it is possible for a compressed request body to be decompressed into memory in one chunk. An attacker may be able to send a compressed payload in specific situations that could be decompressed into memory, potentially leading to DoS (a zip bomb edge case). This vulnerability is fixed in 3.14.1.",
+                "markdown": "**Vulnerability CVE-2026-54278**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|aiohttp|3.14.1|[CVE-2026-54278](https://avd.aquasec.com/nvd/cve-2026-54278)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, during cleanup it is possible for a compressed request body to be decompressed into memory in one chunk. An attacker may be able to send a compressed payload in specific situations that could be decompressed into memory, potentially leading to DoS (a zip bomb edge case). This vulnerability is fixed in 3.14.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.6,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-50269",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aiohttp: AIOHTTP: CRLF injection in multipart headers"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.0, attacker-controlled input included into multipart/payload headers can be used to modify a request to inject additional headers or similar. In the unlikely situation that an application is passing user-controlled strings into MultipartWriter.append(headers=...) or Payload.headers, then an attacker may be able to modify the request to inject headers or change the contents of the request. This vulnerability is fixed in 3.14.0."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-50269",
+              "help": {
+                "text": "Vulnerability CVE-2026-50269\nSeverity: LOW\nPackage: aiohttp\nFixed Version: 3.14.0\nLink: [CVE-2026-50269](https://avd.aquasec.com/nvd/cve-2026-50269)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.0, attacker-controlled input included into multipart/payload headers can be used to modify a request to inject additional headers or similar. In the unlikely situation that an application is passing user-controlled strings into MultipartWriter.append(headers=...) or Payload.headers, then an attacker may be able to modify the request to inject headers or change the contents of the request. This vulnerability is fixed in 3.14.0.",
+                "markdown": "**Vulnerability CVE-2026-50269**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|aiohttp|3.14.0|[CVE-2026-50269](https://avd.aquasec.com/nvd/cve-2026-50269)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.0, attacker-controlled input included into multipart/payload headers can be used to modify a request to inject additional headers or similar. In the unlikely situation that an application is passing user-controlled strings into MultipartWriter.append(headers=...) or Payload.headers, then an attacker may be able to modify the request to inject headers or change the contents of the request. This vulnerability is fixed in 3.14.0."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54275",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aiohttp: AIOHTTP: TLS SNI check bypass via connection reuse"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, the server_hostname TLS SNI check can be bypassed when an existing connection is reused. If an application makes multiple requests to the same domain, but with different per-request server_hostname parameters, then the later calls may succeed by reusing the existing connection when they should have been rejected due to the TLS SNI check. This vulnerability is fixed in 3.14.1."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54275",
+              "help": {
+                "text": "Vulnerability CVE-2026-54275\nSeverity: LOW\nPackage: aiohttp\nFixed Version: 3.14.1\nLink: [CVE-2026-54275](https://avd.aquasec.com/nvd/cve-2026-54275)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, the server_hostname TLS SNI check can be bypassed when an existing connection is reused. If an application makes multiple requests to the same domain, but with different per-request server_hostname parameters, then the later calls may succeed by reusing the existing connection when they should have been rejected due to the TLS SNI check. This vulnerability is fixed in 3.14.1.",
+                "markdown": "**Vulnerability CVE-2026-54275**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|aiohttp|3.14.1|[CVE-2026-54275](https://avd.aquasec.com/nvd/cve-2026-54275)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, the server_hostname TLS SNI check can be bypassed when an existing connection is reused. If an application makes multiple requests to the same domain, but with different per-request server_hostname parameters, then the later calls may succeed by reusing the existing connection when they should have been rejected due to the TLS SNI check. This vulnerability is fixed in 3.14.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54279",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "aiohttp: AIOHTTP: Host-Only Cookies Become Domain Cookies After CookieJar Persistence"
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, host-only cookies that are saved with CookieJar.save() and then restored later with CookieJar.load() lose their host-only status. This vulnerability is fixed in 3.14.1."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54279",
+              "help": {
+                "text": "Vulnerability CVE-2026-54279\nSeverity: LOW\nPackage: aiohttp\nFixed Version: 3.14.1\nLink: [CVE-2026-54279](https://avd.aquasec.com/nvd/cve-2026-54279)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, host-only cookies that are saved with CookieJar.save() and then restored later with CookieJar.load() lose their host-only status. This vulnerability is fixed in 3.14.1.",
+                "markdown": "**Vulnerability CVE-2026-54279**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|aiohttp|3.14.1|[CVE-2026-54279](https://avd.aquasec.com/nvd/cve-2026-54279)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, host-only cookies that are saved with CookieJar.save() and then restored later with CookieJar.load() lose their host-only status. This vulnerability is fixed in 3.14.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 1.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:N/VI:N/VA:N/SC:L/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54280",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio an ..."
+              },
+              "fullDescription": {
+                "text": "AIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, payload resources are not closed correctly when a client disconnects in the middle of a write. If a payload is using an open file or similar limited resource, then an attacker may be able to cause resource starvation temporarily until garbage collection or similar closes the file. This vulnerability is fixed in 3.14.1."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54280",
+              "help": {
+                "text": "Vulnerability CVE-2026-54280\nSeverity: LOW\nPackage: aiohttp\nFixed Version: 3.14.1\nLink: [CVE-2026-54280](https://avd.aquasec.com/nvd/cve-2026-54280)\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, payload resources are not closed correctly when a client disconnects in the middle of a write. If a payload is using an open file or similar limited resource, then an attacker may be able to cause resource starvation temporarily until garbage collection or similar closes the file. This vulnerability is fixed in 3.14.1.",
+                "markdown": "**Vulnerability CVE-2026-54280**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|aiohttp|3.14.1|[CVE-2026-54280](https://avd.aquasec.com/nvd/cve-2026-54280)|\n\nAIOHTTP is an asynchronous HTTP client/server framework for asyncio and Python. Prior to 3.14.1, payload resources are not closed correctly when a client disconnects in the middle of a write. If a payload is using an open file or similar limited resource, then an attacker may be able to cause resource starvation temporarily until garbage collection or similar closes the file. This vulnerability is fixed in 3.14.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 1.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-45409",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Internationalized Domain Names in Applications (IDNA) for Python provi ..."
+              },
+              "fullDescription": {
+                "text": "Internationalized Domain Names in Applications (IDNA) for Python provides support for Internationalized Domain Names in Applications (IDNA) and Unicode IDNA Compatibility Processing. In versions prior to 3.15, payloads such as `\"\\u0660\" * N` or `\"\\u30fb\" * N + \"\\u6f22\"` utilize the `valid_contexto` function prior to length rejection, and for high values of `N` will take a long time to process. This is the same issue as CVE-2024-3651, however the original remediation in 2024 was not a complete fix. A specially crafted argument to the `idna.encode()` function could consume significant resources. This may lead to a denial-of-service. Starting in version 3.14, the function rejects long inputs as soon as practicable prior to any further processing to minimize resource consumption. In version 3.15, this approach was extended to lesser used alternate functions (i.e. per-label conversions and codec support). A workaround is available. Domain names cannot exceed 253 characters in length. If this length limit is enforced prior to passing the domain to the `idna.encode()` function, it should no longer consume significant resources. This is triggered by arbitrarily large inputs that would not occur in normal usage, but may be passed to the library assuming there is no preliminary input validation by the higher-level application."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-45409",
+              "help": {
+                "text": "Vulnerability CVE-2026-45409\nSeverity: MEDIUM\nPackage: idna\nFixed Version: 3.15\nLink: [CVE-2026-45409](https://avd.aquasec.com/nvd/cve-2026-45409)\nInternationalized Domain Names in Applications (IDNA) for Python provides support for Internationalized Domain Names in Applications (IDNA) and Unicode IDNA Compatibility Processing. In versions prior to 3.15, payloads such as `\"\\u0660\" * N` or `\"\\u30fb\" * N + \"\\u6f22\"` utilize the `valid_contexto` function prior to length rejection, and for high values of `N` will take a long time to process. This is the same issue as CVE-2024-3651, however the original remediation in 2024 was not a complete fix. A specially crafted argument to the `idna.encode()` function could consume significant resources. This may lead to a denial-of-service. Starting in version 3.14, the function rejects long inputs as soon as practicable prior to any further processing to minimize resource consumption. In version 3.15, this approach was extended to lesser used alternate functions (i.e. per-label conversions and codec support). A workaround is available. Domain names cannot exceed 253 characters in length. If this length limit is enforced prior to passing the domain to the `idna.encode()` function, it should no longer consume significant resources. This is triggered by arbitrarily large inputs that would not occur in normal usage, but may be passed to the library assuming there is no preliminary input validation by the higher-level application.",
+                "markdown": "**Vulnerability CVE-2026-45409**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|idna|3.15|[CVE-2026-45409](https://avd.aquasec.com/nvd/cve-2026-45409)|\n\nInternationalized Domain Names in Applications (IDNA) for Python provides support for Internationalized Domain Names in Applications (IDNA) and Unicode IDNA Compatibility Processing. In versions prior to 3.15, payloads such as `\"\\u0660\" * N` or `\"\\u30fb\" * N + \"\\u6f22\"` utilize the `valid_contexto` function prior to length rejection, and for high values of `N` will take a long time to process. This is the same issue as CVE-2024-3651, however the original remediation in 2024 was not a complete fix. A specially crafted argument to the `idna.encode()` function could consume significant resources. This may lead to a denial-of-service. Starting in version 3.14, the function rejects long inputs as soon as practicable prior to any further processing to minimize resource consumption. In version 3.15, this approach was extended to lesser used alternate functions (i.e. per-label conversions and codec support). A workaround is available. Domain names cannot exceed 253 characters in length. If this length limit is enforced prior to passing the domain to the `idna.encode()` function, it should no longer consume significant resources. This is triggered by arbitrarily large inputs that would not occur in normal usage, but may be passed to the library assuming there is no preliminary input validation by the higher-level application."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-34993",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-34993\nSeverity: MEDIUM\nFixed Version: 3.14.0\nLink: [CVE-2026-34993](https://avd.aquasec.com/nvd/cve-2026-34993)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-47265",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-47265\nSeverity: MEDIUM\nFixed Version: 3.14.0\nLink: [CVE-2026-47265](https://avd.aquasec.com/nvd/cve-2026-47265)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54273",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-54273\nSeverity: MEDIUM\nFixed Version: 3.14.1\nLink: [CVE-2026-54273](https://avd.aquasec.com/nvd/cve-2026-54273)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54274",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-54274\nSeverity: MEDIUM\nFixed Version: 3.14.1\nLink: [CVE-2026-54274](https://avd.aquasec.com/nvd/cve-2026-54274)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54276",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-54276\nSeverity: MEDIUM\nFixed Version: 3.14.1\nLink: [CVE-2026-54276](https://avd.aquasec.com/nvd/cve-2026-54276)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54277",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-54277\nSeverity: MEDIUM\nFixed Version: 3.14.1\nLink: [CVE-2026-54277](https://avd.aquasec.com/nvd/cve-2026-54277)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54278",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-54278\nSeverity: MEDIUM\nFixed Version: 3.14.1\nLink: [CVE-2026-54278](https://avd.aquasec.com/nvd/cve-2026-54278)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-50269",
+          "ruleIndex": 7,
+          "level": "note",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-50269\nSeverity: LOW\nFixed Version: 3.14.0\nLink: [CVE-2026-50269](https://avd.aquasec.com/nvd/cve-2026-50269)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54275",
+          "ruleIndex": 8,
+          "level": "note",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-54275\nSeverity: LOW\nFixed Version: 3.14.1\nLink: [CVE-2026-54275](https://avd.aquasec.com/nvd/cve-2026-54275)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54279",
+          "ruleIndex": 9,
+          "level": "note",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-54279\nSeverity: LOW\nFixed Version: 3.14.1\nLink: [CVE-2026-54279](https://avd.aquasec.com/nvd/cve-2026-54279)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54280",
+          "ruleIndex": 10,
+          "level": "note",
+          "message": {
+            "text": "Package: aiohttp\nInstalled Version: 3.13.5\nVulnerability CVE-2026-54280\nSeverity: LOW\nFixed Version: 3.14.1\nLink: [CVE-2026-54280](https://avd.aquasec.com/nvd/cve-2026-54280)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iv3nzxwz456hha7jhwlynq0b4rmrq8hw-python3.13-aiohttp-3.13.5/lib/python3.13/site-packages/aiohttp-3.13.5.dist-info/METADATA: aiohttp@3.13.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45409",
+          "ruleIndex": 11,
+          "level": "warning",
+          "message": {
+            "text": "Package: idna\nInstalled Version: 3.13\nVulnerability CVE-2026-45409\nSeverity: MEDIUM\nFixed Version: 3.15\nLink: [CVE-2026-45409](https://avd.aquasec.com/nvd/cve-2026-45409)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/yclf543g13ngziva0j30prwr0rx3kc4h-python3.13-idna-3.13/lib/python3.13/site-packages/idna-3.13.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/yclf543g13ngziva0j30prwr0rx3kc4h-python3.13-idna-3.13/lib/python3.13/site-packages/idna-3.13.dist-info/METADATA: idna@3.13"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:74c9a253c4d75012294f39df9c1806d3a439af885f0f369816c79887f5458ebe",
+        "imageName": "ghcr.io/nix-containers/images/openai:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/openai@sha256:3bed8c1e4f3bb5d4008fc6152724578fb72f3b884e6a8d22b6f7f18b4ae0f056"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/openai:latest"
+        ]
+      }
+    }
+  ]
+}

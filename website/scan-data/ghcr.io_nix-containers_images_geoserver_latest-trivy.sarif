@@ -1,0 +1,2186 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "GHSA-72hv-8253-57qq",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-core: Number Length Constraint Bypass in Async Parser Leads to Potential DoS Condition"
+              },
+              "fullDescription": {
+                "text": "### Summary\nThe non-blocking (async) JSON parser in `jackson-core` bypasses the `maxNumberLength` constraint (default: 1000 characters) defined in `StreamReadConstraints`. This allows an attacker to send JSON with arbitrarily long numbers through the async parser API, leading to excessive memory allocation and potential CPU exhaustion, resulting in a Denial of Service (DoS).\n\nThe standard synchronous parser correctly enforces this limit, but the async parser fails to do so, creating an inconsistent enforcement policy.\n\n### Details\nThe root cause is that the async parsing path in `NonBlockingUtf8JsonParserBase` (and related classes) does not call the methods responsible for number length validation.\n\n- The number parsing methods (e.g., `_finishNumberIntegralPart`) accumulate digits into the `TextBuffer` without any length checks.\n- After parsing, they call `_valueComplete()`, which finalizes the token but does **not** call `resetInt()` or `resetFloat()`.\n- The `resetInt()`/`resetFloat()` methods in `ParserBase` are where the `validateIntegerLength()` and `validateFPLength()` checks are performed.\n- Because this validation step is skipped, the `maxNumberLength` constraint is never enforced in the async code path.\n\n### PoC\nThe following JUnit 5 test demonstrates the vulnerability. It shows that the async parser accepts a 5,000-digit number, whereas the limit should be 1,000.\n\n```java\npackage tools.jackson.core.unittest.dos;\n\nimport java.nio.charset.StandardCharsets;\n\nimport org.junit.jupiter.api.Test;\n\nimport tools.jackson.core.*;\nimport tools.jackson.core.exc.StreamConstraintsException;\nimport tools.jackson.core.json.JsonFactory;\nimport tools.jackson.core.json.async.NonBlockingByteArrayJsonParser;\n\nimport static org.junit.jupiter.api.Assertions.*;\n\n/**\n * POC: Number Length Constraint Bypass in Non-Blocking (Async) JSON Parsers\n *\n * Authors: sprabhav7, rohan-repos\n * \n * maxNumberLength default = 1000 characters (digits).\n * A number with more than 1000 digits should be rejected by any parser.\n *\n * BUG: The async parser never calls resetInt()/resetFloat() which is where\n * validateIntegerLength()/validateFPLength() lives. Instead it calls\n * _valueComplete() which skips all number length validation.\n *\n * CWE-770: Allocation of Resources Without Limits or Throttling\n */\nclass AsyncParserNumberLengthBypassTest {\n\n    private static final int MAX_NUMBER_LENGTH = 1000;\n    private static final int TEST_NUMBER_LENGTH = 5000;\n\n    private final JsonFactory factory = new JsonFactory();\n\n    // CONTROL: Sync parser correctly rejects a number exceeding maxNumberLength\n    @Test\n    void syncParserRejectsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\t\t\n\t\t// Output to console\n        System.out.println(\"[SYNC] Parsing \" + TEST_NUMBER_LENGTH + \"-digit number (limit: \" + MAX_NUMBER_LENGTH + \")\");\n        try {\n            try (JsonParser p = factory.createParser(ObjectReadContext.empty(), payload)) {\n                while (p.nextToken() != null) {\n                    if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                        System.out.println(\"[SYNC] Accepted number with \" + p.getText().length() + \" digits — UNEXPECTED\");\n                    }\n                }\n            }\n            fail(\"Sync parser must reject a \" + TEST_NUMBER_LENGTH + \"-digit number\");\n        } catch (StreamConstraintsException e) {\n            System.out.println(\"[SYNC] Rejected with StreamConstraintsException: \" + e.getMessage());\n        }\n    }\n\n    // VULNERABILITY: Async parser accepts the SAME number that sync rejects\n    @Test\n    void asyncParserAcceptsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\n        NonBlockingByteArrayJsonParser p =\n            (NonBlockingByteArrayJsonParser) factory.createNonBlockingByteArrayParser(ObjectReadContext.empty());\n        p.feedInput(payload, 0, payload.length);\n        p.endOfInput();\n\n        boolean foundNumber = false;\n        try {\n            while (p.nextToken() != null) {\n                if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                    foundNumber = true;\n                    String numberText = p.getText();\n                    assertEquals(TEST_NUMBER_LENGTH, numberText.length(),\n                        \"Async parser silently accepted all \" + TEST_NUMBER_LENGTH + \" digits\");\n                }\n            }\n            // Output to console\n            System.out.println(\"[ASYNC INT] Accepted number with \" + TEST_NUMBER_LENGTH + \" digits — BUG CONFIRMED\");\n            assertTrue(foundNumber, \"Parser should have produced a VALUE_NUMBER_INT token\");\n        } catch (StreamConstraintsException e) {\n            fail(\"Bug is fixed — async parser now correctly rejects long numbers: \" + e.getMessage());\n        }\n        p.close();\n    }\n\n    private byte[] buildPayloadWithLongInteger(int numDigits) {\n        StringBuilder sb = new StringBuilder(numDigits + 10);\n        sb.append(\"{\\\"v\\\":\");\n        for (int i = 0; i \u003c numDigits; i++) {\n            sb.append((char) ('1' + (i % 9)));\n        }\n        sb.append('}');\n        return sb.toString().getBytes(StandardCharsets.UTF_8);\n    }\n}\n\n```\n\n\n### Impact\nA malicious actor can send a JSON document with an arbitrarily long number to an application using the async parser (e.g., in a Spring WebFlux or other reactive application). This can cause:\n1.  **Memory Exhaustion:** Unbounded allocation of memory in the `TextBuffer` to store the number's digits, leading to an `OutOfMemoryError`.\n2.  **CPU Exhaustion:** If the application subsequently calls `getBigIntegerValue()` or `getDecimalValue()`, the JVM can be tied up in O(n^2) `BigInteger` parsing operations, leading to a CPU-based DoS.\n\n### Suggested Remediation\n\nThe async parsing path should be updated to respect the `maxNumberLength` constraint. The simplest fix appears to ensure that `_valueComplete()` or a similar method in the async path calls the appropriate validation methods (`resetInt()` or `resetFloat()`) already present in `ParserBase`, mirroring the behavior of the synchronous parsers.\n\n**NOTE:** This research was performed in collaboration with [rohan-repos](https://github.com/rohan-repos)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-72hv-8253-57qq",
+              "help": {
+                "text": "Vulnerability GHSA-72hv-8253-57qq\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-core\nFixed Version: 2.21.1, 2.18.6\nLink: [GHSA-72hv-8253-57qq](https://github.com/advisories/GHSA-72hv-8253-57qq)\n### Summary\nThe non-blocking (async) JSON parser in `jackson-core` bypasses the `maxNumberLength` constraint (default: 1000 characters) defined in `StreamReadConstraints`. This allows an attacker to send JSON with arbitrarily long numbers through the async parser API, leading to excessive memory allocation and potential CPU exhaustion, resulting in a Denial of Service (DoS).\n\nThe standard synchronous parser correctly enforces this limit, but the async parser fails to do so, creating an inconsistent enforcement policy.\n\n### Details\nThe root cause is that the async parsing path in `NonBlockingUtf8JsonParserBase` (and related classes) does not call the methods responsible for number length validation.\n\n- The number parsing methods (e.g., `_finishNumberIntegralPart`) accumulate digits into the `TextBuffer` without any length checks.\n- After parsing, they call `_valueComplete()`, which finalizes the token but does **not** call `resetInt()` or `resetFloat()`.\n- The `resetInt()`/`resetFloat()` methods in `ParserBase` are where the `validateIntegerLength()` and `validateFPLength()` checks are performed.\n- Because this validation step is skipped, the `maxNumberLength` constraint is never enforced in the async code path.\n\n### PoC\nThe following JUnit 5 test demonstrates the vulnerability. It shows that the async parser accepts a 5,000-digit number, whereas the limit should be 1,000.\n\n```java\npackage tools.jackson.core.unittest.dos;\n\nimport java.nio.charset.StandardCharsets;\n\nimport org.junit.jupiter.api.Test;\n\nimport tools.jackson.core.*;\nimport tools.jackson.core.exc.StreamConstraintsException;\nimport tools.jackson.core.json.JsonFactory;\nimport tools.jackson.core.json.async.NonBlockingByteArrayJsonParser;\n\nimport static org.junit.jupiter.api.Assertions.*;\n\n/**\n * POC: Number Length Constraint Bypass in Non-Blocking (Async) JSON Parsers\n *\n * Authors: sprabhav7, rohan-repos\n * \n * maxNumberLength default = 1000 characters (digits).\n * A number with more than 1000 digits should be rejected by any parser.\n *\n * BUG: The async parser never calls resetInt()/resetFloat() which is where\n * validateIntegerLength()/validateFPLength() lives. Instead it calls\n * _valueComplete() which skips all number length validation.\n *\n * CWE-770: Allocation of Resources Without Limits or Throttling\n */\nclass AsyncParserNumberLengthBypassTest {\n\n    private static final int MAX_NUMBER_LENGTH = 1000;\n    private static final int TEST_NUMBER_LENGTH = 5000;\n\n    private final JsonFactory factory = new JsonFactory();\n\n    // CONTROL: Sync parser correctly rejects a number exceeding maxNumberLength\n    @Test\n    void syncParserRejectsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\t\t\n\t\t// Output to console\n        System.out.println(\"[SYNC] Parsing \" + TEST_NUMBER_LENGTH + \"-digit number (limit: \" + MAX_NUMBER_LENGTH + \")\");\n        try {\n            try (JsonParser p = factory.createParser(ObjectReadContext.empty(), payload)) {\n                while (p.nextToken() != null) {\n                    if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                        System.out.println(\"[SYNC] Accepted number with \" + p.getText().length() + \" digits — UNEXPECTED\");\n                    }\n                }\n            }\n            fail(\"Sync parser must reject a \" + TEST_NUMBER_LENGTH + \"-digit number\");\n        } catch (StreamConstraintsException e) {\n            System.out.println(\"[SYNC] Rejected with StreamConstraintsException: \" + e.getMessage());\n        }\n    }\n\n    // VULNERABILITY: Async parser accepts the SAME number that sync rejects\n    @Test\n    void asyncParserAcceptsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\n        NonBlockingByteArrayJsonParser p =\n            (NonBlockingByteArrayJsonParser) factory.createNonBlockingByteArrayParser(ObjectReadContext.empty());\n        p.feedInput(payload, 0, payload.length);\n        p.endOfInput();\n\n        boolean foundNumber = false;\n        try {\n            while (p.nextToken() != null) {\n                if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                    foundNumber = true;\n                    String numberText = p.getText();\n                    assertEquals(TEST_NUMBER_LENGTH, numberText.length(),\n                        \"Async parser silently accepted all \" + TEST_NUMBER_LENGTH + \" digits\");\n                }\n            }\n            // Output to console\n            System.out.println(\"[ASYNC INT] Accepted number with \" + TEST_NUMBER_LENGTH + \" digits — BUG CONFIRMED\");\n            assertTrue(foundNumber, \"Parser should have produced a VALUE_NUMBER_INT token\");\n        } catch (StreamConstraintsException e) {\n            fail(\"Bug is fixed — async parser now correctly rejects long numbers: \" + e.getMessage());\n        }\n        p.close();\n    }\n\n    private byte[] buildPayloadWithLongInteger(int numDigits) {\n        StringBuilder sb = new StringBuilder(numDigits + 10);\n        sb.append(\"{\\\"v\\\":\");\n        for (int i = 0; i \u003c numDigits; i++) {\n            sb.append((char) ('1' + (i % 9)));\n        }\n        sb.append('}');\n        return sb.toString().getBytes(StandardCharsets.UTF_8);\n    }\n}\n\n```\n\n\n### Impact\nA malicious actor can send a JSON document with an arbitrarily long number to an application using the async parser (e.g., in a Spring WebFlux or other reactive application). This can cause:\n1.  **Memory Exhaustion:** Unbounded allocation of memory in the `TextBuffer` to store the number's digits, leading to an `OutOfMemoryError`.\n2.  **CPU Exhaustion:** If the application subsequently calls `getBigIntegerValue()` or `getDecimalValue()`, the JVM can be tied up in O(n^2) `BigInteger` parsing operations, leading to a CPU-based DoS.\n\n### Suggested Remediation\n\nThe async parsing path should be updated to respect the `maxNumberLength` constraint. The simplest fix appears to ensure that `_valueComplete()` or a similar method in the async path calls the appropriate validation methods (`resetInt()` or `resetFloat()`) already present in `ParserBase`, mirroring the behavior of the synchronous parsers.\n\n**NOTE:** This research was performed in collaboration with [rohan-repos](https://github.com/rohan-repos)",
+                "markdown": "**Vulnerability GHSA-72hv-8253-57qq**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-core|2.21.1, 2.18.6|[GHSA-72hv-8253-57qq](https://github.com/advisories/GHSA-72hv-8253-57qq)|\n\n### Summary\nThe non-blocking (async) JSON parser in `jackson-core` bypasses the `maxNumberLength` constraint (default: 1000 characters) defined in `StreamReadConstraints`. This allows an attacker to send JSON with arbitrarily long numbers through the async parser API, leading to excessive memory allocation and potential CPU exhaustion, resulting in a Denial of Service (DoS).\n\nThe standard synchronous parser correctly enforces this limit, but the async parser fails to do so, creating an inconsistent enforcement policy.\n\n### Details\nThe root cause is that the async parsing path in `NonBlockingUtf8JsonParserBase` (and related classes) does not call the methods responsible for number length validation.\n\n- The number parsing methods (e.g., `_finishNumberIntegralPart`) accumulate digits into the `TextBuffer` without any length checks.\n- After parsing, they call `_valueComplete()`, which finalizes the token but does **not** call `resetInt()` or `resetFloat()`.\n- The `resetInt()`/`resetFloat()` methods in `ParserBase` are where the `validateIntegerLength()` and `validateFPLength()` checks are performed.\n- Because this validation step is skipped, the `maxNumberLength` constraint is never enforced in the async code path.\n\n### PoC\nThe following JUnit 5 test demonstrates the vulnerability. It shows that the async parser accepts a 5,000-digit number, whereas the limit should be 1,000.\n\n```java\npackage tools.jackson.core.unittest.dos;\n\nimport java.nio.charset.StandardCharsets;\n\nimport org.junit.jupiter.api.Test;\n\nimport tools.jackson.core.*;\nimport tools.jackson.core.exc.StreamConstraintsException;\nimport tools.jackson.core.json.JsonFactory;\nimport tools.jackson.core.json.async.NonBlockingByteArrayJsonParser;\n\nimport static org.junit.jupiter.api.Assertions.*;\n\n/**\n * POC: Number Length Constraint Bypass in Non-Blocking (Async) JSON Parsers\n *\n * Authors: sprabhav7, rohan-repos\n * \n * maxNumberLength default = 1000 characters (digits).\n * A number with more than 1000 digits should be rejected by any parser.\n *\n * BUG: The async parser never calls resetInt()/resetFloat() which is where\n * validateIntegerLength()/validateFPLength() lives. Instead it calls\n * _valueComplete() which skips all number length validation.\n *\n * CWE-770: Allocation of Resources Without Limits or Throttling\n */\nclass AsyncParserNumberLengthBypassTest {\n\n    private static final int MAX_NUMBER_LENGTH = 1000;\n    private static final int TEST_NUMBER_LENGTH = 5000;\n\n    private final JsonFactory factory = new JsonFactory();\n\n    // CONTROL: Sync parser correctly rejects a number exceeding maxNumberLength\n    @Test\n    void syncParserRejectsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\t\t\n\t\t// Output to console\n        System.out.println(\"[SYNC] Parsing \" + TEST_NUMBER_LENGTH + \"-digit number (limit: \" + MAX_NUMBER_LENGTH + \")\");\n        try {\n            try (JsonParser p = factory.createParser(ObjectReadContext.empty(), payload)) {\n                while (p.nextToken() != null) {\n                    if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                        System.out.println(\"[SYNC] Accepted number with \" + p.getText().length() + \" digits — UNEXPECTED\");\n                    }\n                }\n            }\n            fail(\"Sync parser must reject a \" + TEST_NUMBER_LENGTH + \"-digit number\");\n        } catch (StreamConstraintsException e) {\n            System.out.println(\"[SYNC] Rejected with StreamConstraintsException: \" + e.getMessage());\n        }\n    }\n\n    // VULNERABILITY: Async parser accepts the SAME number that sync rejects\n    @Test\n    void asyncParserAcceptsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\n        NonBlockingByteArrayJsonParser p =\n            (NonBlockingByteArrayJsonParser) factory.createNonBlockingByteArrayParser(ObjectReadContext.empty());\n        p.feedInput(payload, 0, payload.length);\n        p.endOfInput();\n\n        boolean foundNumber = false;\n        try {\n            while (p.nextToken() != null) {\n                if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                    foundNumber = true;\n                    String numberText = p.getText();\n                    assertEquals(TEST_NUMBER_LENGTH, numberText.length(),\n                        \"Async parser silently accepted all \" + TEST_NUMBER_LENGTH + \" digits\");\n                }\n            }\n            // Output to console\n            System.out.println(\"[ASYNC INT] Accepted number with \" + TEST_NUMBER_LENGTH + \" digits — BUG CONFIRMED\");\n            assertTrue(foundNumber, \"Parser should have produced a VALUE_NUMBER_INT token\");\n        } catch (StreamConstraintsException e) {\n            fail(\"Bug is fixed — async parser now correctly rejects long numbers: \" + e.getMessage());\n        }\n        p.close();\n    }\n\n    private byte[] buildPayloadWithLongInteger(int numDigits) {\n        StringBuilder sb = new StringBuilder(numDigits + 10);\n        sb.append(\"{\\\"v\\\":\");\n        for (int i = 0; i \u003c numDigits; i++) {\n            sb.append((char) ('1' + (i % 9)));\n        }\n        sb.append('}');\n        return sb.toString().getBytes(StandardCharsets.UTF_8);\n    }\n}\n\n```\n\n\n### Impact\nA malicious actor can send a JSON document with an arbitrarily long number to an application using the async parser (e.g., in a Spring WebFlux or other reactive application). This can cause:\n1.  **Memory Exhaustion:** Unbounded allocation of memory in the `TextBuffer` to store the number's digits, leading to an `OutOfMemoryError`.\n2.  **CPU Exhaustion:** If the application subsequently calls `getBigIntegerValue()` or `getDecimalValue()`, the JVM can be tied up in O(n^2) `BigInteger` parsing operations, leading to a CPU-based DoS.\n\n### Suggested Remediation\n\nThe async parsing path should be updated to respect the `maxNumberLength` constraint. The simplest fix appears to ensure that `_valueComplete()` or a similar method in the async path calls the appropriate validation methods (`resetInt()` or `resetFloat()`) already present in `ParserBase`, mirroring the behavior of the synchronous parsers.\n\n**NOTE:** This research was performed in collaboration with [rohan-repos](https://github.com/rohan-repos)"
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54512",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Arbitrary code execution via PolymorphicTypeValidator bypass"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, jackson-databind's PolymorphicTypeValidator (PTV) is the primary safety mechanism guarding polymorphic deserialization. When polymorphic typing is enabled and a type identifier contains generic parameters (i.e. the type ID string contains \u003c), DatabindContext._resolveAndValidateGeneric() validates only the raw container class name (the substring before \u003c) against the configured PTV. If the container type is approved, the method parses the full canonical type string via TypeFactory.constructFromCanonical() and returns the fully parameterized type without ever validating the nested type arguments against the PTV. The nested type arguments are then resolved, instantiated, and populated as beans during deserialization. An attacker who controls the type ID can therefore place a denied class as a generic type parameter of an allowed container — for example java.util.ArrayList\u003ccom.evil.Gadget\u003e when only java.util.ArrayList is allow-listed. The container passes the PTV check; com.evil.Gadget is loaded via Class.forName(name, true, loader), instantiated, and its properties are set from attacker-controlled JSON. This completely bypasses an explicitly configured PTV allow-list. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54512",
+              "help": {
+                "text": "Vulnerability CVE-2026-54512\nSeverity: HIGH\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.18.8, 3.1.4, 2.21.4\nLink: [CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, jackson-databind's PolymorphicTypeValidator (PTV) is the primary safety mechanism guarding polymorphic deserialization. When polymorphic typing is enabled and a type identifier contains generic parameters (i.e. the type ID string contains \u003c), DatabindContext._resolveAndValidateGeneric() validates only the raw container class name (the substring before \u003c) against the configured PTV. If the container type is approved, the method parses the full canonical type string via TypeFactory.constructFromCanonical() and returns the fully parameterized type without ever validating the nested type arguments against the PTV. The nested type arguments are then resolved, instantiated, and populated as beans during deserialization. An attacker who controls the type ID can therefore place a denied class as a generic type parameter of an allowed container — for example java.util.ArrayList\u003ccom.evil.Gadget\u003e when only java.util.ArrayList is allow-listed. The container passes the PTV check; com.evil.Gadget is loaded via Class.forName(name, true, loader), instantiated, and its properties are set from attacker-controlled JSON. This completely bypasses an explicitly configured PTV allow-list. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54512**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|com.fasterxml.jackson.core:jackson-databind|2.18.8, 3.1.4, 2.21.4|[CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, jackson-databind's PolymorphicTypeValidator (PTV) is the primary safety mechanism guarding polymorphic deserialization. When polymorphic typing is enabled and a type identifier contains generic parameters (i.e. the type ID string contains \u003c), DatabindContext._resolveAndValidateGeneric() validates only the raw container class name (the substring before \u003c) against the configured PTV. If the container type is approved, the method parses the full canonical type string via TypeFactory.constructFromCanonical() and returns the fully parameterized type without ever validating the nested type arguments against the PTV. The nested type arguments are then resolved, instantiated, and populated as beans during deserialization. An attacker who controls the type ID can therefore place a denied class as a generic type parameter of an allowed container — for example java.util.ArrayList\u003ccom.evil.Gadget\u003e when only java.util.ArrayList is allow-listed. The container passes the PTV check; com.evil.Gadget is loaded via Class.forName(name, true, loader), instantiated, and its properties are set from attacker-controlled JSON. This completely bypasses an explicitly configured PTV allow-list. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 8.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "8.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54513",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: Jackson-databind: Security bypass allows arbitrary code execution"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, BasicPolymorphicTypeValidator.Builder.allowIfSubTypeIsArray() allowlists any array type based only on clazz.isArray(), without validating the array's component (element) type against the configured allowlist. A PTV built with allowIfSubTypeIsArray() plus an explicit concrete-type allowlist therefore still permits EvilType[] even though EvilType is not allowlisted. When Jackson deserializes the elements and no per-element type IDs are present, it instantiates the component type directly with no further PTV check, bypassing the allowlist. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54513",
+              "help": {
+                "text": "Vulnerability CVE-2026-54513\nSeverity: HIGH\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, BasicPolymorphicTypeValidator.Builder.allowIfSubTypeIsArray() allowlists any array type based only on clazz.isArray(), without validating the array's component (element) type against the configured allowlist. A PTV built with allowIfSubTypeIsArray() plus an explicit concrete-type allowlist therefore still permits EvilType[] even though EvilType is not allowlisted. When Jackson deserializes the elements and no per-element type IDs are present, it instantiates the component type directly with no further PTV check, bypassing the allowlist. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54513**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|com.fasterxml.jackson.core:jackson-databind|2.18.8, 2.21.4, 3.1.4|[CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, BasicPolymorphicTypeValidator.Builder.allowIfSubTypeIsArray() allowlists any array type based only on clazz.isArray(), without validating the array's component (element) type against the configured allowlist. A PTV built with allowIfSubTypeIsArray() plus an explicit concrete-type allowlist therefore still permits EvilType[] even though EvilType is not allowlisted. When Jackson deserializes the elements and no per-element type IDs are present, it instantiates the component type directly with no further PTV check, bypassing the allowlist. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 8.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "8.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54514",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Information Disclosure via Eager DNS Resolution"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.0.0 until 2.18.8, 2.21.4, and 3.1.4, JDKFromStringDeserializer constructed InetSocketAddress with new InetSocketAddress(host, port), which performs eager DNS name resolution for hostname inputs at deserialization time. An application that binds untrusted JSON into a type containing an InetSocketAddress field issues an attacker-chosen DNS query during readValue, before any application-level validation or connect logic. The fix uses InetSocketAddress.createUnresolved(host, port), deferring DNS to an explicit connect. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54514",
+              "help": {
+                "text": "Vulnerability CVE-2026-54514\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.0.0 until 2.18.8, 2.21.4, and 3.1.4, JDKFromStringDeserializer constructed InetSocketAddress with new InetSocketAddress(host, port), which performs eager DNS name resolution for hostname inputs at deserialization time. An application that binds untrusted JSON into a type containing an InetSocketAddress field issues an attacker-chosen DNS query during readValue, before any application-level validation or connect logic. The fix uses InetSocketAddress.createUnresolved(host, port), deferring DNS to an explicit connect. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54514**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|2.18.8, 2.21.4, 3.1.4|[CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.0.0 until 2.18.8, 2.21.4, and 3.1.4, JDKFromStringDeserializer constructed InetSocketAddress with new InetSocketAddress(host, port), which performs eager DNS name resolution for hostname inputs at deserialization time. An application that binds untrusted JSON into a type containing an InetSocketAddress field issues an attacker-chosen DNS query during readValue, before any application-level validation or connect logic. The fix uses InetSocketAddress.createUnresolved(host, port), deferring DNS to an explicit connect. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54515",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Ignored properties can be unexpectedly modified"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.8.0 until 2.18.9, 2.21.5, and 3.1.4, in BeanDeserializerBase.createContextual(), per-property @JsonIgnoreProperties exclusions are applied by _handleByNameInclusion(), producing a contextual deserializer whose BeanPropertyMap has the ignored properties removed. The subsequent per-property case-insensitivity block (triggered by @JsonFormat(ACCEPT_CASE_INSENSITIVE_PROPERTIES)) rebuilds from this._beanProperties (the original, unfiltered map) instead of contextual._beanProperties, then overwrites the filtered map — restoring every property _handleByNameInclusion had just removed. The ignored property becomes writable again. This vulnerability is fixed in 2.18.9, 2.21.5, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54515",
+              "help": {
+                "text": "Vulnerability CVE-2026-54515\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 3.1.4, 2.18.9, 2.21.5, 2.22.1\nLink: [CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.8.0 until 2.18.9, 2.21.5, and 3.1.4, in BeanDeserializerBase.createContextual(), per-property @JsonIgnoreProperties exclusions are applied by _handleByNameInclusion(), producing a contextual deserializer whose BeanPropertyMap has the ignored properties removed. The subsequent per-property case-insensitivity block (triggered by @JsonFormat(ACCEPT_CASE_INSENSITIVE_PROPERTIES)) rebuilds from this._beanProperties (the original, unfiltered map) instead of contextual._beanProperties, then overwrites the filtered map — restoring every property _handleByNameInclusion had just removed. The ignored property becomes writable again. This vulnerability is fixed in 2.18.9, 2.21.5, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54515**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|3.1.4, 2.18.9, 2.21.5, 2.22.1|[CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.8.0 until 2.18.9, 2.21.5, and 3.1.4, in BeanDeserializerBase.createContextual(), per-property @JsonIgnoreProperties exclusions are applied by _handleByNameInclusion(), producing a contextual deserializer whose BeanPropertyMap has the ignored properties removed. The subsequent per-property case-insensitivity block (triggered by @JsonFormat(ACCEPT_CASE_INSENSITIVE_PROPERTIES)) rebuilds from this._beanProperties (the original, unfiltered map) instead of contextual._beanProperties, then overwrites the filtered map — restoring every property _handleByNameInclusion had just removed. The ignored property becomes writable again. This vulnerability is fixed in 2.18.9, 2.21.5, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54516",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Security bypass due to improper handling of renamed properties"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, POJOPropertiesCollector._renameProperties() allows a property with @JsonProperty(\"renamed\") on the getter and @JsonIgnore on the setter to be renamed rather than dropped. With MapperFeature.INFER_PROPERTY_MUTATORS enabled (default), the private backing field is retained; during deserialization BeanDeserializerFactory.addBeanProps() sees hasField()==true, builds a FieldProperty, and makes the backing field writable. An attacker supplying the renamed JSON key writes the backing field directly, bypassing the @JsonIgnore on the setter. This vulnerability is fixed in 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54516",
+              "help": {
+                "text": "Vulnerability CVE-2026-54516\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54516](https://avd.aquasec.com/nvd/cve-2026-54516)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, POJOPropertiesCollector._renameProperties() allows a property with @JsonProperty(\"renamed\") on the getter and @JsonIgnore on the setter to be renamed rather than dropped. With MapperFeature.INFER_PROPERTY_MUTATORS enabled (default), the private backing field is retained; during deserialization BeanDeserializerFactory.addBeanProps() sees hasField()==true, builds a FieldProperty, and makes the backing field writable. An attacker supplying the renamed JSON key writes the backing field directly, bypassing the @JsonIgnore on the setter. This vulnerability is fixed in 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54516**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|2.21.4, 3.1.4|[CVE-2026-54516](https://avd.aquasec.com/nvd/cve-2026-54516)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, POJOPropertiesCollector._renameProperties() allows a property with @JsonProperty(\"renamed\") on the getter and @JsonIgnore on the setter to be renamed rather than dropped. With MapperFeature.INFER_PROPERTY_MUTATORS enabled (default), the private backing field is retained; during deserialization BeanDeserializerFactory.addBeanProps() sees hasField()==true, builds a FieldProperty, and makes the backing field writable. An attacker supplying the renamed JSON key writes the backing field directly, bypassing the @JsonIgnore on the setter. This vulnerability is fixed in 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54517",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Information disclosure via improper JsonView filter application"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, in BeanDeserializer._deserializeUsingPropertyBased, the active-view (@JsonView) filter was applied only to creator properties; the regular property-buffering branch performed no prop.visibleInView(activeView) check. A change making SetterlessProperty.isMerging() return true routed setterless Collection/Map properties through this unguarded path, so a setterless collection annotated with a restricted @JsonView is populated from attacker JSON even when the active view excludes it. This vulnerability is fixed in 2.21.4 and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54517",
+              "help": {
+                "text": "Vulnerability CVE-2026-54517\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54517](https://avd.aquasec.com/nvd/cve-2026-54517)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, in BeanDeserializer._deserializeUsingPropertyBased, the active-view (@JsonView) filter was applied only to creator properties; the regular property-buffering branch performed no prop.visibleInView(activeView) check. A change making SetterlessProperty.isMerging() return true routed setterless Collection/Map properties through this unguarded path, so a setterless collection annotated with a restricted @JsonView is populated from attacker JSON even when the active view excludes it. This vulnerability is fixed in 2.21.4 and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54517**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|2.21.4, 3.1.4|[CVE-2026-54517](https://avd.aquasec.com/nvd/cve-2026-54517)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, in BeanDeserializer._deserializeUsingPropertyBased, the active-view (@JsonView) filter was applied only to creator properties; the regular property-buffering branch performed no prop.visibleInView(activeView) check. A change making SetterlessProperty.isMerging() return true routed setterless Collection/Map properties through this unguarded path, so a setterless collection annotated with a restricted @JsonView is populated from attacker JSON even when the active view excludes it. This vulnerability is fixed in 2.21.4 and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54518",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Information disclosure and data manipulation via view-based access control bypass"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, UnwrappedPropertyHandler.processUnwrappedCreatorProperties() replays buffered JSON into creator parameters but never consults prop.visibleInView(activeView). The normal property-based creator path gates creator properties on the active view, but this unwrapped-creator replay path bypasses that check, so a constructor parameter annotated with both @JsonView(AdminView.class) and @JsonUnwrapped is populated from attacker JSON even when a more restrictive view is active. This vulnerability is fixed in 2.21.4 and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54518",
+              "help": {
+                "text": "Vulnerability CVE-2026-54518\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.21.4\nLink: [CVE-2026-54518](https://avd.aquasec.com/nvd/cve-2026-54518)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, UnwrappedPropertyHandler.processUnwrappedCreatorProperties() replays buffered JSON into creator parameters but never consults prop.visibleInView(activeView). The normal property-based creator path gates creator properties on the active view, but this unwrapped-creator replay path bypasses that check, so a constructor parameter annotated with both @JsonView(AdminView.class) and @JsonUnwrapped is populated from attacker JSON even when a more restrictive view is active. This vulnerability is fixed in 2.21.4 and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54518**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|2.21.4|[CVE-2026-54518](https://avd.aquasec.com/nvd/cve-2026-54518)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.21.0 until 2.21.4 and 3.1.4, UnwrappedPropertyHandler.processUnwrappedCreatorProperties() replays buffered JSON into creator parameters but never consults prop.visibleInView(activeView). The normal property-based creator path gates creator properties on the active view, but this unwrapped-creator replay path bypasses that check, so a constructor parameter annotated with both @JsonView(AdminView.class) and @JsonUnwrapped is populated from attacker JSON even when a more restrictive view is active. This vulnerability is fixed in 2.21.4 and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-7962",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "com.sun.mail/jakarta.mail: Jakarta Mail SMTP Injection Vulnerability"
+              },
+              "fullDescription": {
+                "text": "In Jakarta Mail versions prior to 2.0.2 it is possible to perform an SMTP Injection by utilizing the \\r and \\n UTF-8 characters to separate different messages."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-7962",
+              "help": {
+                "text": "Vulnerability CVE-2025-7962\nSeverity: MEDIUM\nPackage: com.sun.mail:jakarta.mail\nFixed Version: 1.6.8, 2.0.2\nLink: [CVE-2025-7962](https://avd.aquasec.com/nvd/cve-2025-7962)\nIn Jakarta Mail versions prior to 2.0.2 it is possible to perform an SMTP Injection by utilizing the \\r and \\n UTF-8 characters to separate different messages.",
+                "markdown": "**Vulnerability CVE-2025-7962**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.sun.mail:jakarta.mail|1.6.8, 2.0.2|[CVE-2025-7962](https://avd.aquasec.com/nvd/cve-2025-7962)|\n\nIn Jakarta Mail versions prior to 2.0.2 it is possible to perform an SMTP Injection by utilizing the \\r and \\n UTF-8 characters to separate different messages."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                "cvssv40_baseScore": 6,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:L/UI:N/VC:N/VI:H/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-48924",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "commons-lang/commons-lang: org.apache.commons/commons-lang3: Uncontrolled Recursion vulnerability in Apache Commons Lang"
+              },
+              "fullDescription": {
+                "text": "Uncontrolled Recursion vulnerability in Apache Commons Lang.\n\nThis issue affects Apache Commons Lang: Starting with commons-lang:commons-lang 2.0 to 2.6, and, from org.apache.commons:commons-lang3 3.0 before 3.18.0.\n\nThe methods ClassUtils.getClass(...) can throw StackOverflowError on very long inputs. Because an Error is usually not handled by applications and libraries, a \nStackOverflowError could cause an application to stop.\n\nUsers are recommended to upgrade to version 3.18.0, which fixes the issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-48924",
+              "help": {
+                "text": "Vulnerability CVE-2025-48924\nSeverity: MEDIUM\nPackage: commons-lang:commons-lang\nFixed Version: \nLink: [CVE-2025-48924](https://avd.aquasec.com/nvd/cve-2025-48924)\nUncontrolled Recursion vulnerability in Apache Commons Lang.\n\nThis issue affects Apache Commons Lang: Starting with commons-lang:commons-lang 2.0 to 2.6, and, from org.apache.commons:commons-lang3 3.0 before 3.18.0.\n\nThe methods ClassUtils.getClass(...) can throw StackOverflowError on very long inputs. Because an Error is usually not handled by applications and libraries, a \nStackOverflowError could cause an application to stop.\n\nUsers are recommended to upgrade to version 3.18.0, which fixes the issue.",
+                "markdown": "**Vulnerability CVE-2025-48924**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|commons-lang:commons-lang||[CVE-2025-48924](https://avd.aquasec.com/nvd/cve-2025-48924)|\n\nUncontrolled Recursion vulnerability in Apache Commons Lang.\n\nThis issue affects Apache Commons Lang: Starting with commons-lang:commons-lang 2.0 to 2.6, and, from org.apache.commons:commons-lang3 3.0 before 3.18.0.\n\nThe methods ClassUtils.getClass(...) can throw StackOverflowError on very long inputs. Because an Error is usually not handled by applications and libraries, a \nStackOverflowError could cause an application to stop.\n\nUsers are recommended to upgrade to version 3.18.0, which fixes the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34479",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-1.2-api: Apache Log4j 1-to-Log4j 2 bridge: Log processing denial of service due to improper XML escaping"
+              },
+              "fullDescription": {
+                "text": "The Log4j1XmlLayout from the Apache Log4j 1-to-Log4j 2 bridge fails to escape characters forbidden by the XML 1.0 standard, producing malformed XML output. Conforming XML parsers are required to reject documents containing such characters with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nTwo groups of users are affected:\n\n  *  Those using Log4j1XmlLayout directly in a Log4j Core 2 configuration file.\n  *  Those using the Log4j 1 configuration compatibility layer with org.apache.log4j.xml.XMLLayout specified as the layout class.\n\n\nUsers are advised to upgrade to Apache Log4j 1-to-Log4j 2 bridge version 2.25.4, which corrects this issue.\n\nNote: The Apache Log4j 1-to-Log4j 2 bridge is deprecated and will not be present in Log4j 3. Users are encouraged to consult the  Log4j 1 to Log4j 2 migration guide https://logging.apache.org/log4j/2.x/migrate-from-log4j1.html , and specifically the section on eliminating reliance on the bridge."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34479",
+              "help": {
+                "text": "Vulnerability CVE-2026-34479\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-1.2-api\nFixed Version: 2.25.4\nLink: [CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)\nThe Log4j1XmlLayout from the Apache Log4j 1-to-Log4j 2 bridge fails to escape characters forbidden by the XML 1.0 standard, producing malformed XML output. Conforming XML parsers are required to reject documents containing such characters with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nTwo groups of users are affected:\n\n  *  Those using Log4j1XmlLayout directly in a Log4j Core 2 configuration file.\n  *  Those using the Log4j 1 configuration compatibility layer with org.apache.log4j.xml.XMLLayout specified as the layout class.\n\n\nUsers are advised to upgrade to Apache Log4j 1-to-Log4j 2 bridge version 2.25.4, which corrects this issue.\n\nNote: The Apache Log4j 1-to-Log4j 2 bridge is deprecated and will not be present in Log4j 3. Users are encouraged to consult the  Log4j 1 to Log4j 2 migration guide https://logging.apache.org/log4j/2.x/migrate-from-log4j1.html , and specifically the section on eliminating reliance on the bridge.",
+                "markdown": "**Vulnerability CVE-2026-34479**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-1.2-api|2.25.4|[CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)|\n\nThe Log4j1XmlLayout from the Apache Log4j 1-to-Log4j 2 bridge fails to escape characters forbidden by the XML 1.0 standard, producing malformed XML output. Conforming XML parsers are required to reject documents containing such characters with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nTwo groups of users are affected:\n\n  *  Those using Log4j1XmlLayout directly in a Log4j Core 2 configuration file.\n  *  Those using the Log4j 1 configuration compatibility layer with org.apache.log4j.xml.XMLLayout specified as the layout class.\n\n\nUsers are advised to upgrade to Apache Log4j 1-to-Log4j 2 bridge version 2.25.4, which corrects this issue.\n\nNote: The Apache Log4j 1-to-Log4j 2 bridge is deprecated and will not be present in Log4j 3. Users are encouraged to consult the  Log4j 1 to Log4j 2 migration guide https://logging.apache.org/log4j/2.x/migrate-from-log4j1.html , and specifically the section on eliminating reliance on the bridge."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34477",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Man-in-the-middle attack due to incomplete hostname verification"
+              },
+              "fullDescription": {
+                "text": "The fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34477",
+              "help": {
+                "text": "Vulnerability CVE-2026-34477\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)\nThe fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue.",
+                "markdown": "**Vulnerability CVE-2026-34477**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)|\n\nThe fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34478",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Log injection via CRLF sequences due to configuration attribute renames"
+              },
+              "fullDescription": {
+                "text": "Apache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34478",
+              "help": {
+                "text": "Vulnerability CVE-2026-34478\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)\nApache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue.",
+                "markdown": "**Vulnerability CVE-2026-34478**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)|\n\nApache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34480",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Invalid XML output causes denial of service in logging"
+              },
+              "fullDescription": {
+                "text": "Apache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34480",
+              "help": {
+                "text": "Vulnerability CVE-2026-34480\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)\nApache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output.",
+                "markdown": "**Vulnerability CVE-2026-34480**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)|\n\nApache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-43975",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Apache Wicket has a Path Traversal issue"
+              },
+              "fullDescription": {
+                "text": "FolderUploadsFileManager in Apache Wicket does not validate or sanitize the uploadFieldId parameter or the clientFileName\n before constructing file paths, allowing an unauthenticated attacker to\n write arbitrary files outside the intended upload directory or read \nfiles from arbitrary locations on the server.\n\nThis issue affects Apache Wicket: from 8.0.0 through 8.17.0, from 9.0.0 through 9.22.0, from 10.0.0 through 10.8.0.\n\nUsers are recommended to upgrade to version 10.9.0, which fixes the issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-43975",
+              "help": {
+                "text": "Vulnerability CVE-2026-43975\nSeverity: MEDIUM\nPackage: org.apache.wicket:wicket-core\nFixed Version: 10.9.0\nLink: [CVE-2026-43975](https://avd.aquasec.com/nvd/cve-2026-43975)\nFolderUploadsFileManager in Apache Wicket does not validate or sanitize the uploadFieldId parameter or the clientFileName\n before constructing file paths, allowing an unauthenticated attacker to\n write arbitrary files outside the intended upload directory or read \nfiles from arbitrary locations on the server.\n\nThis issue affects Apache Wicket: from 8.0.0 through 8.17.0, from 9.0.0 through 9.22.0, from 10.0.0 through 10.8.0.\n\nUsers are recommended to upgrade to version 10.9.0, which fixes the issue.",
+                "markdown": "**Vulnerability CVE-2026-43975**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.wicket:wicket-core|10.9.0|[CVE-2026-43975](https://avd.aquasec.com/nvd/cve-2026-43975)|\n\nFolderUploadsFileManager in Apache Wicket does not validate or sanitize the uploadFieldId parameter or the clientFileName\n before constructing file paths, allowing an unauthenticated attacker to\n write arbitrary files outside the intended upload directory or read \nfiles from arbitrary locations on the server.\n\nThis issue affects Apache Wicket: from 8.0.0 through 8.17.0, from 9.0.0 through 9.22.0, from 10.0.0 through 10.8.0.\n\nUsers are recommended to upgrade to version 10.9.0, which fixes the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-14813",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "bouncycastle: BC-JAVA: GOSTCTR implementation unable to process more than 255 blocks correctly"
+              },
+              "fullDescription": {
+                "text": ": Use of a Broken or Risky Cryptographic Algorithm vulnerability in Legion of the Bouncy Castle Inc. BC-JAVA bcprov on all (core modules).\n\n This vulnerability is associated with program files G3413CTRBlockCipher.\n\n\n\nThis issue affects BC-JAVA: from 1.59 before 1.80.2, from 1.81 before 1.81.1, from 1.82 before 1.84."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-14813",
+              "help": {
+                "text": "Vulnerability CVE-2025-14813\nSeverity: CRITICAL\nPackage: org.bouncycastle:bcprov-jdk18on\nFixed Version: 1.80.2, 1.81.1, 1.84\nLink: [CVE-2025-14813](https://avd.aquasec.com/nvd/cve-2025-14813)\n: Use of a Broken or Risky Cryptographic Algorithm vulnerability in Legion of the Bouncy Castle Inc. BC-JAVA bcprov on all (core modules).\n\n This vulnerability is associated with program files G3413CTRBlockCipher.\n\n\n\nThis issue affects BC-JAVA: from 1.59 before 1.80.2, from 1.81 before 1.81.1, from 1.82 before 1.84.",
+                "markdown": "**Vulnerability CVE-2025-14813**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|org.bouncycastle:bcprov-jdk18on|1.80.2, 1.81.1, 1.84|[CVE-2025-14813](https://avd.aquasec.com/nvd/cve-2025-14813)|\n\n: Use of a Broken or Risky Cryptographic Algorithm vulnerability in Legion of the Bouncy Castle Inc. BC-JAVA bcprov on all (core modules).\n\n This vulnerability is associated with program files G3413CTRBlockCipher.\n\n\n\nThis issue affects BC-JAVA: from 1.59 before 1.80.2, from 1.81 before 1.81.1, from 1.82 before 1.84."
+              },
+              "properties": {
+                "cvssv40_baseScore": 9.3,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:H/SI:H/SA:N/RE:M/U:Red",
+                "precision": "very-high",
+                "security-severity": "9.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-0636",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "bouncycastle: BC-JAVA: LDAP injection vulnerability in LDAPStoreHelper.java"
+              },
+              "fullDescription": {
+                "text": "Improper neutralization of special elements used in an LDAP query ('LDAP injection') vulnerability in Legion of the Bouncy Castle Inc. BC-JAVA bcprov on all (prov modules).\n\n This vulnerability is associated with program files LDAPStoreHelper.\n\n\n\nThis issue affects BC-JAVA: from 1.74 before 1.80.2, from 1.81 before 1.81.1, from 1.82 before 1.84."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-0636",
+              "help": {
+                "text": "Vulnerability CVE-2026-0636\nSeverity: MEDIUM\nPackage: org.bouncycastle:bcprov-jdk18on\nFixed Version: 1.84\nLink: [CVE-2026-0636](https://avd.aquasec.com/nvd/cve-2026-0636)\nImproper neutralization of special elements used in an LDAP query ('LDAP injection') vulnerability in Legion of the Bouncy Castle Inc. BC-JAVA bcprov on all (prov modules).\n\n This vulnerability is associated with program files LDAPStoreHelper.\n\n\n\nThis issue affects BC-JAVA: from 1.74 before 1.80.2, from 1.81 before 1.81.1, from 1.82 before 1.84.",
+                "markdown": "**Vulnerability CVE-2026-0636**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.bouncycastle:bcprov-jdk18on|1.84|[CVE-2026-0636](https://avd.aquasec.com/nvd/cve-2026-0636)|\n\nImproper neutralization of special elements used in an LDAP query ('LDAP injection') vulnerability in Legion of the Bouncy Castle Inc. BC-JAVA bcprov on all (prov modules).\n\n This vulnerability is associated with program files LDAPStoreHelper.\n\n\n\nThis issue affects BC-JAVA: from 1.74 before 1.80.2, from 1.81 before 1.81.1, from 1.82 before 1.84."
+              },
+              "properties": {
+                "cvssv40_baseScore": 5.5,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N/E:P/RE:M/U:Amber",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-2332",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.eclipse.jetty/jetty-http: HTTP request smuggling via chunked extension quoted-string parsing"
+              },
+              "fullDescription": {
+                "text": "In Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-2332",
+              "help": {
+                "text": "Vulnerability CVE-2026-2332\nSeverity: HIGH\nPackage: org.eclipse.jetty:jetty-http\nFixed Version: 12.1.7, 12.0.33\nLink: [CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)\nIn Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request.",
+                "markdown": "**Vulnerability CVE-2026-2332**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.eclipse.jetty:jetty-http|12.1.7, 12.0.33|[CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)|\n\nIn Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.4,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.4",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-6763",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.eclipse.jetty:jetty-http: jetty: Jetty URI parsing of invalid authority"
+              },
+              "fullDescription": {
+                "text": "Eclipse Jetty is a lightweight, highly scalable, Java-based web server and Servlet engine . It includes a utility class, HttpURI, for URI/URL parsing.\n\nThe HttpURI class does insufficient validation on the authority segment of a URI.  However the behaviour of HttpURI\n differs from the common browsers in how it handles a URI that would be \nconsidered invalid if fully validated against the RRC.  Specifically HttpURI\n and the browser may differ on the value of the host extracted from an \ninvalid URI and thus a combination of Jetty and a vulnerable browser may\n be vulnerable to a open redirect attack or to a SSRF attack if the URI \nis used after passing validation checks."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-6763",
+              "help": {
+                "text": "Vulnerability CVE-2024-6763\nSeverity: MEDIUM\nPackage: org.eclipse.jetty:jetty-http\nFixed Version: 12.0.12\nLink: [CVE-2024-6763](https://avd.aquasec.com/nvd/cve-2024-6763)\nEclipse Jetty is a lightweight, highly scalable, Java-based web server and Servlet engine . It includes a utility class, HttpURI, for URI/URL parsing.\n\nThe HttpURI class does insufficient validation on the authority segment of a URI.  However the behaviour of HttpURI\n differs from the common browsers in how it handles a URI that would be \nconsidered invalid if fully validated against the RRC.  Specifically HttpURI\n and the browser may differ on the value of the host extracted from an \ninvalid URI and thus a combination of Jetty and a vulnerable browser may\n be vulnerable to a open redirect attack or to a SSRF attack if the URI \nis used after passing validation checks.",
+                "markdown": "**Vulnerability CVE-2024-6763**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.eclipse.jetty:jetty-http|12.0.12|[CVE-2024-6763](https://avd.aquasec.com/nvd/cve-2024-6763)|\n\nEclipse Jetty is a lightweight, highly scalable, Java-based web server and Servlet engine . It includes a utility class, HttpURI, for URI/URL parsing.\n\nThe HttpURI class does insufficient validation on the authority segment of a URI.  However the behaviour of HttpURI\n differs from the common browsers in how it handles a URI that would be \nconsidered invalid if fully validated against the RRC.  Specifically HttpURI\n and the browser may differ on the value of the host extracted from an \ninvalid URI and thus a combination of Jetty and a vulnerable browser may\n be vulnerable to a open redirect attack or to a SSRF attack if the URI \nis used after passing validation checks."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.7,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "3.7",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-11143",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.eclipse.jetty/jetty-http: org.eclipse.jetty: Security bypass due to differential URI parsing"
+              },
+              "fullDescription": {
+                "text": "The Jetty URI parser has some key differences to other common parsers when evaluating invalid or unusual URIs. Differential parsing of URIs in systems using multiple components may result in security by-pass. For example a component that enforces a black list may interpret the URIs differently from one that generates a response. At the very least, differential parsing may divulge implementation details."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-11143",
+              "help": {
+                "text": "Vulnerability CVE-2025-11143\nSeverity: LOW\nPackage: org.eclipse.jetty:jetty-http\nFixed Version: 12.0.31, 12.1.5\nLink: [CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)\nThe Jetty URI parser has some key differences to other common parsers when evaluating invalid or unusual URIs. Differential parsing of URIs in systems using multiple components may result in security by-pass. For example a component that enforces a black list may interpret the URIs differently from one that generates a response. At the very least, differential parsing may divulge implementation details.",
+                "markdown": "**Vulnerability CVE-2025-11143**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|org.eclipse.jetty:jetty-http|12.0.31, 12.1.5|[CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)|\n\nThe Jetty URI parser has some key differences to other common parsers when evaluating invalid or unusual URIs. Differential parsing of URIs in systems using multiple components may result in security by-pass. For example a component that enforces a black list may interpret the URIs differently from one that generates a response. At the very least, differential parsing may divulge implementation details."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.7,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "3.7",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-22746",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Spring Security: Spring Security: Timing attack defense bypass allows information disclosure"
+              },
+              "fullDescription": {
+                "text": "Vulnerability in Spring Spring Security. If an application is using the UserDetails#isEnabled, #isAccountNonExpired, or #isAccountNonLocked user attributes, to enable, expire, or lock users, then DaoAuthenticationProvider's timing attack defense can be bypassed for users who are disabled, expired, or locked.This issue affects Spring Security: from 5.7.0 through 5.7.22, from 5.8.0 through 5.8.24, from 6.3.0 through 6.3.15, from 6.5.0 through 6.5.9, from 7.0.0 through 7.0.4."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-22746",
+              "help": {
+                "text": "Vulnerability CVE-2026-22746\nSeverity: LOW\nPackage: org.springframework.security:spring-security-core\nFixed Version: 6.5.10, 7.0.5\nLink: [CVE-2026-22746](https://avd.aquasec.com/nvd/cve-2026-22746)\nVulnerability in Spring Spring Security. If an application is using the UserDetails#isEnabled, #isAccountNonExpired, or #isAccountNonLocked user attributes, to enable, expire, or lock users, then DaoAuthenticationProvider's timing attack defense can be bypassed for users who are disabled, expired, or locked.This issue affects Spring Security: from 5.7.0 through 5.7.22, from 5.8.0 through 5.8.24, from 6.3.0 through 6.3.15, from 6.5.0 through 6.5.9, from 7.0.0 through 7.0.4.",
+                "markdown": "**Vulnerability CVE-2026-22746**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|org.springframework.security:spring-security-core|6.5.10, 7.0.5|[CVE-2026-22746](https://avd.aquasec.com/nvd/cve-2026-22746)|\n\nVulnerability in Spring Spring Security. If an application is using the UserDetails#isEnabled, #isAccountNonExpired, or #isAccountNonLocked user attributes, to enable, expire, or lock users, then DaoAuthenticationProvider's timing attack defense can be bypassed for users who are disabled, expired, or locked.This issue affects Spring Security: from 5.7.0 through 5.7.22, from 5.8.0 through 5.8.24, from 6.3.0 through 6.3.15, from 6.5.0 through 6.5.9, from 7.0.0 through 7.0.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.7,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "3.7",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-22228",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "spring-security-core: Spring Security BCryptPasswordEncoder does not enforce maximum password length"
+              },
+              "fullDescription": {
+                "text": "BCryptPasswordEncoder.matches(CharSequence,String) will incorrectly return true for passwords larger than 72 characters as long as the first 72 characters are the same."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-22228",
+              "help": {
+                "text": "Vulnerability CVE-2025-22228\nSeverity: HIGH\nPackage: org.springframework.security:spring-security-crypto\nFixed Version: 6.3.8, 6.4.4, 6.2.10, 6.1.14, 6.0.16, 5.8.18, 5.7.16\nLink: [CVE-2025-22228](https://avd.aquasec.com/nvd/cve-2025-22228)\nBCryptPasswordEncoder.matches(CharSequence,String) will incorrectly return true for passwords larger than 72 characters as long as the first 72 characters are the same.",
+                "markdown": "**Vulnerability CVE-2025-22228**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.springframework.security:spring-security-crypto|6.3.8, 6.4.4, 6.2.10, 6.1.14, 6.0.16, 5.8.18, 5.7.16|[CVE-2025-22228](https://avd.aquasec.com/nvd/cve-2025-22228)|\n\nBCryptPasswordEncoder.matches(CharSequence,String) will incorrectly return true for passwords larger than 72 characters as long as the first 72 characters are the same."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.4,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.4",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-22732",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Spring Security: Spring Security: Security policy bypass and information disclosure due to unwritten HTTP headers"
+              },
+              "fullDescription": {
+                "text": "When applications specify HTTP response headers for servlet applications using Spring Security, there is the possibility that the HTTP Headers will not be written. \nThis issue affects Spring Security Servlet applications using lazy (default) writing of HTTP Headers:\n\n: from 5.7.0 through 5.7.21, from 5.8.0 through 5.8.23, from 6.3.0 through 6.3.14, from 6.4.0 through 6.4.14, from 6.5.0 through 6.5.8, from 7.0.0 through 7.0.3."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-22732",
+              "help": {
+                "text": "Vulnerability CVE-2026-22732\nSeverity: CRITICAL\nPackage: org.springframework.security:spring-security-web\nFixed Version: 6.5.9, 7.0.4\nLink: [CVE-2026-22732](https://avd.aquasec.com/nvd/cve-2026-22732)\nWhen applications specify HTTP response headers for servlet applications using Spring Security, there is the possibility that the HTTP Headers will not be written. \nThis issue affects Spring Security Servlet applications using lazy (default) writing of HTTP Headers:\n\n: from 5.7.0 through 5.7.21, from 5.8.0 through 5.8.23, from 6.3.0 through 6.3.14, from 6.4.0 through 6.4.14, from 6.5.0 through 6.5.8, from 7.0.0 through 7.0.3.",
+                "markdown": "**Vulnerability CVE-2026-22732**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|org.springframework.security:spring-security-web|6.5.9, 7.0.4|[CVE-2026-22732](https://avd.aquasec.com/nvd/cve-2026-22732)|\n\nWhen applications specify HTTP response headers for servlet applications using Spring Security, there is the possibility that the HTTP Headers will not be written. \nThis issue affects Spring Security Servlet applications using lazy (default) writing of HTTP Headers:\n\n: from 5.7.0 through 5.7.21, from 5.8.0 through 5.8.23, from 6.3.0 through 6.3.14, from 6.4.0 through 6.4.14, from 6.5.0 through 6.5.8, from 7.0.0 through 7.0.3."
+              },
+              "properties": {
+                "cvssv3_baseScore": 9.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "9.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-47838",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Spring Security Vulnerable to Unauthorized User Impersonation when Using X.509 Client Certificates"
+              },
+              "fullDescription": {
+                "text": "SubjectDnX509PrincipalExtractor does not correctly handle certain malformed X.509 certificate CN values, which can lead to reading the wrong value for the username. In a carefully crafted certificate, this can lead to an attacker impersonating another user.\n\nAffected versions:\nSpring Security 5.7.0 through 5.7.24; 5.8.0 through 5.8.26; 6.3.0 through 6.3.17; 6.4.0 through 6.4.17; 6.5.0 through 6.5.10."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-47838",
+              "help": {
+                "text": "Vulnerability CVE-2026-47838\nSeverity: MEDIUM\nPackage: org.springframework.security:spring-security-web\nFixed Version: 6.5.11\nLink: [CVE-2026-47838](https://avd.aquasec.com/nvd/cve-2026-47838)\nSubjectDnX509PrincipalExtractor does not correctly handle certain malformed X.509 certificate CN values, which can lead to reading the wrong value for the username. In a carefully crafted certificate, this can lead to an attacker impersonating another user.\n\nAffected versions:\nSpring Security 5.7.0 through 5.7.24; 5.8.0 through 5.8.26; 6.3.0 through 6.3.17; 6.4.0 through 6.4.17; 6.5.0 through 6.5.10.",
+                "markdown": "**Vulnerability CVE-2026-47838**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.springframework.security:spring-security-web|6.5.11|[CVE-2026-47838](https://avd.aquasec.com/nvd/cve-2026-47838)|\n\nSubjectDnX509PrincipalExtractor does not correctly handle certain malformed X.509 certificate CN values, which can lead to reading the wrong value for the username. In a carefully crafted certificate, this can lead to an attacker impersonating another user.\n\nAffected versions:\nSpring Security 5.7.0 through 5.7.24; 5.8.0 through 5.8.26; 6.3.0 through 6.3.17; 6.4.0 through 6.4.17; 6.5.0 through 6.5.10."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "6.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-38820",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "The fix for CVE-2022-22968 made disallowedFieldspatterns in DataBinder ..."
+              },
+              "fullDescription": {
+                "text": "The fix for CVE-2022-22968 made disallowedFields patterns in DataBinder case insensitive. However, String.toLowerCase() has some Locale dependent exceptions that could potentially result in fields not protected as expected."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-38820",
+              "help": {
+                "text": "Vulnerability CVE-2024-38820\nSeverity: MEDIUM\nPackage: org.springframework:spring-web\nFixed Version: 6.1.14\nLink: [CVE-2024-38820](https://avd.aquasec.com/nvd/cve-2024-38820)\nThe fix for CVE-2022-22968 made disallowedFields patterns in DataBinder case insensitive. However, String.toLowerCase() has some Locale dependent exceptions that could potentially result in fields not protected as expected.",
+                "markdown": "**Vulnerability CVE-2024-38820**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.springframework:spring-web|6.1.14|[CVE-2024-38820](https://avd.aquasec.com/nvd/cve-2024-38820)|\n\nThe fix for CVE-2022-22968 made disallowedFields patterns in DataBinder case insensitive. However, String.toLowerCase() has some Locale dependent exceptions that could potentially result in fields not protected as expected."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-22233",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "CVE-2024-38820 ensured Locale-independent, lowercase conversion for bo ..."
+              },
+              "fullDescription": {
+                "text": "CVE-2024-38820 ensured Locale-independent, lowercase conversion for both the configured disallowedFields patterns and for request parameter names. However, there are still cases where it is possible to bypass the disallowedFields checks.\n\nAffected Spring Products and Versions\n\nSpring Framework:\n  *  6.2.0 - 6.2.6\n\n  *  6.1.0 - 6.1.19\n\n  *  6.0.0 - 6.0.27\n\n  *  5.3.0 - 5.3.42\n  *  Older, unsupported versions are also affected\n\n\n\nMitigation\n\nUsers of affected versions should upgrade to the corresponding fixed version.\n\nAffected version(s)Fix Version Availability 6.2.x\n 6.2.7\nOSS6.1.x\n 6.1.20\nOSS6.0.x\n 6.0.28\n Commercial https://enterprise.spring.io/ 5.3.x\n 5.3.43\n Commercial https://enterprise.spring.io/ \nNo further mitigation steps are necessary.\n\n\nGenerally, we recommend using a dedicated model object with properties only for data binding, or using constructor binding since constructor arguments explicitly declare what to bind together with turning off setter binding through the declarativeBinding flag. See the Model Design section in the reference documentation.\n\nFor setting binding, prefer the use of allowedFields (an explicit list) over disallowedFields.\n\nCredit\n\nThis issue was responsibly reported by the TERASOLUNA Framework Development Team from NTT DATA Group Corporation."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-22233",
+              "help": {
+                "text": "Vulnerability CVE-2025-22233\nSeverity: LOW\nPackage: org.springframework:spring-context\nFixed Version: 6.2.7, 6.1.20\nLink: [CVE-2025-22233](https://avd.aquasec.com/nvd/cve-2025-22233)\nCVE-2024-38820 ensured Locale-independent, lowercase conversion for both the configured disallowedFields patterns and for request parameter names. However, there are still cases where it is possible to bypass the disallowedFields checks.\n\nAffected Spring Products and Versions\n\nSpring Framework:\n  *  6.2.0 - 6.2.6\n\n  *  6.1.0 - 6.1.19\n\n  *  6.0.0 - 6.0.27\n\n  *  5.3.0 - 5.3.42\n  *  Older, unsupported versions are also affected\n\n\n\nMitigation\n\nUsers of affected versions should upgrade to the corresponding fixed version.\n\nAffected version(s)Fix Version Availability 6.2.x\n 6.2.7\nOSS6.1.x\n 6.1.20\nOSS6.0.x\n 6.0.28\n Commercial https://enterprise.spring.io/ 5.3.x\n 5.3.43\n Commercial https://enterprise.spring.io/ \nNo further mitigation steps are necessary.\n\n\nGenerally, we recommend using a dedicated model object with properties only for data binding, or using constructor binding since constructor arguments explicitly declare what to bind together with turning off setter binding through the declarativeBinding flag. See the Model Design section in the reference documentation.\n\nFor setting binding, prefer the use of allowedFields (an explicit list) over disallowedFields.\n\nCredit\n\nThis issue was responsibly reported by the TERASOLUNA Framework Development Team from NTT DATA Group Corporation.",
+                "markdown": "**Vulnerability CVE-2025-22233**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|org.springframework:spring-context|6.2.7, 6.1.20|[CVE-2025-22233](https://avd.aquasec.com/nvd/cve-2025-22233)|\n\nCVE-2024-38820 ensured Locale-independent, lowercase conversion for both the configured disallowedFields patterns and for request parameter names. However, there are still cases where it is possible to bypass the disallowedFields checks.\n\nAffected Spring Products and Versions\n\nSpring Framework:\n  *  6.2.0 - 6.2.6\n\n  *  6.1.0 - 6.1.19\n\n  *  6.0.0 - 6.0.27\n\n  *  5.3.0 - 5.3.42\n  *  Older, unsupported versions are also affected\n\n\n\nMitigation\n\nUsers of affected versions should upgrade to the corresponding fixed version.\n\nAffected version(s)Fix Version Availability 6.2.x\n 6.2.7\nOSS6.1.x\n 6.1.20\nOSS6.0.x\n 6.0.28\n Commercial https://enterprise.spring.io/ 5.3.x\n 5.3.43\n Commercial https://enterprise.spring.io/ \nNo further mitigation steps are necessary.\n\n\nGenerally, we recommend using a dedicated model object with properties only for data binding, or using constructor binding since constructor arguments explicitly declare what to bind together with turning off setter binding through the declarativeBinding flag. See the Model Design section in the reference documentation.\n\nFor setting binding, prefer the use of allowedFields (an explicit list) over disallowedFields.\n\nCredit\n\nThis issue was responsibly reported by the TERASOLUNA Framework Development Team from NTT DATA Group Corporation."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "3.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-41249",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.springframework/spring-core: Spring Framework Annotation Detection Vulnerability"
+              },
+              "fullDescription": {
+                "text": "The Spring Framework annotation detection mechanism may not correctly resolve annotations on methods within type hierarchies with a parameterized super type with unbounded generics. This can be an issue if such annotations are used for authorization decisions.\n\nYour application may be affected by this if you are using Spring Security's @EnableMethodSecurity feature.\n\nYou are not affected by this if you are not using @EnableMethodSecurity or if you do not use security annotations on methods in generic superclasses or generic interfaces.\n\nThis CVE is published in conjunction with  CVE-2025-41248 https://spring.io/security/cve-2025-41248 ."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-41249",
+              "help": {
+                "text": "Vulnerability CVE-2025-41249\nSeverity: HIGH\nPackage: org.springframework:spring-core\nFixed Version: 6.2.11\nLink: [CVE-2025-41249](https://avd.aquasec.com/nvd/cve-2025-41249)\nThe Spring Framework annotation detection mechanism may not correctly resolve annotations on methods within type hierarchies with a parameterized super type with unbounded generics. This can be an issue if such annotations are used for authorization decisions.\n\nYour application may be affected by this if you are using Spring Security's @EnableMethodSecurity feature.\n\nYou are not affected by this if you are not using @EnableMethodSecurity or if you do not use security annotations on methods in generic superclasses or generic interfaces.\n\nThis CVE is published in conjunction with  CVE-2025-41248 https://spring.io/security/cve-2025-41248 .",
+                "markdown": "**Vulnerability CVE-2025-41249**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.springframework:spring-core|6.2.11|[CVE-2025-41249](https://avd.aquasec.com/nvd/cve-2025-41249)|\n\nThe Spring Framework annotation detection mechanism may not correctly resolve annotations on methods within type hierarchies with a parameterized super type with unbounded generics. This can be an issue if such annotations are used for authorization decisions.\n\nYour application may be affected by this if you are using Spring Security's @EnableMethodSecurity feature.\n\nYou are not affected by this if you are not using @EnableMethodSecurity or if you do not use security annotations on methods in generic superclasses or generic interfaces.\n\nThis CVE is published in conjunction with  CVE-2025-41248 https://spring.io/security/cve-2025-41248 ."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2016-1000027",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "spring: HttpInvokerServiceExporter readRemoteInvocation method untrusted java deserialization"
+              },
+              "fullDescription": {
+                "text": "Pivotal Spring Framework through 5.3.16 suffers from a potential remote code execution (RCE) issue if used for Java deserialization of untrusted data. Depending on how the library is implemented within a product, this issue may or not occur, and authentication may be required. NOTE: the vendor's position is that untrusted data is not an intended use case. The product's behavior will not be changed because some users rely on deserialization of trusted data."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2016-1000027",
+              "help": {
+                "text": "Vulnerability CVE-2016-1000027\nSeverity: CRITICAL\nPackage: org.springframework:spring-web\nFixed Version: 6.0.0\nLink: [CVE-2016-1000027](https://avd.aquasec.com/nvd/cve-2016-1000027)\nPivotal Spring Framework through 5.3.16 suffers from a potential remote code execution (RCE) issue if used for Java deserialization of untrusted data. Depending on how the library is implemented within a product, this issue may or not occur, and authentication may be required. NOTE: the vendor's position is that untrusted data is not an intended use case. The product's behavior will not be changed because some users rely on deserialization of trusted data.",
+                "markdown": "**Vulnerability CVE-2016-1000027**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|org.springframework:spring-web|6.0.0|[CVE-2016-1000027](https://avd.aquasec.com/nvd/cve-2016-1000027)|\n\nPivotal Spring Framework through 5.3.16 suffers from a potential remote code execution (RCE) issue if used for Java deserialization of untrusted data. Depending on how the library is implemented within a product, this issue may or not occur, and authentication may be required. NOTE: the vendor's position is that untrusted data is not an intended use case. The product's behavior will not be changed because some users rely on deserialization of trusted data."
+              },
+              "properties": {
+                "cvssv3_baseScore": 9.8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-38816",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "spring-webmvc: Path Traversal Vulnerability in Spring Applications Using RouterFunctions and FileSystemResource"
+              },
+              "fullDescription": {
+                "text": "Applications serving static resources through the functional web frameworks WebMvc.fn or WebFlux.fn are vulnerable to path traversal attacks. An attacker can craft malicious HTTP requests and obtain any file on the file system that is also accessible to the process in which the Spring application is running.\n\nSpecifically, an application is vulnerable when both of the following are true:\n\n  *  the web application uses RouterFunctions to serve static resources\n  *  resource handling is explicitly configured with a FileSystemResource location\n\n\nHowever, malicious requests are blocked and rejected when any of the following is true:\n\n  *  the  Spring Security HTTP Firewall https://docs.spring.io/spring-security/reference/servlet/exploits/firewall.html  is in use\n  *  the application runs on Tomcat or Jetty"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-38816",
+              "help": {
+                "text": "Vulnerability CVE-2024-38816\nSeverity: HIGH\nPackage: org.springframework:spring-webmvc\nFixed Version: 6.1.13\nLink: [CVE-2024-38816](https://avd.aquasec.com/nvd/cve-2024-38816)\nApplications serving static resources through the functional web frameworks WebMvc.fn or WebFlux.fn are vulnerable to path traversal attacks. An attacker can craft malicious HTTP requests and obtain any file on the file system that is also accessible to the process in which the Spring application is running.\n\nSpecifically, an application is vulnerable when both of the following are true:\n\n  *  the web application uses RouterFunctions to serve static resources\n  *  resource handling is explicitly configured with a FileSystemResource location\n\n\nHowever, malicious requests are blocked and rejected when any of the following is true:\n\n  *  the  Spring Security HTTP Firewall https://docs.spring.io/spring-security/reference/servlet/exploits/firewall.html  is in use\n  *  the application runs on Tomcat or Jetty",
+                "markdown": "**Vulnerability CVE-2024-38816**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.springframework:spring-webmvc|6.1.13|[CVE-2024-38816](https://avd.aquasec.com/nvd/cve-2024-38816)|\n\nApplications serving static resources through the functional web frameworks WebMvc.fn or WebFlux.fn are vulnerable to path traversal attacks. An attacker can craft malicious HTTP requests and obtain any file on the file system that is also accessible to the process in which the Spring application is running.\n\nSpecifically, an application is vulnerable when both of the following are true:\n\n  *  the web application uses RouterFunctions to serve static resources\n  *  resource handling is explicitly configured with a FileSystemResource location\n\n\nHowever, malicious requests are blocked and rejected when any of the following is true:\n\n  *  the  Spring Security HTTP Firewall https://docs.spring.io/spring-security/reference/servlet/exploits/firewall.html  is in use\n  *  the application runs on Tomcat or Jetty"
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-38819",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.springframework:spring-webmvc: Path traversal vulnerability in functional web frameworks"
+              },
+              "fullDescription": {
+                "text": "Applications serving static resources through the functional web frameworks WebMvc.fn or WebFlux.fn are vulnerable to path traversal attacks. An attacker can craft malicious HTTP requests and obtain any file on the file system that is also accessible to the process in which the Spring application is running."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-38819",
+              "help": {
+                "text": "Vulnerability CVE-2024-38819\nSeverity: HIGH\nPackage: org.springframework:spring-webmvc\nFixed Version: 6.1.14\nLink: [CVE-2024-38819](https://avd.aquasec.com/nvd/cve-2024-38819)\nApplications serving static resources through the functional web frameworks WebMvc.fn or WebFlux.fn are vulnerable to path traversal attacks. An attacker can craft malicious HTTP requests and obtain any file on the file system that is also accessible to the process in which the Spring application is running.",
+                "markdown": "**Vulnerability CVE-2024-38819**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.springframework:spring-webmvc|6.1.14|[CVE-2024-38819](https://avd.aquasec.com/nvd/cve-2024-38819)|\n\nApplications serving static resources through the functional web frameworks WebMvc.fn or WebFlux.fn are vulnerable to path traversal attacks. An attacker can craft malicious HTTP requests and obtain any file on the file system that is also accessible to the process in which the Spring application is running."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-38828",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.springframework:spring-webmvc: DoS via Spring MVC controller method with byte[] parameter"
+              },
+              "fullDescription": {
+                "text": "Spring MVC controller methods with an @RequestBody byte[] method parameter are vulnerable to a DoS attack."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-38828",
+              "help": {
+                "text": "Vulnerability CVE-2024-38828\nSeverity: MEDIUM\nPackage: org.springframework:spring-webmvc\nFixed Version: 5.3.42\nLink: [CVE-2024-38828](https://avd.aquasec.com/nvd/cve-2024-38828)\nSpring MVC controller methods with an @RequestBody byte[] method parameter are vulnerable to a DoS attack.",
+                "markdown": "**Vulnerability CVE-2024-38828**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.springframework:spring-webmvc|5.3.42|[CVE-2024-38828](https://avd.aquasec.com/nvd/cve-2024-38828)|\n\nSpring MVC controller methods with an @RequestBody byte[] method parameter are vulnerable to a DoS attack."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-41242",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.springframework/spring-webmvc: Spring Framework MVC path traversal vulnerability"
+              },
+              "fullDescription": {
+                "text": "Spring Framework MVC applications can be vulnerable to a “Path Traversal Vulnerability” when deployed on a non-compliant Servlet container.\n\nAn application can be vulnerable when all the following are true:\n\n  *  the application is deployed as a WAR or with an embedded Servlet container\n  *  the Servlet container  does not reject suspicious sequences https://jakarta.ee/specifications/servlet/6.1/jakarta-servlet-spec-6.1.html#uri-path-canonicalization \n  *  the application  serves static resources https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/static-resources.html#page-title  with Spring resource handling\n\n\nWe have verified that applications deployed on Apache Tomcat or Eclipse Jetty are not vulnerable, as long as default security features are not disabled in the configuration. Because we cannot check exploits against all Servlet containers and configuration variants, we strongly recommend upgrading your application."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-41242",
+              "help": {
+                "text": "Vulnerability CVE-2025-41242\nSeverity: MEDIUM\nPackage: org.springframework:spring-webmvc\nFixed Version: 6.2.10\nLink: [CVE-2025-41242](https://avd.aquasec.com/nvd/cve-2025-41242)\nSpring Framework MVC applications can be vulnerable to a “Path Traversal Vulnerability” when deployed on a non-compliant Servlet container.\n\nAn application can be vulnerable when all the following are true:\n\n  *  the application is deployed as a WAR or with an embedded Servlet container\n  *  the Servlet container  does not reject suspicious sequences https://jakarta.ee/specifications/servlet/6.1/jakarta-servlet-spec-6.1.html#uri-path-canonicalization \n  *  the application  serves static resources https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/static-resources.html#page-title  with Spring resource handling\n\n\nWe have verified that applications deployed on Apache Tomcat or Eclipse Jetty are not vulnerable, as long as default security features are not disabled in the configuration. Because we cannot check exploits against all Servlet containers and configuration variants, we strongly recommend upgrading your application.",
+                "markdown": "**Vulnerability CVE-2025-41242**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.springframework:spring-webmvc|6.2.10|[CVE-2025-41242](https://avd.aquasec.com/nvd/cve-2025-41242)|\n\nSpring Framework MVC applications can be vulnerable to a “Path Traversal Vulnerability” when deployed on a non-compliant Servlet container.\n\nAn application can be vulnerable when all the following are true:\n\n  *  the application is deployed as a WAR or with an embedded Servlet container\n  *  the Servlet container  does not reject suspicious sequences https://jakarta.ee/specifications/servlet/6.1/jakarta-servlet-spec-6.1.html#uri-path-canonicalization \n  *  the application  serves static resources https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/static-resources.html#page-title  with Spring resource handling\n\n\nWe have verified that applications deployed on Apache Tomcat or Eclipse Jetty are not vulnerable, as long as default security features are not disabled in the configuration. Because we cannot check exploits against all Servlet containers and configuration variants, we strongly recommend upgrading your application."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.9,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "5.9",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-22737",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Spring Framework: Spring Framework: Information disclosure via Java scripting engine enabled template views"
+              },
+              "fullDescription": {
+                "text": "Use of Java scripting engine enabled (e.g. JRuby, Jython) template views in Spring MVC and Spring WebFlux applications can result in disclosure of content from files outside the configured locations for script template views. This issue affects Spring Framework: from 7.0.0 through 7.0.5, from 6.2.0 through 6.2.16, from 6.1.0 through 6.1.25, from 5.3.0 through 5.3.46."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-22737",
+              "help": {
+                "text": "Vulnerability CVE-2026-22737\nSeverity: MEDIUM\nPackage: org.springframework:spring-webmvc\nFixed Version: 7.0.6, 6.2.17\nLink: [CVE-2026-22737](https://avd.aquasec.com/nvd/cve-2026-22737)\nUse of Java scripting engine enabled (e.g. JRuby, Jython) template views in Spring MVC and Spring WebFlux applications can result in disclosure of content from files outside the configured locations for script template views. This issue affects Spring Framework: from 7.0.0 through 7.0.5, from 6.2.0 through 6.2.16, from 6.1.0 through 6.1.25, from 5.3.0 through 5.3.46.",
+                "markdown": "**Vulnerability CVE-2026-22737**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.springframework:spring-webmvc|7.0.6, 6.2.17|[CVE-2026-22737](https://avd.aquasec.com/nvd/cve-2026-22737)|\n\nUse of Java scripting engine enabled (e.g. JRuby, Jython) template views in Spring MVC and Spring WebFlux applications can result in disclosure of content from files outside the configured locations for script template views. This issue affects Spring Framework: from 7.0.0 through 7.0.5, from 6.2.0 through 6.2.16, from 6.1.0 through 6.1.25, from 5.3.0 through 5.3.46."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.9,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "5.9",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-22745",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "spring-webflux: Spring MVC and Spring WebFlux: Denial of Service via slow static resource resolution on Windows"
+              },
+              "fullDescription": {
+                "text": "Spring MVC and WebFlux applications are vulnerable to Denial of Service attacks when resolving static resources.\n\n\nMore precisely, an application can be vulnerable when all the following are true:\n\n  *  the application is using Spring MVC or Spring WebFlux\n  *  the application is serving static resources from the file system\n  *  the application is running on a Windows platform\n\n\nWhen all the conditions above are met, the attacker can send malicious requests that are slow to resolve and that can keep HTTP connections in use. This can cause a Denial of Service on the application."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-22745",
+              "help": {
+                "text": "Vulnerability CVE-2026-22745\nSeverity: MEDIUM\nPackage: org.springframework:spring-webmvc\nFixed Version: 7.0.7, 6.2.18\nLink: [CVE-2026-22745](https://avd.aquasec.com/nvd/cve-2026-22745)\nSpring MVC and WebFlux applications are vulnerable to Denial of Service attacks when resolving static resources.\n\n\nMore precisely, an application can be vulnerable when all the following are true:\n\n  *  the application is using Spring MVC or Spring WebFlux\n  *  the application is serving static resources from the file system\n  *  the application is running on a Windows platform\n\n\nWhen all the conditions above are met, the attacker can send malicious requests that are slow to resolve and that can keep HTTP connections in use. This can cause a Denial of Service on the application.",
+                "markdown": "**Vulnerability CVE-2026-22745**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.springframework:spring-webmvc|7.0.7, 6.2.18|[CVE-2026-22745](https://avd.aquasec.com/nvd/cve-2026-22745)|\n\nSpring MVC and WebFlux applications are vulnerable to Denial of Service attacks when resolving static resources.\n\n\nMore precisely, an application can be vulnerable when all the following are true:\n\n  *  the application is using Spring MVC or Spring WebFlux\n  *  the application is serving static resources from the file system\n  *  the application is running on a Windows platform\n\n\nWhen all the conditions above are met, the attacker can send malicious requests that are slow to resolve and that can keep HTTP connections in use. This can cause a Denial of Service on the application."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-22735",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.springframework/spring-webmvc: org.springframework/spring-webflux: Spring MVC and WebFlux: Stream corruption vulnerability when using Server-Sent Events"
+              },
+              "fullDescription": {
+                "text": "Spring MVC and WebFlux applications are vulnerable to stream corruption when using Server-Sent Events (SSE). This issue affects Spring Foundation: from 7.0.0 through 7.0.5, from 6.2.0 through 6.2.16, from 6.1.0 through 6.1.25, from 5.3.0 through 5.3.46."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-22735",
+              "help": {
+                "text": "Vulnerability CVE-2026-22735\nSeverity: LOW\nPackage: org.springframework:spring-webmvc\nFixed Version: 7.0.6, 6.2.17\nLink: [CVE-2026-22735](https://avd.aquasec.com/nvd/cve-2026-22735)\nSpring MVC and WebFlux applications are vulnerable to stream corruption when using Server-Sent Events (SSE). This issue affects Spring Foundation: from 7.0.0 through 7.0.5, from 6.2.0 through 6.2.16, from 6.1.0 through 6.1.25, from 5.3.0 through 5.3.46.",
+                "markdown": "**Vulnerability CVE-2026-22735**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|org.springframework:spring-webmvc|7.0.6, 6.2.17|[CVE-2026-22735](https://avd.aquasec.com/nvd/cve-2026-22735)|\n\nSpring MVC and WebFlux applications are vulnerable to stream corruption when using Server-Sent Events (SSE). This issue affects Spring Foundation: from 7.0.0 through 7.0.5, from 6.2.0 through 6.2.16, from 6.1.0 through 6.1.25, from 5.3.0 through 5.3.46."
+              },
+              "properties": {
+                "cvssv3_baseScore": 2.6,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "2.6",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-22741",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Spring MVC: Spring WebFlux: Spring MVC and Spring WebFlux: Denial of Service via cache poisoning"
+              },
+              "fullDescription": {
+                "text": "Spring MVC and WebFlux applications are vulnerable to cache poisoning when resolving static resources.\n\n\nMore precisely, an application can be vulnerable when all the following are true:\n\n  *  the application is using Spring MVC or Spring WebFlux\n  *  the application is configuring the  resource chain support https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/static-resources.html#page-title  with caching enabled\n  *  the application adds support for encoded resources resolution\n  *  the resource cache must be empty when the attacker has access to the application\n\n\nWhen all the conditions above are met, the attacker can send malicious requests and poison the resource cache with resources using the wrong encoding. This can cause a denial of service by breaking the front-end application for clients."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-22741",
+              "help": {
+                "text": "Vulnerability CVE-2026-22741\nSeverity: LOW\nPackage: org.springframework:spring-webmvc\nFixed Version: 7.0.7, 6.2.18\nLink: [CVE-2026-22741](https://avd.aquasec.com/nvd/cve-2026-22741)\nSpring MVC and WebFlux applications are vulnerable to cache poisoning when resolving static resources.\n\n\nMore precisely, an application can be vulnerable when all the following are true:\n\n  *  the application is using Spring MVC or Spring WebFlux\n  *  the application is configuring the  resource chain support https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/static-resources.html#page-title  with caching enabled\n  *  the application adds support for encoded resources resolution\n  *  the resource cache must be empty when the attacker has access to the application\n\n\nWhen all the conditions above are met, the attacker can send malicious requests and poison the resource cache with resources using the wrong encoding. This can cause a denial of service by breaking the front-end application for clients.",
+                "markdown": "**Vulnerability CVE-2026-22741**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|org.springframework:spring-webmvc|7.0.7, 6.2.18|[CVE-2026-22741](https://avd.aquasec.com/nvd/cve-2026-22741)|\n\nSpring MVC and WebFlux applications are vulnerable to cache poisoning when resolving static resources.\n\n\nMore precisely, an application can be vulnerable when all the following are true:\n\n  *  the application is using Spring MVC or Spring WebFlux\n  *  the application is configuring the  resource chain support https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/static-resources.html#page-title  with caching enabled\n  *  the application adds support for encoded resources resolution\n  *  the resource cache must be empty when the attacker has access to the application\n\n\nWhen all the conditions above are met, the attacker can send malicious requests and poison the resource cache with resources using the wrong encoding. This can cause a denial of service by breaking the front-end application for clients."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "3.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "GHSA-72hv-8253-57qq",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-core\nInstalled Version: 2.21.0\nVulnerability GHSA-72hv-8253-57qq\nSeverity: MEDIUM\nFixed Version: 2.21.1, 2.18.6\nLink: [GHSA-72hv-8253-57qq](https://github.com/advisories/GHSA-72hv-8253-57qq)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-core-2.21.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-core-2.21.0.jar: com.fasterxml.jackson.core:jackson-core@2.21.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54512",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.0\nVulnerability CVE-2026-54512\nSeverity: HIGH\nFixed Version: 2.18.8, 3.1.4, 2.21.4\nLink: [CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar: com.fasterxml.jackson.core:jackson-databind@2.21.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54513",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.0\nVulnerability CVE-2026-54513\nSeverity: HIGH\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar: com.fasterxml.jackson.core:jackson-databind@2.21.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54514",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.0\nVulnerability CVE-2026-54514\nSeverity: MEDIUM\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar: com.fasterxml.jackson.core:jackson-databind@2.21.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54515",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.0\nVulnerability CVE-2026-54515\nSeverity: MEDIUM\nFixed Version: 3.1.4, 2.18.9, 2.21.5, 2.22.1\nLink: [CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar: com.fasterxml.jackson.core:jackson-databind@2.21.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54516",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.0\nVulnerability CVE-2026-54516\nSeverity: MEDIUM\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54516](https://avd.aquasec.com/nvd/cve-2026-54516)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar: com.fasterxml.jackson.core:jackson-databind@2.21.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54517",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.0\nVulnerability CVE-2026-54517\nSeverity: MEDIUM\nFixed Version: 2.21.4, 3.1.4\nLink: [CVE-2026-54517](https://avd.aquasec.com/nvd/cve-2026-54517)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar: com.fasterxml.jackson.core:jackson-databind@2.21.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54518",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.21.0\nVulnerability CVE-2026-54518\nSeverity: MEDIUM\nFixed Version: 2.21.4\nLink: [CVE-2026-54518](https://avd.aquasec.com/nvd/cve-2026-54518)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jackson-databind-2.21.0.jar: com.fasterxml.jackson.core:jackson-databind@2.21.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-7962",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.sun.mail:jakarta.mail\nInstalled Version: 1.6.7\nVulnerability CVE-2025-7962\nSeverity: MEDIUM\nFixed Version: 1.6.8, 2.0.2\nLink: [CVE-2025-7962](https://avd.aquasec.com/nvd/cve-2025-7962)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jakarta.mail-1.6.7.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/jakarta.mail-1.6.7.jar: com.sun.mail:jakarta.mail@1.6.7"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-48924",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: commons-lang:commons-lang\nInstalled Version: 2.6\nVulnerability CVE-2025-48924\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2025-48924](https://avd.aquasec.com/nvd/cve-2025-48924)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/commons-lang-2.6.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/commons-lang-2.6.jar: commons-lang:commons-lang@2.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34479",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-1.2-api\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34479\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/log4j-1.2-api-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/log4j-1.2-api-2.25.3.jar: org.apache.logging.log4j:log4j-1.2-api@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34479",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-1.2-api\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34479\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/log4j-1.2-api-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/log4j-1.2-api-2.25.3.jar: org.apache.logging.log4j:log4j-1.2-api@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34477",
+          "ruleIndex": 11,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34477\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34477",
+          "ruleIndex": 11,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34477\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34478",
+          "ruleIndex": 12,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34478\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34478",
+          "ruleIndex": 12,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34478\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34480",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34480\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34480",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34480\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-43975",
+          "ruleIndex": 14,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.wicket:wicket-core\nInstalled Version: 9.21.0\nVulnerability CVE-2026-43975\nSeverity: MEDIUM\nFixed Version: 10.9.0\nLink: [CVE-2026-43975](https://avd.aquasec.com/nvd/cve-2026-43975)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/wicket-core-9.21.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/wicket-core-9.21.0.jar: org.apache.wicket:wicket-core@9.21.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-14813",
+          "ruleIndex": 15,
+          "level": "error",
+          "message": {
+            "text": "Package: org.bouncycastle:bcprov-jdk18on\nInstalled Version: 1.79\nVulnerability CVE-2025-14813\nSeverity: CRITICAL\nFixed Version: 1.80.2, 1.81.1, 1.84\nLink: [CVE-2025-14813](https://avd.aquasec.com/nvd/cve-2025-14813)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/bcprov-jdk18on-1.79.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/bcprov-jdk18on-1.79.jar: org.bouncycastle:bcprov-jdk18on@1.79"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-0636",
+          "ruleIndex": 16,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.bouncycastle:bcprov-jdk18on\nInstalled Version: 1.79\nVulnerability CVE-2026-0636\nSeverity: MEDIUM\nFixed Version: 1.84\nLink: [CVE-2026-0636](https://avd.aquasec.com/nvd/cve-2026-0636)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/bcprov-jdk18on-1.79.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/bcprov-jdk18on-1.79.jar: org.bouncycastle:bcprov-jdk18on@1.79"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-2332",
+          "ruleIndex": 17,
+          "level": "error",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 10.0.25\nVulnerability CVE-2026-2332\nSeverity: HIGH\nFixed Version: 12.1.7, 12.0.33\nLink: [CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/jetty-http-10.0.25.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/jetty-http-10.0.25.jar: org.eclipse.jetty:jetty-http@10.0.25"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-6763",
+          "ruleIndex": 18,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 10.0.25\nVulnerability CVE-2024-6763\nSeverity: MEDIUM\nFixed Version: 12.0.12\nLink: [CVE-2024-6763](https://avd.aquasec.com/nvd/cve-2024-6763)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/jetty-http-10.0.25.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/jetty-http-10.0.25.jar: org.eclipse.jetty:jetty-http@10.0.25"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-11143",
+          "ruleIndex": 19,
+          "level": "note",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 10.0.25\nVulnerability CVE-2025-11143\nSeverity: LOW\nFixed Version: 12.0.31, 12.1.5\nLink: [CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/jetty-http-10.0.25.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/lib/jetty-http-10.0.25.jar: org.eclipse.jetty:jetty-http@10.0.25"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22746",
+          "ruleIndex": 20,
+          "level": "note",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-core\nInstalled Version: 5.8.16\nVulnerability CVE-2026-22746\nSeverity: LOW\nFixed Version: 6.5.10, 7.0.5\nLink: [CVE-2026-22746](https://avd.aquasec.com/nvd/cve-2026-22746)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-security-core-5.8.16.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-security-core-5.8.16.jar: org.springframework.security:spring-security-core@5.8.16"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22228",
+          "ruleIndex": 21,
+          "level": "error",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-crypto\nInstalled Version: 5.8.16\nVulnerability CVE-2025-22228\nSeverity: HIGH\nFixed Version: 6.3.8, 6.4.4, 6.2.10, 6.1.14, 6.0.16, 5.8.18, 5.7.16\nLink: [CVE-2025-22228](https://avd.aquasec.com/nvd/cve-2025-22228)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-security-crypto-5.8.16.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-security-crypto-5.8.16.jar: org.springframework.security:spring-security-crypto@5.8.16"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22732",
+          "ruleIndex": 22,
+          "level": "error",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-web\nInstalled Version: 5.8.16\nVulnerability CVE-2026-22732\nSeverity: CRITICAL\nFixed Version: 6.5.9, 7.0.4\nLink: [CVE-2026-22732](https://avd.aquasec.com/nvd/cve-2026-22732)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-security-web-5.8.16.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-security-web-5.8.16.jar: org.springframework.security:spring-security-web@5.8.16"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-47838",
+          "ruleIndex": 23,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework.security:spring-security-web\nInstalled Version: 5.8.16\nVulnerability CVE-2026-47838\nSeverity: MEDIUM\nFixed Version: 6.5.11\nLink: [CVE-2026-47838](https://avd.aquasec.com/nvd/cve-2026-47838)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-security-web-5.8.16.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-security-web-5.8.16.jar: org.springframework.security:spring-security-web@5.8.16"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-38820",
+          "ruleIndex": 24,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework:spring-context\nInstalled Version: 5.3.39\nVulnerability CVE-2024-38820\nSeverity: MEDIUM\nFixed Version: 6.1.14\nLink: [CVE-2024-38820](https://avd.aquasec.com/nvd/cve-2024-38820)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-context-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-context-5.3.39.jar: org.springframework:spring-context@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-22233",
+          "ruleIndex": 25,
+          "level": "note",
+          "message": {
+            "text": "Package: org.springframework:spring-context\nInstalled Version: 5.3.39\nVulnerability CVE-2025-22233\nSeverity: LOW\nFixed Version: 6.2.7, 6.1.20\nLink: [CVE-2025-22233](https://avd.aquasec.com/nvd/cve-2025-22233)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-context-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-context-5.3.39.jar: org.springframework:spring-context@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-41249",
+          "ruleIndex": 26,
+          "level": "error",
+          "message": {
+            "text": "Package: org.springframework:spring-core\nInstalled Version: 5.3.39\nVulnerability CVE-2025-41249\nSeverity: HIGH\nFixed Version: 6.2.11\nLink: [CVE-2025-41249](https://avd.aquasec.com/nvd/cve-2025-41249)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-core-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-core-5.3.39.jar: org.springframework:spring-core@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2016-1000027",
+          "ruleIndex": 27,
+          "level": "error",
+          "message": {
+            "text": "Package: org.springframework:spring-web\nInstalled Version: 5.3.39\nVulnerability CVE-2016-1000027\nSeverity: CRITICAL\nFixed Version: 6.0.0\nLink: [CVE-2016-1000027](https://avd.aquasec.com/nvd/cve-2016-1000027)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-web-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-web-5.3.39.jar: org.springframework:spring-web@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-38820",
+          "ruleIndex": 24,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework:spring-web\nInstalled Version: 5.3.39\nVulnerability CVE-2024-38820\nSeverity: MEDIUM\nFixed Version: 6.1.14\nLink: [CVE-2024-38820](https://avd.aquasec.com/nvd/cve-2024-38820)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-web-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-web-5.3.39.jar: org.springframework:spring-web@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-38816",
+          "ruleIndex": 28,
+          "level": "error",
+          "message": {
+            "text": "Package: org.springframework:spring-webmvc\nInstalled Version: 5.3.39\nVulnerability CVE-2024-38816\nSeverity: HIGH\nFixed Version: 6.1.13\nLink: [CVE-2024-38816](https://avd.aquasec.com/nvd/cve-2024-38816)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar: org.springframework:spring-webmvc@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-38819",
+          "ruleIndex": 29,
+          "level": "error",
+          "message": {
+            "text": "Package: org.springframework:spring-webmvc\nInstalled Version: 5.3.39\nVulnerability CVE-2024-38819\nSeverity: HIGH\nFixed Version: 6.1.14\nLink: [CVE-2024-38819](https://avd.aquasec.com/nvd/cve-2024-38819)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar: org.springframework:spring-webmvc@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-38828",
+          "ruleIndex": 30,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework:spring-webmvc\nInstalled Version: 5.3.39\nVulnerability CVE-2024-38828\nSeverity: MEDIUM\nFixed Version: 5.3.42\nLink: [CVE-2024-38828](https://avd.aquasec.com/nvd/cve-2024-38828)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar: org.springframework:spring-webmvc@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-41242",
+          "ruleIndex": 31,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework:spring-webmvc\nInstalled Version: 5.3.39\nVulnerability CVE-2025-41242\nSeverity: MEDIUM\nFixed Version: 6.2.10\nLink: [CVE-2025-41242](https://avd.aquasec.com/nvd/cve-2025-41242)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar: org.springframework:spring-webmvc@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22737",
+          "ruleIndex": 32,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework:spring-webmvc\nInstalled Version: 5.3.39\nVulnerability CVE-2026-22737\nSeverity: MEDIUM\nFixed Version: 7.0.6, 6.2.17\nLink: [CVE-2026-22737](https://avd.aquasec.com/nvd/cve-2026-22737)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar: org.springframework:spring-webmvc@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22745",
+          "ruleIndex": 33,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.springframework:spring-webmvc\nInstalled Version: 5.3.39\nVulnerability CVE-2026-22745\nSeverity: MEDIUM\nFixed Version: 7.0.7, 6.2.18\nLink: [CVE-2026-22745](https://avd.aquasec.com/nvd/cve-2026-22745)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar: org.springframework:spring-webmvc@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22735",
+          "ruleIndex": 34,
+          "level": "note",
+          "message": {
+            "text": "Package: org.springframework:spring-webmvc\nInstalled Version: 5.3.39\nVulnerability CVE-2026-22735\nSeverity: LOW\nFixed Version: 7.0.6, 6.2.17\nLink: [CVE-2026-22735](https://avd.aquasec.com/nvd/cve-2026-22735)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar: org.springframework:spring-webmvc@5.3.39"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-22741",
+          "ruleIndex": 35,
+          "level": "note",
+          "message": {
+            "text": "Package: org.springframework:spring-webmvc\nInstalled Version: 5.3.39\nVulnerability CVE-2026-22741\nSeverity: LOW\nFixed Version: 7.0.7, 6.2.18\nLink: [CVE-2026-22741](https://avd.aquasec.com/nvd/cve-2026-22741)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/iwniyvnx4sl4pxa09ad64ka7dqpkn4sy-geoserver-2.28.4/share/geoserver/webapps/geoserver/WEB-INF/lib/spring-webmvc-5.3.39.jar: org.springframework:spring-webmvc@5.3.39"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:5c24b568ab5c7b43940b562c72d5ca06c9c327eaa8fb68af299d40f4ed0e71c7",
+        "imageName": "ghcr.io/nix-containers/images/geoserver:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/geoserver@sha256:7617d3b9adb81c5e9bdb408e41922399e8021cf053eaec3e333412e17a29dcf5"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/geoserver:latest"
+        ]
+      }
+    }
+  ]
+}

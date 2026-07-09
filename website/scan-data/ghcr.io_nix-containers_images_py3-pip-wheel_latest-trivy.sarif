@@ -1,0 +1,365 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-3219",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "pip: pip: Incorrect file installation due to improper archive handling"
+              },
+              "fullDescription": {
+                "text": "pip handles concatenated tar and ZIP files as ZIP files regardless of filename or whether a file is both a tar and ZIP file. This behavior could result in confusing installation behavior, such as installing \"incorrect\" files according to the filename of the archive. New behavior only proceeds with installation if the file identifies uniquely as a ZIP or tar archive, not as both."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-3219",
+              "help": {
+                "text": "Vulnerability CVE-2026-3219\nSeverity: MEDIUM\nPackage: pip\nFixed Version: 26.1\nLink: [CVE-2026-3219](https://avd.aquasec.com/nvd/cve-2026-3219)\npip handles concatenated tar and ZIP files as ZIP files regardless of filename or whether a file is both a tar and ZIP file. This behavior could result in confusing installation behavior, such as installing \"incorrect\" files according to the filename of the archive. New behavior only proceeds with installation if the file identifies uniquely as a ZIP or tar archive, not as both.",
+                "markdown": "**Vulnerability CVE-2026-3219**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|pip|26.1|[CVE-2026-3219](https://avd.aquasec.com/nvd/cve-2026-3219)|\n\npip handles concatenated tar and ZIP files as ZIP files regardless of filename or whether a file is both a tar and ZIP file. This behavior could result in confusing installation behavior, such as installing \"incorrect\" files according to the filename of the archive. New behavior only proceeds with installation if the file identifies uniquely as a ZIP or tar archive, not as both."
+              },
+              "properties": {
+                "cvssv40_baseScore": 4.6,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-6357",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "pip: pip: Arbitrary code execution or information disclosure via malicious wheel package installation"
+              },
+              "fullDescription": {
+                "text": "pip prior to version 26.1 would run self-update check functionality after installing wheel files which required importing well-known Python modules names. These module imports were intentionally deferred to increase startup time of the pip CLI. The patch changes self-update functionality to run before wheels are installed to prevent newly-installed modules from being imported shortly after the installation of a wheel package. Users should still review package contents prior to installation."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-6357",
+              "help": {
+                "text": "Vulnerability CVE-2026-6357\nSeverity: MEDIUM\nPackage: pip\nFixed Version: 26.1\nLink: [CVE-2026-6357](https://avd.aquasec.com/nvd/cve-2026-6357)\npip prior to version 26.1 would run self-update check functionality after installing wheel files which required importing well-known Python modules names. These module imports were intentionally deferred to increase startup time of the pip CLI. The patch changes self-update functionality to run before wheels are installed to prevent newly-installed modules from being imported shortly after the installation of a wheel package. Users should still review package contents prior to installation.",
+                "markdown": "**Vulnerability CVE-2026-6357**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|pip|26.1|[CVE-2026-6357](https://avd.aquasec.com/nvd/cve-2026-6357)|\n\npip prior to version 26.1 would run self-update check functionality after installing wheel files which required importing well-known Python modules names. These module imports were intentionally deferred to increase startup time of the pip CLI. The patch changes self-update functionality to run before wheels are installed to prevent newly-installed modules from being imported shortly after the installation of a wheel package. Users should still review package contents prior to installation."
+              },
+              "properties": {
+                "cvssv40_baseScore": 5.3,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:P/PR:H/UI:A/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-8643",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "python-pip: Path traversal via malicious entry point name in pip wheel installation allows arbitrary file overwrite"
+              },
+              "fullDescription": {
+                "text": "pip would treat console_scripts and gui_scripts as paths instead of file names without sanitizing the resolved absolute path to the installation directory, leading to entry points being installed outside the installation directory."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-8643",
+              "help": {
+                "text": "Vulnerability CVE-2026-8643\nSeverity: MEDIUM\nPackage: pip\nFixed Version: 26.1.2\nLink: [CVE-2026-8643](https://avd.aquasec.com/nvd/cve-2026-8643)\npip would treat console_scripts and gui_scripts as paths instead of file names without sanitizing the resolved absolute path to the installation directory, leading to entry points being installed outside the installation directory.",
+                "markdown": "**Vulnerability CVE-2026-8643**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|pip|26.1.2|[CVE-2026-8643](https://avd.aquasec.com/nvd/cve-2026-8643)|\n\npip would treat console_scripts and gui_scripts as paths instead of file names without sanitizing the resolved absolute path to the installation directory, leading to entry points being installed outside the installation directory."
+              },
+              "properties": {
+                "cvssv3_baseScore": 8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:H",
+                "cvssv40_baseScore": 4.1,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:A/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-1703",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "pip: pip: Information disclosure via path traversal when installing crafted wheel archives"
+              },
+              "fullDescription": {
+                "text": "When pip is installing and extracting a maliciously crafted wheel archive, files may be extracted outside the installation directory. The path traversal is limited to prefixes of the installation directory, thus isn't able to inject or overwrite executable files in typical situations."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-1703",
+              "help": {
+                "text": "Vulnerability CVE-2026-1703\nSeverity: LOW\nPackage: pip\nFixed Version: 26.0\nLink: [CVE-2026-1703](https://avd.aquasec.com/nvd/cve-2026-1703)\nWhen pip is installing and extracting a maliciously crafted wheel archive, files may be extracted outside the installation directory. The path traversal is limited to prefixes of the installation directory, thus isn't able to inject or overwrite executable files in typical situations.",
+                "markdown": "**Vulnerability CVE-2026-1703**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|pip|26.0|[CVE-2026-1703](https://avd.aquasec.com/nvd/cve-2026-1703)|\n\nWhen pip is installing and extracting a maliciously crafted wheel archive, files may be extracted outside the installation directory. The path traversal is limited to prefixes of the installation directory, thus isn't able to inject or overwrite executable files in typical situations."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:L/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-3219",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: pip\nInstalled Version: 25.3\nVulnerability CVE-2026-3219\nSeverity: MEDIUM\nFixed Version: 26.1\nLink: [CVE-2026-3219](https://avd.aquasec.com/nvd/cve-2026-3219)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/python3.13/site-packages/pip-25.3.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "lib/python3.13/site-packages/pip-25.3.dist-info/METADATA: pip@25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-3219",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: pip\nInstalled Version: 25.3\nVulnerability CVE-2026-3219\nSeverity: MEDIUM\nFixed Version: 26.1\nLink: [CVE-2026-3219](https://avd.aquasec.com/nvd/cve-2026-3219)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/khr8cymav7k1q1chjr8wr4i4hc5kw3jz-python3.13-pip-25.3/lib/python3.13/site-packages/pip-25.3.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/khr8cymav7k1q1chjr8wr4i4hc5kw3jz-python3.13-pip-25.3/lib/python3.13/site-packages/pip-25.3.dist-info/METADATA: pip@25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-6357",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: pip\nInstalled Version: 25.3\nVulnerability CVE-2026-6357\nSeverity: MEDIUM\nFixed Version: 26.1\nLink: [CVE-2026-6357](https://avd.aquasec.com/nvd/cve-2026-6357)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/python3.13/site-packages/pip-25.3.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "lib/python3.13/site-packages/pip-25.3.dist-info/METADATA: pip@25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-6357",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: pip\nInstalled Version: 25.3\nVulnerability CVE-2026-6357\nSeverity: MEDIUM\nFixed Version: 26.1\nLink: [CVE-2026-6357](https://avd.aquasec.com/nvd/cve-2026-6357)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/khr8cymav7k1q1chjr8wr4i4hc5kw3jz-python3.13-pip-25.3/lib/python3.13/site-packages/pip-25.3.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/khr8cymav7k1q1chjr8wr4i4hc5kw3jz-python3.13-pip-25.3/lib/python3.13/site-packages/pip-25.3.dist-info/METADATA: pip@25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-8643",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: pip\nInstalled Version: 25.3\nVulnerability CVE-2026-8643\nSeverity: MEDIUM\nFixed Version: 26.1.2\nLink: [CVE-2026-8643](https://avd.aquasec.com/nvd/cve-2026-8643)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/python3.13/site-packages/pip-25.3.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "lib/python3.13/site-packages/pip-25.3.dist-info/METADATA: pip@25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-8643",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: pip\nInstalled Version: 25.3\nVulnerability CVE-2026-8643\nSeverity: MEDIUM\nFixed Version: 26.1.2\nLink: [CVE-2026-8643](https://avd.aquasec.com/nvd/cve-2026-8643)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/khr8cymav7k1q1chjr8wr4i4hc5kw3jz-python3.13-pip-25.3/lib/python3.13/site-packages/pip-25.3.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/khr8cymav7k1q1chjr8wr4i4hc5kw3jz-python3.13-pip-25.3/lib/python3.13/site-packages/pip-25.3.dist-info/METADATA: pip@25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-1703",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: pip\nInstalled Version: 25.3\nVulnerability CVE-2026-1703\nSeverity: LOW\nFixed Version: 26.0\nLink: [CVE-2026-1703](https://avd.aquasec.com/nvd/cve-2026-1703)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/python3.13/site-packages/pip-25.3.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "lib/python3.13/site-packages/pip-25.3.dist-info/METADATA: pip@25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-1703",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: pip\nInstalled Version: 25.3\nVulnerability CVE-2026-1703\nSeverity: LOW\nFixed Version: 26.0\nLink: [CVE-2026-1703](https://avd.aquasec.com/nvd/cve-2026-1703)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/khr8cymav7k1q1chjr8wr4i4hc5kw3jz-python3.13-pip-25.3/lib/python3.13/site-packages/pip-25.3.dist-info/METADATA",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/khr8cymav7k1q1chjr8wr4i4hc5kw3jz-python3.13-pip-25.3/lib/python3.13/site-packages/pip-25.3.dist-info/METADATA: pip@25.3"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:3b9e19b3e0c04c51a0cb32c7620887e0d45878780f0d8834f88a605ea3c9725b",
+        "imageName": "ghcr.io/nix-containers/images/py3-pip-wheel:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/py3-pip-wheel@sha256:8af833e89f6a03e57c3093b68126ca641d4efdb46f8b3de3b065f9cecc97f129"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/py3-pip-wheel:latest"
+        ]
+      }
+    }
+  ]
+}

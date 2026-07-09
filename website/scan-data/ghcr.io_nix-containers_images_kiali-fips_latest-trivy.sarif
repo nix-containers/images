@@ -1,0 +1,356 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-39882",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "OpenTelemetry-Go is the Go implementation of OpenTelemetry. Prior to 1 ..."
+              },
+              "fullDescription": {
+                "text": "OpenTelemetry-Go is the Go implementation of OpenTelemetry. Prior to 1.43.0, the otlp HTTP exporters (traces/metrics/logs) read the full HTTP response body into an in-memory bytes.Buffer without a size cap. This is exploitable for memory exhaustion when the configured collector endpoint is attacker-controlled (or a network attacker can mitm the exporter connection). This vulnerability is fixed in 1.43.0."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39882",
+              "help": {
+                "text": "Vulnerability CVE-2026-39882\nSeverity: MEDIUM\nPackage: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp\nFixed Version: 1.43.0\nLink: [CVE-2026-39882](https://avd.aquasec.com/nvd/cve-2026-39882)\nOpenTelemetry-Go is the Go implementation of OpenTelemetry. Prior to 1.43.0, the otlp HTTP exporters (traces/metrics/logs) read the full HTTP response body into an in-memory bytes.Buffer without a size cap. This is exploitable for memory exhaustion when the configured collector endpoint is attacker-controlled (or a network attacker can mitm the exporter connection). This vulnerability is fixed in 1.43.0.",
+                "markdown": "**Vulnerability CVE-2026-39882**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp|1.43.0|[CVE-2026-39882](https://avd.aquasec.com/nvd/cve-2026-39882)|\n\nOpenTelemetry-Go is the Go implementation of OpenTelemetry. Prior to 1.43.0, the otlp HTTP exporters (traces/metrics/logs) read the full HTTP response body into an in-memory bytes.Buffer without a size cap. This is exploitable for memory exhaustion when the configured collector endpoint is attacker-controlled (or a network attacker can mitm the exporter connection). This vulnerability is fixed in 1.43.0."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:A/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GO-2026-5932",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues"
+              },
+              "fullDescription": {
+                "text": "The golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "help": {
+                "text": "Vulnerability GO-2026-5932\nSeverity: UNKNOWN\nPackage: golang.org/x/crypto\nFixed Version: \nLink: [GO-2026-5932]()\nThe golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package.",
+                "markdown": "**Vulnerability GO-2026-5932**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/crypto||[GO-2026-5932]()|\n\nThe golang.org/x/crypto/openpgp package is unsafe by design, has numerous known security issues, is not maintained, and should not be used.\n\nIf you are required to interoperate with OpenPGP systems and need a maintained package, consider github.com/ProtonMail/go-crypto/openpgp which is a maintained fork that aims to be a drop-in replacement for this package."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-27145",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "crypto/x509: golang: golang crypto/x509: Denial of Service via excessive processing of DNS SAN entries"
+              },
+              "fullDescription": {
+                "text": "(*x509.Certificate).VerifyHostname previously called matchHostnames in a loop over all DNS Subject Alternative Name (SAN) entries. This caused strings.Split(host, \".\") to execute repeatedly on the same input hostname. With a large DNS SAN list, verification costs scaled quadratically based on the number of SAN entries multiplied by the hostname's label count. Because x509.Verify validates hostnames before building the certificate chain, this overhead occurred even for untrusted certificates."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-27145",
+              "help": {
+                "text": "Vulnerability CVE-2026-27145\nSeverity: HIGH\nPackage: stdlib\nFixed Version: 1.25.11, 1.26.4\nLink: [CVE-2026-27145](https://avd.aquasec.com/nvd/cve-2026-27145)\n(*x509.Certificate).VerifyHostname previously called matchHostnames in a loop over all DNS Subject Alternative Name (SAN) entries. This caused strings.Split(host, \".\") to execute repeatedly on the same input hostname. With a large DNS SAN list, verification costs scaled quadratically based on the number of SAN entries multiplied by the hostname's label count. Because x509.Verify validates hostnames before building the certificate chain, this overhead occurred even for untrusted certificates.",
+                "markdown": "**Vulnerability CVE-2026-27145**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|stdlib|1.25.11, 1.26.4|[CVE-2026-27145](https://avd.aquasec.com/nvd/cve-2026-27145)|\n\n(*x509.Certificate).VerifyHostname previously called matchHostnames in a loop over all DNS Subject Alternative Name (SAN) entries. This caused strings.Split(host, \".\") to execute repeatedly on the same input hostname. With a large DNS SAN list, verification costs scaled quadratically based on the number of SAN entries multiplied by the hostname's label count. Because x509.Verify validates hostnames before building the certificate chain, this overhead occurred even for untrusted certificates."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39822",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symli ..."
+              },
+              "fullDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39822",
+              "help": {
+                "text": "Vulnerability CVE-2026-39822\nSeverity: UNKNOWN\nPackage: stdlib\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+                "markdown": "**Vulnerability CVE-2026-39822**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|stdlib|1.25.12, 1.26.5, 1.27.0-rc.2|[CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)|\n\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-39882",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp\nInstalled Version: v1.37.0\nVulnerability CVE-2026-39882\nSeverity: MEDIUM\nFixed Version: 1.43.0\nLink: [CVE-2026-39882](https://avd.aquasec.com/nvd/cve-2026-39882)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kiali",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kiali: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.37.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.53.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kiali",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kiali: golang.org/x/crypto@v0.53.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27145",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.3\nVulnerability CVE-2026-27145\nSeverity: HIGH\nFixed Version: 1.25.11, 1.26.4\nLink: [CVE-2026-27145](https://avd.aquasec.com/nvd/cve-2026-27145)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kiali",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kiali: stdlib@v1.26.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.3\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kiali",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kiali: stdlib@v1.26.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39882",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp\nInstalled Version: v1.37.0\nVulnerability CVE-2026-39882\nSeverity: MEDIUM\nFixed Version: 1.43.0\nLink: [CVE-2026-39882](https://avd.aquasec.com/nvd/cve-2026-39882)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/0iwpqmnkpc5n78injrsggj09r1ps7pwj-kiali-2.28.0/bin/kiali",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/0iwpqmnkpc5n78injrsggj09r1ps7pwj-kiali-2.28.0/bin/kiali: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.37.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GO-2026-5932",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: v0.53.0\nVulnerability GO-2026-5932\nSeverity: UNKNOWN\nFixed Version: \nLink: [GO-2026-5932]()"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/0iwpqmnkpc5n78injrsggj09r1ps7pwj-kiali-2.28.0/bin/kiali",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/0iwpqmnkpc5n78injrsggj09r1ps7pwj-kiali-2.28.0/bin/kiali: golang.org/x/crypto@v0.53.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27145",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.3\nVulnerability CVE-2026-27145\nSeverity: HIGH\nFixed Version: 1.25.11, 1.26.4\nLink: [CVE-2026-27145](https://avd.aquasec.com/nvd/cve-2026-27145)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/0iwpqmnkpc5n78injrsggj09r1ps7pwj-kiali-2.28.0/bin/kiali",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/0iwpqmnkpc5n78injrsggj09r1ps7pwj-kiali-2.28.0/bin/kiali: stdlib@v1.26.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.3\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/0iwpqmnkpc5n78injrsggj09r1ps7pwj-kiali-2.28.0/bin/kiali",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/0iwpqmnkpc5n78injrsggj09r1ps7pwj-kiali-2.28.0/bin/kiali: stdlib@v1.26.3"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:f4412dd3fe3def68d682fd031c4c514c3edd47a45454995e69ba36f9d819579f",
+        "imageName": "ghcr.io/nix-containers/images/kiali-fips:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/kiali-fips@sha256:635d81ec12deb200c0082379aab00eb39804160613434b268e88f4dba8a5c43b"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/kiali-fips:latest"
+        ]
+      }
+    }
+  ]
+}

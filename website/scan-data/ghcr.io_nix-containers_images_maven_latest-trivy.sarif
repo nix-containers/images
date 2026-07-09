@@ -1,0 +1,166 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "maven-settings-passphrase",
+              "name": "Secret",
+              "shortDescription": {
+                "text": "Maven settings.xml passphrase"
+              },
+              "fullDescription": {
+                "text": "      \u003cpassphrase\u003e**********************************\u003c/passphrase\u003e"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/aquasecurity/trivy/blob/main/pkg/fanal/secret/builtin-rules.go",
+              "help": {
+                "text": "Secret Maven settings.xml passphrase\nSeverity: HIGH\nMatch:       \u003cpassphrase\u003e**********************************\u003c/passphrase\u003e",
+                "markdown": "**Secret Maven settings.xml passphrase**\n| Severity | Match |\n| --- | --- |\n|HIGH|      \u003cpassphrase\u003e**********************************\u003c/passphrase\u003e|"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "secret",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "maven-settings-password",
+              "name": "Secret",
+              "shortDescription": {
+                "text": "Maven settings.xml password"
+              },
+              "fullDescription": {
+                "text": "      \u003cpassword\u003e*******\u003c/password\u003e"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/aquasecurity/trivy/blob/main/pkg/fanal/secret/builtin-rules.go",
+              "help": {
+                "text": "Secret Maven settings.xml password\nSeverity: HIGH\nMatch:       \u003cpassword\u003e*******\u003c/password\u003e",
+                "markdown": "**Secret Maven settings.xml password**\n| Severity | Match |\n| --- | --- |\n|HIGH|      \u003cpassword\u003e*******\u003c/password\u003e|"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "secret",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "maven-settings-passphrase",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Artifact: /nix/store/2vwgw5nzxz0fnnkynkwvsiyg3c1w6j6s-maven-3.9.16/maven/conf/settings.xml\nType: \nSecret Maven settings.xml passphrase\nSeverity: HIGH\nMatch:       \u003cpassphrase\u003e**********************************\u003c/passphrase\u003e"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/nix/store/2vwgw5nzxz0fnnkynkwvsiyg3c1w6j6s-maven-3.9.16/maven/conf/settings.xml",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 131,
+                  "startColumn": 1,
+                  "endLine": 131,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "/nix/store/2vwgw5nzxz0fnnkynkwvsiyg3c1w6j6s-maven-3.9.16/maven/conf/settings.xml"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "maven-settings-password",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Artifact: /nix/store/2vwgw5nzxz0fnnkynkwvsiyg3c1w6j6s-maven-3.9.16/maven/conf/settings.xml\nType: \nSecret Maven settings.xml password\nSeverity: HIGH\nMatch:       \u003cpassword\u003e*********\u003c/password\u003e"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/nix/store/2vwgw5nzxz0fnnkynkwvsiyg3c1w6j6s-maven-3.9.16/maven/conf/settings.xml",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 100,
+                  "startColumn": 1,
+                  "endLine": 100,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "/nix/store/2vwgw5nzxz0fnnkynkwvsiyg3c1w6j6s-maven-3.9.16/maven/conf/settings.xml"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "maven-settings-password",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Artifact: /nix/store/2vwgw5nzxz0fnnkynkwvsiyg3c1w6j6s-maven-3.9.16/maven/conf/settings.xml\nType: \nSecret Maven settings.xml password\nSeverity: HIGH\nMatch:       \u003cpassword\u003e*******\u003c/password\u003e"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "/nix/store/2vwgw5nzxz0fnnkynkwvsiyg3c1w6j6s-maven-3.9.16/maven/conf/settings.xml",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 123,
+                  "startColumn": 1,
+                  "endLine": 123,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "/nix/store/2vwgw5nzxz0fnnkynkwvsiyg3c1w6j6s-maven-3.9.16/maven/conf/settings.xml"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:b6df3dfdf3d144c27ed271a93778cc65484b4b043d119f12c1b1dbbff9cfec9e",
+        "imageName": "ghcr.io/nix-containers/images/maven:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/maven@sha256:c38c45c4b872916196077e7f783225a7bf31f89f03247fb81769c416e206a108"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/maven:latest"
+        ]
+      }
+    }
+  ]
+}
