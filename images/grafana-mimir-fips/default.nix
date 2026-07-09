@@ -1,25 +1,15 @@
 { mkImage, pkgs, lib, ... }:
 
-# Grafana Mimir (fips image variant; packaged from the upstream Mimir binary)
+# Grafana Mimir (-fips image variant)
+# -fips variant packages the same upstream mimir binary (no FIPS claim made).
 # https://github.com/grafana/mimir
+#
+# Uses pkgs.mimir (built from source via nixpkgs + the flake.nix overlay
+# that pins the current upstream release). This keeps Go-stdlib CVEs
+# clearing on each rebuild.
 let
-  version = "3.1.2";
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "grafana-mimir-fips";
-    inherit version;
-    src = pkgs.fetchurl {
-      url = "https://github.com/grafana/mimir/releases/download/mimir-${version}/mimir-linux-amd64";
-      hash = "sha256-wKvT7ACerbNClyUwEjSX1cTvhYG1QtZaOQdbP1vKV6s=";
-    };
-    dontUnpack = true;
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/mimir
-      runHook postInstall
-    '';
-  };
+  drv = pkgs.mimir;
+  version = drv.version;
 in mkImage {
   inherit drv;
   name = "grafana-mimir-fips";
@@ -29,6 +19,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "grafana-mimir-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "nixpkgs";
   };
 }
