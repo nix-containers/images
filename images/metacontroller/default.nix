@@ -2,29 +2,31 @@
 
 # Metacontroller - add-on for building Kubernetes controllers
 # https://github.com/metacontroller/metacontroller
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "4.16.2";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "metacontroller";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/metacontroller/metacontroller/releases/download/v${version}/metacontroller_.${version}_Linux_x86_64.tar.gz";
-      hash = "sha256-YCuaDi0/X54+tCc7TfUA4BBedgysS4r6iW6ffOqri5Q=";
+    src = pkgs.fetchFromGitHub {
+      owner = "metacontroller";
+      repo = "metacontroller";
+      rev = "v${version}";
+      hash = "sha256-QXVmGNAvPKS0guHMAZgiEfbRZ116uTeP59NcRKbL04M=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-DKD28otjShaN8U63upLQmy8SaLnZbUyG1H9hyd9p2BE=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 metacontroller $out/bin/metacontroller
-      runHook postInstall
-    '';
+    subPackages = [ "pkg/cmd/metacontroller" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
     meta = with lib; {
       description = "Add-on for building Kubernetes controllers";
@@ -45,6 +47,6 @@ in mkImage {
     "org.opencontainers.image.title" = "metacontroller";
     "org.opencontainers.image.description" = "Add-on for building Kubernetes controllers";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
