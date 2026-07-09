@@ -1,51 +1,43 @@
 { mkImage, pkgs, lib, ... }:
 
-# Dapr sidecar injector
+# Dapr injector (dapr-injector)
 # https://github.com/dapr/dapr
+
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.18.1";
 
-  injector = pkgs.stdenv.mkDerivation rec {
-    pname = "dapr-injector";
+  drv = pkgs.buildGoModule {
+    pname = "injector";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/dapr/dapr/releases/download/v${version}/injector_linux_amd64.tar.gz";
-      hash = "sha256-KQP8PoEuGwama3GEEdfGb5SwUvlob1FGV5aIyVtF6yw=";
+    src = pkgs.fetchFromGitHub {
+      owner = "dapr";
+      repo = "dapr";
+      rev = "v${version}";
+      hash = "sha256-vxsEJcjRe30vDgsYfdOVI8MvItZmI1vxzFFqb9f7RpA=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    proxyVendor = true;
+    vendorHash = "sha256-TpDXL/APpsgb8zHPuzdD3bM8JI+lk/GzDovKk3rFaA0=";
 
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/bin
-      install -m755 injector $out/bin/injector
-      runHook postInstall
-    '';
-
-    meta = with lib; {
-      description = "Dapr sidecar injector";
-      homepage = "https://github.com/dapr/dapr";
-      license = licenses.asl20;
-      platforms = [ "x86_64-linux" ];
-    };
+    subPackages = [ "cmd/injector" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-
 in mkImage {
-  drv = injector;
+  inherit drv;
   name = "dapr-injector";
   tag = "v${version}";
-  entrypoint = [ "${injector}/bin/injector" ];
+  entrypoint = [ "${drv}/bin/injector" ];
   cmd = [ "--help" ];
-
   labels = {
     "org.opencontainers.image.title" = "dapr-injector";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
