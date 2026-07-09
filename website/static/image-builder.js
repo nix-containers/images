@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  const BASE = window.SITE_BASE || '/';
+
   // Small curated list of common CLI tools that make useful base packages.
   // Users can type any nixpkgs attribute name — this list is just a hint.
   const SUGGESTED_BASES = [
@@ -22,18 +24,31 @@
   const $ = (id) => document.getElementById(id);
   const baseInput = $('base-package');
   const extraInput = $('extra-packages');
+  const extraSuggestions = $('extra-suggestions');
   const layersContainer = $('layers');
   const cmdOutput = $('cmd-output');
   const cmdStatus = $('cmd-status');
   const copyBtn = $('copy-cmd');
   const dataList = $('package-suggestions');
+  const cvePreview = $('cve-preview');
+  const cveRows = $('cve-rows');
+  const cveTotals = $('cve-totals');
+  const cveCaveat = $('cve-caveat');
 
-  // Populate <datalist>
+  // Populate <datalist> for the base input (native browser autocomplete)
   for (const name of SUGGESTED_BASES) {
     const opt = document.createElement('option');
     opt.value = name;
     dataList.appendChild(opt);
   }
+
+  // CVE index: name -> { critical, high, medium, total }
+  // Fetched from /image-cve-index.json which render.py emits at build time.
+  let cveIndex = null;
+  fetch(BASE + 'image-cve-index.json')
+    .then((r) => r.ok ? r.json() : null)
+    .then((j) => { cveIndex = j || {}; render(); })
+    .catch(() => { cveIndex = {}; });
 
   // Restore state from ?base=&layers=&extra=  (or from sessionStorage)
   function readState() {
@@ -60,7 +75,6 @@
       layers: layers.join(','),
     };
     try { sessionStorage.setItem('imgb', JSON.stringify(state)); } catch {}
-    // Also update the URL (without reload) so the state is copy-shareable.
     const q = new URLSearchParams();
     if (state.base) q.set('base', state.base);
     if (state.extra) q.set('extra', state.extra);
@@ -84,6 +98,80 @@
     return { base, extras: [...layerPkgs] };
   }
 
+  function cveForName(name) {
+    if (!cveIndex || !name) return null;
+    return cveIndex[name] || null;
+  }
+
+  function renderCves(base, extras) {
+    if (!cveIndex) {
+      cvePreview.classList.add('hidden');
+      return;
+    }
+    const rows = [];
+    const totals = { critical: 0, high: 0, medium: 0, total: 0 };
+    const unknown = [];
+
+    const addRow = (name, kind) => {
+      const s = cveForName(name);
+      if (!s) { unknown.push(name); return; }
+      totals.critical += s.critical;
+      totals.high += s.high;
+      totals.medium += s.medium;
+      totals.total += s.total;
+      rows.push({ name, kind, s });
+    };
+
+    if (base) addRow(base, 'base');
+    for (const e of extras) addRow(e, 'extra');
+
+    if (rows.length === 0) {
+      cveRows.innerHTML =
+        '<div class="text-fg-muted italic">' +
+        'No selected package matches an image in this catalog — build locally and scan the result to see CVEs.' +
+        '</div>';
+      cveTotals.innerHTML = '';
+      cveCaveat.textContent = '';
+      cvePreview.classList.remove('hidden');
+      return;
+    }
+
+    cveRows.innerHTML = rows.map((r) => {
+      const { s, name, kind } = r;
+      const pieces = [
+        s.critical ? `<span class="text-accent-bad">${s.critical} crit</span>` : '',
+        s.high     ? `<span class="text-accent-warn">${s.high} high</span>`    : '',
+        s.medium   ? `<span class="text-fg-muted">${s.medium} med</span>`      : '',
+      ].filter(Boolean).join(' · ');
+      const zeroPill = pieces ? '' : `<span class="text-accent-ok">clean</span>`;
+      const link = `<a href="${BASE}images/${encodeURIComponent(name)}/" class="hover:text-fg-primary">${name}</a>`;
+      const label = kind === 'base' ? '(base)' : '(extra)';
+      return `<div class="flex justify-between gap-3">
+        <span>${link} <span class="text-fg-muted opacity-70">${label}</span></span>
+        <span>${pieces}${zeroPill}</span>
+      </div>`;
+    }).join('');
+
+    cveTotals.innerHTML = `
+      <span>total: <span class="text-fg-primary">${totals.total}</span></span>
+      <span>crit: <span class="${totals.critical ? 'text-accent-bad' : 'text-accent-ok'}">${totals.critical}</span></span>
+      <span>high: <span class="${totals.high ? 'text-accent-warn' : 'text-accent-ok'}">${totals.high}</span></span>
+      <span>medium: <span class="text-fg-primary">${totals.medium}</span></span>
+    `;
+
+    const notes = [];
+    if (unknown.length) {
+      notes.push(`Not in this catalog (no CVE data): ${unknown.join(', ')}.`);
+    }
+    notes.push(
+      'Numbers reflect the most recent scan of the matching published image ' +
+      '(same attr may be assembled differently). Actual count of your composed ' +
+      'image depends on final layer overlap — scan the local build to confirm.'
+    );
+    cveCaveat.textContent = notes.join(' ');
+    cvePreview.classList.remove('hidden');
+  }
+
   function render() {
     const { base, extras } = currentPackages();
 
@@ -91,6 +179,7 @@
       cmdOutput.textContent = '';
       cmdStatus.textContent = '(waiting for a base package)';
       copyBtn.disabled = true;
+      cvePreview.classList.add('hidden');
       writeState();
       return;
     }
@@ -98,6 +187,7 @@
       cmdOutput.textContent = '';
       cmdStatus.textContent = `(invalid base attr: “${base}”)`;
       copyBtn.disabled = true;
+      cvePreview.classList.add('hidden');
       writeState();
       return;
     }
@@ -106,6 +196,7 @@
       cmdOutput.textContent = '';
       cmdStatus.textContent = `(invalid extras: ${invalidExtras.join(', ')})`;
       copyBtn.disabled = true;
+      cvePreview.classList.add('hidden');
       writeState();
       return;
     }
@@ -136,6 +227,7 @@ ${extraLine}  }
     cmdOutput.textContent = cmd;
     cmdStatus.textContent = `base = pkgs.${base}${extras.length ? ` · ${extras.length} extra` : ''}`;
     copyBtn.disabled = false;
+    renderCves(base, extras);
     writeState();
   }
 
@@ -148,7 +240,87 @@ ${extraLine}  }
     } catch {}
   });
 
-  [baseInput, extraInput].forEach((el) => el.addEventListener('input', render));
+  // Extras autocomplete. Native <datalist> only supports one full-input token,
+  // but the extras field lets users chain several attrs (e.g. "kubectl helm jq").
+  // We build a custom dropdown that suggests matches for the LAST token being
+  // typed. Trigger: ≥2 chars in the current token.
+  function currentExtraTokenRange() {
+    const val = extraInput.value;
+    const caret = extraInput.selectionStart ?? val.length;
+    const before = val.slice(0, caret);
+    const m = before.match(/(?:^|[\s,])([A-Za-z0-9_+\-.]*)$/);
+    const token = m ? m[1] : '';
+    const tokenStart = m ? caret - token.length : caret;
+    return { token, tokenStart, caret };
+  }
+
+  function extraSuggestionsFor(token) {
+    const t = token.toLowerCase();
+    if (t.length < 2) return [];
+    // Merge curated bases with every known nixpkgs attr that already appears
+    // as a packaged image in this catalog (cveIndex keys). Broader coverage
+    // than the base <datalist> so users can pick less-common tools too.
+    const pool = new Set(SUGGESTED_BASES);
+    if (cveIndex) Object.keys(cveIndex).forEach((n) => pool.add(n));
+    const arr = [...pool];
+    const pre = arr.filter((n) => n.toLowerCase().startsWith(t)).sort();
+    const sub = arr.filter((n) => {
+      const ln = n.toLowerCase();
+      return ln.includes(t) && !ln.startsWith(t);
+    }).sort();
+    return [...pre, ...sub].slice(0, 12);
+  }
+
+  function refreshExtraSuggestions() {
+    const { token, tokenStart, caret } = currentExtraTokenRange();
+    const matches = extraSuggestionsFor(token);
+    if (matches.length === 0) {
+      extraSuggestions.classList.add('hidden');
+      extraSuggestions.innerHTML = '';
+      return;
+    }
+    extraSuggestions.innerHTML = matches.map((m) => {
+      const cve = cveForName(m);
+      const badge = cve
+        ? (cve.critical
+            ? `<span class="text-accent-bad ml-2">${cve.critical} crit</span>`
+            : cve.high
+              ? `<span class="text-accent-warn ml-2">${cve.high} high</span>`
+              : `<span class="text-accent-ok ml-2">clean</span>`)
+        : '';
+      return `<li class="px-3 py-2 hover:bg-neutral-800 cursor-pointer text-sm font-mono flex justify-between"
+                  data-name="${m}" data-start="${tokenStart}" data-end="${caret}">
+                <span>${m}</span>${badge}
+              </li>`;
+    }).join('');
+    extraSuggestions.classList.remove('hidden');
+  }
+
+  extraSuggestions.addEventListener('mousedown', (ev) => {
+    ev.preventDefault(); // keep focus on the input while inserting
+    const li = ev.target.closest('li[data-name]');
+    if (!li) return;
+    const name = li.dataset.name;
+    const start = parseInt(li.dataset.start, 10);
+    const end = parseInt(li.dataset.end, 10);
+    const v = extraInput.value;
+    extraInput.value = v.slice(0, start) + name + ' ' + v.slice(end);
+    const newCaret = start + name.length + 1;
+    extraInput.setSelectionRange(newCaret, newCaret);
+    extraInput.focus();
+    extraSuggestions.classList.add('hidden');
+    render();
+  });
+
+  extraInput.addEventListener('input', () => { refreshExtraSuggestions(); render(); });
+  extraInput.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') extraSuggestions.classList.add('hidden');
+  });
+  extraInput.addEventListener('blur', () => {
+    setTimeout(() => extraSuggestions.classList.add('hidden'), 150);
+  });
+
+  baseInput.addEventListener('input', render);
   layersContainer.addEventListener('change', render);
 
   readState();

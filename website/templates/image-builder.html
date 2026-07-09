@@ -115,11 +115,14 @@
       <label class="block text-sm text-fg-muted">Extra packages (optional)</label>
       <input type="text"
              id="extra-packages"
-             placeholder="e.g. kubectl helm jq"
+             placeholder="e.g. kubectl helm jq (type ≥2 chars for suggestions)"
              autocomplete="off"
              class="w-full bg-bg-input rounded px-3 py-2 text-fg-primary
                     placeholder-fg-muted focus:outline-none focus:ring-2
                     focus:ring-accent-ok font-mono">
+      <ul id="extra-suggestions"
+          class="hidden bg-bg-input border border-neutral-800 rounded max-h-60
+                 overflow-y-auto divide-y divide-neutral-800"></ul>
       <p class="text-xs text-fg-muted">
         Space- or comma-separated nixpkgs attribute names. Appended to
         <code>extraPkgs</code>.
@@ -147,6 +150,19 @@
         also works via <code>nix run/build github:nix-containers/images#…</code>
         once you've committed the derivation.
       </p>
+
+      <div id="cve-preview"
+           class="mt-4 pt-4 border-t border-neutral-800 text-sm hidden">
+        <div class="text-fg-muted mb-2">
+          Inherited CVEs
+          <span class="text-xs opacity-70">(from images that already package these attrs)</span>
+        </div>
+        <div id="cve-rows" class="space-y-1 font-mono text-xs"></div>
+        <div id="cve-totals"
+             class="mt-3 pt-2 border-t border-neutral-900 text-xs
+                    flex flex-wrap gap-x-4 gap-y-1 font-mono"></div>
+        <p id="cve-caveat" class="text-xs text-fg-muted mt-2 leading-relaxed"></p>
+      </div>
     </div>
 
   </main>
