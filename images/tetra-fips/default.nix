@@ -1,30 +1,32 @@
 { mkImage, pkgs, lib, ... }:
 
-# tetra-fips - CLI for Tetragon (Cilium); -fips suffix is the same upstream tetra binary
+# tetra-fips - CLI for Tetragon (Cilium)
+# -fips variant packages the upstream tetra binary (no FIPS claim made).
 # https://github.com/cilium/tetragon
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.7.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "tetra-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/cilium/tetragon/releases/download/v${version}/tetra-linux-amd64.tar.gz";
-      hash = "sha256:1naq51qhqvz4451wicgy9xkw64d08y2irm39kcmw1k0ak3sghrd7";
+    src = pkgs.fetchFromGitHub {
+      owner = "cilium";
+      repo = "tetragon";
+      rev = "v${version}";
+      hash = "sha256-MOBT2hdzssrWW34v0K4CE4qlAmB+Y7F/R5kAxjl6yT8=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 tetra $out/bin/tetra
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/tetra" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
     meta = with lib; {
       description = "CLI for Tetragon";
@@ -45,6 +47,6 @@ in mkImage {
     "org.opencontainers.image.title" = "tetra-fips";
     "org.opencontainers.image.description" = "CLI for Tetragon";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
