@@ -1,44 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# openjdk-bcfips-policy-140-3-j17
-# OpenJDK Java runtime
-
-let
-  jdk = pkgs.jdk140;
-
-  jdkPkgs = [
-    jdk
-    pkgs.bash
-    pkgs.coreutils
-    pkgs.cacert
-    pkgs.tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in
+# openjdk-bcfips-policy-140-3-j17 — UPSTREAM REFERENCE (not built/hosted). Use docker.io/eclipse-temurin:17 directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "openjdk-bcfips-policy-140-3-j17";
-  tag = jdk.version;
-
-  copyToRoot = [
-    (buildEnv {
-      name = "openjdk-bcfips-policy-140-3-j17-root";
-      paths = base.basePackages ++ jdkPkgs ++ [ userEnv ];
-    })
-  ];
-
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv ++ [
-      "PATH=${lib.makeBinPath jdkPkgs}"
-      "JAVA_HOME=${jdk}"
-    ];
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "openjdk ucfips policy 140 3 j17";
-      "org.opencontainers.image.description" = "OpenJDK 140 Java runtime";
-      "org.opencontainers.image.version" = jdk.version;
-    };
+  tag = "17";
+  config.Labels = {
+    "org.opencontainers.image.version" = "17";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/eclipse-temurin:17 directly.";
+    "io.nix-containers.upstream-image" = "docker.io/eclipse-temurin:17";
+    "io.nix-containers.image.upstream" = "docker.io/eclipse-temurin";
   };
 }

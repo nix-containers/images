@@ -1,39 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# GitLab Logger-fips
-# Logging sidecar for GitLab components
-
-let
-  loggerPkgs = with pkgs; [
-    bash
-    coreutils
-    findutils
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in
+# gitlab-logger-fips — UPSTREAM REFERENCE (not built/hosted). Use registry.gitlab.com/gitlab-org/build/cng/gitlab-logger:v19.1.2-build-fips directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "gitlab-logger-fips";
-  tag = "latest";
-
-  copyToRoot = [
-    (buildEnv {
-      name = "gitlab-logger-fips-root";
-      paths = base.basePackages ++ loggerPkgs ++ [ userEnv ];
-    })
-  ];
-
-  config = nonRoot.defaultConfig // {
-    Cmd = [ "tail" "-f" "/dev/null" ];
-    Env = base.defaultEnv ++ nonRoot.userEnv;
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "source";
-      "io.nix-containers.build-method" = "Built from source using Nix";
-      "org.opencontainers.image.title" = "GitLab Logger";
-      "org.opencontainers.image.description" = "Logging sidecar for GitLab";
-      "io.nix-containers.chart" = "gitlab";
-    "io.nix-containers.compliance" = "FIPS-140-2";
-    };
+  tag = "v19.1.2-build-fips";
+  config.Labels = {
+    "org.opencontainers.image.version" = "v19.1.2-build-fips";
+    "org.opencontainers.image.description" = "Upstream reference — pull registry.gitlab.com/gitlab-org/build/cng/gitlab-logger:v19.1.2-build-fips directly.";
+    "io.nix-containers.upstream-image" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-logger:v19.1.2-build-fips";
+    "io.nix-containers.image.upstream" = "registry.gitlab.com/gitlab-org/build/cng/gitlab-logger";
   };
 }

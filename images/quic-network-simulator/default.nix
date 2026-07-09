@@ -1,7 +1,6 @@
 { nix2container, lib, pkgs, ... }:
 
-# quic-network-simulator — UPSTREAM REFERENCE (not built or hosted by us).
-# Use the OSS upstream image directly: docker.io/martenseemann/quic-network-simulator:latest
+# quic-network-simulator — UPSTREAM REFERENCE (not built/hosted). Use docker.io/martenseemann/quic-network-simulator:latest directly.
 # Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "quic-network-simulator";

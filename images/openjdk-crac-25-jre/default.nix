@@ -1,44 +1,14 @@
-{ nix2container, lib, buildEnv, pkgs, base, nonRoot, ... }:
+{ nix2container, lib, pkgs, ... }:
 
-# openjdk-crac-25-jre
-# OpenJDK Java runtime
-
-let
-  jdk = pkgs.jdk25;
-
-  jdkPkgs = [
-    jdk
-    pkgs.bash
-    pkgs.coreutils
-    pkgs.cacert
-    pkgs.tzdata
-  ];
-
-  userEnv = nonRoot.mkDefaultUserEnv pkgs [];
-
-in
+# openjdk-crac-25-jre — UPSTREAM REFERENCE (not built/hosted). Use docker.io/eclipse-temurin:25-jre directly.
+# Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "openjdk-crac-25-jre";
-  tag = jdk.version;
-
-  copyToRoot = [
-    (buildEnv {
-      name = "openjdk-crac-25-jre-root";
-      paths = base.basePackages ++ jdkPkgs ++ [ userEnv ];
-    })
-  ];
-
-  config = nonRoot.defaultConfig // {
-    Env = base.defaultEnv ++ nonRoot.userEnv ++ [
-      "PATH=${lib.makeBinPath jdkPkgs}"
-      "JAVA_HOME=${jdk}"
-    ];
-    Labels = base.defaultLabels // {
-      "io.nix-containers.build-type" = "binary";
-      "io.nix-containers.build-method" = "Pre-built binary packaged with Nix";
-      "org.opencontainers.image.title" = "openjdk crac 25 jre";
-      "org.opencontainers.image.description" = "OpenJDK 25 Java runtime";
-      "org.opencontainers.image.version" = jdk.version;
-    };
+  tag = "25-jre";
+  config.Labels = {
+    "org.opencontainers.image.version" = "25-jre";
+    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/eclipse-temurin:25-jre directly.";
+    "io.nix-containers.upstream-image" = "docker.io/eclipse-temurin:25-jre";
+    "io.nix-containers.image.upstream" = "docker.io/eclipse-temurin";
   };
 }
