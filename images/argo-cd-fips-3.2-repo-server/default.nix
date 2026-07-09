@@ -2,30 +2,37 @@
 
 # Argo CD repo-server (multi-call argocd binary, invoked as argocd-repo-server)
 # https://github.com/argoproj/argo-cd
-# Note: -fips suffix denotes the same upstream tool; packaged from the upstream binary.
+# -fips suffix denotes the same upstream tool; the "3.2" in the name pins the
+# 3.2 release line (v3.2.12) rather than the latest 3.x tag.
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the upstream
+# prebuilt binary clear at each rebuild.
 
 let
   version = "3.2.12";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "argocd";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/argoproj/argo-cd/releases/download/v${version}/argocd-linux-amd64";
-      hash = "sha256:09j55jg6g3f4fgqciw40yvnlf8lzv019s121aa7fwv1zdqw8zmcv";
+    src = pkgs.fetchFromGitHub {
+      owner = "argoproj";
+      repo = "argo-cd";
+      rev = "v${version}";
+      hash = "sha256-aIeaXlr4YyfVreogIA2d2EWqaxG6pZNq/a/NZycwCTo=";
     };
 
-    dontUnpack = true;
+    proxyVendor = true;
+    vendorHash = "sha256-+QFPvlGMvcQRnl83AApZEnU4ivnmqsOYEwuPaNc4AL4=";
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    subPackages = [ "cmd" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/argocd
+    postInstall = ''
+      mv $out/bin/cmd $out/bin/argocd
       ln -s argocd $out/bin/argocd-repo-server
-      runHook postInstall
     '';
   };
 in mkImage {
@@ -38,6 +45,6 @@ in mkImage {
     "org.opencontainers.image.title" = "argo-cd-fips-3.2-repo-server";
     "org.opencontainers.image.description" = "Argo CD repo-server";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
