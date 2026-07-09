@@ -1,37 +1,11 @@
 { mkImage, pkgs, lib, ... }:
 
-# EKS Distro kube-apiserver (fips variant) - packaged from the upstream Kubernetes release binary.
+# EKS Distro kube-apiserver — -fips variant packages the same upstream
+# binary (no FIPS claim made). Built from source via pkgs.kubernetes.
 # https://kubernetes.io
 let
-  version = "1.31.14";
-
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "eks-distro-kube-apiserver-fips";
-    inherit version;
-
-    src = pkgs.fetchurl {
-      url = "https://dl.k8s.io/v${version}/bin/linux/amd64/kube-apiserver";
-      hash = "sha256:186w1pgrjcdw69frj8ml43jprvar02a82hx7979mjllwwrpbhnnv";
-    };
-
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-
-    dontUnpack = true;
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/kube-apiserver
-      runHook postInstall
-    '';
-
-    meta = with lib; {
-      description = "Kubernetes API server (EKS Distro)";
-      homepage = "https://kubernetes.io";
-      license = licenses.asl20;
-      platforms = [ "x86_64-linux" ];
-    };
-  };
+  drv = pkgs.kubernetes;
+  version = drv.version;
 in mkImage {
   inherit drv;
   name = "eks-distro-kube-apiserver-fips";
@@ -41,6 +15,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "eks-distro-kube-apiserver-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "nixpkgs";
   };
 }
