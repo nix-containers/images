@@ -1005,6 +1005,9 @@ def main():
             "fromNixpkgs": img.get("fromNixpkgs", False),
             "upstreamUrl": upstream,
             "upstreamImage": img.get("upstreamImage", ""),
+            # Per-image SBOM package count — lets the homepage stat cards
+            # recompute the packages total when a filter is active.
+            "packageCount": len(sbom or []),
             "pullCommand": img.get("pullCommand", ""),
             "usedByCharts": img.get("usedByCharts", []),
             "scan": scan or None,
