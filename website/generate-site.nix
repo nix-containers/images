@@ -254,6 +254,7 @@ pkgs.stdenv.mkDerivation {
     cp static/app.js $OUT_DIR/static/app.js
     cp static/packages.js $OUT_DIR/static/packages.js
     cp static/auto-updates.js $OUT_DIR/static/auto-updates.js
+    cp static/bigbang-images.json $OUT_DIR/static/bigbang-images.json
 
     echo "-> Parsing image popularity table..."
     python3 parse-popularity.py \

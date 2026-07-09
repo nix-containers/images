@@ -1,13 +1,17 @@
 let allImages = [];
 let filteredImages = [];
 let criticalsOnly = false;
+let bigbangSet = new Set();
 const BASE = window.SITE_BASE || '/';
 
 document.addEventListener('DOMContentLoaded', () => {
   loadImages();
+  loadBigbang();
   document.getElementById('search').addEventListener('input', filter);
   document.getElementById('category-filter').addEventListener('change', filter);
   document.getElementById('chart-filter').addEventListener('change', filter);
+  const bbEl = document.getElementById('bigbang-filter');
+  if (bbEl) bbEl.addEventListener('change', filter);
   const critCard = document.getElementById('critical-card');
   if (critCard) {
     const toggleCrit = () => {
@@ -87,11 +91,22 @@ async function loadImages() {
     allImages = data.images || [];
     filteredImages = [...allImages];
     updateStats(data);
+    updateReactiveStats(allImages);
     populateCategoryFilter();
     render();
   } catch (e) {
     showError('Failed to load images-data.json: ' + e.message);
   }
+}
+
+// Load the Big Bang image set (our catalog names that ship in a Big Bang
+// release). Powers the "Used by Big Bang" filter; if unavailable the filter
+// simply matches nothing.
+async function loadBigbang() {
+  try {
+    const r = await fetch(BASE + 'static/bigbang-images.json');
+    bigbangSet = new Set(await r.json());
+  } catch (e) { /* no-op */ }
 }
 
 function updateStats(data) {
@@ -217,6 +232,8 @@ function filter() {
   const q = document.getElementById('search').value.toLowerCase();
   const cat = document.getElementById('category-filter').value;
   const chartsOnly = document.getElementById('chart-filter').checked;
+  const bbEl = document.getElementById('bigbang-filter');
+  const bigbangOnly = bbEl && bbEl.checked;
   filteredImages = allImages.filter(i => {
     const matchesQ = !q ||
       i.name.toLowerCase().includes(q) ||
@@ -224,16 +241,38 @@ function filter() {
     const matchesCat = !cat || i.category === cat;
     const matchesChart = !chartsOnly ||
       (Array.isArray(i.usedByCharts) && i.usedByCharts.length > 0);
+    const matchesBigbang = !bigbangOnly || bigbangSet.has(i.name);
     // The Critical/High stat card filters to images with either severity.
     const matchesCrit = !criticalsOnly || imgCritical(i) > 0 || imgHigh(i) > 0;
-    return matchesQ && matchesCat && matchesChart && matchesCrit;
+    return matchesQ && matchesCat && matchesChart && matchesBigbang && matchesCrit;
   });
   // Surface the worst offenders first: by critical count, then high count.
   if (criticalsOnly) {
     filteredImages.sort((a, b) =>
       (imgCritical(b) - imgCritical(a)) || (imgHigh(b) - imgHigh(a)));
   }
+  // Stat cards (total images, CVEs, packages) reflect the filtered set.
+  updateReactiveStats(filteredImages);
   render();
+}
+
+// Recompute the filter-sensitive stat cards from a given image set. Called on
+// load (all images) and after every filter change (the filtered subset).
+function updateReactiveStats(imgs) {
+  const ti = document.getElementById('total-images');
+  if (ti) ti.textContent = imgs.length.toLocaleString();
+  const crit = imgs.reduce((a, i) => a + imgCritical(i), 0);
+  const high = imgs.reduce((a, i) => a + imgHigh(i), 0);
+  const ce = document.getElementById('critical-count');
+  if (ce) ce.textContent = crit.toLocaleString();
+  const he = document.getElementById('high-count');
+  if (he) he.textContent = high.toLocaleString();
+  const pkgs = imgs.reduce((a, i) => a + (i.packageCount || 0), 0);
+  const disp = pkgs > 0 ? pkgs.toLocaleString() : '–';
+  const pe = document.getElementById('total-packages');
+  if (pe) pe.textContent = disp;
+  const pte = document.getElementById('total-images-packages');
+  if (pte) pte.textContent = disp;
 }
 
 function render() {
