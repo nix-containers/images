@@ -2,11 +2,11 @@
 # Update: bump version + imageDigest (cng/gitlab-webservice-ce:v<ver>-fips) + refresh sha256.
 { nix2container, pkgs, lib, ... }:
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-webservice-ce";
-    imageDigest = "sha256:8bd5df23f846d2416e3ca1156241e8b0d3cd076b70a201016d1a5e5fcc602814";
-    sha256      = "sha256-47GThkFs2YhjzPMLzBNGz1J47tLWIqJxj6h48hpPXXE=";
+    imageDigest = "sha256:869e7f68e3189358944e064ab67569ba60cf90c00e68c71aeba9b5eb2f747789";
+    sha256      = "sha256-kbPNQzkAb0laNJs1gSLduzpFKduUQOmx+JhF9r6wCPQ=";
   };
 in nix2container.buildImage {
   name = "gitlab-webservice-ce-fips"; tag = "v${version}"; fromImage = upstreamImage;

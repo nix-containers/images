@@ -9,11 +9,11 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-logger";
-    imageDigest = "sha256:2a656a35a7188308a43c9a4cdb1bd4b54924173bc8c57514b2ad7baa28cdb59a";
-    sha256      = "sha256-Cca2mEVD6Y2eV0cZfgL4c6vKOqMSQNPvt0Drc8O8xVw=";
+    imageDigest = "sha256:343bf68dbb13a8d4ae45705c34716ddba39fed9da03deb678feec3c502f6d4d8";
+    sha256      = "sha256-9l0ARvYPd7wGiw07iGUUjDisu03DDum5vDdzWcEAeeY=";
   };
 in
 nix2container.buildImage {

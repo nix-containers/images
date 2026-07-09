@@ -9,10 +9,10 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ce";
-    imageDigest = "sha256:86e9f1c840b41a885a2ce5f012b94a4cd73c257087acd852e2fb011325f0d6f5";
+    imageDigest = "sha256:f7718cc9e6947171a6ac6adac1eaa83efb7f76bcc856ae930e68e15b6ca17e67";
     sha256      = "sha256-YA9BkVuETTLN0+SvVyTPc5/VZpvKxUNw+xCzVVO2mHA=";
   };
 in

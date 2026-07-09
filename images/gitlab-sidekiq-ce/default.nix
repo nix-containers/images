@@ -9,11 +9,11 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-sidekiq-ce";
-    imageDigest = "sha256:4c2a3b9b9feb35a513003a75f55fc478bd50e858d3d499130f4765570050903d";
-    sha256      = "sha256-zQuJ1vcO8tceqXrRnb9xXE8liuVveFvAUkDFVw5ISYQ=";
+    imageDigest = "sha256:e23279dc81bb5716276749fd427452b774336f43746aa763908d3c48ad7605d6";
+    sha256      = "sha256-XtsIGJ1FlwjZ7XPAmW61SlxyQxZwGTsF9M8rHa2Ltf4=";
   };
 in
 nix2container.buildImage {

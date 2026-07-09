@@ -12,12 +12,12 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
 
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-container-registry";
-    imageDigest = "sha256:00f2a16359a0fd7e27d8a342af2cade31109d539952297aaa84d4dda93af825d";
-    sha256      = "sha256-CIsn4DN1UMs2CTGq4XZAbA5df4Wvn3g+vZzpMfCX1Xw=";
+    imageDigest = "sha256:1844e0562357b1e1a8d3f194f90965717f88bc06adb0fed0d54377d9709d4f54";
+    sha256      = "sha256-86Ub74gEu+kLNjp2aBYtlZT7rnDwAN+7n7n5Vql+jy8=";
   };
 
 in

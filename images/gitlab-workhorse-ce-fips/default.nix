@@ -9,11 +9,11 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-workhorse-ce";
-    imageDigest = "sha256:5b0799992337cab5113860a3f0cc6ca6bb0f9f7a0818f08ff7ac3daada24b576";
-    sha256      = "sha256-9++OcZKvAHm9Pwtp0XzrzdhtOWTyK/IJupSPGURkOEM=";
+    imageDigest = "sha256:51508eb5c8ab98d892778588e8ac823861f89436887e6972df30a93fcacf6314";
+    sha256      = "sha256-CO7BQLkt85zkNGlK9RwuhlVGvEtnQhO2PFGVveZvkFU=";
   };
 in
 nix2container.buildImage {
