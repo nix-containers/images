@@ -2,28 +2,35 @@
 
 # log-counter - log pattern counter shipped with node-problem-detector
 # https://github.com/kubernetes/node-problem-detector
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.35.2";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "log-counter";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/kubernetes/node-problem-detector/releases/download/v${version}/node-problem-detector-v${version}-linux_amd64.tar.gz";
-      hash = "sha256:1zqf158nj2rp1hag7m674a9468k5ip8lb1rzalmvla2dq5cyxkza";
+    src = pkgs.fetchFromGitHub {
+      owner = "kubernetes";
+      repo = "node-problem-detector";
+      rev = "v${version}";
+      hash = "sha256-hDf6F9sCrX6vu9FJlXTMRtGaA+gwI7PdqD9GKINHPO0=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;
 
-    sourceRoot = ".";
+    subPackages = [ "cmd/logcounter" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 bin/log-counter $out/bin/log-counter
-      runHook postInstall
+    postInstall = ''
+      if [ -e $out/bin/logcounter ]; then
+        mv $out/bin/logcounter $out/bin/log-counter
+      fi
     '';
   };
 in mkImage {
@@ -35,6 +42,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "log-counter";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
