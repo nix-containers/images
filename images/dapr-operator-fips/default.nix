@@ -1,39 +1,43 @@
-{ mkImage, fetchFromGitHub, buildGoModule, pkgs, lib, ... }:
+{ mkImage, pkgs, lib, ... }:
 
-# dapr-operator-fips
-# Dapr component
+# Dapr operator (dapr-operator-fips)
+# https://github.com/dapr/dapr
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "1.14.0";
-  component = buildGoModule {
-    pname = "dapr-operator-fips";
+  version = "1.18.1";
+
+  drv = pkgs.buildGoModule {
+    pname = "operator";
     inherit version;
-    src = fetchFromGitHub {
+
+    src = pkgs.fetchFromGitHub {
       owner = "dapr";
       repo = "dapr";
       rev = "v${version}";
-      hash = "sha256-gPWm6PLjOF6velnC2MuJSuVjOQzAqCGD8HRtQdJdhdw=";
+      hash = "sha256-vxsEJcjRe30vDgsYfdOVI8MvItZmI1vxzFFqb9f7RpA=";
     };
-    vendorHash = null;
-    subPackages = [ "." ];
-    env.CGO_ENABLED = 1;
-    env.GOEXPERIMENT = "boringcrypto";
+
+    proxyVendor = true;
+    vendorHash = "sha256-TpDXL/APpsgb8zHPuzdD3bM8JI+lk/GzDovKk3rFaA0=";
+
+    subPackages = [ "cmd/operator" ];
     ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
     doCheck = false;
   };
-
 in mkImage {
-  drv = component;
+  inherit drv;
   name = "dapr-operator-fips";
   tag = "v${version}";
-  entrypoint = [ "${component}/bin/dapr-operator" ];
-  cmd = [];
-  extraPkgs = with pkgs; [ cacert ];
+  entrypoint = [ "${drv}/bin/operator" ];
+  cmd = [ "--help" ];
   labels = {
     "org.opencontainers.image.title" = "dapr-operator-fips";
-    "org.opencontainers.image.description" = "Dapr dapr-operator";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.chart" = "dapr";
-    "io.nix-containers.compliance" = "FIPS-140-2";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

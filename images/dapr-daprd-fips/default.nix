@@ -1,34 +1,34 @@
 { mkImage, pkgs, lib, ... }:
 
-# dapr-daprd-fips - Dapr sidecar runtime (daprd).
-# Packages the upstream Dapr daprd binary. No FIPS claim is made here.
+# Dapr daprd (dapr-daprd-fips)
 # https://github.com/dapr/dapr
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.18.1";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "daprd";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/dapr/dapr/releases/download/v${version}/daprd_linux_amd64.tar.gz";
-      hash = "sha256:0l4cka724jxpar2fjrrlkhfvmwmni4ilmkrzshbxqyksb85c08yh";
+    src = pkgs.fetchFromGitHub {
+      owner = "dapr";
+      repo = "dapr";
+      rev = "v${version}";
+      hash = "sha256-vxsEJcjRe30vDgsYfdOVI8MvItZmI1vxzFFqb9f7RpA=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-TpDXL/APpsgb8zHPuzdD3bM8JI+lk/GzDovKk3rFaA0=";
 
-    sourceRoot = ".";
-    dontStrip = true;
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 daprd $out/bin/daprd
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/daprd" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-
 in mkImage {
   inherit drv;
   name = "dapr-daprd-fips";
@@ -37,8 +37,7 @@ in mkImage {
   cmd = [ "--help" ];
   labels = {
     "org.opencontainers.image.title" = "dapr-daprd-fips";
-    "org.opencontainers.image.description" = "Dapr sidecar runtime (daprd)";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

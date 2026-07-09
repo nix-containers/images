@@ -1,34 +1,34 @@
 { mkImage, pkgs, lib, ... }:
 
-# dapr-placement-fips - Dapr actor placement control-plane service.
-# Packages the upstream Dapr placement binary. No FIPS claim is made here.
+# Dapr placement (dapr-placement-fips)
 # https://github.com/dapr/dapr
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.18.1";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "dapr-placement";
+  drv = pkgs.buildGoModule {
+    pname = "placement";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/dapr/dapr/releases/download/v${version}/placement_linux_amd64.tar.gz";
-      hash = "sha256:1fjld8ypx2fdg174km6vad589zd6xw5y01546k1mp3wy2qly41ad";
+    src = pkgs.fetchFromGitHub {
+      owner = "dapr";
+      repo = "dapr";
+      rev = "v${version}";
+      hash = "sha256-vxsEJcjRe30vDgsYfdOVI8MvItZmI1vxzFFqb9f7RpA=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-TpDXL/APpsgb8zHPuzdD3bM8JI+lk/GzDovKk3rFaA0=";
 
-    sourceRoot = ".";
-    dontStrip = true;
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 placement $out/bin/placement
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/placement" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-
 in mkImage {
   inherit drv;
   name = "dapr-placement-fips";
@@ -37,8 +37,7 @@ in mkImage {
   cmd = [ "--help" ];
   labels = {
     "org.opencontainers.image.title" = "dapr-placement-fips";
-    "org.opencontainers.image.description" = "Dapr actor placement service";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

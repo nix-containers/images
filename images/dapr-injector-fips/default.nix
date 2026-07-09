@@ -1,34 +1,34 @@
 { mkImage, pkgs, lib, ... }:
 
-# dapr-injector-fips - Dapr sidecar injector control-plane service.
-# Packages the upstream Dapr injector binary. No FIPS claim is made here.
+# Dapr injector (dapr-injector-fips)
 # https://github.com/dapr/dapr
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.18.1";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "dapr-injector";
+  drv = pkgs.buildGoModule {
+    pname = "injector";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/dapr/dapr/releases/download/v${version}/injector_linux_amd64.tar.gz";
-      hash = "sha256:0b7b8mdwk24nax352vv8z59b153gqvbi313idfk0c6rfh4zgq0r9";
+    src = pkgs.fetchFromGitHub {
+      owner = "dapr";
+      repo = "dapr";
+      rev = "v${version}";
+      hash = "sha256-vxsEJcjRe30vDgsYfdOVI8MvItZmI1vxzFFqb9f7RpA=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-TpDXL/APpsgb8zHPuzdD3bM8JI+lk/GzDovKk3rFaA0=";
 
-    sourceRoot = ".";
-    dontStrip = true;
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 injector $out/bin/injector
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/injector" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-
 in mkImage {
   inherit drv;
   name = "dapr-injector-fips";
@@ -37,8 +37,7 @@ in mkImage {
   cmd = [ "--help" ];
   labels = {
     "org.opencontainers.image.title" = "dapr-injector-fips";
-    "org.opencontainers.image.description" = "Dapr sidecar injector service";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

@@ -1,51 +1,43 @@
 { mkImage, pkgs, lib, ... }:
 
-# Dapr sidecar runtime (daprd)
+# Dapr daprd (dapr-daprd)
 # https://github.com/dapr/dapr
+
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.18.1";
 
-  daprd = pkgs.stdenv.mkDerivation rec {
+  drv = pkgs.buildGoModule {
     pname = "daprd";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/dapr/dapr/releases/download/v${version}/daprd_linux_amd64.tar.gz";
-      hash = "sha256-0CPAClp6etwX1D/PSiOJtvK6HZw0Z+lEVrdLIo6ajFA=";
+    src = pkgs.fetchFromGitHub {
+      owner = "dapr";
+      repo = "dapr";
+      rev = "v${version}";
+      hash = "sha256-vxsEJcjRe30vDgsYfdOVI8MvItZmI1vxzFFqb9f7RpA=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    proxyVendor = true;
+    vendorHash = "sha256-TpDXL/APpsgb8zHPuzdD3bM8JI+lk/GzDovKk3rFaA0=";
 
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/bin
-      install -m755 daprd $out/bin/daprd
-      runHook postInstall
-    '';
-
-    meta = with lib; {
-      description = "Dapr sidecar runtime";
-      homepage = "https://github.com/dapr/dapr";
-      license = licenses.asl20;
-      platforms = [ "x86_64-linux" ];
-    };
+    subPackages = [ "cmd/daprd" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-
 in mkImage {
-  drv = daprd;
+  inherit drv;
   name = "dapr-daprd";
   tag = "v${version}";
-  entrypoint = [ "${daprd}/bin/daprd" ];
+  entrypoint = [ "${drv}/bin/daprd" ];
   cmd = [ "--help" ];
-
   labels = {
     "org.opencontainers.image.title" = "dapr-daprd";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

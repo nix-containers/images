@@ -1,39 +1,34 @@
 { mkImage, pkgs, lib, ... }:
 
-# Dapr scheduler - control plane component of the Dapr distributed runtime
+# Dapr scheduler (dapr-scheduler)
 # https://github.com/dapr/dapr
+
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.18.1";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "dapr-scheduler";
+  drv = pkgs.buildGoModule {
+    pname = "scheduler";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/dapr/dapr/releases/download/v${version}/scheduler_linux_amd64.tar.gz";
-      hash = "sha256-L9FVqAauntUBvCfer5ogI0ozKfG4tUA0AXNxpHi19y8=";
+    src = pkgs.fetchFromGitHub {
+      owner = "dapr";
+      repo = "dapr";
+      rev = "v${version}";
+      hash = "sha256-vxsEJcjRe30vDgsYfdOVI8MvItZmI1vxzFFqb9f7RpA=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-TpDXL/APpsgb8zHPuzdD3bM8JI+lk/GzDovKk3rFaA0=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 scheduler $out/bin/scheduler
-      runHook postInstall
-    '';
-
-    meta = with lib; {
-      description = "Dapr scheduler control plane component";
-      homepage = "https://github.com/dapr/dapr";
-      license = licenses.asl20;
-      platforms = [ "x86_64-linux" ];
-    };
+    subPackages = [ "cmd/scheduler" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-
 in mkImage {
   inherit drv;
   name = "dapr-scheduler";
@@ -43,6 +38,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "dapr-scheduler";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

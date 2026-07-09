@@ -1,39 +1,34 @@
 { mkImage, pkgs, lib, ... }:
 
-# Dapr operator - control plane component of the Dapr distributed runtime
+# Dapr operator (dapr-operator)
 # https://github.com/dapr/dapr
+
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.18.1";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "dapr-operator";
+  drv = pkgs.buildGoModule {
+    pname = "operator";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/dapr/dapr/releases/download/v${version}/operator_linux_amd64.tar.gz";
-      hash = "sha256-7F8MOIowvGPoRmEcrZ6y7PTqe4jMgP3QaAoe2ZrElRM=";
+    src = pkgs.fetchFromGitHub {
+      owner = "dapr";
+      repo = "dapr";
+      rev = "v${version}";
+      hash = "sha256-vxsEJcjRe30vDgsYfdOVI8MvItZmI1vxzFFqb9f7RpA=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-TpDXL/APpsgb8zHPuzdD3bM8JI+lk/GzDovKk3rFaA0=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 operator $out/bin/operator
-      runHook postInstall
-    '';
-
-    meta = with lib; {
-      description = "Dapr operator control plane component";
-      homepage = "https://github.com/dapr/dapr";
-      license = licenses.asl20;
-      platforms = [ "x86_64-linux" ];
-    };
+    subPackages = [ "cmd/operator" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-
 in mkImage {
   inherit drv;
   name = "dapr-operator";
@@ -43,6 +38,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "dapr-operator";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

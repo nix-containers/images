@@ -1,34 +1,34 @@
 { mkImage, pkgs, lib, ... }:
 
-# dapr-sentry-fips - Dapr sentry certificate-authority control-plane service.
-# Packages the upstream Dapr sentry binary. No FIPS claim is made here.
+# Dapr sentry (dapr-sentry-fips)
 # https://github.com/dapr/dapr
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.18.1";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "dapr-sentry";
+  drv = pkgs.buildGoModule {
+    pname = "sentry";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/dapr/dapr/releases/download/v${version}/sentry_linux_amd64.tar.gz";
-      hash = "sha256:133y10zn15r30pq0vslph764684nq893x9qhzk58lq45khny53m7";
+    src = pkgs.fetchFromGitHub {
+      owner = "dapr";
+      repo = "dapr";
+      rev = "v${version}";
+      hash = "sha256-vxsEJcjRe30vDgsYfdOVI8MvItZmI1vxzFFqb9f7RpA=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-TpDXL/APpsgb8zHPuzdD3bM8JI+lk/GzDovKk3rFaA0=";
 
-    sourceRoot = ".";
-    dontStrip = true;
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 sentry $out/bin/sentry
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/sentry" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-
 in mkImage {
   inherit drv;
   name = "dapr-sentry-fips";
@@ -37,8 +37,7 @@ in mkImage {
   cmd = [ "--help" ];
   labels = {
     "org.opencontainers.image.title" = "dapr-sentry-fips";
-    "org.opencontainers.image.description" = "Dapr sentry certificate authority service";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
