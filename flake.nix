@@ -204,6 +204,15 @@
                     url = "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${version}-linux-x86_64.tar.gz";
                     hash = "sha256-9xdd46yMoWMmudvf9O9wvD2mQF7+YkZVREuiRkBz6o4=";
                   };
+                  # ES 7.17 is EOL; the bundled bcprov/bcpkix/bcutil-jdk18on
+                  # stay at 1.78.1 (CVE-2025-14813 critical). The tools in
+                  # lib/tools/security-cli/ (elasticsearch-users,
+                  # elasticsearch-service-tokens, etc.) are admin utilities
+                  # never touched at container startup — the container runs
+                  # `bin/elasticsearch` with security off. Drop them.
+                  postFixup = (o.postFixup or "") + ''
+                    rm -rf $out/lib/tools/security-cli || true
+                  '';
                 });
               })
               # cosign 3.0.6 → 3.1.1: newer deps (9 high + 18 -fips).
