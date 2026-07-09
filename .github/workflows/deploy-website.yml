@@ -1,13 +1,13 @@
 name: Deploy Website to GitHub Pages
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'images/*/README.md'
-      - 'images/*/default.nix'
-      - 'website/**'
-      - 'flake.nix'
+  # Deliberately NOT triggered per-push: with multiple agents merging rapidly
+  # (e.g. CVE-fix bursts), every push kicked off a ~30-min deploy and they
+  # thrashed — each run superseded by the next, so none finished and the
+  # catalog stayed stale. Deploy on a schedule + on demand instead; the site
+  # still refreshes regularly without rapid merges blocking it.
+  schedule:
+    - cron: '23 */3 * * *'   # every 3 hours
   workflow_dispatch:
 
 permissions:
