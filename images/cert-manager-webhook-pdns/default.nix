@@ -4,7 +4,7 @@
 # cert-manager component
 
 let
-  version = "1.20.3";
+  version = "1.21.0";
   component = buildGoModule {
     pname = "cert-manager-webhook-pdns";
     inherit version;
@@ -12,9 +12,9 @@ let
       owner = "cert-manager";
       repo = "cert-manager";
       rev = "v${version}";
-      hash = "sha256-YNTaUrtq2FUt8DTzNJaOyuNrlOPkUUx0CeImfGL5+Io=";
+      hash = "sha256-yUO2nloWL+OdRv9dyq5q7Zxr+a4L4ljYD5R4w9bhbhU=";
     };
-    vendorHash = "sha256-WIody/rEIDCtwCxrPmtX1+OP5Cs8kpRorUVDs3StLVo=";
+    vendorHash = "sha256-Gb6RIW+pmrY4bLzWx3E+s9I0w0f6o2LWKZQyrX/2tFQ=";
     subPackages = [ "." ];
     env.CGO_ENABLED = 0;
     ldflags = [ "-s" "-w" ];
