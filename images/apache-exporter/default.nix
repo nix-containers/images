@@ -2,29 +2,31 @@
 
 # Prometheus exporter for Apache HTTP Server metrics
 # https://github.com/Lusitaniae/apache_exporter
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.1.1";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "apache-exporter";
+  drv = pkgs.buildGoModule {
+    pname = "apache_exporter";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/Lusitaniae/apache_exporter/releases/download/v${version}/apache_exporter-${version}.linux-amd64.tar.gz";
-      hash = "sha256:032hg103f061n4qv1vgzvhqbpf8zjaa5z79xi5bv5w8px28jirp3";
+    src = pkgs.fetchFromGitHub {
+      owner = "Lusitaniae";
+      repo = "apache_exporter";
+      rev = "v${version}";
+      hash = "sha256-Aa325MbiPAoXr/30N5ELX61/Uo7MwrYbDj8cGLSI0fY=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-nXUJIl3rfWisL5wOg3WrFB+BAtecgDuZUBhVVmWN+QM=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 apache_exporter-${version}.linux-amd64/apache_exporter $out/bin/apache_exporter
-      runHook postInstall
-    '';
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -42,6 +44,6 @@ in mkImage {
     "org.opencontainers.image.title" = "apache-exporter";
     "org.opencontainers.image.description" = "Prometheus exporter for Apache HTTP Server metrics";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
