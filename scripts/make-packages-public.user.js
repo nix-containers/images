@@ -162,6 +162,23 @@
     `;
     btn.addEventListener('click', runBulk);
     host.prepend(btn);
+
+    // Reset button: wipes the saved progress ('history') and returns to the
+    // filtered private list so the next run starts completely fresh.
+    if (!document.getElementById('nc-bulk-reset-btn')) {
+      const reset = document.createElement('button');
+      reset.id = 'nc-bulk-reset-btn';
+      reset.textContent = 'Reset history';
+      reset.style.cssText = `
+        margin: 12px 4px; padding: 8px 16px; background: #6e7681; color: #fff;
+        border: 0; border-radius: 6px; font-weight: 600; cursor: pointer;
+      `;
+      reset.addEventListener('click', () => {
+        clearState();
+        location.href = `/orgs/${ORG}/packages?visibility=private&page=1`;
+      });
+      host.prepend(reset);
+    }
   }
 
   // Phase 1 of bulk: listing. Auto-navigates page by page, scraping the
@@ -202,7 +219,9 @@
     saveState(state);
     // Throttle to be polite, then navigate.
     await new Promise(r => setTimeout(r, 500));
-    window.location.href = `/orgs/${ORG}/packages?page=${state.currentPage}`;
+    // Keep the visibility=private filter across pages so we only ever walk
+    // private packages — far fewer pages than the full catalog.
+    window.location.href = `/orgs/${ORG}/packages?visibility=private&page=${state.currentPage}`;
   }
 
   // Phase 2: flipping. Iterates state.targets, then loops back over
