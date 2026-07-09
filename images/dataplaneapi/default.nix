@@ -2,29 +2,31 @@
 
 # HAProxy Data Plane API - REST API for dynamic HAProxy configuration
 # https://github.com/haproxytech/dataplaneapi
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "3.4.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "dataplaneapi";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/haproxytech/dataplaneapi/releases/download/v${version}/dataplaneapi_${version}_linux_x86_64.tar.gz";
-      hash = "sha256-jwOOU6Mq73f6rcr63HCxhTiOEEY2yWNQBLpNqQch7h0=";
+    src = pkgs.fetchFromGitHub {
+      owner = "haproxytech";
+      repo = "dataplaneapi";
+      rev = "v${version}";
+      hash = "sha256-I7f2GFEvGD+cqSxWtTn9MAtR9rhoHRZQi5jvDl34byY=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-07t0Clg2bG7j7dwyOFNMMqEjzF20ZcxQSrTSsKo2jps=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 dataplaneapi $out/bin/dataplaneapi
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/dataplaneapi" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -36,6 +38,6 @@ in mkImage {
     "org.opencontainers.image.title" = "dataplaneapi";
     "org.opencontainers.image.description" = "HAProxy Data Plane API";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
