@@ -166,6 +166,9 @@ function updateStats(data) {
   if (pkgEl) {
     pkgEl.textContent = pkgUnique > 0 ? pkgUnique.toLocaleString() : '–';
   }
+  // Mirror the packages total under the Total images card (requested).
+  const pkgTotEl = document.getElementById('total-images-packages');
+  if (pkgTotEl) pkgTotEl.textContent = pkgUnique > 0 ? pkgUnique.toLocaleString() : '–';
   if (pkgInstEl && pkgInstances > 0) {
     pkgInstEl.textContent = `${pkgInstances.toLocaleString()} instances`;
   }
