@@ -9,11 +9,11 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-exporter";
-    imageDigest = "sha256:523d15d24ff2596d2f60d763f9932cc9e33397e1e902df1d40940483b5cbeec9";
-    sha256      = "sha256-01XI50jOR/x6sH4hHaIlahyQZw6HQgOCqkrlVdQWpjw=";
+    imageDigest = "sha256:d85e2947630301a5bc04bfd28883bdcdb79400a3156f353c86ee3041bb0ee966";
+    sha256      = "sha256-KQhQaaPmNAFripPbx6cFRCJtcM/fy5mX6L1RC9Uqnk8=";
   };
 in
 nix2container.buildImage {

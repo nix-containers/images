@@ -9,11 +9,11 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/kubectl";
-    imageDigest = "sha256:6dc0172bbd9908a15d675903e0ac0dadbc40af473ac7d0d2b3f254bc84cf88f1";
-    sha256      = "sha256-6FsAraF748d2BcN43seGf/Q9uuD/BsrSQiO35av19/E=";
+    imageDigest = "sha256:91e436b869a236a8b341a63c9dc8f856f9a0297b303c7af6d160d19618d50684";
+    sha256      = "sha256-vThaF4bAaTw2VNxe3emdI35JGCfBEHIbY0iMoLwn688=";
   };
 in
 nix2container.buildImage {

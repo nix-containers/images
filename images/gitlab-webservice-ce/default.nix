@@ -9,11 +9,11 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-webservice-ce";
-    imageDigest = "sha256:3604068977fbbeed497fc55fce81b1e62973bb4da60ea847410ee24db97e2fb5";
-    sha256      = "sha256-VHtNaGtlDWsT9P6Mg9qBubfaSxIkDPMQxSQ19QPbUiw=";
+    imageDigest = "sha256:510d68e41c911a724ded885bb8dafaed328ee5303d68dac4c9bd0adb41f77967";
+    sha256      = "sha256-LRGhTGstwQKyUPN9Sr5tueqONtBF1HoQEAHcWnke4iM=";
   };
 in
 nix2container.buildImage {

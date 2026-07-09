@@ -16,12 +16,12 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
 
   upstreamImage = nix2container.pullImage {
     imageName   = "gitlab/gitlab-ce";
-    imageDigest = "sha256:c1b65c81a144aaf803e3dda893d35e5a224063bf5918a578702768de401dcde2";
-    sha256      = "sha256-RrruSiDUkhNwAHsgwmiHLJ8/njGWLFxDORITM5VYJos=";
+    imageDigest = "sha256:ed48f1d320841a393c3b8c3a9558f28117a4ebdbb35538b43a73467aabd9590a";
+    sha256      = "sha256-JMI/hWXP1UEEBoAnZesNcFgBc7vUNS8/FMI+XIvMTQE=";
   };
 
 in

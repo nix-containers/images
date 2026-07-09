@@ -2,11 +2,11 @@
 # Update: bump version + imageDigest (cng/certificates:v<ver>-fips) + refresh sha256.
 { nix2container, pkgs, lib, ... }:
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/certificates";
-    imageDigest = "sha256:f725b5b572b553e54873848261b6cdea3a1e59aec6c42d4cf7954337633fb778";
-    sha256      = "sha256-Q7iq0aTNiWuWiC2ymZy193f5epDFRZhtTVi4TVV2xoc=";
+    imageDigest = "sha256:63e165aca06d5f7fec203156124d423861119b42e4c70363c02d7df511adc71d";
+    sha256      = "sha256-e8MQa91DIpvEXUr6HgmGFlYgbeeKtoqvRpm3miDNBXs=";
   };
 in nix2container.buildImage {
   name = "gitlab-certificates-fips"; tag = "v${version}"; fromImage = upstreamImage;

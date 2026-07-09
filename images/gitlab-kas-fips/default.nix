@@ -2,11 +2,11 @@
 # Update: bump version + imageDigest (cng/gitlab-kas:v<ver>-fips) + refresh sha256.
 { nix2container, pkgs, lib, ... }:
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-kas";
-    imageDigest = "sha256:8e84d4a4a59d0d158dd9cb30956c03aad0921369ba97954e9fd591fe0e7bce70";
-    sha256      = "sha256-dn3tyu5FyhVQfCBPCGqdeCcV9Ci4KisYr2VU+tcRzM8=";
+    imageDigest = "sha256:be6a410ccdf8dece10a321a71d22ee4c7b5e2ac69768732aec07be24bf142deb";
+    sha256      = "sha256-L8kI7diebGegRuNtEYbS84qAAtdrSk7yDhaDj4drmro=";
   };
 in nix2container.buildImage {
   name = "gitlab-kas-fips"; tag = "v${version}"; fromImage = upstreamImage;

@@ -9,11 +9,11 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "19.1.1";
+  version = "19.1.2";
   upstreamImage = nix2container.pullImage {
     imageName   = "registry.gitlab.com/gitlab-org/build/cng/gitlab-mailroom";
-    imageDigest = "sha256:a7ef990ba0c5205dd3f9f9217912310d8a358e5f8511a4419c774be4521eb8d5";
-    sha256      = "sha256-21AsbWpQod9Q4AtDkmERdubvmPlTHbCu7ETfjCbf7Co=";
+    imageDigest = "sha256:627a9c03bf193dabf0df229413dadb2301b6e465c175e0b7481da21cb125ef61";
+    sha256      = "sha256-YdjxGq9pNGKpdmJb45ec4bzl3BAJlAHt1PjQsbnlkaM=";
   };
 in
 nix2container.buildImage {
