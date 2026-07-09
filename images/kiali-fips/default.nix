@@ -2,29 +2,40 @@
 
 # Kiali - observability console for the Istio service mesh
 # https://github.com/kiali/kiali
-# Note: "-fips" denotes the same upstream Kiali tool; we package the upstream linux/amd64 binary.
+# -fips variant packages the upstream Kiali binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "2.28.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "kiali";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/kiali/kiali/releases/download/v${version}/kiali-linux-amd64";
-      hash = "sha256:1mh3xhc5kfqv3rblcdfh1b4kfc7n2v58dls9180fd79k2zmd8xqq";
+    src = pkgs.fetchFromGitHub {
+      owner = "kiali";
+      repo = "kiali";
+      rev = "v${version}";
+      hash = "sha256-y+XmtpIEb+SLIOxd/283ajRfSaG2NcoxtBrx6aGJ3Zk=";
     };
 
-    dontUnpack = true;
+    proxyVendor = true;
+    vendorHash = "sha256-wdDvvzB5njkqddlKLIbUUEqjBEejtqv/UqWxq5LzHAk=";
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    # Kiali's main lives at the repo root as kiali.go (package main).
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/kiali
-      runHook postInstall
+    # frontend/frontend.go embeds `all:build` (the JS UI bundle) which is
+    # normally produced by yarn build. The backend doesn't need the assets
+    # to compile, but the embed directive requires the dir exist.
+    preBuild = ''
+      mkdir -p frontend/build
+      touch frontend/build/index.html
     '';
   };
 in mkImage {
@@ -36,6 +47,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "kiali-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
