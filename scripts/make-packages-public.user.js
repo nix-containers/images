@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         nix-containers: bulk make packages public
 // @namespace    nix-containers
-// @version      0.1.0
+// @version      0.2.0
 // @description  Flip private container packages under nix-containers org to public, in the user's authenticated browser session. Workaround for GitHub's missing REST endpoint for visibility changes.
 // @match        https://github.com/orgs/nix-containers/packages*
 // @match        https://github.com/orgs/nix-containers/packages/container/images*
