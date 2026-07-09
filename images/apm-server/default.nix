@@ -1,36 +1,37 @@
 { mkImage, pkgs, lib, ... }:
 
-# Elastic APM Server - upstream prebuilt release binary
-# https://github.com/elastic/apm-server / https://www.elastic.co/apm
+# Elastic APM Server - upstream Go APM ingestion server
+# https://github.com/elastic/apm-server
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "9.4.2";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "apm-server";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://artifacts.elastic.co/downloads/apm-server/apm-server-${version}-linux-x86_64.tar.gz";
-      hash = "sha256-qg9uCMsYPH5c2no3uCIr9qtNstQp0s/ErE7grXtJw/w=";
+    src = pkgs.fetchFromGitHub {
+      owner = "elastic";
+      repo = "apm-server";
+      rev = "v${version}";
+      hash = "sha256-HCdIWiqkj2/385Lfa6Un7/8HT7o4i4S6NjvrZfP/LB4=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib pkgs.zlib ];
+    proxyVendor = true;
+    vendorHash = "sha256-EDYlW3qU4rUx3X0KCdTk7nBPl1jXSBbzz9GlR2+fpnk=";
 
-    sourceRoot = "apm-server-${version}-linux-x86_64";
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/share/apm-server
-      cp -r . $out/share/apm-server/
-      install -Dm755 apm-server $out/bin/apm-server
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/apm-server" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-  # apm-server needs a config; bake a minimal one (the binary ships no /etc, so
-  # no shadowing). Bind the intake API on 0.0.0.0:8200 and use the `console`
-  # output so it runs with no Elasticsearch backend. Operators mount their own
+
+  # apm-server needs a minimal config; bake one that binds the intake on
+  # 0.0.0.0:8200 and routes everything to the console output so the image
+  # starts with no Elasticsearch dependency. Operators mount their own
   # config (output.elasticsearch + a real host/auth).
   apmConfig = pkgs.writeTextDir "etc/apm-server/apm-server.yml" ''
     apm-server:
@@ -44,13 +45,9 @@ in mkImage {
   name = "apm-server";
   tag = "v${version}";
   entrypoint = [ "${drv}/bin/apm-server" ];
-  # Was `--help` (a one-shot). Run the intake server with the baked config; log
-  # to stderr (-e), and keep apm-server's home (its bundled assets) + writable
-  # data dir explicit (the default data dir is the read-only install tree).
   cmd = [
     "-e"
     "-c" "/etc/apm-server/apm-server.yml"
-    "--path.home" "${drv}/share/apm-server"
     "--path.data" "/tmp/apm-server"
   ];
 
@@ -58,6 +55,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "apm-server";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

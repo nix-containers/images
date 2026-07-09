@@ -1,38 +1,35 @@
 { mkImage, pkgs, lib, ... }:
 
-# Elastic APM Server (apm-server-fips variant) - upstream prebuilt release binary
-# https://github.com/elastic/apm-server / https://www.elastic.co/apm
-# The -fips suffix is an upstream naming variant; this packages the upstream apm-server binary.
+# Elastic APM Server (-fips variant) - built from source
+# https://github.com/elastic/apm-server
+# -fips suffix packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "9.4.2";
 
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "apm-server";
+  drv = pkgs.buildGoModule {
+    pname = "apm-server-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://artifacts.elastic.co/downloads/apm-server/apm-server-${version}-linux-x86_64.tar.gz";
-      hash = "sha256-qg9uCMsYPH5c2no3uCIr9qtNstQp0s/ErE7grXtJw/w=";
+    src = pkgs.fetchFromGitHub {
+      owner = "elastic";
+      repo = "apm-server";
+      rev = "v${version}";
+      hash = "sha256-HCdIWiqkj2/385Lfa6Un7/8HT7o4i4S6NjvrZfP/LB4=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib pkgs.zlib ];
+    proxyVendor = true;
+    vendorHash = "sha256-EDYlW3qU4rUx3X0KCdTk7nBPl1jXSBbzz9GlR2+fpnk=";
 
-    sourceRoot = "apm-server-${version}-linux-x86_64";
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/share/apm-server
-      cp -r . $out/share/apm-server/
-      install -Dm755 apm-server $out/bin/apm-server
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/apm-server" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
-  # apm-server needs a config; bake a minimal one (the binary ships no /etc, so
-  # no shadowing). Bind the intake API on 0.0.0.0:8200 and use the `console`
-  # output so it runs with no Elasticsearch backend. Mirrors the sibling
-  # `apm-server` image (same binary), whose kind-test validates this.
+
   apmConfig = pkgs.writeTextDir "etc/apm-server/apm-server.yml" ''
     apm-server:
       host: "0.0.0.0:8200"
@@ -45,14 +42,9 @@ in mkImage {
   name = "apm-server-fips";
   tag = "v${version}";
   entrypoint = [ "${drv}/bin/apm-server" ];
-  # Was `--help` (a one-shot, so the kind-test pod CrashLoops). Run the intake
-  # server with the baked config; log to stderr (-e), and keep apm-server's home
-  # (its bundled assets) + a writable data dir explicit (the default data dir is
-  # the read-only install tree).
   cmd = [
     "-e"
     "-c" "/etc/apm-server/apm-server.yml"
-    "--path.home" "${drv}/share/apm-server"
     "--path.data" "/tmp/apm-server"
   ];
 
@@ -60,6 +52,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "apm-server-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
