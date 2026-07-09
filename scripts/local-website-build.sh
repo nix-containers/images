@@ -45,13 +45,25 @@ fi
 export LAST_BUILD_AT
 
 # SCAN_DATA_PATH must be a path reachable inside the Nix sandbox.
-# The workflow bind-mounts the source tree via `git add -f`; for local
-# builds we stage the same way so the flake sees the files.
-if ! git ls-files --error-unmatch website/scan-data >/dev/null 2>&1; then
+# Nix flakes read the source via `git ls-files`, so scan-data / tags-data
+# (both gitignored) have to be force-staged for the build to see them.
+# But if we just leave them staged, any subsequent `git commit -a` or a
+# targeted-file `git commit` snarfs 17k+ files into the PR — we've done
+# that + cleaned up more than once. Trap so `git restore --staged` runs
+# on exit, unstage them the moment the build finishes.
+_website_build_staged_dirs=()
+_website_build_unstage() {
+  [ "${#_website_build_staged_dirs[@]}" -eq 0 ] && return
+  git restore --staged "${_website_build_staged_dirs[@]}" 2>/dev/null || true
+}
+trap _website_build_unstage EXIT
+if [ -d website/scan-data ] && ! git ls-files --error-unmatch website/scan-data >/dev/null 2>&1; then
   git add -f website/scan-data/
+  _website_build_staged_dirs+=(website/scan-data)
 fi
 if [ -d website/tags-data ] && ! git ls-files --error-unmatch website/tags-data >/dev/null 2>&1; then
   git add -f website/tags-data/ 2>/dev/null || true
+  _website_build_staged_dirs+=(website/tags-data)
 fi
 
 # Point SCAN_DATA_PATH at the tree-relative dir so generate-site.nix can read it.
