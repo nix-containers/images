@@ -188,34 +188,17 @@ while IFS= read -r image; do
     total_ok=$((total_ok + 1))
   fi
 
-  # Stage the scan-data files for commit.
-  git add -f \
-    "${SCAN_DIR}/${safe_latest}-trivy.json" \
-    "${SCAN_DIR}/${safe_latest}-grype.json" \
-    "${SCAN_DIR}/${safe_latest}-sbom.json" \
-    "${SCAN_DIR}/${safe_latest}-sbom-spdx.json" 2>/dev/null
+  # NOTE: previous versions of this script also staged (`git add -f`) and
+  # committed the scan-data files here, then `git push origin $BRANCH`ed
+  # them in batches. That collided badly with running other work in the
+  # same repo — any concurrent `git commit` in another branch inherited
+  # the driver's staged files and dragged them into unrelated PRs (see
+  # #700, #701, #702 fallout). The scan-data files land on disk under
+  # scan-data/ where the site build finds them; no in-repo commit is
+  # needed. Leave them untracked and let the operator commit whatever
+  # they want intentionally.
   batch_count=$((batch_count + 1))
-
-  if [ "$batch_count" -ge "$BATCH_SIZE" ]; then
-    assert_branch
-    git commit -m "scan: refresh scan-data for $batch_count images (local build+scan+push batch)" >/dev/null 2>&1 \
-      && echo "==> committed batch of $batch_count (total ok: $total_ok)"
-    batch_count=0
-    push_count=$((push_count + 1))
-    if [ "$push_count" -ge "$PUSH_EVERY" ]; then
-      git push origin "$BRANCH" 2>&1 | tail -2
-      push_count=0
-    fi
-  fi
 done < "$LIST"
-
-# Flush remainder
-if [ "$batch_count" -gt 0 ]; then
-  assert_branch
-  git commit -m "scan: refresh scan-data for $batch_count images (final batch)" >/dev/null 2>&1 \
-    && echo "==> committed final batch of $batch_count"
-  git push origin "$BRANCH" 2>&1 | tail -2
-fi
 
 echo ""
 echo "==> summary"
