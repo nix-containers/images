@@ -2,24 +2,14 @@
 
 # Grafana Mimir - horizontally scalable, multi-tenant Prometheus TSDB
 # https://github.com/grafana/mimir
+#
+# Uses pkgs.mimir (built from source via nixpkgs + the flake.nix overlay
+# that pins the current upstream release). This keeps Go-stdlib CVEs
+# clearing on each rebuild instead of freezing to whatever the upstream
+# prebuilt binary was compiled with.
 let
-  version = "3.1.2";
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "grafana-mimir";
-    inherit version;
-    src = pkgs.fetchurl {
-      url = "https://github.com/grafana/mimir/releases/download/mimir-${version}/mimir-linux-amd64";
-      hash = "sha256-wKvT7ACerbNClyUwEjSX1cTvhYG1QtZaOQdbP1vKV6s=";
-    };
-    dontUnpack = true;
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/mimir
-      runHook postInstall
-    '';
-  };
+  drv = pkgs.mimir;
+  version = drv.version;
 
   # Minimal single-binary (monolithic) config: filesystem object storage under
   # the writable /tmp mkImage provides, single-node ingester ring, HTTP on
@@ -66,6 +56,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "grafana-mimir";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "nixpkgs";
   };
 }
