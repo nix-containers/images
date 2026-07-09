@@ -2,31 +2,31 @@
 
 # loki-canary - standalone Grafana Loki data-integrity canary
 # https://github.com/grafana/loki
-# Note: "-fips" suffix refers to the build variant; this packages the
-# upstream loki-canary binary and makes no FIPS compliance claim.
+# -fips variant packages the upstream loki-canary binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "3.7.3";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "loki-canary";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/grafana/loki/releases/download/v${version}/loki-canary-linux-amd64.zip";
-      hash = "sha256:1plra6673xq8nc98lgkr4wkq46shxinf023l66830v9hs7v9kq9s";
+    src = pkgs.fetchFromGitHub {
+      owner = "grafana";
+      repo = "loki";
+      rev = "v${version}";
+      hash = "sha256-2dqwnM2+9+P/ZIiz5Z9JPN9WicHLRzq9xn6jG1OBqLs=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook pkgs.unzip ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 loki-canary-linux-amd64 $out/bin/loki-canary
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/loki-canary" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -37,6 +37,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "loki-canary";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
