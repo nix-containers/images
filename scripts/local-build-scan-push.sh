@@ -168,11 +168,13 @@ while IFS= read -r image; do
   # --- 5. oras attach SBOM + trivy report as OCI referrers ---
   echo "==> [$image] oras attach sbom + trivy"
   attach_ok=true
-  oras attach --artifact-type application/spdx+json \
+  # --disable-path-validation: newer oras (>=1.2) rejects absolute file
+  # paths by default; SCAN_DIR is absolute here.
+  oras attach --disable-path-validation --artifact-type application/spdx+json \
        "${REGISTRY}/${image}:latest" \
        "${SCAN_DIR}/${safe_latest}-sbom-spdx.json:application/spdx+json" \
        >/dev/null 2>&1 || attach_ok=false
-  oras attach --artifact-type application/vnd.aquasec.trivy.report.v1+json \
+  oras attach --disable-path-validation --artifact-type application/vnd.aquasec.trivy.report.v1+json \
        "${REGISTRY}/${image}:latest" \
        "${SCAN_DIR}/${safe_latest}-trivy.json:application/json" \
        >/dev/null 2>&1 || attach_ok=false
