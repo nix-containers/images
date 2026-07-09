@@ -2,30 +2,32 @@
 
 # Envoy Gateway - manages Envoy Proxy as a standalone or Kubernetes-based API Gateway
 # https://github.com/envoyproxy/gateway
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.8.2";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "envoy-gateway";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/envoyproxy/gateway/releases/download/v${version}/envoy-gateway_v${version}_linux_amd64.tar.gz";
-      hash = "sha256-habJf24qUSopbq+5b60rj0p3dCtgKygqAQAGWIPX/IM=";
+    src = pkgs.fetchFromGitHub {
+      owner = "envoyproxy";
+      repo = "gateway";
+      rev = "v${version}";
+      hash = "sha256-givYesuucfw/gumEwxpU/NTtyfZQgmGXg7u+xg9Yx0s=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    proxyVendor = true;
+    vendorHash = "sha256-5Hlycq0+/wvboP81MKlKBFLEgxa545eyXwPtueHONNE=";
 
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 bin/linux/amd64/envoy-gateway $out/bin/envoy-gateway
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/envoy-gateway" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
     meta = with lib; {
       description = "Manages Envoy Proxy as a standalone or Kubernetes-based API Gateway";
@@ -46,6 +48,6 @@ in mkImage {
     "org.opencontainers.image.title" = "envoy-gateway-fips";
     "org.opencontainers.image.description" = "Envoy Gateway - Kubernetes-based API Gateway";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
