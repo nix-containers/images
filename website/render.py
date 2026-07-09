@@ -1087,6 +1087,23 @@ def main():
     }
     (out / "images-data.json").write_text(json.dumps(slim_data))
 
+    # Compact CVE index keyed by image name. Powers the image-builder
+    # preview page — visitor picks a base package and we look it up
+    # here to show inherited crit/high/total counts. One tiny JSON so
+    # the builder page doesn't have to pull the full images-data.json.
+    cve_index = {}
+    for i in slim_data["images"]:
+        s = i.get("scan") or {}
+        if not s:
+            continue
+        cve_index[i["name"]] = {
+            "critical": s.get("critical", 0),
+            "high": s.get("high", 0),
+            "medium": s.get("medium", 0),
+            "total": s.get("total", 0),
+        }
+    (out / "image-cve-index.json").write_text(json.dumps(cve_index))
+
     # Separate, larger packages.json so the homepage doesn't pay the
     # download cost. ~3000 entries × ~5 fields each = ~500 KB.
     (out / "packages.json").write_text(json.dumps({
@@ -1119,6 +1136,16 @@ def main():
         rendered_auto_updates = fill_template(auto_updates_template, {"BASE": base})
         (out / "auto-updates").mkdir(parents=True, exist_ok=True)
         (out / "auto-updates" / "index.html").write_text(rendered_auto_updates)
+
+    # /image-builder/ page — client-side composer that generates a `nix build`
+    # command from a base package + optional layers. Preview feature; the
+    # curated base-package list lives inside static/image-builder.js.
+    image_builder_template_path = Path(args.templates, "image-builder.html")
+    if image_builder_template_path.exists():
+        image_builder_template = image_builder_template_path.read_text()
+        rendered_image_builder = fill_template(image_builder_template, {"BASE": base})
+        (out / "image-builder").mkdir(parents=True, exist_ok=True)
+        (out / "image-builder" / "index.html").write_text(rendered_image_builder)
 
     # Charts pages — one index + one per-chart detail page. Feeds the
     # "Charts" nav link and the clickable chips on per-image pages
