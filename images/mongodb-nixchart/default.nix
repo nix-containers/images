@@ -2,49 +2,17 @@
 
 # mongodb-nixchart
 # ================
-# MongoDB Community Server via upstream prebuilt binary — avoids the
-# multi-hour source build of pkgs.mongodb.
+# MongoDB Community Server for the nix-containers `mongodb` chart.
+#
+# Uses pkgs.mongodb-ce (nixpkgs — 8.2.6, built from source). Prior revision
+# consumed the upstream prebuilt tarball to "avoid the multi-hour source
+# build of pkgs.mongodb"; nixpkgs' mongodb-ce derivation is cached via
+# cache.nixos.org so this pulls the pre-built store path in seconds and
+# re-links against current libs on each rebuild.
 
 let
-  version = "8.0.26";
-  subdir = "mongodb-linux-x86_64-ubuntu2204-${version}";
-
-  drv = pkgs.stdenv.mkDerivation {
-    pname = "mongodb-nixchart";
-    inherit version;
-
-    src = pkgs.fetchurl {
-      url = "https://fastdl.mongodb.org/linux/${subdir}.tgz";
-      hash = "sha256-8zkInMowUE4HopP+dmz/ev4Zw3C99NbeWPIWWv/AXUY=";
-    };
-
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-
-    buildInputs = with pkgs; [
-      stdenv.cc.cc.lib
-      openssl
-      curl
-      zlib
-    ];
-
-    sourceRoot = subdir;
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 bin/mongod $out/bin/mongod
-      install -Dm755 bin/mongosh $out/bin/mongosh || true
-      runHook postInstall
-    '';
-
-    dontStrip = true;
-
-    meta = with lib; {
-      description = "MongoDB Community Server";
-      homepage = "https://www.mongodb.com";
-      license = licenses.sspl;
-      platforms = [ "x86_64-linux" ];
-    };
-  };
+  drv = pkgs.mongodb-ce;
+  version = drv.version;
 
   entrypoint = pkgs.writeShellScript "mongodb-entrypoint" ''
     set -euo pipefail
@@ -84,5 +52,6 @@ in mkImage {
     "org.opencontainers.image.description" = "MongoDB tuned for the nix-containers charts/mongodb chart";
     "org.opencontainers.image.version" = version;
     "io.nix-containers.chart" = "mongodb";
+    "io.nix-containers.source" = "nixpkgs";
   };
 }
