@@ -96,6 +96,7 @@ process_one() {
   if [ -z "$tag" ]; then
     tag="latest"
   fi
+  tag="${tag//+/-}"   # docker tags disallow '+' (matches build-and-push.yml)
 
   # Tags to push: latest, commit-sha (immutable per build), and the
   # image's declared version when distinct. Matches what
