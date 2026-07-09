@@ -2,31 +2,38 @@
 
 # consul-k8s CLI - control plane for Consul on Kubernetes
 # https://github.com/hashicorp/consul-k8s
-# Official prebuilt binary from releases.hashicorp.com.
-# The -fips suffix denotes the same upstream tool (no FIPS claim made here).
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild. The CLI lives in cli/.
 
 let
   version = "1.8.14";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "consul-k8s-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://releases.hashicorp.com/consul-k8s/${version}/consul-k8s_${version}_linux_amd64.zip";
-      hash = "sha256-1vn3fsmnpVleu2GQNsIwI+8PJ5nWoVjhxaec+32Og7c=";
+    src = pkgs.fetchFromGitHub {
+      owner = "hashicorp";
+      repo = "consul-k8s";
+      rev = "v${version}";
+      hash = "sha256-Yy/cWRdbhbQseb/D7T4y8bB01tZHC6umB+gyGLjUHiA=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook pkgs.unzip ];
+    modRoot = "cli";
+    proxyVendor = true;
+    vendorHash = "sha256-ocTpSmkuW8L7U42FH6SDZbb2lR7q27wtwZn2L19UoiM=";
 
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 consul-k8s $out/bin/consul-k8s
-      runHook postInstall
+    postInstall = ''
+      if [ -e $out/bin/cli ]; then
+        mv $out/bin/cli $out/bin/consul-k8s
+      fi
     '';
   };
 
@@ -39,6 +46,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "consul-k8s-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
