@@ -339,7 +339,11 @@ jobs:
           LAST_BUILD_AT: ${{ steps.buildcheck.outputs.iso }}
         run: |
           set -euo pipefail
-          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+          # Standard nix install exposes this profile; NixOS self-hosted
+          # runners (nixtop) don't have it — nix is already on PATH there.
+          export PATH="$HOME/.nix-profile/bin:/run/current-system/sw/bin:$PATH"
+          [ -f /nix/var/nix/profiles/default/etc/profile.d/nix.sh ] \
+            && . /nix/var/nix/profiles/default/etc/profile.d/nix.sh || true
           # --impure required to read PAGES_BASE_PATH / SCAN_DATA_PATH /
           # LAST_BUILD_AT via builtins.getEnv in generate-site.nix.
           # SCAN_DATA_PATH now points at a /nix/store/ path (staged in
