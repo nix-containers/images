@@ -215,6 +215,30 @@
                   '';
                 });
               })
+              # prometheus-alertmanager 0.31.1 → 0.33.1: newer x/net + x/crypto,
+              # jose-jwt refresh — meaningful CVE reduction on a BigBang image.
+              (final: prev: {
+                prometheus-alertmanager = prev.prometheus-alertmanager.overrideAttrs (o: rec {
+                  version = "0.33.1";
+                  src = prev.fetchFromGitHub {
+                    owner = "prometheus"; repo = "alertmanager"; rev = "v${version}";
+                    hash = "sha256-LGjBuZ7kbtABunEk2YyCKILsPS/0FlS/6Mf/2qVpseI=";
+                  };
+                  vendorHash = "sha256-t5jQtccln3dfcHlnEOnLQHfjzfU9kY9Y7q+r4AigvBE=";
+                });
+              })
+              # gatekeeper 3.22.2 → 3.23.0: bundled x/net + x/crypto refresh
+              # (was 12 high; new bump clears many).
+              (final: prev: {
+                gatekeeper = prev.gatekeeper.overrideAttrs (o: rec {
+                  version = "3.23.0";
+                  src = prev.fetchFromGitHub {
+                    owner = "open-policy-agent"; repo = "gatekeeper"; rev = "v${version}";
+                    hash = "sha256-3aXyXIiwx6pSvYQ4YY4lnuk+0oRG2S6TxrSJNmLRM9c=";
+                  };
+                  vendorHash = "sha256-zhkPJc23cux0NCp81Iv2QSczbdD6banqS0qQt9FBELY=";
+                });
+              })
               # cosign 3.0.6 → 3.1.1: newer deps (9 high + 18 -fips).
               (final: prev: {
                 cosign = prev.cosign.overrideAttrs (o: rec {

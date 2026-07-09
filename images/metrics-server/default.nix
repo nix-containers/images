@@ -6,7 +6,7 @@
 #   metrics-server (0.8.0-r5)
 
 let
-  version = "0.7.0";
+  version = "0.8.1";
   metrics-server = buildGoModule {
     pname = "metrics-server";
     inherit version;
@@ -15,11 +15,11 @@ let
       owner = "kubernetes-sigs";
       repo = "metrics-server";
       rev = "v${version}";
-      hash = "sha256-UgltnGkzAtUfuXzNfnNWOGIKC7IUi6Yy0YZuOgyNSaA=";
+      hash = "sha256-ERrHDcacsPAL/44Ff3EWMaTvSv2c3o61uJeod1nduKc=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-v662+2TxUoGhRA6mmeL1nVUKjxePL/8oYpi3YOGFnTw=";
+    vendorHash = "sha256-OTrNmTHd2tSbUza+7fs+t0GNuIdpsCFl1AmW9DjaYo4=";
 
     subPackages = [ "cmd/metrics-server" ];
 
