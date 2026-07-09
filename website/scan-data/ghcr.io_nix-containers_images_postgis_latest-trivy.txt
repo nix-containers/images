@@ -1,0 +1,55 @@
+2026-07-09T13:05:27Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T13:05:27Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T13:05:27Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T13:05:27Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T13:06:09Z	INFO	Number of language-specific files	num=2
+2026-07-09T13:06:09Z	INFO	[gobinary] Detecting vulnerabilities...
+2026-07-09T13:06:09Z	INFO	[python-pkg] Detecting vulnerabilities...
+2026-07-09T13:06:09Z	WARN	Version matching error	err="python constraint error (<3.13.0RC1): improper constraint: <3.13.0RC1"
+2026-07-09T13:06:09Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.71/guide/scanner/vulnerability#severity-selection for details.
+2026-07-09T13:06:09Z	INFO	Table result includes only package filenames. Use '--format json' option to get the full path to the package file.
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
+│                                      Target                                      │    Type    │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/9asvh5g5wxj0aywr5f9wbn2ib27pfkkb-python3.13-numpy-2.4.4/lib/python3.1- │ python-pkg │        0        │    -    │
+│ 3/site-packages/numpy-2.4.4.dist-info/METADATA                                   │            │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/qcsjz55p1vldrn0wk0iazxnc386mfd60-gdal-minimal-3.12.4/lib/python3.13/s- │ python-pkg │        1        │    -    │
+│ ite-packages/GDAL-3.12.4-py3.13.egg-info/PKG-INFO                                │            │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/9fg5pqz4pslr9nw8nix0xq88qk66aavg-gosu-1.19/bin/gosu                    │  gobinary  │        0        │    -    │
+└──────────────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+Python (python-pkg)
+===================
+Total: 1 (HIGH: 1, CRITICAL: 0)
+
+┌─────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬────────────────────────────────────────────────────────────┐
+│     Library     │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                           Title                            │
+├─────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼────────────────────────────────────────────────────────────┤
+│ GDAL (PKG-INFO) │ CVE-2026-49014 │ HIGH     │ fixed  │ 3.12.4            │ 3.13.1        │ In GDAL 3.1.0 through 3.13.0, scanForGeometryContainers in │
+│                 │                │          │        │                   │               │ the netCDF ...                                             │
+│                 │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-49014                 │
+└─────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

@@ -1,0 +1,446 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-34479",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-1.2-api: Apache Log4j 1-to-Log4j 2 bridge: Log processing denial of service due to improper XML escaping"
+              },
+              "fullDescription": {
+                "text": "The Log4j1XmlLayout from the Apache Log4j 1-to-Log4j 2 bridge fails to escape characters forbidden by the XML 1.0 standard, producing malformed XML output. Conforming XML parsers are required to reject documents containing such characters with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nTwo groups of users are affected:\n\n  *  Those using Log4j1XmlLayout directly in a Log4j Core 2 configuration file.\n  *  Those using the Log4j 1 configuration compatibility layer with org.apache.log4j.xml.XMLLayout specified as the layout class.\n\n\nUsers are advised to upgrade to Apache Log4j 1-to-Log4j 2 bridge version 2.25.4, which corrects this issue.\n\nNote: The Apache Log4j 1-to-Log4j 2 bridge is deprecated and will not be present in Log4j 3. Users are encouraged to consult the  Log4j 1 to Log4j 2 migration guide https://logging.apache.org/log4j/2.x/migrate-from-log4j1.html , and specifically the section on eliminating reliance on the bridge."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34479",
+              "help": {
+                "text": "Vulnerability CVE-2026-34479\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-1.2-api\nFixed Version: 2.25.4\nLink: [CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)\nThe Log4j1XmlLayout from the Apache Log4j 1-to-Log4j 2 bridge fails to escape characters forbidden by the XML 1.0 standard, producing malformed XML output. Conforming XML parsers are required to reject documents containing such characters with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nTwo groups of users are affected:\n\n  *  Those using Log4j1XmlLayout directly in a Log4j Core 2 configuration file.\n  *  Those using the Log4j 1 configuration compatibility layer with org.apache.log4j.xml.XMLLayout specified as the layout class.\n\n\nUsers are advised to upgrade to Apache Log4j 1-to-Log4j 2 bridge version 2.25.4, which corrects this issue.\n\nNote: The Apache Log4j 1-to-Log4j 2 bridge is deprecated and will not be present in Log4j 3. Users are encouraged to consult the  Log4j 1 to Log4j 2 migration guide https://logging.apache.org/log4j/2.x/migrate-from-log4j1.html , and specifically the section on eliminating reliance on the bridge.",
+                "markdown": "**Vulnerability CVE-2026-34479**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-1.2-api|2.25.4|[CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)|\n\nThe Log4j1XmlLayout from the Apache Log4j 1-to-Log4j 2 bridge fails to escape characters forbidden by the XML 1.0 standard, producing malformed XML output. Conforming XML parsers are required to reject documents containing such characters with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nTwo groups of users are affected:\n\n  *  Those using Log4j1XmlLayout directly in a Log4j Core 2 configuration file.\n  *  Those using the Log4j 1 configuration compatibility layer with org.apache.log4j.xml.XMLLayout specified as the layout class.\n\n\nUsers are advised to upgrade to Apache Log4j 1-to-Log4j 2 bridge version 2.25.4, which corrects this issue.\n\nNote: The Apache Log4j 1-to-Log4j 2 bridge is deprecated and will not be present in Log4j 3. Users are encouraged to consult the  Log4j 1 to Log4j 2 migration guide https://logging.apache.org/log4j/2.x/migrate-from-log4j1.html , and specifically the section on eliminating reliance on the bridge."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34477",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Man-in-the-middle attack due to incomplete hostname verification"
+              },
+              "fullDescription": {
+                "text": "The fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34477",
+              "help": {
+                "text": "Vulnerability CVE-2026-34477\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)\nThe fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue.",
+                "markdown": "**Vulnerability CVE-2026-34477**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)|\n\nThe fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34478",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Log injection via CRLF sequences due to configuration attribute renames"
+              },
+              "fullDescription": {
+                "text": "Apache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34478",
+              "help": {
+                "text": "Vulnerability CVE-2026-34478\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)\nApache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue.",
+                "markdown": "**Vulnerability CVE-2026-34478**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)|\n\nApache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34480",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Invalid XML output causes denial of service in logging"
+              },
+              "fullDescription": {
+                "text": "Apache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34480",
+              "help": {
+                "text": "Vulnerability CVE-2026-34480\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)\nApache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output.",
+                "markdown": "**Vulnerability CVE-2026-34480**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)|\n\nApache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34481",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j: Apache Log4j JsonTemplateLayout: Denial of Service via invalid JSON output"
+              },
+              "fullDescription": {
+                "text": "Apache Log4j's  JsonTemplateLayout https://logging.apache.org/log4j/2.x/manual/json-template-layout.html , in versions up to and including 2.25.3, produces invalid JSON output when log events contain non-finite floating-point values (NaN, Infinity, or -Infinity), which are prohibited by RFC 8259. This may cause downstream log processing systems to reject or fail to index affected records.\n\nAn attacker can exploit this issue only if both of the following conditions are met:\n\n  *  The application uses JsonTemplateLayout.\n  *  The application logs a MapMessage containing an attacker-controlled floating-point value.\n\n\nUsers are advised to upgrade to Apache Log4j JSON Template Layout 2.25.4, which corrects this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34481",
+              "help": {
+                "text": "Vulnerability CVE-2026-34481\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-layout-template-json\nFixed Version: 2.25.4\nLink: [CVE-2026-34481](https://avd.aquasec.com/nvd/cve-2026-34481)\nApache Log4j's  JsonTemplateLayout https://logging.apache.org/log4j/2.x/manual/json-template-layout.html , in versions up to and including 2.25.3, produces invalid JSON output when log events contain non-finite floating-point values (NaN, Infinity, or -Infinity), which are prohibited by RFC 8259. This may cause downstream log processing systems to reject or fail to index affected records.\n\nAn attacker can exploit this issue only if both of the following conditions are met:\n\n  *  The application uses JsonTemplateLayout.\n  *  The application logs a MapMessage containing an attacker-controlled floating-point value.\n\n\nUsers are advised to upgrade to Apache Log4j JSON Template Layout 2.25.4, which corrects this issue.",
+                "markdown": "**Vulnerability CVE-2026-34481**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-layout-template-json|2.25.4|[CVE-2026-34481](https://avd.aquasec.com/nvd/cve-2026-34481)|\n\nApache Log4j's  JsonTemplateLayout https://logging.apache.org/log4j/2.x/manual/json-template-layout.html , in versions up to and including 2.25.3, produces invalid JSON output when log events contain non-finite floating-point values (NaN, Infinity, or -Infinity), which are prohibited by RFC 8259. This may cause downstream log processing systems to reject or fail to index affected records.\n\nAn attacker can exploit this issue only if both of the following conditions are met:\n\n  *  The application uses JsonTemplateLayout.\n  *  The application logs a MapMessage containing an attacker-controlled floating-point value.\n\n\nUsers are advised to upgrade to Apache Log4j JSON Template Layout 2.25.4, which corrects this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-34479",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-1.2-api\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34479\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-1.2-api-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-1.2-api-2.25.3.jar: org.apache.logging.log4j:log4j-1.2-api@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34479",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-1.2-api\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34479\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "opt/flink/lib/log4j-1.2-api-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "opt/flink/lib/log4j-1.2-api-2.25.3.jar: org.apache.logging.log4j:log4j-1.2-api@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34477",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34477\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34477",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34477\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "opt/flink/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "opt/flink/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34478",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34478\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34478",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34478\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "opt/flink/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "opt/flink/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34480",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34480\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34480",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34480\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "opt/flink/lib/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "opt/flink/lib/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34481",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-layout-template-json\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34481\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34481](https://avd.aquasec.com/nvd/cve-2026-34481)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-layout-template-json-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3n3rzi41ak608nl8lmd5v5r7phwm2kcd-flink-2.3.0/opt/flink/lib/log4j-layout-template-json-2.25.3.jar: org.apache.logging.log4j:log4j-layout-template-json@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34481",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-layout-template-json\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34481\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34481](https://avd.aquasec.com/nvd/cve-2026-34481)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "opt/flink/lib/log4j-layout-template-json-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "opt/flink/lib/log4j-layout-template-json-2.25.3.jar: org.apache.logging.log4j:log4j-layout-template-json@2.25.3"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:328d9572e5b4e03df4c5612c943481cefe70417f27b8b4c5032d866f6b150645",
+        "imageName": "ghcr.io/nix-containers/images/flink:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/flink@sha256:6f4411b7cf6c4ffa58da10856e024fca4f8f1bf32cc1a03a2b8d29b48650910b"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/flink:latest"
+        ]
+      }
+    }
+  ]
+}

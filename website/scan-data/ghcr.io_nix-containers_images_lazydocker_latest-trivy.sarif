@@ -1,0 +1,691 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2025-15558",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "docker/cli: Docker CLI for Windows: Privilege escalation via malicious plugin binaries"
+              },
+              "fullDescription": {
+                "text": "Docker CLI for Windows searches for plugin binaries in C:\\ProgramData\\Docker\\cli-plugins, a directory that does not exist by default. A low-privileged attacker can create this directory and place malicious CLI plugin binaries (docker-compose.exe, docker-buildx.exe, etc.) that are executed when a victim user opens Docker Desktop or invokes Docker CLI plugin features, and allow privilege-escalation if the docker CLI is executed as a privileged user.\n\nThis issue affects Docker CLI: through 29.1.5 and Windows binaries acting as a CLI-plugin manager using the  github.com/docker/cli/cli-plugins/manager https://pkg.go.dev/github.com/docker/cli@v29.1.5+incompatible/cli-plugins/manager  package, such as Docker Compose.\n\nThis issue does not impact non-Windows binaries, and projects not using the plugin-manager code."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-15558",
+              "help": {
+                "text": "Vulnerability CVE-2025-15558\nSeverity: HIGH\nPackage: github.com/docker/cli\nFixed Version: 29.2.0\nLink: [CVE-2025-15558](https://avd.aquasec.com/nvd/cve-2025-15558)\nDocker CLI for Windows searches for plugin binaries in C:\\ProgramData\\Docker\\cli-plugins, a directory that does not exist by default. A low-privileged attacker can create this directory and place malicious CLI plugin binaries (docker-compose.exe, docker-buildx.exe, etc.) that are executed when a victim user opens Docker Desktop or invokes Docker CLI plugin features, and allow privilege-escalation if the docker CLI is executed as a privileged user.\n\nThis issue affects Docker CLI: through 29.1.5 and Windows binaries acting as a CLI-plugin manager using the  github.com/docker/cli/cli-plugins/manager https://pkg.go.dev/github.com/docker/cli@v29.1.5+incompatible/cli-plugins/manager  package, such as Docker Compose.\n\nThis issue does not impact non-Windows binaries, and projects not using the plugin-manager code.",
+                "markdown": "**Vulnerability CVE-2025-15558**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|github.com/docker/cli|29.2.0|[CVE-2025-15558](https://avd.aquasec.com/nvd/cve-2025-15558)|\n\nDocker CLI for Windows searches for plugin binaries in C:\\ProgramData\\Docker\\cli-plugins, a directory that does not exist by default. A low-privileged attacker can create this directory and place malicious CLI plugin binaries (docker-compose.exe, docker-buildx.exe, etc.) that are executed when a victim user opens Docker Desktop or invokes Docker CLI plugin features, and allow privilege-escalation if the docker CLI is executed as a privileged user.\n\nThis issue affects Docker CLI: through 29.1.5 and Windows binaries acting as a CLI-plugin manager using the  github.com/docker/cli/cli-plugins/manager https://pkg.go.dev/github.com/docker/cli@v29.1.5+incompatible/cli-plugins/manager  package, such as Docker Compose.\n\nThis issue does not impact non-Windows binaries, and projects not using the plugin-manager code."
+              },
+              "properties": {
+                "cvssv40_baseScore": 7,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34040",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Moby: Moby: Authorization bypass vulnerability"
+              },
+              "fullDescription": {
+                "text": "Moby is an open source container framework. Prior to version 29.3.1, a security vulnerability has been detected that allows attackers to bypass authorization plugins (AuthZ). This issue has been patched in version 29.3.1."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34040",
+              "help": {
+                "text": "Vulnerability CVE-2026-34040\nSeverity: HIGH\nPackage: github.com/docker/docker\nFixed Version: 29.3.1\nLink: [CVE-2026-34040](https://avd.aquasec.com/nvd/cve-2026-34040)\nMoby is an open source container framework. Prior to version 29.3.1, a security vulnerability has been detected that allows attackers to bypass authorization plugins (AuthZ). This issue has been patched in version 29.3.1.",
+                "markdown": "**Vulnerability CVE-2026-34040**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|github.com/docker/docker|29.3.1|[CVE-2026-34040](https://avd.aquasec.com/nvd/cve-2026-34040)|\n\nMoby is an open source container framework. Prior to version 29.3.1, a security vulnerability has been detected that allows attackers to bypass authorization plugins (AuthZ). This issue has been patched in version 29.3.1."
+              },
+              "properties": {
+                "cvssv3_baseScore": 8.8,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "8.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41567",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "docker: Moby/Docker Engine: Arbitrary Code Execution via malicious container image and compressed archive upload"
+              },
+              "fullDescription": {
+                "text": "Moby is an open source container framework. In versions prior to 29.5.1 and in moby/moby v2 prior to v2.0.0-beta.14, when a compressed archive is uploaded to a container via `PUT /containers/{id}/archive` or piped through `docker cp -`, the daemon resolves decompression binaries (such as `xz` or `unpigz`) from the container's filesystem rather than the host's due to incorrect ordering of operations. A malicious container image containing a trojanized decompression binary can achieve arbitrary code execution with full daemon privileges, including host root UID and unrestricted capabilities, when a user uploads a compressed (xz or gzip) archive into that container. This issue is fixed in Docker Engine 29.5.1 and moby/moby v2.0.0-beta.14. Workarounds include only running containers from trusted images, using authorization plugins to restrict access to the `PUT /containers/{id}/archive` endpoint, and avoiding piping compressed archives into containers created from untrusted images"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41567",
+              "help": {
+                "text": "Vulnerability CVE-2026-41567\nSeverity: HIGH\nPackage: github.com/docker/docker\nFixed Version: \nLink: [CVE-2026-41567](https://avd.aquasec.com/nvd/cve-2026-41567)\nMoby is an open source container framework. In versions prior to 29.5.1 and in moby/moby v2 prior to v2.0.0-beta.14, when a compressed archive is uploaded to a container via `PUT /containers/{id}/archive` or piped through `docker cp -`, the daemon resolves decompression binaries (such as `xz` or `unpigz`) from the container's filesystem rather than the host's due to incorrect ordering of operations. A malicious container image containing a trojanized decompression binary can achieve arbitrary code execution with full daemon privileges, including host root UID and unrestricted capabilities, when a user uploads a compressed (xz or gzip) archive into that container. This issue is fixed in Docker Engine 29.5.1 and moby/moby v2.0.0-beta.14. Workarounds include only running containers from trusted images, using authorization plugins to restrict access to the `PUT /containers/{id}/archive` endpoint, and avoiding piping compressed archives into containers created from untrusted images",
+                "markdown": "**Vulnerability CVE-2026-41567**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|github.com/docker/docker||[CVE-2026-41567](https://avd.aquasec.com/nvd/cve-2026-41567)|\n\nMoby is an open source container framework. In versions prior to 29.5.1 and in moby/moby v2 prior to v2.0.0-beta.14, when a compressed archive is uploaded to a container via `PUT /containers/{id}/archive` or piped through `docker cp -`, the daemon resolves decompression binaries (such as `xz` or `unpigz`) from the container's filesystem rather than the host's due to incorrect ordering of operations. A malicious container image containing a trojanized decompression binary can achieve arbitrary code execution with full daemon privileges, including host root UID and unrestricted capabilities, when a user uploads a compressed (xz or gzip) archive into that container. This issue is fixed in Docker Engine 29.5.1 and moby/moby v2.0.0-beta.14. Workarounds include only running containers from trusted images, using authorization plugins to restrict access to the `PUT /containers/{id}/archive` endpoint, and avoiding piping compressed archives into containers created from untrusted images"
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.2,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:C/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42306",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Moby is an open source container framework. In Docker Engine prior to  ..."
+              },
+              "fullDescription": {
+                "text": "Moby is an open source container framework. In Docker Engine prior to version 29.5.1, Docker Daemon versions 28.5.2 and prior, and Moby Daemon prior to version 2.0.0-beta.14, a race condition during docker cp mount setup allows a malicious container to redirect a bind mount target to an arbitrary host path, potentially overwriting host files or causing denial of service. This issue has been patched in Docker Engine version 29.5.1 and Moby Daemon version 2.0.0-beta.14."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42306",
+              "help": {
+                "text": "Vulnerability CVE-2026-42306\nSeverity: HIGH\nPackage: github.com/docker/docker\nFixed Version: \nLink: [CVE-2026-42306](https://avd.aquasec.com/nvd/cve-2026-42306)\nMoby is an open source container framework. In Docker Engine prior to version 29.5.1, Docker Daemon versions 28.5.2 and prior, and Moby Daemon prior to version 2.0.0-beta.14, a race condition during docker cp mount setup allows a malicious container to redirect a bind mount target to an arbitrary host path, potentially overwriting host files or causing denial of service. This issue has been patched in Docker Engine version 29.5.1 and Moby Daemon version 2.0.0-beta.14.",
+                "markdown": "**Vulnerability CVE-2026-42306**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|github.com/docker/docker||[CVE-2026-42306](https://avd.aquasec.com/nvd/cve-2026-42306)|\n\nMoby is an open source container framework. In Docker Engine prior to version 29.5.1, Docker Daemon versions 28.5.2 and prior, and Moby Daemon prior to version 2.0.0-beta.14, a race condition during docker cp mount setup allows a malicious container to redirect a bind mount target to an arbitrary host path, potentially overwriting host files or causing denial of service. This issue has been patched in Docker Engine version 29.5.1 and Moby Daemon version 2.0.0-beta.14."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.2,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:C/C:N/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "7.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-33997",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "moby: docker: github.com/moby/moby: Moby: Privilege validation bypass during plugin installation"
+              },
+              "fullDescription": {
+                "text": "Moby is an open source container framework. Prior to version 29.3.1, a security vulnerability has been detected that allows plugins privilege validation to be bypassed during docker plugin install. Due to an error in the daemon's privilege comparison logic, the daemon may incorrectly accept a privilege set that differs from the one approved by the user. Plugins that request exactly one privilege are also affected, because no comparison is performed at all. This issue has been patched in version 29.3.1."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-33997",
+              "help": {
+                "text": "Vulnerability CVE-2026-33997\nSeverity: MEDIUM\nPackage: github.com/docker/docker\nFixed Version: 29.3.1\nLink: [CVE-2026-33997](https://avd.aquasec.com/nvd/cve-2026-33997)\nMoby is an open source container framework. Prior to version 29.3.1, a security vulnerability has been detected that allows plugins privilege validation to be bypassed during docker plugin install. Due to an error in the daemon's privilege comparison logic, the daemon may incorrectly accept a privilege set that differs from the one approved by the user. Plugins that request exactly one privilege are also affected, because no comparison is performed at all. This issue has been patched in version 29.3.1.",
+                "markdown": "**Vulnerability CVE-2026-33997**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|github.com/docker/docker|29.3.1|[CVE-2026-33997](https://avd.aquasec.com/nvd/cve-2026-33997)|\n\nMoby is an open source container framework. Prior to version 29.3.1, a security vulnerability has been detected that allows plugins privilege validation to be bypassed during docker plugin install. Due to an error in the daemon's privilege comparison logic, the daemon may incorrectly accept a privilege set that differs from the one approved by the user. Plugins that request exactly one privilege are also affected, because no comparison is performed at all. This issue has been patched in version 29.3.1."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "6.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41568",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "github.com/docker/docker: github.com/moby/moby: Moby: Denial of Service via race condition in docker cp mount setup"
+              },
+              "fullDescription": {
+                "text": "Moby is an open source container framework. In Docker Engine prior to version 29.5.1, Docker Daemon versions 28.5.2 and prior, and Moby Daemon prior to version 2.0.0-beta.14, a race condition during docker cp mount setup allows a malicious container to create empty files or directories at arbitrary absolute paths on the host filesystem. This issue has been patched in Docker Engine version 29.5.1 and Moby Daemon version 2.0.0-beta.14."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41568",
+              "help": {
+                "text": "Vulnerability CVE-2026-41568\nSeverity: MEDIUM\nPackage: github.com/docker/docker\nFixed Version: \nLink: [CVE-2026-41568](https://avd.aquasec.com/nvd/cve-2026-41568)\nMoby is an open source container framework. In Docker Engine prior to version 29.5.1, Docker Daemon versions 28.5.2 and prior, and Moby Daemon prior to version 2.0.0-beta.14, a race condition during docker cp mount setup allows a malicious container to create empty files or directories at arbitrary absolute paths on the host filesystem. This issue has been patched in Docker Engine version 29.5.1 and Moby Daemon version 2.0.0-beta.14.",
+                "markdown": "**Vulnerability CVE-2026-41568**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|github.com/docker/docker||[CVE-2026-41568](https://avd.aquasec.com/nvd/cve-2026-41568)|\n\nMoby is an open source container framework. In Docker Engine prior to version 29.5.1, Docker Daemon versions 28.5.2 and prior, and Moby Daemon prior to version 2.0.0-beta.14, a race condition during docker cp mount setup allows a malicious container to create empty files or directories at arbitrary absolute paths on the host filesystem. This issue has been patched in Docker Engine version 29.5.1 and Moby Daemon version 2.0.0-beta.14."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:C/C:N/I:L/A:H",
+                "precision": "very-high",
+                "security-severity": "6.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39824",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows"
+              },
+              "fullDescription": {
+                "text": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39824",
+              "help": {
+                "text": "Vulnerability CVE-2026-39824\nSeverity: UNKNOWN\nPackage: golang.org/x/sys\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)\nNewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error.",
+                "markdown": "**Vulnerability CVE-2026-39824**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/sys|0.44.0|[CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)|\n\nNewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39822",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symli ..."
+              },
+              "fullDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39822",
+              "help": {
+                "text": "Vulnerability CVE-2026-39822\nSeverity: UNKNOWN\nPackage: stdlib\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+                "markdown": "**Vulnerability CVE-2026-39822**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|stdlib|1.25.12, 1.26.5, 1.27.0-rc.2|[CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)|\n\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2025-15558",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/docker/cli\nInstalled Version: v27.1.1+incompatible\nVulnerability CVE-2025-15558\nSeverity: HIGH\nFixed Version: 29.2.0\nLink: [CVE-2025-15558](https://avd.aquasec.com/nvd/cve-2025-15558)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/lazydocker: github.com/docker/cli@v27.1.1+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34040",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-34040\nSeverity: HIGH\nFixed Version: 29.3.1\nLink: [CVE-2026-34040](https://avd.aquasec.com/nvd/cve-2026-34040)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41567",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-41567\nSeverity: HIGH\nFixed Version: \nLink: [CVE-2026-41567](https://avd.aquasec.com/nvd/cve-2026-41567)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42306",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-42306\nSeverity: HIGH\nFixed Version: \nLink: [CVE-2026-42306](https://avd.aquasec.com/nvd/cve-2026-42306)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33997",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-33997\nSeverity: MEDIUM\nFixed Version: 29.3.1\nLink: [CVE-2026-33997](https://avd.aquasec.com/nvd/cve-2026-33997)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41568",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-41568\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2026-41568](https://avd.aquasec.com/nvd/cve-2026-41568)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39824",
+          "ruleIndex": 6,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/sys\nInstalled Version: v0.24.0\nVulnerability CVE-2026-39824\nSeverity: UNKNOWN\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/lazydocker: golang.org/x/sys@v0.24.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 7,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/lazydocker: stdlib@v1.26.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-15558",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/docker/cli\nInstalled Version: v27.1.1+incompatible\nVulnerability CVE-2025-15558\nSeverity: HIGH\nFixed Version: 29.2.0\nLink: [CVE-2025-15558](https://avd.aquasec.com/nvd/cve-2025-15558)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker: github.com/docker/cli@v27.1.1+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34040",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-34040\nSeverity: HIGH\nFixed Version: 29.3.1\nLink: [CVE-2026-34040](https://avd.aquasec.com/nvd/cve-2026-34040)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41567",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-41567\nSeverity: HIGH\nFixed Version: \nLink: [CVE-2026-41567](https://avd.aquasec.com/nvd/cve-2026-41567)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42306",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-42306\nSeverity: HIGH\nFixed Version: \nLink: [CVE-2026-42306](https://avd.aquasec.com/nvd/cve-2026-42306)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33997",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-33997\nSeverity: MEDIUM\nFixed Version: 29.3.1\nLink: [CVE-2026-33997](https://avd.aquasec.com/nvd/cve-2026-33997)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41568",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: github.com/docker/docker\nInstalled Version: v28.5.2+incompatible\nVulnerability CVE-2026-41568\nSeverity: MEDIUM\nFixed Version: \nLink: [CVE-2026-41568](https://avd.aquasec.com/nvd/cve-2026-41568)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker: github.com/docker/docker@v28.5.2+incompatible"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39824",
+          "ruleIndex": 6,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/sys\nInstalled Version: v0.24.0\nVulnerability CVE-2026-39824\nSeverity: UNKNOWN\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker: golang.org/x/sys@v0.24.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 7,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/mrb03fbj0579yf9x7xq18hiz9i0jxzip-lazydocker-0.25.2/bin/lazydocker: stdlib@v1.26.4"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:beb8198def54bebc093aaed35e6e51cfeea0683de7acd91d65512b187dd3a514",
+        "imageName": "ghcr.io/nix-containers/images/lazydocker:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/lazydocker@sha256:0de6cc88529c81cd3b08764643f3a1378777673810a004115c3d48b5d5fb8734"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/lazydocker:latest"
+        ]
+      }
+    }
+  ]
+}

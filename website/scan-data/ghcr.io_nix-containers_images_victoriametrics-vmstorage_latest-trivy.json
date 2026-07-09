@@ -1,0 +1,679 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.71.2"
+  },
+  "ReportID": "019f46da-8862-7615-a6b0-809815c25060",
+  "CreatedAt": "2026-07-09T12:29:14.722400688Z",
+  "ArtifactID": "sha256:d585bf19694a627394e875bba8fe67f89e5c423ed73f3bae8a7787f7d1741c82",
+  "ArtifactName": "ghcr.io/nix-containers/images/victoriametrics-vmstorage:latest",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 73761792,
+    "ImageID": "sha256:4982b7a04d54abbe5adf1b7d202e7da800f01375350d6968c253d71f2f4b9602",
+    "DiffIDs": [
+      "sha256:002602104e6cb5a35114fb1d2b0fdca3b8b95f12db1f15f8b2b9575c6c0f1e42",
+      "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7",
+      "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+    ],
+    "RepoTags": [
+      "ghcr.io/nix-containers/images/victoriametrics-vmstorage:latest"
+    ],
+    "RepoDigests": [
+      "ghcr.io/nix-containers/images/victoriametrics-vmstorage@sha256:d5803546919820241a36573093c8e8191cbd8dc8bacf0ce7ca8e4d7838eecab3"
+    ],
+    "Reference": "ghcr.io/nix-containers/images/victoriametrics-vmstorage:latest",
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "0001-01-01T00:00:00Z",
+      "history": [
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:002602104e6cb5a35114fb1d2b0fdca3b8b95f12db1f15f8b2b9575c6c0f1e42",
+          "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7",
+          "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+        ]
+      },
+      "config": {
+        "Cmd": [
+          "-httpListenAddr=0.0.0.0:8482",
+          "-storageDataPath=/tmp/vmstorage-data"
+        ],
+        "Entrypoint": [
+          "/nix/store/lip30wlpi6mj1i4208b7qb4haaswxy7s-vmstorage-1.146.0/bin/vmstorage"
+        ],
+        "Env": [
+          "SSL_CERT_FILE=/nix/store/6snfrwakqanqp7c21nnzmz183fkhnzv1-nss-cacert-3.123/etc/ssl/certs/ca-bundle.crt",
+          "PATH=/nix/store/pjpcj6wpmr11bhmr1f6qdsb95nkfa83f-busybox-1.37.0/bin:/nix/store/lip30wlpi6mj1i4208b7qb4haaswxy7s-vmstorage-1.146.0/bin"
+        ],
+        "Labels": {
+          "io.nix-containers.build-method": "Built from source using Nix",
+          "io.nix-containers.build-type": "source",
+          "io.nix-containers.chart": "victoria-metrics-cluster",
+          "org.label-schema.vcs-url": "https://github.com/drduker/nix-containers",
+          "org.opencontainers.image.description": "Cluster component for storing time series data",
+          "org.opencontainers.image.source": "https://github.com/drduker/nix-containers",
+          "org.opencontainers.image.title": "VictoriaMetrics vmstorage",
+          "org.opencontainers.image.version": "1.146.0"
+        },
+        "User": "65534:65534"
+      }
+    },
+    "Layers": [
+      {
+        "Size": 43382784,
+        "Digest": "sha256:62f1deca4e9047dc3fa179af4d096a7dcf609ee4c4ee8b9ee939b8de6d66db06",
+        "DiffID": "sha256:002602104e6cb5a35114fb1d2b0fdca3b8b95f12db1f15f8b2b9575c6c0f1e42"
+      },
+      {
+        "Size": 14133248,
+        "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+        "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+      },
+      {
+        "Size": 16245760,
+        "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+        "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "bin/vmstorage",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "github.com/VictoriaMetrics/VictoriaMetrics",
+          "Name": "github.com/VictoriaMetrics/VictoriaMetrics",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/victoriametrics",
+            "UID": "98c82825b31d9dd9"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "github.com/VictoriaMetrics/easyproto@v1.2.0",
+            "github.com/VictoriaMetrics/fastcache@v1.13.3",
+            "github.com/VictoriaMetrics/metrics@v1.44.0",
+            "github.com/VictoriaMetrics/metricsql@v0.87.1",
+            "github.com/cespare/xxhash/v2@v2.3.0",
+            "github.com/golang/snappy@v1.0.0",
+            "github.com/klauspost/compress@v1.18.6",
+            "github.com/valyala/bytebufferpool@v1.0.0",
+            "github.com/valyala/fastrand@v1.1.0",
+            "github.com/valyala/fasttemplate@v1.2.2",
+            "github.com/valyala/gozstd@v1.24.0",
+            "github.com/valyala/histogram@v1.2.0",
+            "github.com/valyala/quicktemplate@v1.8.0",
+            "golang.org/x/sys@v0.46.0",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "d3880b1088c6521c"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/VictoriaMetrics/easyproto@v1.2.0",
+          "Name": "github.com/VictoriaMetrics/easyproto",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/easyproto@v1.2.0",
+            "UID": "e68f3aa6bc05ad81"
+          },
+          "Version": "v1.2.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/VictoriaMetrics/fastcache@v1.13.3",
+          "Name": "github.com/VictoriaMetrics/fastcache",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/fastcache@v1.13.3",
+            "UID": "86137019fcf25ac3"
+          },
+          "Version": "v1.13.3",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/VictoriaMetrics/metrics@v1.44.0",
+          "Name": "github.com/VictoriaMetrics/metrics",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/metrics@v1.44.0",
+            "UID": "5954eb1c3264d5a3"
+          },
+          "Version": "v1.44.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/VictoriaMetrics/metricsql@v0.87.1",
+          "Name": "github.com/VictoriaMetrics/metricsql",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/metricsql@v0.87.1",
+            "UID": "2d206a53fffb49af"
+          },
+          "Version": "v0.87.1",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/cespare/xxhash/v2@v2.3.0",
+          "Name": "github.com/cespare/xxhash/v2",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/cespare/xxhash/v2@v2.3.0",
+            "UID": "b208c9ef4af7044"
+          },
+          "Version": "v2.3.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/golang/snappy@v1.0.0",
+          "Name": "github.com/golang/snappy",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/golang/snappy@v1.0.0",
+            "UID": "92b1c4ac1269ed4e"
+          },
+          "Version": "v1.0.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/klauspost/compress@v1.18.6",
+          "Name": "github.com/klauspost/compress",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/klauspost/compress@v1.18.6",
+            "UID": "72044a32c3cd58a"
+          },
+          "Version": "v1.18.6",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/bytebufferpool@v1.0.0",
+          "Name": "github.com/valyala/bytebufferpool",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/bytebufferpool@v1.0.0",
+            "UID": "22d06026e8ae5df5"
+          },
+          "Version": "v1.0.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/fastrand@v1.1.0",
+          "Name": "github.com/valyala/fastrand",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/fastrand@v1.1.0",
+            "UID": "23f1c6fa022335a8"
+          },
+          "Version": "v1.1.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/fasttemplate@v1.2.2",
+          "Name": "github.com/valyala/fasttemplate",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/fasttemplate@v1.2.2",
+            "UID": "b636a7f144af7483"
+          },
+          "Version": "v1.2.2",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/gozstd@v1.24.0",
+          "Name": "github.com/valyala/gozstd",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/gozstd@v1.24.0",
+            "UID": "a815554923f3bd25"
+          },
+          "Version": "v1.24.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/histogram@v1.2.0",
+          "Name": "github.com/valyala/histogram",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/histogram@v1.2.0",
+            "UID": "b8b1c0528160ebde"
+          },
+          "Version": "v1.2.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/quicktemplate@v1.8.0",
+          "Name": "github.com/valyala/quicktemplate",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/quicktemplate@v1.8.0",
+            "UID": "8466e64d5961e0e"
+          },
+          "Version": "v1.8.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.46.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.46.0",
+            "UID": "d6f37fb00983a652"
+          },
+          "Version": "v0.46.0",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "d3880b1088c6521c"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:d419c3abc3b452e63bd89cd12a97c9561d669beb0057918ced7ed5e4304cc4e4",
+            "DiffID": "sha256:815b45ea877861deb829b83d961b5627ee2a8dab452ea347df0b3597c6c2cef7"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:3f453507f20ff16b741e67fee6e80433bb78ef9682f720dbb1338e8c0b70bedc",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    },
+    {
+      "Target": "nix/store/lip30wlpi6mj1i4208b7qb4haaswxy7s-vmstorage-1.146.0/bin/vmstorage",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "github.com/VictoriaMetrics/VictoriaMetrics",
+          "Name": "github.com/VictoriaMetrics/VictoriaMetrics",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/victoriametrics",
+            "UID": "d12b0374b181a9c4"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "github.com/VictoriaMetrics/easyproto@v1.2.0",
+            "github.com/VictoriaMetrics/fastcache@v1.13.3",
+            "github.com/VictoriaMetrics/metrics@v1.44.0",
+            "github.com/VictoriaMetrics/metricsql@v0.87.1",
+            "github.com/cespare/xxhash/v2@v2.3.0",
+            "github.com/golang/snappy@v1.0.0",
+            "github.com/klauspost/compress@v1.18.6",
+            "github.com/valyala/bytebufferpool@v1.0.0",
+            "github.com/valyala/fastrand@v1.1.0",
+            "github.com/valyala/fasttemplate@v1.2.2",
+            "github.com/valyala/gozstd@v1.24.0",
+            "github.com/valyala/histogram@v1.2.0",
+            "github.com/valyala/quicktemplate@v1.8.0",
+            "golang.org/x/sys@v0.46.0",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "4223c079e601aff9"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/VictoriaMetrics/easyproto@v1.2.0",
+          "Name": "github.com/VictoriaMetrics/easyproto",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/easyproto@v1.2.0",
+            "UID": "e18acf5b581aac38"
+          },
+          "Version": "v1.2.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/VictoriaMetrics/fastcache@v1.13.3",
+          "Name": "github.com/VictoriaMetrics/fastcache",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/fastcache@v1.13.3",
+            "UID": "8986ad22b120f9ca"
+          },
+          "Version": "v1.13.3",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/VictoriaMetrics/metrics@v1.44.0",
+          "Name": "github.com/VictoriaMetrics/metrics",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/metrics@v1.44.0",
+            "UID": "22e915b6f22c6b0a"
+          },
+          "Version": "v1.44.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/VictoriaMetrics/metricsql@v0.87.1",
+          "Name": "github.com/VictoriaMetrics/metricsql",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/victoriametrics/metricsql@v0.87.1",
+            "UID": "46895af369700226"
+          },
+          "Version": "v0.87.1",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/cespare/xxhash/v2@v2.3.0",
+          "Name": "github.com/cespare/xxhash/v2",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/cespare/xxhash/v2@v2.3.0",
+            "UID": "1fc51aeda012e051"
+          },
+          "Version": "v2.3.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/golang/snappy@v1.0.0",
+          "Name": "github.com/golang/snappy",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/golang/snappy@v1.0.0",
+            "UID": "81b9adce10a1e6af"
+          },
+          "Version": "v1.0.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/klauspost/compress@v1.18.6",
+          "Name": "github.com/klauspost/compress",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/klauspost/compress@v1.18.6",
+            "UID": "d0d4e84983b7ed8f"
+          },
+          "Version": "v1.18.6",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/bytebufferpool@v1.0.0",
+          "Name": "github.com/valyala/bytebufferpool",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/bytebufferpool@v1.0.0",
+            "UID": "707acd897d286b74"
+          },
+          "Version": "v1.0.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/fastrand@v1.1.0",
+          "Name": "github.com/valyala/fastrand",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/fastrand@v1.1.0",
+            "UID": "3dab65291dc62009"
+          },
+          "Version": "v1.1.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/fasttemplate@v1.2.2",
+          "Name": "github.com/valyala/fasttemplate",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/fasttemplate@v1.2.2",
+            "UID": "1811d0f4a78eb60a"
+          },
+          "Version": "v1.2.2",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/gozstd@v1.24.0",
+          "Name": "github.com/valyala/gozstd",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/gozstd@v1.24.0",
+            "UID": "ced4aeb586fdd424"
+          },
+          "Version": "v1.24.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/histogram@v1.2.0",
+          "Name": "github.com/valyala/histogram",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/histogram@v1.2.0",
+            "UID": "4035ed7ba7a6ede3"
+          },
+          "Version": "v1.2.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/valyala/quicktemplate@v1.8.0",
+          "Name": "github.com/valyala/quicktemplate",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/valyala/quicktemplate@v1.8.0",
+            "UID": "58716ff843f0853"
+          },
+          "Version": "v1.8.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.46.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.46.0",
+            "UID": "60ef8993abc88a37"
+          },
+          "Version": "v0.46.0",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "4223c079e601aff9"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:3e39a6192054d70901e762eaffc153bbc0ceadb4990c77ef9d8fb6703a0a34a0",
+            "DiffID": "sha256:230cf42fdb01678e8aa190bed8413ec125315f9464a85e5f267803111b4a8c14"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:dd7e6050a9f40ac5c262eca79cf6ddd16278f21767da6e0693143935fe20607c",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    }
+  ]
+}

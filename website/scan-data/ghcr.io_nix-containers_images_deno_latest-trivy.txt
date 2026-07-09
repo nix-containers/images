@@ -1,0 +1,63 @@
+2026-07-09T12:17:00Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:17:00Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:17:00Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:17:00Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:17:03Z	INFO	Number of language-specific files	num=4
+2026-07-09T12:17:03Z	INFO	[rustbinary] Detecting vulnerabilities...
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
+│                                  Target                                  │    Type    │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ bin/deno                                                                 │ rustbinary │        1        │    -    │
+├──────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ lib/libtest_ffi.so                                                       │ rustbinary │        0        │    -    │
+├──────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/kms7faqqhch9njpyixcci2k501pdvj0w-deno-2.8.3/bin/deno           │ rustbinary │        1        │    -    │
+├──────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/kms7faqqhch9njpyixcci2k501pdvj0w-deno-2.8.3/lib/libtest_ffi.so │ rustbinary │        0        │    -    │
+└──────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+bin/deno (rustbinary)
+=====================
+Total: 1 (HIGH: 1, CRITICAL: 0)
+
+┌───────────────┬─────────────────────┬──────────┬──────────┬───────────────────┬───────────────┬────────────────────────────────────────────────────────┐
+│    Library    │    Vulnerability    │ Severity │  Status  │ Installed Version │ Fixed Version │                         Title                          │
+├───────────────┼─────────────────────┼──────────┼──────────┼───────────────────┼───────────────┼────────────────────────────────────────────────────────┤
+│ hickory-proto │ GHSA-3v94-mw7p-v465 │ HIGH     │ affected │ 0.25.2            │               │ hickory-proto: NSEC3 closest-encloser proof validation │
+│               │                     │          │          │                   │               │ enters unbounded loop on cross-zone responses          │
+│               │                     │          │          │                   │               │ https://github.com/advisories/GHSA-3v94-mw7p-v465      │
+└───────────────┴─────────────────────┴──────────┴──────────┴───────────────────┴───────────────┴────────────────────────────────────────────────────────┘
+
+nix/store/kms7faqqhch9njpyixcci2k501pdvj0w-deno-2.8.3/bin/deno (rustbinary)
+===========================================================================
+Total: 1 (HIGH: 1, CRITICAL: 0)
+
+┌───────────────┬─────────────────────┬──────────┬──────────┬───────────────────┬───────────────┬────────────────────────────────────────────────────────┐
+│    Library    │    Vulnerability    │ Severity │  Status  │ Installed Version │ Fixed Version │                         Title                          │
+├───────────────┼─────────────────────┼──────────┼──────────┼───────────────────┼───────────────┼────────────────────────────────────────────────────────┤
+│ hickory-proto │ GHSA-3v94-mw7p-v465 │ HIGH     │ affected │ 0.25.2            │               │ hickory-proto: NSEC3 closest-encloser proof validation │
+│               │                     │          │          │                   │               │ enters unbounded loop on cross-zone responses          │
+│               │                     │          │          │                   │               │ https://github.com/advisories/GHSA-3v94-mw7p-v465      │
+└───────────────┴─────────────────────┴──────────┴──────────┴───────────────────┴───────────────┴────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

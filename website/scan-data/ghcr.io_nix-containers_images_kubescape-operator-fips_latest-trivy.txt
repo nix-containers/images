@@ -1,0 +1,134 @@
+2026-07-09T12:40:25Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:40:25Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:40:25Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:40:25Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:40:29Z	INFO	Number of language-specific files	num=2
+2026-07-09T12:40:29Z	INFO	[gobinary] Detecting vulnerabilities...
+2026-07-09T12:40:29Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.71/guide/scanner/vulnerability#severity-selection for details.
+
+Report Summary
+
+┌───────────────────────────────────────────────────────────────────────────┬──────────┬─────────────────┬─────────┐
+│                                  Target                                   │   Type   │ Vulnerabilities │ Secrets │
+├───────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ bin/kubescape                                                             │ gobinary │       10        │    -    │
+├───────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/r7q2gkwqvpcbikxhhs5jgv3hxwim7jj5-kubescape-4.0.10/bin/kubescape │ gobinary │       10        │    -    │
+└───────────────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+bin/kubescape (gobinary)
+========================
+Total: 10 (HIGH: 10, CRITICAL: 0)
+
+┌─────────────────────────────────────┬────────────────┬──────────┬──────────┬──────────────────────┬─────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│               Library               │ Vulnerability  │ Severity │  Status  │  Installed Version   │        Fixed Version        │                            Title                             │
+├─────────────────────────────────────┼────────────────┼──────────┼──────────┼──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/containerd/containerd/v2 │ CVE-2026-53488 │ HIGH     │ fixed    │ v2.2.4               │ 2.0.10, 2.1.9, 2.2.5, 2.3.2 │ github.com/containerd/containerd: containerd: Host-root      │
+│                                     │                │          │          │                      │                             │ command execution via unvalidated image config labels in     │
+│                                     │                │          │          │                      │                             │ CRI...                                                       │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-53488                   │
+│                                     ├────────────────┤          │          │                      ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53489 │          │          │                      │ 2.1.9, 2.2.5, 2.3.2         │ github.com/containerd/containerd: containerd: Arbitrary host │
+│                                     │                │          │          │                      │                             │ file read via symlink following in CRI checkpoint...         │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-53489                   │
+│                                     ├────────────────┤          │          │                      │                             ├──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53492 │          │          │                      │                             │ github.com/containerd/containerd: containerd: Security       │
+│                                     │                │          │          │                      │                             │ bypass via Container Device Interface (CDI) annotation       │
+│                                     │                │          │          │                      │                             │ smuggling during...                                          │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-53492                   │
+├─────────────────────────────────────┼────────────────┤          │          ├──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/docker/docker            │ CVE-2026-34040 │          │          │ v28.5.2+incompatible │ 29.3.1                      │ Moby: Moby: Authorization bypass vulnerability               │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-34040                   │
+│                                     ├────────────────┤          ├──────────┤                      ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-41567 │          │ affected │                      │                             │ docker: Moby/Docker Engine: Arbitrary Code Execution via     │
+│                                     │                │          │          │                      │                             │ malicious container image and compressed...                  │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-41567                   │
+│                                     ├────────────────┤          │          │                      ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-42306 │          │          │                      │                             │ Moby is an open source container framework. In Docker Engine │
+│                                     │                │          │          │                      │                             │ prior to...                                                  │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-42306                   │
+├─────────────────────────────────────┼────────────────┤          ├──────────┼──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/sigstore/fulcio          │ CVE-2026-49478 │          │ fixed    │ v1.8.5               │ 1.8.6                       │ Fulcio has OIDC Discovery Redirect Following Allows SSRF and │
+│                                     │                │          │          │                      │                             │ JWKS Substitution for...                                     │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-49478                   │
+├─────────────────────────────────────┼────────────────┤          │          ├──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/sigstore/rekor           │ CVE-2026-48702 │          │          │ v1.5.0               │ 1.5.2                       │ Rekor has an OOM Condition due to Unbounded gzip             │
+│                                     │                │          │          │                      │                             │ Decompression in Alpine...                                   │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-48702                   │
+├─────────────────────────────────────┼────────────────┤          │          ├──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ oras.land/oras-go/v2                │ CVE-2026-50151 │          │          │ v2.6.0               │ 2.6.1                       │ oras-go blob upload vulnerable to credential forwarding via  │
+│                                     │                │          │          │                      │                             │ unvalidated Location header                                  │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-50151                   │
+│                                     ├────────────────┤          ├──────────┤                      ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-50163 │          │ affected │                      │                             │ `oras-go` tar extraction: Hardlink entry with relative       │
+│                                     │                │          │          │                      │                             │ Linkname escapes extract dir via...                          │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-50163                   │
+└─────────────────────────────────────┴────────────────┴──────────┴──────────┴──────────────────────┴─────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/r7q2gkwqvpcbikxhhs5jgv3hxwim7jj5-kubescape-4.0.10/bin/kubescape (gobinary)
+====================================================================================
+Total: 10 (HIGH: 10, CRITICAL: 0)
+
+┌─────────────────────────────────────┬────────────────┬──────────┬──────────┬──────────────────────┬─────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│               Library               │ Vulnerability  │ Severity │  Status  │  Installed Version   │        Fixed Version        │                            Title                             │
+├─────────────────────────────────────┼────────────────┼──────────┼──────────┼──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/containerd/containerd/v2 │ CVE-2026-53488 │ HIGH     │ fixed    │ v2.2.4               │ 2.0.10, 2.1.9, 2.2.5, 2.3.2 │ github.com/containerd/containerd: containerd: Host-root      │
+│                                     │                │          │          │                      │                             │ command execution via unvalidated image config labels in     │
+│                                     │                │          │          │                      │                             │ CRI...                                                       │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-53488                   │
+│                                     ├────────────────┤          │          │                      ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53489 │          │          │                      │ 2.1.9, 2.2.5, 2.3.2         │ github.com/containerd/containerd: containerd: Arbitrary host │
+│                                     │                │          │          │                      │                             │ file read via symlink following in CRI checkpoint...         │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-53489                   │
+│                                     ├────────────────┤          │          │                      │                             ├──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-53492 │          │          │                      │                             │ github.com/containerd/containerd: containerd: Security       │
+│                                     │                │          │          │                      │                             │ bypass via Container Device Interface (CDI) annotation       │
+│                                     │                │          │          │                      │                             │ smuggling during...                                          │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-53492                   │
+├─────────────────────────────────────┼────────────────┤          │          ├──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/docker/docker            │ CVE-2026-34040 │          │          │ v28.5.2+incompatible │ 29.3.1                      │ Moby: Moby: Authorization bypass vulnerability               │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-34040                   │
+│                                     ├────────────────┤          ├──────────┤                      ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-41567 │          │ affected │                      │                             │ docker: Moby/Docker Engine: Arbitrary Code Execution via     │
+│                                     │                │          │          │                      │                             │ malicious container image and compressed...                  │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-41567                   │
+│                                     ├────────────────┤          │          │                      ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-42306 │          │          │                      │                             │ Moby is an open source container framework. In Docker Engine │
+│                                     │                │          │          │                      │                             │ prior to...                                                  │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-42306                   │
+├─────────────────────────────────────┼────────────────┤          ├──────────┼──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/sigstore/fulcio          │ CVE-2026-49478 │          │ fixed    │ v1.8.5               │ 1.8.6                       │ Fulcio has OIDC Discovery Redirect Following Allows SSRF and │
+│                                     │                │          │          │                      │                             │ JWKS Substitution for...                                     │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-49478                   │
+├─────────────────────────────────────┼────────────────┤          │          ├──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/sigstore/rekor           │ CVE-2026-48702 │          │          │ v1.5.0               │ 1.5.2                       │ Rekor has an OOM Condition due to Unbounded gzip             │
+│                                     │                │          │          │                      │                             │ Decompression in Alpine...                                   │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-48702                   │
+├─────────────────────────────────────┼────────────────┤          │          ├──────────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ oras.land/oras-go/v2                │ CVE-2026-50151 │          │          │ v2.6.0               │ 2.6.1                       │ oras-go blob upload vulnerable to credential forwarding via  │
+│                                     │                │          │          │                      │                             │ unvalidated Location header                                  │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-50151                   │
+│                                     ├────────────────┤          ├──────────┤                      ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                     │ CVE-2026-50163 │          │ affected │                      │                             │ `oras-go` tar extraction: Hardlink entry with relative       │
+│                                     │                │          │          │                      │                             │ Linkname escapes extract dir via...                          │
+│                                     │                │          │          │                      │                             │ https://avd.aquasec.com/nvd/cve-2026-50163                   │
+└─────────────────────────────────────┴────────────────┴──────────┴──────────┴──────────────────────┴─────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

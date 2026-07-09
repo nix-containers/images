@@ -1,0 +1,309 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2025-65637",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "github.com/sirupsen/logrus: github.com/sirupsen/logrus: Denial-of-Service due to large single-line payload"
+              },
+              "fullDescription": {
+                "text": "A denial-of-service vulnerability exists in github.com/sirupsen/logrus when using Entry.Writer() to log a single-line payload larger than 64KB without newline characters. Due to limitations in the internal bufio.Scanner, the read fails with \"token too long\" and the writer pipe is closed, leaving Writer() unusable and causing application unavailability (DoS). This affects versions \u003c 1.8.3, 1.9.0, and 1.9.2. The issue is fixed in 1.8.3, 1.9.1, and 1.9.3+, where the input is chunked and the writer continues to function even if an error is logged."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-65637",
+              "help": {
+                "text": "Vulnerability CVE-2025-65637\nSeverity: HIGH\nPackage: github.com/sirupsen/logrus\nFixed Version: 1.8.3, 1.9.1, 1.9.3\nLink: [CVE-2025-65637](https://avd.aquasec.com/nvd/cve-2025-65637)\nA denial-of-service vulnerability exists in github.com/sirupsen/logrus when using Entry.Writer() to log a single-line payload larger than 64KB without newline characters. Due to limitations in the internal bufio.Scanner, the read fails with \"token too long\" and the writer pipe is closed, leaving Writer() unusable and causing application unavailability (DoS). This affects versions \u003c 1.8.3, 1.9.0, and 1.9.2. The issue is fixed in 1.8.3, 1.9.1, and 1.9.3+, where the input is chunked and the writer continues to function even if an error is logged.",
+                "markdown": "**Vulnerability CVE-2025-65637**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|github.com/sirupsen/logrus|1.8.3, 1.9.1, 1.9.3|[CVE-2025-65637](https://avd.aquasec.com/nvd/cve-2025-65637)|\n\nA denial-of-service vulnerability exists in github.com/sirupsen/logrus when using Entry.Writer() to log a single-line payload larger than 64KB without newline characters. Due to limitations in the internal bufio.Scanner, the read fails with \"token too long\" and the writer pipe is closed, leaving Writer() unusable and causing application unavailability (DoS). This affects versions \u003c 1.8.3, 1.9.0, and 1.9.2. The issue is fixed in 1.8.3, 1.9.1, and 1.9.3+, where the input is chunked and the writer continues to function even if an error is logged."
+              },
+              "properties": {
+                "cvssv40_baseScore": 8.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39824",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows"
+              },
+              "fullDescription": {
+                "text": "NewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39824",
+              "help": {
+                "text": "Vulnerability CVE-2026-39824\nSeverity: UNKNOWN\nPackage: golang.org/x/sys\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)\nNewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error.",
+                "markdown": "**Vulnerability CVE-2026-39824**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|golang.org/x/sys|0.44.0|[CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)|\n\nNewNTUnicodeString does not check for string length overflow. When provided with a string that overflows the maximum size of a NTUnicodeString (a 16-bit number of bytes), it returns a truncated string rather than an error."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2022-32149",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang: golang.org/x/text/language: ParseAcceptLanguage takes a long time to parse complex tags"
+              },
+              "fullDescription": {
+                "text": "An attacker may cause a denial of service by crafting an Accept-Language header which ParseAcceptLanguage will take significant time to parse."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2022-32149",
+              "help": {
+                "text": "Vulnerability CVE-2022-32149\nSeverity: HIGH\nPackage: golang.org/x/text\nFixed Version: 0.3.8\nLink: [CVE-2022-32149](https://avd.aquasec.com/nvd/cve-2022-32149)\nAn attacker may cause a denial of service by crafting an Accept-Language header which ParseAcceptLanguage will take significant time to parse.",
+                "markdown": "**Vulnerability CVE-2022-32149**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/text|0.3.8|[CVE-2022-32149](https://avd.aquasec.com/nvd/cve-2022-32149)|\n\nAn attacker may cause a denial of service by crafting an Accept-Language header which ParseAcceptLanguage will take significant time to parse."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-24786",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang-protobuf: encoding/protojson, internal/encoding/json: infinite loop in protojson.Unmarshal when unmarshaling certain forms of invalid JSON"
+              },
+              "fullDescription": {
+                "text": "The protojson.Unmarshal function can enter an infinite loop when unmarshaling certain forms of invalid JSON. This condition can occur when unmarshaling into a message which contains a google.protobuf.Any value, or when the UnmarshalOptions.DiscardUnknown option is set."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-24786",
+              "help": {
+                "text": "Vulnerability CVE-2024-24786\nSeverity: MEDIUM\nPackage: google.golang.org/protobuf\nFixed Version: 1.33.0\nLink: [CVE-2024-24786](https://avd.aquasec.com/nvd/cve-2024-24786)\nThe protojson.Unmarshal function can enter an infinite loop when unmarshaling certain forms of invalid JSON. This condition can occur when unmarshaling into a message which contains a google.protobuf.Any value, or when the UnmarshalOptions.DiscardUnknown option is set.",
+                "markdown": "**Vulnerability CVE-2024-24786**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|google.golang.org/protobuf|1.33.0|[CVE-2024-24786](https://avd.aquasec.com/nvd/cve-2024-24786)|\n\nThe protojson.Unmarshal function can enter an infinite loop when unmarshaling certain forms of invalid JSON. This condition can occur when unmarshaling into a message which contains a google.protobuf.Any value, or when the UnmarshalOptions.DiscardUnknown option is set."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "cvssv40_baseScore": 6.6,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39822",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symli ..."
+              },
+              "fullDescription": {
+                "text": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39822",
+              "help": {
+                "text": "Vulnerability CVE-2026-39822\nSeverity: UNKNOWN\nPackage: stdlib\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+                "markdown": "**Vulnerability CVE-2026-39822**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|UNKNOWN|stdlib|1.25.12, 1.26.5, 1.27.0-rc.2|[CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)|\n\nOn Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "0.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2025-65637",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/sirupsen/logrus\nInstalled Version: v1.8.1\nVulnerability CVE-2025-65637\nSeverity: HIGH\nFixed Version: 1.8.3, 1.9.1, 1.9.3\nLink: [CVE-2025-65637](https://avd.aquasec.com/nvd/cve-2025-65637)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped: github.com/sirupsen/logrus@v1.8.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39824",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: golang.org/x/sys\nInstalled Version: v0.0.0-20220412211240-33da011f77ad\nVulnerability CVE-2026-39824\nSeverity: UNKNOWN\nFixed Version: 0.44.0\nLink: [CVE-2026-39824](https://avd.aquasec.com/nvd/cve-2026-39824)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped: golang.org/x/sys@v0.0.0-20220412211240-33da011f77ad"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2022-32149",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/text\nInstalled Version: v0.3.7\nVulnerability CVE-2022-32149\nSeverity: HIGH\nFixed Version: 0.3.8\nLink: [CVE-2022-32149](https://avd.aquasec.com/nvd/cve-2022-32149)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped: golang.org/x/text@v0.3.7"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-24786",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: google.golang.org/protobuf\nInstalled Version: v1.28.0\nVulnerability CVE-2024-24786\nSeverity: MEDIUM\nFixed Version: 1.33.0\nLink: [CVE-2024-24786](https://avd.aquasec.com/nvd/cve-2024-24786)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped: google.golang.org/protobuf@v1.28.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39822",
+          "ruleIndex": 4,
+          "level": "note",
+          "message": {
+            "text": "Package: stdlib\nInstalled Version: v1.26.4\nVulnerability CVE-2026-39822\nSeverity: UNKNOWN\nFixed Version: 1.25.12, 1.26.5, 1.27.0-rc.2\nLink: [CVE-2026-39822](https://avd.aquasec.com/nvd/cve-2026-39822)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/ssip1fjg5jlhn489ak2dsjplwp95wp03-php-fpm_exporter-2.2.0/bin/.php-fpm_exporter-wrapped: stdlib@v1.26.4"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:c16065878aef680b3367cdcf5e8bf2dc379dfdd440147669195fdc907e878d02",
+        "imageName": "ghcr.io/nix-containers/images/php-fpm_exporter:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/php-fpm_exporter@sha256:e6bbbbc996800f42603964dd83910365611ea998f1990b9a5bc2d92ce4f79349"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/php-fpm_exporter:latest"
+        ]
+      }
+    }
+  ]
+}

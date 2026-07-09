@@ -1,0 +1,2675 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "GHSA-xhj4-vrgc-hr34",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "actix-http has HTTP/1.1 CL.TE Request Smuggling "
+              },
+              "fullDescription": {
+                "text": "A vulnerability in `actix-http`'s HTTP/1.1 request parser allows an unauthenticated remote client to smuggle requests in deployments where a front-end HTTP intermediary and the Actix backend disagree about whether `Content-Length` or `Transfer-Encoding: chunked` defines the request body length.\n\n## Severity\n\n**Medium**.\nThis is an HTTP request smuggling vulnerability that can be triggered over the network without application-level credentials. Exploitation requires a specific proxy topology: an upstream proxy, WAF, load balancer, or similar intermediary must use `Content-Length` framing while forwarding the conflicting `Transfer-Encoding: chunked` request to an Actix backend over a reused HTTP/1.1 connection.\n\n## Affected Versions\n\n- `actix-http`: versions up to and including **3.12.0**\n\n## Description\n\nHTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` are ambiguous and must be rejected by recipients to avoid request smuggling.\n\nAffected versions of `actix-http` accepted a request with a syntactically valid `Content-Length` header and `Transfer-Encoding: chunked` on the same HTTP/1.1 message. The parser then selected chunked decoding instead of rejecting the conflicting framing signals.\n\nIn a CL.TE proxy topology, an intermediary may treat bytes after the declared `Content-Length` body as part of the first request, while the Actix backend stops at the terminating chunk marker and parses the remaining bytes on the backend connection as a second HTTP request. This creates a backend-side request desynchronization primitive.\n\nThe issue is limited to HTTP/1.1 request parsing.\n\n## Impact\n\n**HTTP request smuggling**\n\n* **Attack Vector:** Network, unauthenticated.\n* **Effect:** Backend request desynchronization with low integrity impact to requests processed by the vulnerable Actix service.\n* **Scope:** Actix services using affected `actix-http` versions behind an HTTP/1.1 intermediary that forwards ambiguous `Content-Length` plus `Transfer-Encoding: chunked` requests and reuses backend connections.\n\nNo direct confidentiality, availability, or subsequent-system impact is scored for this advisory.\n\n## Fixed Versions\n\nThis issue is fixed in **actix-http 3.12.1**.\n\nThe fix rejects HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` instead of choosing one framing interpretation.\n\n## Mitigation\n\nUsers should upgrade to **actix-http 3.12.1** or later.\n\nApplications that depend on `actix-http` through `actix-web`, `awc`, or another Actix crate should ensure dependency resolution selects `actix-http` 3.12.1 or later. For example:\n\n```bash\ncargo update -p actix-http\n```\n\nIf an immediate upgrade is not possible, configure all upstream HTTP intermediaries to reject HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding`, and avoid forwarding ambiguous request framing to Actix backends.\n## Credits\n\nActix thanks [mufeedvh](https://github.com/mufeedvh) who disclosed this issue through coordinated disclosure."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-xhj4-vrgc-hr34",
+              "help": {
+                "text": "Vulnerability GHSA-xhj4-vrgc-hr34\nSeverity: MEDIUM\nPackage: actix-http\nFixed Version: 3.12.1\nLink: [GHSA-xhj4-vrgc-hr34](https://github.com/advisories/GHSA-xhj4-vrgc-hr34)\nA vulnerability in `actix-http`'s HTTP/1.1 request parser allows an unauthenticated remote client to smuggle requests in deployments where a front-end HTTP intermediary and the Actix backend disagree about whether `Content-Length` or `Transfer-Encoding: chunked` defines the request body length.\n\n## Severity\n\n**Medium**.\nThis is an HTTP request smuggling vulnerability that can be triggered over the network without application-level credentials. Exploitation requires a specific proxy topology: an upstream proxy, WAF, load balancer, or similar intermediary must use `Content-Length` framing while forwarding the conflicting `Transfer-Encoding: chunked` request to an Actix backend over a reused HTTP/1.1 connection.\n\n## Affected Versions\n\n- `actix-http`: versions up to and including **3.12.0**\n\n## Description\n\nHTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` are ambiguous and must be rejected by recipients to avoid request smuggling.\n\nAffected versions of `actix-http` accepted a request with a syntactically valid `Content-Length` header and `Transfer-Encoding: chunked` on the same HTTP/1.1 message. The parser then selected chunked decoding instead of rejecting the conflicting framing signals.\n\nIn a CL.TE proxy topology, an intermediary may treat bytes after the declared `Content-Length` body as part of the first request, while the Actix backend stops at the terminating chunk marker and parses the remaining bytes on the backend connection as a second HTTP request. This creates a backend-side request desynchronization primitive.\n\nThe issue is limited to HTTP/1.1 request parsing.\n\n## Impact\n\n**HTTP request smuggling**\n\n* **Attack Vector:** Network, unauthenticated.\n* **Effect:** Backend request desynchronization with low integrity impact to requests processed by the vulnerable Actix service.\n* **Scope:** Actix services using affected `actix-http` versions behind an HTTP/1.1 intermediary that forwards ambiguous `Content-Length` plus `Transfer-Encoding: chunked` requests and reuses backend connections.\n\nNo direct confidentiality, availability, or subsequent-system impact is scored for this advisory.\n\n## Fixed Versions\n\nThis issue is fixed in **actix-http 3.12.1**.\n\nThe fix rejects HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` instead of choosing one framing interpretation.\n\n## Mitigation\n\nUsers should upgrade to **actix-http 3.12.1** or later.\n\nApplications that depend on `actix-http` through `actix-web`, `awc`, or another Actix crate should ensure dependency resolution selects `actix-http` 3.12.1 or later. For example:\n\n```bash\ncargo update -p actix-http\n```\n\nIf an immediate upgrade is not possible, configure all upstream HTTP intermediaries to reject HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding`, and avoid forwarding ambiguous request framing to Actix backends.\n## Credits\n\nActix thanks [mufeedvh](https://github.com/mufeedvh) who disclosed this issue through coordinated disclosure.",
+                "markdown": "**Vulnerability GHSA-xhj4-vrgc-hr34**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|actix-http|3.12.1|[GHSA-xhj4-vrgc-hr34](https://github.com/advisories/GHSA-xhj4-vrgc-hr34)|\n\nA vulnerability in `actix-http`'s HTTP/1.1 request parser allows an unauthenticated remote client to smuggle requests in deployments where a front-end HTTP intermediary and the Actix backend disagree about whether `Content-Length` or `Transfer-Encoding: chunked` defines the request body length.\n\n## Severity\n\n**Medium**.\nThis is an HTTP request smuggling vulnerability that can be triggered over the network without application-level credentials. Exploitation requires a specific proxy topology: an upstream proxy, WAF, load balancer, or similar intermediary must use `Content-Length` framing while forwarding the conflicting `Transfer-Encoding: chunked` request to an Actix backend over a reused HTTP/1.1 connection.\n\n## Affected Versions\n\n- `actix-http`: versions up to and including **3.12.0**\n\n## Description\n\nHTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` are ambiguous and must be rejected by recipients to avoid request smuggling.\n\nAffected versions of `actix-http` accepted a request with a syntactically valid `Content-Length` header and `Transfer-Encoding: chunked` on the same HTTP/1.1 message. The parser then selected chunked decoding instead of rejecting the conflicting framing signals.\n\nIn a CL.TE proxy topology, an intermediary may treat bytes after the declared `Content-Length` body as part of the first request, while the Actix backend stops at the terminating chunk marker and parses the remaining bytes on the backend connection as a second HTTP request. This creates a backend-side request desynchronization primitive.\n\nThe issue is limited to HTTP/1.1 request parsing.\n\n## Impact\n\n**HTTP request smuggling**\n\n* **Attack Vector:** Network, unauthenticated.\n* **Effect:** Backend request desynchronization with low integrity impact to requests processed by the vulnerable Actix service.\n* **Scope:** Actix services using affected `actix-http` versions behind an HTTP/1.1 intermediary that forwards ambiguous `Content-Length` plus `Transfer-Encoding: chunked` requests and reuses backend connections.\n\nNo direct confidentiality, availability, or subsequent-system impact is scored for this advisory.\n\n## Fixed Versions\n\nThis issue is fixed in **actix-http 3.12.1**.\n\nThe fix rejects HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` instead of choosing one framing interpretation.\n\n## Mitigation\n\nUsers should upgrade to **actix-http 3.12.1** or later.\n\nApplications that depend on `actix-http` through `actix-web`, `awc`, or another Actix crate should ensure dependency resolution selects `actix-http` 3.12.1 or later. For example:\n\n```bash\ncargo update -p actix-http\n```\n\nIf an immediate upgrade is not possible, configure all upstream HTTP intermediaries to reject HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding`, and avoid forwarding ambiguous request framing to Actix backends.\n## Credits\n\nActix thanks [mufeedvh](https://github.com/mufeedvh) who disclosed this issue through coordinated disclosure."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-2rxc-gjrp-vjhx",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Unsoundness in anstream"
+              },
+              "fullDescription": {
+                "text": "When given a valid UTF8 string \"ö\\x1b😀\", the function in crates/anstream/src/adapter/strip.rs will be confused. The UTF8 bytes are \\xc3\\xb6 then \\x1b then \\xf0\\x9f\\x98\\x80.\n\nWhen looping over \"non-printable bytes\" \\x1b\\xf0 will be considered as some non-printable sequence.\n\nThis will produce a broken str from the incorrectly segmented bytes via str::from_utf8_unchecked, and that should never happen.\n\nFull credit goes to @Ralith who reviewed this code and asked @burakemir to follow up."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-2rxc-gjrp-vjhx",
+              "help": {
+                "text": "Vulnerability GHSA-2rxc-gjrp-vjhx\nSeverity: MEDIUM\nPackage: anstream\nFixed Version: 0.6.8\nLink: [GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)\nWhen given a valid UTF8 string \"ö\\x1b😀\", the function in crates/anstream/src/adapter/strip.rs will be confused. The UTF8 bytes are \\xc3\\xb6 then \\x1b then \\xf0\\x9f\\x98\\x80.\n\nWhen looping over \"non-printable bytes\" \\x1b\\xf0 will be considered as some non-printable sequence.\n\nThis will produce a broken str from the incorrectly segmented bytes via str::from_utf8_unchecked, and that should never happen.\n\nFull credit goes to @Ralith who reviewed this code and asked @burakemir to follow up.",
+                "markdown": "**Vulnerability GHSA-2rxc-gjrp-vjhx**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|anstream|0.6.8|[GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)|\n\nWhen given a valid UTF8 string \"ö\\x1b😀\", the function in crates/anstream/src/adapter/strip.rs will be confused. The UTF8 bytes are \\xc3\\xb6 then \\x1b then \\xf0\\x9f\\x98\\x80.\n\nWhen looping over \"non-printable bytes\" \\x1b\\xf0 will be considered as some non-printable sequence.\n\nThis will produce a broken str from the incorrectly segmented bytes via str::from_utf8_unchecked, and that should never happen.\n\nFull credit goes to @Ralith who reviewed this code and asked @burakemir to follow up."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-25541",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Bytes is a utility library for working with bytes. From version 1.2.1  ..."
+              },
+              "fullDescription": {
+                "text": "Bytes is a utility library for working with bytes. From version 1.2.1 to before 1.11.1, Bytes is vulnerable to integer overflow in BytesMut::reserve. In the unique reclaim path of BytesMut::reserve, if the condition \"v_capacity \u003e= new_cap + offset\" uses an unchecked addition. When new_cap + offset overflows usize in release builds, this condition may incorrectly pass, causing self.cap to be set to a value that exceeds the actual allocated capacity. Subsequent APIs such as spare_capacity_mut() then trust this corrupted cap value and may create out-of-bounds slices, leading to UB. This behavior is observable in release builds (integer overflow wraps), whereas debug builds panic due to overflow checks. This issue has been patched in version 1.11.1."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-25541",
+              "help": {
+                "text": "Vulnerability CVE-2026-25541\nSeverity: MEDIUM\nPackage: bytes\nFixed Version: 1.11.1\nLink: [CVE-2026-25541](https://avd.aquasec.com/nvd/cve-2026-25541)\nBytes is a utility library for working with bytes. From version 1.2.1 to before 1.11.1, Bytes is vulnerable to integer overflow in BytesMut::reserve. In the unique reclaim path of BytesMut::reserve, if the condition \"v_capacity \u003e= new_cap + offset\" uses an unchecked addition. When new_cap + offset overflows usize in release builds, this condition may incorrectly pass, causing self.cap to be set to a value that exceeds the actual allocated capacity. Subsequent APIs such as spare_capacity_mut() then trust this corrupted cap value and may create out-of-bounds slices, leading to UB. This behavior is observable in release builds (integer overflow wraps), whereas debug builds panic due to overflow checks. This issue has been patched in version 1.11.1.",
+                "markdown": "**Vulnerability CVE-2026-25541**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|bytes|1.11.1|[CVE-2026-25541](https://avd.aquasec.com/nvd/cve-2026-25541)|\n\nBytes is a utility library for working with bytes. From version 1.2.1 to before 1.11.1, Bytes is vulnerable to integer overflow in BytesMut::reserve. In the unique reclaim path of BytesMut::reserve, if the condition \"v_capacity \u003e= new_cap + offset\" uses an unchecked addition. When new_cap + offset overflows usize in release builds, this condition may incorrectly pass, causing self.cap to be set to a value that exceeds the actual allocated capacity. Subsequent APIs such as spare_capacity_mut() then trust this corrupted cap value and may create out-of-bounds slices, leading to UB. This behavior is observable in release builds (integer overflow wraps), whereas debug builds panic due to overflow checks. This issue has been patched in version 1.11.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 5.5,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N/E:P",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-h5x4-m2qf-r4f2",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Diesel's SQLite backend has possible UTF-8 corruption"
+              },
+              "fullDescription": {
+                "text": "Diesel uses the `sqlite3_value_text` function to receive strings from SQLite while deserializing query results. We misinterpreted the corresponding [SQLite](https://sqlite.org/c3ref/value_blob.html) documentation that this function always returns a UTF-8 encoded string values as `*const c_char`. Based on that we used `str::from_utf8_unchecked` to construct a Rust string slice without any additional UTF-8 checks in place. It turned out that this function doesn't always return correct UTF-8 strings. For field of the SQLite side storage type `BLOB` this pointer can contain arbitrary bytes, which makes the usage of `str::from_utf8_unchecked` unsound as this violates the safety contract of `str` to only contain valid UTF-8 encoded Strings.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly checks whether the provides byte buffer is actually valid UTF-8, instead of relying on SQLite's documentation. This fix is included in the `2.3.8` release."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-h5x4-m2qf-r4f2",
+              "help": {
+                "text": "Vulnerability GHSA-h5x4-m2qf-r4f2\nSeverity: HIGH\nPackage: diesel\nFixed Version: 2.3.8\nLink: [GHSA-h5x4-m2qf-r4f2](https://github.com/advisories/GHSA-h5x4-m2qf-r4f2)\nDiesel uses the `sqlite3_value_text` function to receive strings from SQLite while deserializing query results. We misinterpreted the corresponding [SQLite](https://sqlite.org/c3ref/value_blob.html) documentation that this function always returns a UTF-8 encoded string values as `*const c_char`. Based on that we used `str::from_utf8_unchecked` to construct a Rust string slice without any additional UTF-8 checks in place. It turned out that this function doesn't always return correct UTF-8 strings. For field of the SQLite side storage type `BLOB` this pointer can contain arbitrary bytes, which makes the usage of `str::from_utf8_unchecked` unsound as this violates the safety contract of `str` to only contain valid UTF-8 encoded Strings.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly checks whether the provides byte buffer is actually valid UTF-8, instead of relying on SQLite's documentation. This fix is included in the `2.3.8` release.",
+                "markdown": "**Vulnerability GHSA-h5x4-m2qf-r4f2**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|diesel|2.3.8|[GHSA-h5x4-m2qf-r4f2](https://github.com/advisories/GHSA-h5x4-m2qf-r4f2)|\n\nDiesel uses the `sqlite3_value_text` function to receive strings from SQLite while deserializing query results. We misinterpreted the corresponding [SQLite](https://sqlite.org/c3ref/value_blob.html) documentation that this function always returns a UTF-8 encoded string values as `*const c_char`. Based on that we used `str::from_utf8_unchecked` to construct a Rust string slice without any additional UTF-8 checks in place. It turned out that this function doesn't always return correct UTF-8 strings. For field of the SQLite side storage type `BLOB` this pointer can contain arbitrary bytes, which makes the usage of `str::from_utf8_unchecked` unsound as this violates the safety contract of `str` to only contain valid UTF-8 encoded Strings.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly checks whether the provides byte buffer is actually valid UTF-8, instead of relying on SQLite's documentation. This fix is included in the `2.3.8` release."
+              },
+              "properties": {
+                "cvssv40_baseScore": 8.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-wq9x-qwcq-mmgf",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Diesel vulnerable to Binary Protocol Misinterpretation caused by Truncating or Overflowing Casts"
+              },
+              "fullDescription": {
+                "text": "The following presentation at this year's DEF CON was brought to our attention on the Diesel Gitter Channel:\n\n\u003e SQL Injection isn't Dead: Smuggling Queries at the Protocol Level  \n\u003e \u003chttp://web.archive.org/web/20240812130923/https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn't%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf\u003e  \n\u003e (Archive link for posterity.)\nEssentially, encoding a value larger than 4GiB can cause the length prefix in the protocol to overflow, \ncausing the server to interpret the rest of the string as binary protocol commands or other data.\n\nIt appears Diesel _does_ perform truncating casts in a way that could be problematic, \nfor example: \u003chttps://github.com/diesel-rs/diesel/blob/ae82c4a5a133db65612b7436356f549bfecda1c7/diesel/src/pg/connection/stmt/mod.rs#L36\u003e\n\nThis code has existed essentially since the beginning, \nso it is reasonable to assume that all published versions `\u003c= 2.2.2` are affected.\n\n## Mitigation\n\nThe prefered migration to the outlined problem is to update to a Diesel version newer than 2.2.2, which includes \nfixes for the problem. \n\nAs always, you should make sure your application is validating untrustworthy user input. \nReject any input over 4 GiB, or any input that could _encode_ to a string longer than 4 GiB. \nDynamically built queries are also potentially problematic if it pushes the message size over this 4 GiB bound.\n\nFor web application backends, consider adding some middleware that limits the size of request bodies by default.\n\n## Resolution\n\nDiesel now uses `#[deny]` directives for the following Clippy lints:\n\n* [`cast_possible_truncation`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_truncation)\n* [`cast_possible_wrap`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_wrap)\n* [`cast_sign_loss`](https://rust-lang.github.io/rust-clippy/master/#/cast_sign_loss)\n\nto prevent casts that will lead to precision loss or other trunctations. Additionally we performed an \naudit of the relevant code.\n\nA fix is included in the `2.2.3` release.\n"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-wq9x-qwcq-mmgf",
+              "help": {
+                "text": "Vulnerability GHSA-wq9x-qwcq-mmgf\nSeverity: HIGH\nPackage: diesel\nFixed Version: 2.2.3\nLink: [GHSA-wq9x-qwcq-mmgf](https://github.com/advisories/GHSA-wq9x-qwcq-mmgf)\nThe following presentation at this year's DEF CON was brought to our attention on the Diesel Gitter Channel:\n\n\u003e SQL Injection isn't Dead: Smuggling Queries at the Protocol Level  \n\u003e \u003chttp://web.archive.org/web/20240812130923/https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn't%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf\u003e  \n\u003e (Archive link for posterity.)\nEssentially, encoding a value larger than 4GiB can cause the length prefix in the protocol to overflow, \ncausing the server to interpret the rest of the string as binary protocol commands or other data.\n\nIt appears Diesel _does_ perform truncating casts in a way that could be problematic, \nfor example: \u003chttps://github.com/diesel-rs/diesel/blob/ae82c4a5a133db65612b7436356f549bfecda1c7/diesel/src/pg/connection/stmt/mod.rs#L36\u003e\n\nThis code has existed essentially since the beginning, \nso it is reasonable to assume that all published versions `\u003c= 2.2.2` are affected.\n\n## Mitigation\n\nThe prefered migration to the outlined problem is to update to a Diesel version newer than 2.2.2, which includes \nfixes for the problem. \n\nAs always, you should make sure your application is validating untrustworthy user input. \nReject any input over 4 GiB, or any input that could _encode_ to a string longer than 4 GiB. \nDynamically built queries are also potentially problematic if it pushes the message size over this 4 GiB bound.\n\nFor web application backends, consider adding some middleware that limits the size of request bodies by default.\n\n## Resolution\n\nDiesel now uses `#[deny]` directives for the following Clippy lints:\n\n* [`cast_possible_truncation`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_truncation)\n* [`cast_possible_wrap`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_wrap)\n* [`cast_sign_loss`](https://rust-lang.github.io/rust-clippy/master/#/cast_sign_loss)\n\nto prevent casts that will lead to precision loss or other trunctations. Additionally we performed an \naudit of the relevant code.\n\nA fix is included in the `2.2.3` release.\n",
+                "markdown": "**Vulnerability GHSA-wq9x-qwcq-mmgf**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|diesel|2.2.3|[GHSA-wq9x-qwcq-mmgf](https://github.com/advisories/GHSA-wq9x-qwcq-mmgf)|\n\nThe following presentation at this year's DEF CON was brought to our attention on the Diesel Gitter Channel:\n\n\u003e SQL Injection isn't Dead: Smuggling Queries at the Protocol Level  \n\u003e \u003chttp://web.archive.org/web/20240812130923/https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn't%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf\u003e  \n\u003e (Archive link for posterity.)\nEssentially, encoding a value larger than 4GiB can cause the length prefix in the protocol to overflow, \ncausing the server to interpret the rest of the string as binary protocol commands or other data.\n\nIt appears Diesel _does_ perform truncating casts in a way that could be problematic, \nfor example: \u003chttps://github.com/diesel-rs/diesel/blob/ae82c4a5a133db65612b7436356f549bfecda1c7/diesel/src/pg/connection/stmt/mod.rs#L36\u003e\n\nThis code has existed essentially since the beginning, \nso it is reasonable to assume that all published versions `\u003c= 2.2.2` are affected.\n\n## Mitigation\n\nThe prefered migration to the outlined problem is to update to a Diesel version newer than 2.2.2, which includes \nfixes for the problem. \n\nAs always, you should make sure your application is validating untrustworthy user input. \nReject any input over 4 GiB, or any input that could _encode_ to a string longer than 4 GiB. \nDynamically built queries are also potentially problematic if it pushes the message size over this 4 GiB bound.\n\nFor web application backends, consider adding some middleware that limits the size of request bodies by default.\n\n## Resolution\n\nDiesel now uses `#[deny]` directives for the following Clippy lints:\n\n* [`cast_possible_truncation`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_truncation)\n* [`cast_possible_wrap`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_wrap)\n* [`cast_sign_loss`](https://rust-lang.github.io/rust-clippy/master/#/cast_sign_loss)\n\nto prevent casts that will lead to precision loss or other trunctations. Additionally we performed an \naudit of the relevant code.\n\nA fix is included in the `2.2.3` release.\n"
+              },
+              "properties": {
+                "cvssv3_baseScore": 8.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "cvssv40_baseScore": 8.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:P",
+                "precision": "very-high",
+                "security-severity": "8.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-m9p2-fxp5-v3fp",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Diesel: Command injection in Diesel's implementation of `COPY FROM`/`COPY TO`"
+              },
+              "fullDescription": {
+                "text": "Diesel allows users to configure various options for PostgreSQL's `COPY FROM` and `COPY TO` statements. These configurations are partially provided as strings or characters. \n\nDiesel did not check if any these user-provided options contain a quote character `'`, which can lead to the injection of additional options in the current `COPY FROM`/`COPY TO` statement. \n\nThis vulnerability affects any user of `COPY FROM`/`COPY TO` that passes user-provided input to any of the affected functions. It can result in modifications of options in the current statement, but it is not possible inject additional statements.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly escapes any quotes contained in the provided arguments."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-m9p2-fxp5-v3fp",
+              "help": {
+                "text": "Vulnerability GHSA-m9p2-fxp5-v3fp\nSeverity: MEDIUM\nPackage: diesel\nFixed Version: 2.3.8\nLink: [GHSA-m9p2-fxp5-v3fp](https://github.com/advisories/GHSA-m9p2-fxp5-v3fp)\nDiesel allows users to configure various options for PostgreSQL's `COPY FROM` and `COPY TO` statements. These configurations are partially provided as strings or characters. \n\nDiesel did not check if any these user-provided options contain a quote character `'`, which can lead to the injection of additional options in the current `COPY FROM`/`COPY TO` statement. \n\nThis vulnerability affects any user of `COPY FROM`/`COPY TO` that passes user-provided input to any of the affected functions. It can result in modifications of options in the current statement, but it is not possible inject additional statements.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly escapes any quotes contained in the provided arguments.",
+                "markdown": "**Vulnerability GHSA-m9p2-fxp5-v3fp**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|diesel|2.3.8|[GHSA-m9p2-fxp5-v3fp](https://github.com/advisories/GHSA-m9p2-fxp5-v3fp)|\n\nDiesel allows users to configure various options for PostgreSQL's `COPY FROM` and `COPY TO` statements. These configurations are partially provided as strings or characters. \n\nDiesel did not check if any these user-provided options contain a quote character `'`, which can lead to the injection of additional options in the current `COPY FROM`/`COPY TO` statement. \n\nThis vulnerability affects any user of `COPY FROM`/`COPY TO` that passes user-provided input to any of the affected functions. It can result in modifications of options in the current statement, but it is not possible inject additional statements.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly escapes any quotes contained in the provided arguments."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-q8x8-jrhj-fh9p",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Diesel: Possible unaligned data access for implementations of `SqliteAggregate`"
+              },
+              "fullDescription": {
+                "text": "Diesel allows to register custom aggregate SQL functions for SQLite via the `SqliteAggregate` interface.\n\nTo store an instance of the custom aggregate processor Diesel relied on the `sqlite3_aggregate_context` function provided by sqlite. This function doesn't provide any guarantees about alignment of the returned allocation, which in turn can lead to problems if the type implementing requires a special alignment, e.g. via a custom `#[align(x)]` attribute on the type implementing this trait. This affects any user of `SqliteAggregate` that registers the custom aggregate function with an SQLite connection, while using a non-standard alignment on the type implementing this trait.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now allocates the corresponding memory on Rust side to get a correctly aligned allocation."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-q8x8-jrhj-fh9p",
+              "help": {
+                "text": "Vulnerability GHSA-q8x8-jrhj-fh9p\nSeverity: MEDIUM\nPackage: diesel\nFixed Version: 2.3.8\nLink: [GHSA-q8x8-jrhj-fh9p](https://github.com/advisories/GHSA-q8x8-jrhj-fh9p)\nDiesel allows to register custom aggregate SQL functions for SQLite via the `SqliteAggregate` interface.\n\nTo store an instance of the custom aggregate processor Diesel relied on the `sqlite3_aggregate_context` function provided by sqlite. This function doesn't provide any guarantees about alignment of the returned allocation, which in turn can lead to problems if the type implementing requires a special alignment, e.g. via a custom `#[align(x)]` attribute on the type implementing this trait. This affects any user of `SqliteAggregate` that registers the custom aggregate function with an SQLite connection, while using a non-standard alignment on the type implementing this trait.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now allocates the corresponding memory on Rust side to get a correctly aligned allocation.",
+                "markdown": "**Vulnerability GHSA-q8x8-jrhj-fh9p**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|diesel|2.3.8|[GHSA-q8x8-jrhj-fh9p](https://github.com/advisories/GHSA-q8x8-jrhj-fh9p)|\n\nDiesel allows to register custom aggregate SQL functions for SQLite via the `SqliteAggregate` interface.\n\nTo store an instance of the custom aggregate processor Diesel relied on the `sqlite3_aggregate_context` function provided by sqlite. This function doesn't provide any guarantees about alignment of the returned allocation, which in turn can lead to problems if the type implementing requires a special alignment, e.g. via a custom `#[align(x)]` attribute on the type implementing this trait. This affects any user of `SqliteAggregate` that registers the custom aggregate function with an SQLite connection, while using a non-standard alignment on the type implementing this trait.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now allocates the corresponding memory on Rust side to get a correctly aligned allocation."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:N/VI:L/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2023-26964",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "An issue was discovered in hyper v0.13.7. h2-0.2.4 Stream stacking occ ..."
+              },
+              "fullDescription": {
+                "text": "An issue was discovered in hyper v0.13.7. h2-0.2.4 Stream stacking occurs when the H2 component processes HTTP2 RST_STREAM frames. As a result, the memory and CPU usage are high which can lead to a Denial of Service (DoS)."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2023-26964",
+              "help": {
+                "text": "Vulnerability CVE-2023-26964\nSeverity: MEDIUM\nPackage: h2\nFixed Version: 0.3.17\nLink: [CVE-2023-26964](https://avd.aquasec.com/nvd/cve-2023-26964)\nAn issue was discovered in hyper v0.13.7. h2-0.2.4 Stream stacking occurs when the H2 component processes HTTP2 RST_STREAM frames. As a result, the memory and CPU usage are high which can lead to a Denial of Service (DoS).",
+                "markdown": "**Vulnerability CVE-2023-26964**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|h2|0.3.17|[CVE-2023-26964](https://avd.aquasec.com/nvd/cve-2023-26964)|\n\nAn issue was discovered in hyper v0.13.7. h2-0.2.4 Stream stacking occurs when the H2 component processes HTTP2 RST_STREAM frames. As a result, the memory and CPU usage are high which can lead to a Denial of Service (DoS)."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-8r5v-vm4m-4g25",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Resource exhaustion vulnerability in h2 may lead to Denial of Service (DoS)"
+              },
+              "fullDescription": {
+                "text": "An attacker with an HTTP/2 connection to an affected endpoint can send a steady stream of invalid frames to force the\ngeneration of reset frames on the victim endpoint.\nBy closing their recv window, the attacker could then force these resets to be queued in an unbounded fashion,\nresulting in Out Of Memory (OOM) and high CPU usage.\n\nThis fix is corrected in [hyperium/h2#737](https://github.com/hyperium/h2/pull/737), which limits the total number of\ninternal error resets emitted by default before the connection is closed.\n"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-8r5v-vm4m-4g25",
+              "help": {
+                "text": "Vulnerability GHSA-8r5v-vm4m-4g25\nSeverity: MEDIUM\nPackage: h2\nFixed Version: 0.3.24, 0.4.2\nLink: [GHSA-8r5v-vm4m-4g25](https://github.com/advisories/GHSA-8r5v-vm4m-4g25)\nAn attacker with an HTTP/2 connection to an affected endpoint can send a steady stream of invalid frames to force the\ngeneration of reset frames on the victim endpoint.\nBy closing their recv window, the attacker could then force these resets to be queued in an unbounded fashion,\nresulting in Out Of Memory (OOM) and high CPU usage.\n\nThis fix is corrected in [hyperium/h2#737](https://github.com/hyperium/h2/pull/737), which limits the total number of\ninternal error resets emitted by default before the connection is closed.\n",
+                "markdown": "**Vulnerability GHSA-8r5v-vm4m-4g25**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|h2|0.3.24, 0.4.2|[GHSA-8r5v-vm4m-4g25](https://github.com/advisories/GHSA-8r5v-vm4m-4g25)|\n\nAn attacker with an HTTP/2 connection to an affected endpoint can send a steady stream of invalid frames to force the\ngeneration of reset frames on the victim endpoint.\nBy closing their recv window, the attacker could then force these resets to be queued in an unbounded fashion,\nresulting in Out Of Memory (OOM) and high CPU usage.\n\nThis fix is corrected in [hyperium/h2#737](https://github.com/hyperium/h2/pull/737), which limits the total number of\ninternal error resets emitted by default before the connection is closed.\n"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-q6cp-qfwq-4gcv",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "h2 servers vulnerable to degradation of service with CONTINUATION Flood"
+              },
+              "fullDescription": {
+                "text": "An attacker can send a flood of CONTINUATION frames, causing `h2` to process them indefinitely. This results in an increase in CPU usage.\n\nTokio task budget helps prevent this from a complete denial-of-service, as the server can still respond to legitimate requests, albeit with increased latency.\n\nMore details at https://seanmonstar.com/blog/hyper-http2-continuation-flood/.\n\nPatches available for 0.4.x and 0.3.x versions.\n"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-q6cp-qfwq-4gcv",
+              "help": {
+                "text": "Vulnerability GHSA-q6cp-qfwq-4gcv\nSeverity: MEDIUM\nPackage: h2\nFixed Version: 0.3.26, 0.4.4\nLink: [GHSA-q6cp-qfwq-4gcv](https://github.com/advisories/GHSA-q6cp-qfwq-4gcv)\nAn attacker can send a flood of CONTINUATION frames, causing `h2` to process them indefinitely. This results in an increase in CPU usage.\n\nTokio task budget helps prevent this from a complete denial-of-service, as the server can still respond to legitimate requests, albeit with increased latency.\n\nMore details at https://seanmonstar.com/blog/hyper-http2-continuation-flood/.\n\nPatches available for 0.4.x and 0.3.x versions.\n",
+                "markdown": "**Vulnerability GHSA-q6cp-qfwq-4gcv**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|h2|0.3.26, 0.4.4|[GHSA-q6cp-qfwq-4gcv](https://github.com/advisories/GHSA-q6cp-qfwq-4gcv)|\n\nAn attacker can send a flood of CONTINUATION frames, causing `h2` to process them indefinitely. This results in an increase in CPU usage.\n\nTokio task budget helps prevent this from a complete denial-of-service, as the server can still respond to legitimate requests, albeit with increased latency.\n\nMore details at https://seanmonstar.com/blog/hyper-http2-continuation-flood/.\n\nPatches available for 0.4.x and 0.3.x versions.\n"
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-12224",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "idna: idna accepts Punycode labels that do not produce any non-ASCII when decoded"
+              },
+              "fullDescription": {
+                "text": "Improper Validation of Unsafe Equivalence in punycode by the idna crate from Servo rust-url allows an attacker to create a punycode hostname that one part of a system might treat as distinct while another part of that system would treat as equivalent to another hostname."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-12224",
+              "help": {
+                "text": "Vulnerability CVE-2024-12224\nSeverity: MEDIUM\nPackage: idna\nFixed Version: 1.0.0\nLink: [CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)\nImproper Validation of Unsafe Equivalence in punycode by the idna crate from Servo rust-url allows an attacker to create a punycode hostname that one part of a system might treat as distinct while another part of that system would treat as equivalent to another hostname.",
+                "markdown": "**Vulnerability CVE-2024-12224**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|idna|1.0.0|[CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)|\n\nImproper Validation of Unsafe Equivalence in punycode by the idna crate from Servo rust-url allows an attacker to create a punycode hostname that one part of a system might treat as distinct while another part of that system would treat as equivalent to another hostname."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-rhfx-m35p-ff5j",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "`IterMut` violates Stacked Borrows by invalidating internal pointer"
+              },
+              "fullDescription": {
+                "text": "Affected versions of this crate contain a soundness issue in the `IterMut` iterator implementation. The `IterMut::next` and `IterMut::next_back` methods temporarily create an exclusive reference to the key when dereferencing the internal node pointer.\n\nThis invalidates the shared pointer held by the internal `HashMap`, violating Stacked Borrows rules."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-rhfx-m35p-ff5j",
+              "help": {
+                "text": "Vulnerability GHSA-rhfx-m35p-ff5j\nSeverity: LOW\nPackage: lru\nFixed Version: 0.16.3\nLink: [GHSA-rhfx-m35p-ff5j](https://github.com/advisories/GHSA-rhfx-m35p-ff5j)\nAffected versions of this crate contain a soundness issue in the `IterMut` iterator implementation. The `IterMut::next` and `IterMut::next_back` methods temporarily create an exclusive reference to the key when dereferencing the internal node pointer.\n\nThis invalidates the shared pointer held by the internal `HashMap`, violating Stacked Borrows rules.",
+                "markdown": "**Vulnerability GHSA-rhfx-m35p-ff5j**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|lru|0.16.3|[GHSA-rhfx-m35p-ff5j](https://github.com/advisories/GHSA-rhfx-m35p-ff5j)|\n\nAffected versions of this crate contain a soundness issue in the `IterMut` iterator implementation. The `IterMut::next` and `IterMut::next_back` methods temporarily create an exclusive reference to the key when dereferencing the internal node pointer.\n\nThis invalidates the shared pointer held by the internal `HashMap`, violating Stacked Borrows rules."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-27308",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "CVE-2024-27308 affecting package rpm-ostree for versions less than 2024.4-1"
+              },
+              "fullDescription": {
+                "text": "Mio is a Metal I/O library for Rust. When using named pipes on Windows, mio will under some circumstances return invalid tokens that correspond to named pipes that have already been deregistered from the mio registry. The impact of this vulnerability depends on how mio is used. For some applications, invalid tokens may be ignored or cause a warning or a crash. On the other hand, for applications that store pointers in the tokens, this vulnerability may result in a use-after-free. For users of Tokio, this vulnerability is serious and can result in a use-after-free in Tokio. The vulnerability is Windows-specific, and can only happen if you are using named pipes. Other IO resources are not affected. This vulnerability has been fixed in mio v0.8.11. All versions of mio between v0.7.2 and v0.8.10 are vulnerable. Tokio is vulnerable when you are using a vulnerable version of mio AND you are using at least Tokio v1.30.0. Versions of Tokio prior to v1.30.0 will ignore invalid tokens, so they are not vulnerable. Vulnerable libraries that use mio can work around this issue by detecting and ignoring invalid tokens."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-27308",
+              "help": {
+                "text": "Vulnerability CVE-2024-27308\nSeverity: HIGH\nPackage: mio\nFixed Version: 0.8.11\nLink: [CVE-2024-27308](https://avd.aquasec.com/nvd/cve-2024-27308)\nMio is a Metal I/O library for Rust. When using named pipes on Windows, mio will under some circumstances return invalid tokens that correspond to named pipes that have already been deregistered from the mio registry. The impact of this vulnerability depends on how mio is used. For some applications, invalid tokens may be ignored or cause a warning or a crash. On the other hand, for applications that store pointers in the tokens, this vulnerability may result in a use-after-free. For users of Tokio, this vulnerability is serious and can result in a use-after-free in Tokio. The vulnerability is Windows-specific, and can only happen if you are using named pipes. Other IO resources are not affected. This vulnerability has been fixed in mio v0.8.11. All versions of mio between v0.7.2 and v0.8.10 are vulnerable. Tokio is vulnerable when you are using a vulnerable version of mio AND you are using at least Tokio v1.30.0. Versions of Tokio prior to v1.30.0 will ignore invalid tokens, so they are not vulnerable. Vulnerable libraries that use mio can work around this issue by detecting and ignoring invalid tokens.",
+                "markdown": "**Vulnerability CVE-2024-27308**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|mio|0.8.11|[CVE-2024-27308](https://avd.aquasec.com/nvd/cve-2024-27308)|\n\nMio is a Metal I/O library for Rust. When using named pipes on Windows, mio will under some circumstances return invalid tokens that correspond to named pipes that have already been deregistered from the mio registry. The impact of this vulnerability depends on how mio is used. For some applications, invalid tokens may be ignored or cause a warning or a crash. On the other hand, for applications that store pointers in the tokens, this vulnerability may result in a use-after-free. For users of Tokio, this vulnerability is serious and can result in a use-after-free in Tokio. The vulnerability is Windows-specific, and can only happen if you are using named pipes. Other IO resources are not affected. This vulnerability has been fixed in mio v0.8.11. All versions of mio between v0.7.2 and v0.8.10 are vulnerable. Tokio is vulnerable when you are using a vulnerable version of mio AND you are using at least Tokio v1.30.0. Versions of Tokio prior to v1.30.0 will ignore invalid tokens, so they are not vulnerable. Vulnerable libraries that use mio can work around this issue by detecting and ignoring invalid tokens."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41676",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming langua ..."
+              },
+              "fullDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.9.27 to before 0.10.78, Deriver::derive (and PkeyCtxRef::derive) sets len = buf.len() and passes it as the in/out length to EVP_PKEY_derive, relying on OpenSSL to honor it. On OpenSSL 1.1.x, X25519, X448, DH and HKDF-extract ignore the incoming *keylen, unconditionally writing the full shared secret (32/56/prime-size bytes). A caller passing a short slice gets a heap/stack overflow from safe code. OpenSSL 3.x providers do check, so this only impacts older OpenSSL. This vulnerability is fixed in 0.10.78."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41676",
+              "help": {
+                "text": "Vulnerability CVE-2026-41676\nSeverity: HIGH\nPackage: openssl\nFixed Version: 0.10.78\nLink: [CVE-2026-41676](https://avd.aquasec.com/nvd/cve-2026-41676)\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.9.27 to before 0.10.78, Deriver::derive (and PkeyCtxRef::derive) sets len = buf.len() and passes it as the in/out length to EVP_PKEY_derive, relying on OpenSSL to honor it. On OpenSSL 1.1.x, X25519, X448, DH and HKDF-extract ignore the incoming *keylen, unconditionally writing the full shared secret (32/56/prime-size bytes). A caller passing a short slice gets a heap/stack overflow from safe code. OpenSSL 3.x providers do check, so this only impacts older OpenSSL. This vulnerability is fixed in 0.10.78.",
+                "markdown": "**Vulnerability CVE-2026-41676**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|openssl|0.10.78|[CVE-2026-41676](https://avd.aquasec.com/nvd/cve-2026-41676)|\n\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.9.27 to before 0.10.78, Deriver::derive (and PkeyCtxRef::derive) sets len = buf.len() and passes it as the in/out length to EVP_PKEY_derive, relying on OpenSSL to honor it. On OpenSSL 1.1.x, X25519, X448, DH and HKDF-extract ignore the incoming *keylen, unconditionally writing the full shared secret (32/56/prime-size bytes). A caller passing a short slice gets a heap/stack overflow from safe code. OpenSSL 3.x providers do check, so this only impacts older OpenSSL. This vulnerability is fixed in 0.10.78."
+              },
+              "properties": {
+                "cvssv40_baseScore": 7.2,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41678",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming langua ..."
+              },
+              "fullDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming language.  From  to before 0.10.78, aes::unwrap_key() contains an incorrect assertion: it checks that out.len() + 8 \u003c= in_.len(), but this condition is reversed. The intended invariant is out.len() \u003e= in_.len() - 8, ensuring the output buffer is large enough. Because of the inverted check, the function only accepts buffers at or below the minimum required size and rejects larger ones. If a smaller buffer is provided the function will write past the end of out by in_.len() - 8 - out.len() bytes, causing an out-of-bounds write from a safe public function. This vulnerability is fixed in 0.10.78."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41678",
+              "help": {
+                "text": "Vulnerability CVE-2026-41678\nSeverity: HIGH\nPackage: openssl\nFixed Version: 0.10.78\nLink: [CVE-2026-41678](https://avd.aquasec.com/nvd/cve-2026-41678)\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From  to before 0.10.78, aes::unwrap_key() contains an incorrect assertion: it checks that out.len() + 8 \u003c= in_.len(), but this condition is reversed. The intended invariant is out.len() \u003e= in_.len() - 8, ensuring the output buffer is large enough. Because of the inverted check, the function only accepts buffers at or below the minimum required size and rejects larger ones. If a smaller buffer is provided the function will write past the end of out by in_.len() - 8 - out.len() bytes, causing an out-of-bounds write from a safe public function. This vulnerability is fixed in 0.10.78.",
+                "markdown": "**Vulnerability CVE-2026-41678**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|openssl|0.10.78|[CVE-2026-41678](https://avd.aquasec.com/nvd/cve-2026-41678)|\n\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From  to before 0.10.78, aes::unwrap_key() contains an incorrect assertion: it checks that out.len() + 8 \u003c= in_.len(), but this condition is reversed. The intended invariant is out.len() \u003e= in_.len() - 8, ensuring the output buffer is large enough. Because of the inverted check, the function only accepts buffers at or below the minimum required size and rejects larger ones. If a smaller buffer is provided the function will write past the end of out by in_.len() - 8 - out.len() bytes, causing an out-of-bounds write from a safe public function. This vulnerability is fixed in 0.10.78."
+              },
+              "properties": {
+                "cvssv40_baseScore": 7.2,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41681",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming langua ..."
+              },
+              "fullDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.10.39 to before 0.10.78, EVP_DigestFinal() always writes EVP_MD_CTX_size(ctx) to the out buffer. If out is smaller than that, MdCtxRef::digest_final() writes past its end, usually corrupting the stack. This is reachable from safe Rust. This vulnerability is fixed in 0.10.78."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41681",
+              "help": {
+                "text": "Vulnerability CVE-2026-41681\nSeverity: HIGH\nPackage: openssl\nFixed Version: 0.10.78\nLink: [CVE-2026-41681](https://avd.aquasec.com/nvd/cve-2026-41681)\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.10.39 to before 0.10.78, EVP_DigestFinal() always writes EVP_MD_CTX_size(ctx) to the out buffer. If out is smaller than that, MdCtxRef::digest_final() writes past its end, usually corrupting the stack. This is reachable from safe Rust. This vulnerability is fixed in 0.10.78.",
+                "markdown": "**Vulnerability CVE-2026-41681**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|openssl|0.10.78|[CVE-2026-41681](https://avd.aquasec.com/nvd/cve-2026-41681)|\n\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.10.39 to before 0.10.78, EVP_DigestFinal() always writes EVP_MD_CTX_size(ctx) to the out buffer. If out is smaller than that, MdCtxRef::digest_final() writes past its end, usually corrupting the stack. This is reachable from safe Rust. This vulnerability is fixed in 0.10.78."
+              },
+              "properties": {
+                "cvssv40_baseScore": 8.1,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41898",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming langua ..."
+              },
+              "fullDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.9.24 to before 0.10.78, the FFI trampolines behind SslContextBuilder::set_psk_client_callback, set_psk_server_callback, set_cookie_generate_cb, and set_stateless_cookie_generate_cb forwarded the user closure's returned usize directly to OpenSSL without checking it against the \u0026mut [u8] that was handed to the closure. This can lead to buffer overflows and other unintended consequences. This vulnerability is fixed in 0.10.78."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41898",
+              "help": {
+                "text": "Vulnerability CVE-2026-41898\nSeverity: HIGH\nPackage: openssl\nFixed Version: 0.10.78\nLink: [CVE-2026-41898](https://avd.aquasec.com/nvd/cve-2026-41898)\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.9.24 to before 0.10.78, the FFI trampolines behind SslContextBuilder::set_psk_client_callback, set_psk_server_callback, set_cookie_generate_cb, and set_stateless_cookie_generate_cb forwarded the user closure's returned usize directly to OpenSSL without checking it against the \u0026mut [u8] that was handed to the closure. This can lead to buffer overflows and other unintended consequences. This vulnerability is fixed in 0.10.78.",
+                "markdown": "**Vulnerability CVE-2026-41898**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|openssl|0.10.78|[CVE-2026-41898](https://avd.aquasec.com/nvd/cve-2026-41898)|\n\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.9.24 to before 0.10.78, the FFI trampolines behind SslContextBuilder::set_psk_client_callback, set_psk_server_callback, set_cookie_generate_cb, and set_stateless_cookie_generate_cb forwarded the user closure's returned usize directly to OpenSSL without checking it against the \u0026mut [u8] that was handed to the closure. This can lead to buffer overflows and other unintended consequences. This vulnerability is fixed in 0.10.78."
+              },
+              "properties": {
+                "cvssv40_baseScore": 8.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:N/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-6hcf-g6gr-hhcr",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "`openssl` `X509Extension::new` and `X509Extension::new_nid` null pointer dereference"
+              },
+              "fullDescription": {
+                "text": "These functions would crash when the context argument was None with certain extension types.\n\nThanks to David Benjamin (Google) for reporting this issue.\n"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-6hcf-g6gr-hhcr",
+              "help": {
+                "text": "Vulnerability GHSA-6hcf-g6gr-hhcr\nSeverity: HIGH\nPackage: openssl\nFixed Version: 0.10.48\nLink: [GHSA-6hcf-g6gr-hhcr](https://github.com/advisories/GHSA-6hcf-g6gr-hhcr)\nThese functions would crash when the context argument was None with certain extension types.\n\nThanks to David Benjamin (Google) for reporting this issue.\n",
+                "markdown": "**Vulnerability GHSA-6hcf-g6gr-hhcr**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|openssl|0.10.48|[GHSA-6hcf-g6gr-hhcr](https://github.com/advisories/GHSA-6hcf-g6gr-hhcr)|\n\nThese functions would crash when the context argument was None with certain extension types.\n\nThanks to David Benjamin (Google) for reporting this issue.\n"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-9qwg-crg9-m2vc",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "`openssl` `SubjectAlternativeName` and `ExtendedKeyUsage::other` allow arbitrary file read"
+              },
+              "fullDescription": {
+                "text": "`SubjectAlternativeName` and `ExtendedKeyUsage` arguments were parsed using the OpenSSL function `X509V3_EXT_nconf`. This function parses all input using an OpenSSL mini-language which can perform arbitrary file reads.\n\nThanks to David Benjamin (Google) for reporting this issue.\n"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-9qwg-crg9-m2vc",
+              "help": {
+                "text": "Vulnerability GHSA-9qwg-crg9-m2vc\nSeverity: HIGH\nPackage: openssl\nFixed Version: 0.10.48\nLink: [GHSA-9qwg-crg9-m2vc](https://github.com/advisories/GHSA-9qwg-crg9-m2vc)\n`SubjectAlternativeName` and `ExtendedKeyUsage` arguments were parsed using the OpenSSL function `X509V3_EXT_nconf`. This function parses all input using an OpenSSL mini-language which can perform arbitrary file reads.\n\nThanks to David Benjamin (Google) for reporting this issue.\n",
+                "markdown": "**Vulnerability GHSA-9qwg-crg9-m2vc**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|openssl|0.10.48|[GHSA-9qwg-crg9-m2vc](https://github.com/advisories/GHSA-9qwg-crg9-m2vc)|\n\n`SubjectAlternativeName` and `ExtendedKeyUsage` arguments were parsed using the OpenSSL function `X509V3_EXT_nconf`. This function parses all input using an OpenSSL mini-language which can perform arbitrary file reads.\n\nThanks to David Benjamin (Google) for reporting this issue.\n"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2023-53159",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "openssl: OpenSSL: Out-of-bounds Read Vulnerability"
+              },
+              "fullDescription": {
+                "text": "The openssl crate before 0.10.55 for Rust allows an out-of-bounds read via an empty string to X509VerifyParamRef::set_host."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2023-53159",
+              "help": {
+                "text": "Vulnerability CVE-2023-53159\nSeverity: MEDIUM\nPackage: openssl\nFixed Version: 0.10.55\nLink: [CVE-2023-53159](https://avd.aquasec.com/nvd/cve-2023-53159)\nThe openssl crate before 0.10.55 for Rust allows an out-of-bounds read via an empty string to X509VerifyParamRef::set_host.",
+                "markdown": "**Vulnerability CVE-2023-53159**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|openssl|0.10.55|[CVE-2023-53159](https://avd.aquasec.com/nvd/cve-2023-53159)|\n\nThe openssl crate before 0.10.55 for Rust allows an out-of-bounds read via an empty string to X509VerifyParamRef::set_host."
+              },
+              "properties": {
+                "cvssv3_baseScore": 4.5,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:H/PR:N/UI:N/S:C/C:L/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "4.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-24898",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl: rust openssl ssl::select_next_proto use after free"
+              },
+              "fullDescription": {
+                "text": "rust-openssl is a set of OpenSSL bindings for the Rust programming language. In affected versions `ssl::select_next_proto` can return a slice pointing into the `server` argument's buffer but with a lifetime bound to the `client` argument. In situations where the `sever` buffer's lifetime is shorter than the `client` buffer's, this can cause a use after free. This could cause the server to crash or to return arbitrary memory contents to the client. The crate`openssl` version 0.10.70 fixes the signature of `ssl::select_next_proto` to properly constrain the output buffer's lifetime to that of both input buffers. Users are advised to upgrade. In standard usage of `ssl::select_next_proto` in the callback passed to `SslContextBuilder::set_alpn_select_callback`, code is only affected if the `server` buffer is constructed *within* the callback."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-24898",
+              "help": {
+                "text": "Vulnerability CVE-2025-24898\nSeverity: MEDIUM\nPackage: openssl\nFixed Version: 0.10.70\nLink: [CVE-2025-24898](https://avd.aquasec.com/nvd/cve-2025-24898)\nrust-openssl is a set of OpenSSL bindings for the Rust programming language. In affected versions `ssl::select_next_proto` can return a slice pointing into the `server` argument's buffer but with a lifetime bound to the `client` argument. In situations where the `sever` buffer's lifetime is shorter than the `client` buffer's, this can cause a use after free. This could cause the server to crash or to return arbitrary memory contents to the client. The crate`openssl` version 0.10.70 fixes the signature of `ssl::select_next_proto` to properly constrain the output buffer's lifetime to that of both input buffers. Users are advised to upgrade. In standard usage of `ssl::select_next_proto` in the callback passed to `SslContextBuilder::set_alpn_select_callback`, code is only affected if the `server` buffer is constructed *within* the callback.",
+                "markdown": "**Vulnerability CVE-2025-24898**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|openssl|0.10.70|[CVE-2025-24898](https://avd.aquasec.com/nvd/cve-2025-24898)|\n\nrust-openssl is a set of OpenSSL bindings for the Rust programming language. In affected versions `ssl::select_next_proto` can return a slice pointing into the `server` argument's buffer but with a lifetime bound to the `client` argument. In situations where the `sever` buffer's lifetime is shorter than the `client` buffer's, this can cause a use after free. This could cause the server to crash or to return arbitrary memory contents to the client. The crate`openssl` version 0.10.70 fixes the signature of `ssl::select_next_proto` to properly constrain the output buffer's lifetime to that of both input buffers. Users are advised to upgrade. In standard usage of `ssl::select_next_proto` in the callback passed to `SslContextBuilder::set_alpn_select_callback`, code is only affected if the `server` buffer is constructed *within* the callback."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:L/VI:N/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44662",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming langua ..."
+              },
+              "fullDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming language. From 0.10.0 to before 0.10.79, CipherCtxRef::cipher_update, CipherCtxRef::cipher_update_vec, and symm::Crypter::update incorrectly sized output buffers when used with AES key-wrap-with-padding ciphers (EVP_aes_{128,192,256}_wrap_pad). For a non-multiple-of-8 input, OpenSSL writes up to 7 bytes past the end of the caller's buffer or Vec, producing attacker-controllable heap corruption when the plaintext length is attacker-influenced. This only impacts users using AES key-wrap-with-padding ciphers. This vulnerability is fixed in 0.10.79."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44662",
+              "help": {
+                "text": "Vulnerability CVE-2026-44662\nSeverity: MEDIUM\nPackage: openssl\nFixed Version: 0.10.79\nLink: [CVE-2026-44662](https://avd.aquasec.com/nvd/cve-2026-44662)\nrust-openssl provides OpenSSL bindings for the Rust programming language. From 0.10.0 to before 0.10.79, CipherCtxRef::cipher_update, CipherCtxRef::cipher_update_vec, and symm::Crypter::update incorrectly sized output buffers when used with AES key-wrap-with-padding ciphers (EVP_aes_{128,192,256}_wrap_pad). For a non-multiple-of-8 input, OpenSSL writes up to 7 bytes past the end of the caller's buffer or Vec, producing attacker-controllable heap corruption when the plaintext length is attacker-influenced. This only impacts users using AES key-wrap-with-padding ciphers. This vulnerability is fixed in 0.10.79.",
+                "markdown": "**Vulnerability CVE-2026-44662**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|openssl|0.10.79|[CVE-2026-44662](https://avd.aquasec.com/nvd/cve-2026-44662)|\n\nrust-openssl provides OpenSSL bindings for the Rust programming language. From 0.10.0 to before 0.10.79, CipherCtxRef::cipher_update, CipherCtxRef::cipher_update_vec, and symm::Crypter::update incorrectly sized output buffers when used with AES key-wrap-with-padding ciphers (EVP_aes_{128,192,256}_wrap_pad). For a non-multiple-of-8 input, OpenSSL writes up to 7 bytes past the end of the caller's buffer or Vec, producing attacker-controllable heap corruption when the plaintext length is attacker-influenced. This only impacts users using AES key-wrap-with-padding ciphers. This vulnerability is fixed in 0.10.79."
+              },
+              "properties": {
+                "cvssv40_baseScore": 5.1,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-3gxf-9r58-2ghg",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "`openssl` `X509NameBuilder::build` returned object is not thread safe"
+              },
+              "fullDescription": {
+                "text": "OpenSSL has a `modified` bit that it can set on on `X509_NAME` objects. If this bit is set then the object is not thread-safe even when it appears the code is not modifying the value.\n\nThanks to David Benjamin (Google) for reporting this issue.\n"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-3gxf-9r58-2ghg",
+              "help": {
+                "text": "Vulnerability GHSA-3gxf-9r58-2ghg\nSeverity: MEDIUM\nPackage: openssl\nFixed Version: 0.10.48\nLink: [GHSA-3gxf-9r58-2ghg](https://github.com/advisories/GHSA-3gxf-9r58-2ghg)\nOpenSSL has a `modified` bit that it can set on on `X509_NAME` objects. If this bit is set then the object is not thread-safe even when it appears the code is not modifying the value.\n\nThanks to David Benjamin (Google) for reporting this issue.\n",
+                "markdown": "**Vulnerability GHSA-3gxf-9r58-2ghg**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|openssl|0.10.48|[GHSA-3gxf-9r58-2ghg](https://github.com/advisories/GHSA-3gxf-9r58-2ghg)|\n\nOpenSSL has a `modified` bit that it can set on on `X509_NAME` objects. If this bit is set then the object is not thread-safe even when it appears the code is not modifying the value.\n\nThanks to David Benjamin (Google) for reporting this issue.\n"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-4fcv-w3qc-ppgg",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl Use-After-Free in `Md::fetch` and `Cipher::fetch`"
+              },
+              "fullDescription": {
+                "text": "When a `Some(...)` value was passed to the `properties` argument of either of these functions, a use-after-free would result.\n\nIn practice this would nearly always result in OpenSSL treating the properties as an empty string (due to `CString::drop`'s behavior).\n\nThe maintainers thank [quitbug](https://github.com/quitbug/) for reporting this vulnerability to us."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-4fcv-w3qc-ppgg",
+              "help": {
+                "text": "Vulnerability GHSA-4fcv-w3qc-ppgg\nSeverity: MEDIUM\nPackage: openssl\nFixed Version: 0.10.72\nLink: [GHSA-4fcv-w3qc-ppgg](https://github.com/advisories/GHSA-4fcv-w3qc-ppgg)\nWhen a `Some(...)` value was passed to the `properties` argument of either of these functions, a use-after-free would result.\n\nIn practice this would nearly always result in OpenSSL treating the properties as an empty string (due to `CString::drop`'s behavior).\n\nThe maintainers thank [quitbug](https://github.com/quitbug/) for reporting this vulnerability to us.",
+                "markdown": "**Vulnerability GHSA-4fcv-w3qc-ppgg**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|openssl|0.10.72|[GHSA-4fcv-w3qc-ppgg](https://github.com/advisories/GHSA-4fcv-w3qc-ppgg)|\n\nWhen a `Some(...)` value was passed to the `properties` argument of either of these functions, a use-after-free would result.\n\nIn practice this would nearly always result in OpenSSL treating the properties as an empty string (due to `CString::drop`'s behavior).\n\nThe maintainers thank [quitbug](https://github.com/quitbug/) for reporting this vulnerability to us."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-q445-7m23-qrmw",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "openssl's `MemBio::get_buf` has undefined behavior with empty buffers"
+              },
+              "fullDescription": {
+                "text": "Previously, `MemBio::get_buf` called `slice::from_raw_parts` with a null-pointer, which violates the functions invariants, leading to undefined behavior. In debug builds this would produce an assertion failure. This is now fixed.\n"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-q445-7m23-qrmw",
+              "help": {
+                "text": "Vulnerability GHSA-q445-7m23-qrmw\nSeverity: MEDIUM\nPackage: openssl\nFixed Version: 0.10.66\nLink: [GHSA-q445-7m23-qrmw](https://github.com/advisories/GHSA-q445-7m23-qrmw)\nPreviously, `MemBio::get_buf` called `slice::from_raw_parts` with a null-pointer, which violates the functions invariants, leading to undefined behavior. In debug builds this would produce an assertion failure. This is now fixed.\n",
+                "markdown": "**Vulnerability GHSA-q445-7m23-qrmw**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|openssl|0.10.66|[GHSA-q445-7m23-qrmw](https://github.com/advisories/GHSA-q445-7m23-qrmw)|\n\nPreviously, `MemBio::get_buf` called `slice::from_raw_parts` with a null-pointer, which violates the functions invariants, leading to undefined behavior. In debug builds this would produce an assertion failure. This is now fixed.\n"
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L",
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-xphf-cx8h-7q9g",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "`openssl` `X509StoreRef::objects` is unsound"
+              },
+              "fullDescription": {
+                "text": "This function returned a reference into an OpenSSL datastructure, but there was no way to ensure OpenSSL would not mutate the datastructure behind one's back.\n\nUse of this function should be replaced with `X509StoreRef::all_certificates`.\n"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-xphf-cx8h-7q9g",
+              "help": {
+                "text": "Vulnerability GHSA-xphf-cx8h-7q9g\nSeverity: MEDIUM\nPackage: openssl\nFixed Version: 0.10.60\nLink: [GHSA-xphf-cx8h-7q9g](https://github.com/advisories/GHSA-xphf-cx8h-7q9g)\nThis function returned a reference into an OpenSSL datastructure, but there was no way to ensure OpenSSL would not mutate the datastructure behind one's back.\n\nUse of this function should be replaced with `X509StoreRef::all_certificates`.\n",
+                "markdown": "**Vulnerability GHSA-xphf-cx8h-7q9g**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|openssl|0.10.60|[GHSA-xphf-cx8h-7q9g](https://github.com/advisories/GHSA-xphf-cx8h-7q9g)|\n\nThis function returned a reference into an OpenSSL datastructure, but there was no way to ensure OpenSSL would not mutate the datastructure behind one's back.\n\nUse of this function should be replaced with `X509StoreRef::all_certificates`.\n"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41677",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming langua ..."
+              },
+              "fullDescription": {
+                "text": "rust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.9.0 to before 0.10.78, the *_from_pem_callback APIs did not validate the length returned by the user's callback. A password callback that returns a value larger than the buffer it was given can cause some versions of OpenSSL to over-read this buffer. OpenSSL 3.x is not affected by this. This vulnerability is fixed in 0.10.78."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41677",
+              "help": {
+                "text": "Vulnerability CVE-2026-41677\nSeverity: LOW\nPackage: openssl\nFixed Version: 0.10.78\nLink: [CVE-2026-41677](https://avd.aquasec.com/nvd/cve-2026-41677)\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.9.0 to before 0.10.78, the *_from_pem_callback APIs did not validate the length returned by the user's callback. A password callback that returns a value larger than the buffer it was given can cause some versions of OpenSSL to over-read this buffer. OpenSSL 3.x is not affected by this. This vulnerability is fixed in 0.10.78.",
+                "markdown": "**Vulnerability CVE-2026-41677**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|openssl|0.10.78|[CVE-2026-41677](https://avd.aquasec.com/nvd/cve-2026-41677)|\n\nrust-openssl provides OpenSSL bindings for the Rust programming language.  From 0.9.0 to before 0.10.78, the *_from_pem_callback APIs did not validate the length returned by the user's callback. A password callback that returns a value larger than the buffer it was given can cause some versions of OpenSSL to over-read this buffer. OpenSSL 3.x is not affected by this. This vulnerability is fixed in 0.10.78."
+              },
+              "properties": {
+                "cvssv40_baseScore": 1.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:L/VI:N/VA:L/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-cq8v-f236-94qc",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Rand is unsound with a custom logger using rand::rng()"
+              },
+              "fullDescription": {
+                "text": "It has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-cq8v-f236-94qc",
+              "help": {
+                "text": "Vulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nPackage: rand\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)\nIt has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict.",
+                "markdown": "**Vulnerability GHSA-cq8v-f236-94qc**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rand|0.9.3, 0.10.1, 0.8.6|[GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)|\n\nIt has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-43806",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Rustix is a set of safe Rust bindings to POSIX-ish APIs. When using `r ..."
+              },
+              "fullDescription": {
+                "text": "Rustix is a set of safe Rust bindings to POSIX-ish APIs. When using `rustix::fs::Dir` using the `linux_raw` backend, it's possible for the iterator to \"get stuck\" when an IO error is encountered. Combined with a memory over-allocation issue in `rustix::fs::Dir::read_more`, this can cause quick and unbounded memory explosion (gigabytes in a few seconds if used on a hot path) and eventually lead to an OOM crash of the application. The symptoms were initially discovered in https://github.com/imsnif/bandwhich/issues/284. That post has lots of details of our investigation. Full details can be read on the GHSA-c827-hfw6-qwvm repo advisory. If a program tries to access a directory with its file descriptor after the file has been unlinked (or any other action that leaves the `Dir` iterator in the stuck state), and the implementation does not break after seeing an error, it can cause a memory explosion. As an example, Linux's various virtual file systems (e.g. `/proc`, `/sys`) can contain directories that spontaneously pop in and out of existence. Attempting to iterate over them using `rustix::fs::Dir` directly or indirectly (e.g. with the `procfs` crate) can trigger this fault condition if the implementation decides to continue on errors. An attacker knowledgeable about the implementation details of a vulnerable target can therefore try to trigger this fault condition via any one or a combination of several available APIs. If successful, the application host will quickly run out of memory, after which the application will likely be terminated by an OOM killer, leading to denial of service. This issue has been addressed in release versions 0.35.15, 0.36.16, 0.37.25, and 0.38.19. Users are advised to upgrade. There are no known workarounds for this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-43806",
+              "help": {
+                "text": "Vulnerability CVE-2024-43806\nSeverity: MEDIUM\nPackage: rustix\nFixed Version: 0.35.15, 0.36.16, 0.37.25, 0.38.19\nLink: [CVE-2024-43806](https://avd.aquasec.com/nvd/cve-2024-43806)\nRustix is a set of safe Rust bindings to POSIX-ish APIs. When using `rustix::fs::Dir` using the `linux_raw` backend, it's possible for the iterator to \"get stuck\" when an IO error is encountered. Combined with a memory over-allocation issue in `rustix::fs::Dir::read_more`, this can cause quick and unbounded memory explosion (gigabytes in a few seconds if used on a hot path) and eventually lead to an OOM crash of the application. The symptoms were initially discovered in https://github.com/imsnif/bandwhich/issues/284. That post has lots of details of our investigation. Full details can be read on the GHSA-c827-hfw6-qwvm repo advisory. If a program tries to access a directory with its file descriptor after the file has been unlinked (or any other action that leaves the `Dir` iterator in the stuck state), and the implementation does not break after seeing an error, it can cause a memory explosion. As an example, Linux's various virtual file systems (e.g. `/proc`, `/sys`) can contain directories that spontaneously pop in and out of existence. Attempting to iterate over them using `rustix::fs::Dir` directly or indirectly (e.g. with the `procfs` crate) can trigger this fault condition if the implementation decides to continue on errors. An attacker knowledgeable about the implementation details of a vulnerable target can therefore try to trigger this fault condition via any one or a combination of several available APIs. If successful, the application host will quickly run out of memory, after which the application will likely be terminated by an OOM killer, leading to denial of service. This issue has been addressed in release versions 0.35.15, 0.36.16, 0.37.25, and 0.38.19. Users are advised to upgrade. There are no known workarounds for this issue.",
+                "markdown": "**Vulnerability CVE-2024-43806**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|rustix|0.35.15, 0.36.16, 0.37.25, 0.38.19|[CVE-2024-43806](https://avd.aquasec.com/nvd/cve-2024-43806)|\n\nRustix is a set of safe Rust bindings to POSIX-ish APIs. When using `rustix::fs::Dir` using the `linux_raw` backend, it's possible for the iterator to \"get stuck\" when an IO error is encountered. Combined with a memory over-allocation issue in `rustix::fs::Dir::read_more`, this can cause quick and unbounded memory explosion (gigabytes in a few seconds if used on a hot path) and eventually lead to an OOM crash of the application. The symptoms were initially discovered in https://github.com/imsnif/bandwhich/issues/284. That post has lots of details of our investigation. Full details can be read on the GHSA-c827-hfw6-qwvm repo advisory. If a program tries to access a directory with its file descriptor after the file has been unlinked (or any other action that leaves the `Dir` iterator in the stuck state), and the implementation does not break after seeing an error, it can cause a memory explosion. As an example, Linux's various virtual file systems (e.g. `/proc`, `/sys`) can contain directories that spontaneously pop in and out of existence. Attempting to iterate over them using `rustix::fs::Dir` directly or indirectly (e.g. with the `procfs` crate) can trigger this fault condition if the implementation decides to continue on errors. An attacker knowledgeable about the implementation details of a vulnerable target can therefore try to trigger this fault condition via any one or a combination of several available APIs. If successful, the application host will quickly run out of memory, after which the application will likely be terminated by an OOM killer, leading to denial of service. This issue has been addressed in release versions 0.35.15, 0.36.16, 0.37.25, and 0.38.19. Users are advised to upgrade. There are no known workarounds for this issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-25727",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "time: time affected by a stack exhaustion denial of service attack"
+              },
+              "fullDescription": {
+                "text": "time provides date and time handling in Rust. From 0.3.6 to before 0.3.47, when user-provided input is provided to any type that parses with the RFC 2822 format, a denial of service attack via stack exhaustion is possible. The attack relies on formally deprecated and rarely-used features that are part of the RFC 2822 format used in a malicious manner. Ordinary, non-malicious input will never encounter this scenario. A limit to the depth of recursion was added in v0.3.47. From this version, an error will be returned rather than exhausting the stack."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-25727",
+              "help": {
+                "text": "Vulnerability CVE-2026-25727\nSeverity: MEDIUM\nPackage: time\nFixed Version: 0.3.47\nLink: [CVE-2026-25727](https://avd.aquasec.com/nvd/cve-2026-25727)\ntime provides date and time handling in Rust. From 0.3.6 to before 0.3.47, when user-provided input is provided to any type that parses with the RFC 2822 format, a denial of service attack via stack exhaustion is possible. The attack relies on formally deprecated and rarely-used features that are part of the RFC 2822 format used in a malicious manner. Ordinary, non-malicious input will never encounter this scenario. A limit to the depth of recursion was added in v0.3.47. From this version, an error will be returned rather than exhausting the stack.",
+                "markdown": "**Vulnerability CVE-2026-25727**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|time|0.3.47|[CVE-2026-25727](https://avd.aquasec.com/nvd/cve-2026-25727)|\n\ntime provides date and time handling in Rust. From 0.3.6 to before 0.3.47, when user-provided input is provided to any type that parses with the RFC 2822 format, a denial of service attack via stack exhaustion is possible. The attack relies on formally deprecated and rarely-used features that are part of the RFC 2822 format used in a malicious manner. Ordinary, non-malicious input will never encounter this scenario. A limit to the depth of recursion was added in v0.3.47. From this version, an error will be returned rather than exhausting the stack."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.8,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:L/UI:A/VC:N/VI:N/VA:H/SC:N/SI:N/SA:H",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-rr8g-9fpq-6wmg",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Tokio broadcast channel calls clone in parallel, but does not require `Sync`"
+              },
+              "fullDescription": {
+                "text": "The broadcast channel internally calls `clone` on the stored value when receiving it, and only requires `T:Send`. This means that using the broadcast channel with values that are `Send` but not `Sync` can trigger unsoundness if the `clone` implementation makes use of the value being `!Sync`.\n\nThank you to Austin Bonander for finding and reporting this issue."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-rr8g-9fpq-6wmg",
+              "help": {
+                "text": "Vulnerability GHSA-rr8g-9fpq-6wmg\nSeverity: LOW\nPackage: tokio\nFixed Version: 1.44.2, 1.38.2, 1.43.1\nLink: [GHSA-rr8g-9fpq-6wmg](https://github.com/advisories/GHSA-rr8g-9fpq-6wmg)\nThe broadcast channel internally calls `clone` on the stored value when receiving it, and only requires `T:Send`. This means that using the broadcast channel with values that are `Send` but not `Sync` can trigger unsoundness if the `clone` implementation makes use of the value being `!Sync`.\n\nThank you to Austin Bonander for finding and reporting this issue.",
+                "markdown": "**Vulnerability GHSA-rr8g-9fpq-6wmg**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|tokio|1.44.2, 1.38.2, 1.43.1|[GHSA-rr8g-9fpq-6wmg](https://github.com/advisories/GHSA-rr8g-9fpq-6wmg)|\n\nThe broadcast channel internally calls `clone` on the stored value when receiving it, and only requires `T:Send`. This means that using the broadcast channel with values that are `Send` but not `Sync` can trigger unsoundness if the `clone` implementation makes use of the value being `!Sync`.\n\nThank you to Austin Bonander for finding and reporting this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-58160",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "tracing-subscriber: Tracing log pollution"
+              },
+              "fullDescription": {
+                "text": "tracing is a framework for instrumenting Rust programs to collect structured, event-based diagnostic information. Prior to version 0.3.20, tracing-subscriber was vulnerable to ANSI escape sequence injection attacks. Untrusted user input containing ANSI escape sequences could be injected into terminal output when logged, potentially allowing attackers to manipulate terminal title bars, clear screens or modify terminal display, and potentially mislead users through terminal manipulation. tracing-subscriber version 0.3.20 fixes this vulnerability by escaping ANSI control characters when writing events to destinations that may be printed to the terminal. A workaround involves avoiding printing logs to terminal emulators without escaping ANSI control sequences."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-58160",
+              "help": {
+                "text": "Vulnerability CVE-2025-58160\nSeverity: LOW\nPackage: tracing-subscriber\nFixed Version: 0.3.20\nLink: [CVE-2025-58160](https://avd.aquasec.com/nvd/cve-2025-58160)\ntracing is a framework for instrumenting Rust programs to collect structured, event-based diagnostic information. Prior to version 0.3.20, tracing-subscriber was vulnerable to ANSI escape sequence injection attacks. Untrusted user input containing ANSI escape sequences could be injected into terminal output when logged, potentially allowing attackers to manipulate terminal title bars, clear screens or modify terminal display, and potentially mislead users through terminal manipulation. tracing-subscriber version 0.3.20 fixes this vulnerability by escaping ANSI control characters when writing events to destinations that may be printed to the terminal. A workaround involves avoiding printing logs to terminal emulators without escaping ANSI control sequences.",
+                "markdown": "**Vulnerability CVE-2025-58160**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|tracing-subscriber|0.3.20|[CVE-2025-58160](https://avd.aquasec.com/nvd/cve-2025-58160)|\n\ntracing is a framework for instrumenting Rust programs to collect structured, event-based diagnostic information. Prior to version 0.3.20, tracing-subscriber was vulnerable to ANSI escape sequence injection attacks. Untrusted user input containing ANSI escape sequences could be injected into terminal output when logged, potentially allowing attackers to manipulate terminal title bars, clear screens or modify terminal display, and potentially mislead users through terminal manipulation. tracing-subscriber version 0.3.20 fixes this vulnerability by escaping ANSI control characters when writing events to destinations that may be printed to the terminal. A workaround involves avoiding printing logs to terminal emulators without escaping ANSI control sequences."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "GHSA-xhj4-vrgc-hr34",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: actix-http\nInstalled Version: 3.3.1\nVulnerability GHSA-xhj4-vrgc-hr34\nSeverity: MEDIUM\nFixed Version: 3.12.1\nLink: [GHSA-xhj4-vrgc-hr34](https://github.com/advisories/GHSA-xhj4-vrgc-hr34)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: actix-http@3.3.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2rxc-gjrp-vjhx",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: anstream\nInstalled Version: 0.3.2\nVulnerability GHSA-2rxc-gjrp-vjhx\nSeverity: MEDIUM\nFixed Version: 0.6.8\nLink: [GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: anstream@0.3.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25541",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: bytes\nInstalled Version: 1.2.1\nVulnerability CVE-2026-25541\nSeverity: MEDIUM\nFixed Version: 1.11.1\nLink: [CVE-2026-25541](https://avd.aquasec.com/nvd/cve-2026-25541)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: bytes@1.2.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-h5x4-m2qf-r4f2",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.0\nVulnerability GHSA-h5x4-m2qf-r4f2\nSeverity: HIGH\nFixed Version: 2.3.8\nLink: [GHSA-h5x4-m2qf-r4f2](https://github.com/advisories/GHSA-h5x4-m2qf-r4f2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: diesel@2.1.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-wq9x-qwcq-mmgf",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.0\nVulnerability GHSA-wq9x-qwcq-mmgf\nSeverity: HIGH\nFixed Version: 2.2.3\nLink: [GHSA-wq9x-qwcq-mmgf](https://github.com/advisories/GHSA-wq9x-qwcq-mmgf)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: diesel@2.1.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-m9p2-fxp5-v3fp",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.0\nVulnerability GHSA-m9p2-fxp5-v3fp\nSeverity: MEDIUM\nFixed Version: 2.3.8\nLink: [GHSA-m9p2-fxp5-v3fp](https://github.com/advisories/GHSA-m9p2-fxp5-v3fp)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: diesel@2.1.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q8x8-jrhj-fh9p",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.0\nVulnerability GHSA-q8x8-jrhj-fh9p\nSeverity: MEDIUM\nFixed Version: 2.3.8\nLink: [GHSA-q8x8-jrhj-fh9p](https://github.com/advisories/GHSA-q8x8-jrhj-fh9p)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: diesel@2.1.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-26964",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.11\nVulnerability CVE-2023-26964\nSeverity: MEDIUM\nFixed Version: 0.3.17\nLink: [CVE-2023-26964](https://avd.aquasec.com/nvd/cve-2023-26964)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: h2@0.3.11"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-8r5v-vm4m-4g25",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.11\nVulnerability GHSA-8r5v-vm4m-4g25\nSeverity: MEDIUM\nFixed Version: 0.3.24, 0.4.2\nLink: [GHSA-8r5v-vm4m-4g25](https://github.com/advisories/GHSA-8r5v-vm4m-4g25)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: h2@0.3.11"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q6cp-qfwq-4gcv",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.11\nVulnerability GHSA-q6cp-qfwq-4gcv\nSeverity: MEDIUM\nFixed Version: 0.3.26, 0.4.4\nLink: [GHSA-q6cp-qfwq-4gcv](https://github.com/advisories/GHSA-q6cp-qfwq-4gcv)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: h2@0.3.11"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-12224",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: idna\nInstalled Version: 0.2.3\nVulnerability CVE-2024-12224\nSeverity: MEDIUM\nFixed Version: 1.0.0\nLink: [CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: idna@0.2.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-rhfx-m35p-ff5j",
+          "ruleIndex": 11,
+          "level": "note",
+          "message": {
+            "text": "Package: lru\nInstalled Version: 0.11.0\nVulnerability GHSA-rhfx-m35p-ff5j\nSeverity: LOW\nFixed Version: 0.16.3\nLink: [GHSA-rhfx-m35p-ff5j](https://github.com/advisories/GHSA-rhfx-m35p-ff5j)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: lru@0.11.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-27308",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Package: mio\nInstalled Version: 0.8.5\nVulnerability CVE-2024-27308\nSeverity: HIGH\nFixed Version: 0.8.11\nLink: [CVE-2024-27308](https://avd.aquasec.com/nvd/cve-2024-27308)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: mio@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41676",
+          "ruleIndex": 13,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41676\nSeverity: HIGH\nFixed Version: 0.10.78\nLink: [CVE-2026-41676](https://avd.aquasec.com/nvd/cve-2026-41676)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41678",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41678\nSeverity: HIGH\nFixed Version: 0.10.78\nLink: [CVE-2026-41678](https://avd.aquasec.com/nvd/cve-2026-41678)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41681",
+          "ruleIndex": 15,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41681\nSeverity: HIGH\nFixed Version: 0.10.78\nLink: [CVE-2026-41681](https://avd.aquasec.com/nvd/cve-2026-41681)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41898",
+          "ruleIndex": 16,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41898\nSeverity: HIGH\nFixed Version: 0.10.78\nLink: [CVE-2026-41898](https://avd.aquasec.com/nvd/cve-2026-41898)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-6hcf-g6gr-hhcr",
+          "ruleIndex": 17,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-6hcf-g6gr-hhcr\nSeverity: HIGH\nFixed Version: 0.10.48\nLink: [GHSA-6hcf-g6gr-hhcr](https://github.com/advisories/GHSA-6hcf-g6gr-hhcr)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-9qwg-crg9-m2vc",
+          "ruleIndex": 18,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-9qwg-crg9-m2vc\nSeverity: HIGH\nFixed Version: 0.10.48\nLink: [GHSA-9qwg-crg9-m2vc](https://github.com/advisories/GHSA-9qwg-crg9-m2vc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-53159",
+          "ruleIndex": 19,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2023-53159\nSeverity: MEDIUM\nFixed Version: 0.10.55\nLink: [CVE-2023-53159](https://avd.aquasec.com/nvd/cve-2023-53159)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-24898",
+          "ruleIndex": 20,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2025-24898\nSeverity: MEDIUM\nFixed Version: 0.10.70\nLink: [CVE-2025-24898](https://avd.aquasec.com/nvd/cve-2025-24898)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44662",
+          "ruleIndex": 21,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-44662\nSeverity: MEDIUM\nFixed Version: 0.10.79\nLink: [CVE-2026-44662](https://avd.aquasec.com/nvd/cve-2026-44662)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-3gxf-9r58-2ghg",
+          "ruleIndex": 22,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-3gxf-9r58-2ghg\nSeverity: MEDIUM\nFixed Version: 0.10.48\nLink: [GHSA-3gxf-9r58-2ghg](https://github.com/advisories/GHSA-3gxf-9r58-2ghg)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-4fcv-w3qc-ppgg",
+          "ruleIndex": 23,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-4fcv-w3qc-ppgg\nSeverity: MEDIUM\nFixed Version: 0.10.72\nLink: [GHSA-4fcv-w3qc-ppgg](https://github.com/advisories/GHSA-4fcv-w3qc-ppgg)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q445-7m23-qrmw",
+          "ruleIndex": 24,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-q445-7m23-qrmw\nSeverity: MEDIUM\nFixed Version: 0.10.66\nLink: [GHSA-q445-7m23-qrmw](https://github.com/advisories/GHSA-q445-7m23-qrmw)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xphf-cx8h-7q9g",
+          "ruleIndex": 25,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-xphf-cx8h-7q9g\nSeverity: MEDIUM\nFixed Version: 0.10.60\nLink: [GHSA-xphf-cx8h-7q9g](https://github.com/advisories/GHSA-xphf-cx8h-7q9g)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41677",
+          "ruleIndex": 26,
+          "level": "note",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41677\nSeverity: LOW\nFixed Version: 0.10.78\nLink: [CVE-2026-41677](https://avd.aquasec.com/nvd/cve-2026-41677)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 27,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-43806",
+          "ruleIndex": 28,
+          "level": "warning",
+          "message": {
+            "text": "Package: rustix\nInstalled Version: 0.38.4\nVulnerability CVE-2024-43806\nSeverity: MEDIUM\nFixed Version: 0.35.15, 0.36.16, 0.37.25, 0.38.19\nLink: [CVE-2024-43806](https://avd.aquasec.com/nvd/cve-2024-43806)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: rustix@0.38.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25727",
+          "ruleIndex": 29,
+          "level": "warning",
+          "message": {
+            "text": "Package: time\nInstalled Version: 0.3.17\nVulnerability CVE-2026-25727\nSeverity: MEDIUM\nFixed Version: 0.3.47\nLink: [CVE-2026-25727](https://avd.aquasec.com/nvd/cve-2026-25727)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: time@0.3.17"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-rr8g-9fpq-6wmg",
+          "ruleIndex": 30,
+          "level": "note",
+          "message": {
+            "text": "Package: tokio\nInstalled Version: 1.25.1\nVulnerability GHSA-rr8g-9fpq-6wmg\nSeverity: LOW\nFixed Version: 1.44.2, 1.38.2, 1.43.1\nLink: [GHSA-rr8g-9fpq-6wmg](https://github.com/advisories/GHSA-rr8g-9fpq-6wmg)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: tokio@1.25.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-58160",
+          "ruleIndex": 31,
+          "level": "note",
+          "message": {
+            "text": "Package: tracing-subscriber\nInstalled Version: 0.3.17\nVulnerability CVE-2025-58160\nSeverity: LOW\nFixed Version: 0.3.20\nLink: [CVE-2025-58160](https://avd.aquasec.com/nvd/cve-2025-58160)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/kepler: tracing-subscriber@0.3.17"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xhj4-vrgc-hr34",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: actix-http\nInstalled Version: 3.3.1\nVulnerability GHSA-xhj4-vrgc-hr34\nSeverity: MEDIUM\nFixed Version: 3.12.1\nLink: [GHSA-xhj4-vrgc-hr34](https://github.com/advisories/GHSA-xhj4-vrgc-hr34)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: actix-http@3.3.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2rxc-gjrp-vjhx",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: anstream\nInstalled Version: 0.3.2\nVulnerability GHSA-2rxc-gjrp-vjhx\nSeverity: MEDIUM\nFixed Version: 0.6.8\nLink: [GHSA-2rxc-gjrp-vjhx](https://github.com/advisories/GHSA-2rxc-gjrp-vjhx)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: anstream@0.3.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25541",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: bytes\nInstalled Version: 1.2.1\nVulnerability CVE-2026-25541\nSeverity: MEDIUM\nFixed Version: 1.11.1\nLink: [CVE-2026-25541](https://avd.aquasec.com/nvd/cve-2026-25541)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: bytes@1.2.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-h5x4-m2qf-r4f2",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.0\nVulnerability GHSA-h5x4-m2qf-r4f2\nSeverity: HIGH\nFixed Version: 2.3.8\nLink: [GHSA-h5x4-m2qf-r4f2](https://github.com/advisories/GHSA-h5x4-m2qf-r4f2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: diesel@2.1.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-wq9x-qwcq-mmgf",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.0\nVulnerability GHSA-wq9x-qwcq-mmgf\nSeverity: HIGH\nFixed Version: 2.2.3\nLink: [GHSA-wq9x-qwcq-mmgf](https://github.com/advisories/GHSA-wq9x-qwcq-mmgf)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: diesel@2.1.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-m9p2-fxp5-v3fp",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.0\nVulnerability GHSA-m9p2-fxp5-v3fp\nSeverity: MEDIUM\nFixed Version: 2.3.8\nLink: [GHSA-m9p2-fxp5-v3fp](https://github.com/advisories/GHSA-m9p2-fxp5-v3fp)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: diesel@2.1.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q8x8-jrhj-fh9p",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.0\nVulnerability GHSA-q8x8-jrhj-fh9p\nSeverity: MEDIUM\nFixed Version: 2.3.8\nLink: [GHSA-q8x8-jrhj-fh9p](https://github.com/advisories/GHSA-q8x8-jrhj-fh9p)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: diesel@2.1.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-26964",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.11\nVulnerability CVE-2023-26964\nSeverity: MEDIUM\nFixed Version: 0.3.17\nLink: [CVE-2023-26964](https://avd.aquasec.com/nvd/cve-2023-26964)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: h2@0.3.11"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-8r5v-vm4m-4g25",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.11\nVulnerability GHSA-8r5v-vm4m-4g25\nSeverity: MEDIUM\nFixed Version: 0.3.24, 0.4.2\nLink: [GHSA-8r5v-vm4m-4g25](https://github.com/advisories/GHSA-8r5v-vm4m-4g25)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: h2@0.3.11"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q6cp-qfwq-4gcv",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.11\nVulnerability GHSA-q6cp-qfwq-4gcv\nSeverity: MEDIUM\nFixed Version: 0.3.26, 0.4.4\nLink: [GHSA-q6cp-qfwq-4gcv](https://github.com/advisories/GHSA-q6cp-qfwq-4gcv)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: h2@0.3.11"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-12224",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: idna\nInstalled Version: 0.2.3\nVulnerability CVE-2024-12224\nSeverity: MEDIUM\nFixed Version: 1.0.0\nLink: [CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: idna@0.2.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-rhfx-m35p-ff5j",
+          "ruleIndex": 11,
+          "level": "note",
+          "message": {
+            "text": "Package: lru\nInstalled Version: 0.11.0\nVulnerability GHSA-rhfx-m35p-ff5j\nSeverity: LOW\nFixed Version: 0.16.3\nLink: [GHSA-rhfx-m35p-ff5j](https://github.com/advisories/GHSA-rhfx-m35p-ff5j)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: lru@0.11.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-27308",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Package: mio\nInstalled Version: 0.8.5\nVulnerability CVE-2024-27308\nSeverity: HIGH\nFixed Version: 0.8.11\nLink: [CVE-2024-27308](https://avd.aquasec.com/nvd/cve-2024-27308)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: mio@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41676",
+          "ruleIndex": 13,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41676\nSeverity: HIGH\nFixed Version: 0.10.78\nLink: [CVE-2026-41676](https://avd.aquasec.com/nvd/cve-2026-41676)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41678",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41678\nSeverity: HIGH\nFixed Version: 0.10.78\nLink: [CVE-2026-41678](https://avd.aquasec.com/nvd/cve-2026-41678)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41681",
+          "ruleIndex": 15,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41681\nSeverity: HIGH\nFixed Version: 0.10.78\nLink: [CVE-2026-41681](https://avd.aquasec.com/nvd/cve-2026-41681)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41898",
+          "ruleIndex": 16,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41898\nSeverity: HIGH\nFixed Version: 0.10.78\nLink: [CVE-2026-41898](https://avd.aquasec.com/nvd/cve-2026-41898)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-6hcf-g6gr-hhcr",
+          "ruleIndex": 17,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-6hcf-g6gr-hhcr\nSeverity: HIGH\nFixed Version: 0.10.48\nLink: [GHSA-6hcf-g6gr-hhcr](https://github.com/advisories/GHSA-6hcf-g6gr-hhcr)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-9qwg-crg9-m2vc",
+          "ruleIndex": 18,
+          "level": "error",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-9qwg-crg9-m2vc\nSeverity: HIGH\nFixed Version: 0.10.48\nLink: [GHSA-9qwg-crg9-m2vc](https://github.com/advisories/GHSA-9qwg-crg9-m2vc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2023-53159",
+          "ruleIndex": 19,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2023-53159\nSeverity: MEDIUM\nFixed Version: 0.10.55\nLink: [CVE-2023-53159](https://avd.aquasec.com/nvd/cve-2023-53159)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-24898",
+          "ruleIndex": 20,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2025-24898\nSeverity: MEDIUM\nFixed Version: 0.10.70\nLink: [CVE-2025-24898](https://avd.aquasec.com/nvd/cve-2025-24898)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44662",
+          "ruleIndex": 21,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-44662\nSeverity: MEDIUM\nFixed Version: 0.10.79\nLink: [CVE-2026-44662](https://avd.aquasec.com/nvd/cve-2026-44662)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-3gxf-9r58-2ghg",
+          "ruleIndex": 22,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-3gxf-9r58-2ghg\nSeverity: MEDIUM\nFixed Version: 0.10.48\nLink: [GHSA-3gxf-9r58-2ghg](https://github.com/advisories/GHSA-3gxf-9r58-2ghg)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-4fcv-w3qc-ppgg",
+          "ruleIndex": 23,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-4fcv-w3qc-ppgg\nSeverity: MEDIUM\nFixed Version: 0.10.72\nLink: [GHSA-4fcv-w3qc-ppgg](https://github.com/advisories/GHSA-4fcv-w3qc-ppgg)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q445-7m23-qrmw",
+          "ruleIndex": 24,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-q445-7m23-qrmw\nSeverity: MEDIUM\nFixed Version: 0.10.66\nLink: [GHSA-q445-7m23-qrmw](https://github.com/advisories/GHSA-q445-7m23-qrmw)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xphf-cx8h-7q9g",
+          "ruleIndex": 25,
+          "level": "warning",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability GHSA-xphf-cx8h-7q9g\nSeverity: MEDIUM\nFixed Version: 0.10.60\nLink: [GHSA-xphf-cx8h-7q9g](https://github.com/advisories/GHSA-xphf-cx8h-7q9g)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41677",
+          "ruleIndex": 26,
+          "level": "note",
+          "message": {
+            "text": "Package: openssl\nInstalled Version: 0.10.42\nVulnerability CVE-2026-41677\nSeverity: LOW\nFixed Version: 0.10.78\nLink: [CVE-2026-41677](https://avd.aquasec.com/nvd/cve-2026-41677)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: openssl@0.10.42"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 27,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-43806",
+          "ruleIndex": 28,
+          "level": "warning",
+          "message": {
+            "text": "Package: rustix\nInstalled Version: 0.38.4\nVulnerability CVE-2024-43806\nSeverity: MEDIUM\nFixed Version: 0.35.15, 0.36.16, 0.37.25, 0.38.19\nLink: [CVE-2024-43806](https://avd.aquasec.com/nvd/cve-2024-43806)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: rustix@0.38.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25727",
+          "ruleIndex": 29,
+          "level": "warning",
+          "message": {
+            "text": "Package: time\nInstalled Version: 0.3.17\nVulnerability CVE-2026-25727\nSeverity: MEDIUM\nFixed Version: 0.3.47\nLink: [CVE-2026-25727](https://avd.aquasec.com/nvd/cve-2026-25727)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: time@0.3.17"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-rr8g-9fpq-6wmg",
+          "ruleIndex": 30,
+          "level": "note",
+          "message": {
+            "text": "Package: tokio\nInstalled Version: 1.25.1\nVulnerability GHSA-rr8g-9fpq-6wmg\nSeverity: LOW\nFixed Version: 1.44.2, 1.38.2, 1.43.1\nLink: [GHSA-rr8g-9fpq-6wmg](https://github.com/advisories/GHSA-rr8g-9fpq-6wmg)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: tokio@1.25.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-58160",
+          "ruleIndex": 31,
+          "level": "note",
+          "message": {
+            "text": "Package: tracing-subscriber\nInstalled Version: 0.3.17\nVulnerability CVE-2025-58160\nSeverity: LOW\nFixed Version: 0.3.20\nLink: [CVE-2025-58160](https://avd.aquasec.com/nvd/cve-2025-58160)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vm6ymwva2s158xkqbffngakxac3dm5sk-kepler-unstable-2023-07-19/bin/kepler: tracing-subscriber@0.3.17"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:6213b7ddc24e1d86a67913d3b3085561e98ca1a1b64963b68669f18dda0c2993",
+        "imageName": "ghcr.io/nix-containers/images/kepler:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/kepler@sha256:67b83bbec9cdb741354d9b61ac6e9c80fe20be4014ba01349e9bd70b477ad125"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/kepler:latest"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,2519 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "CVE-2026-42583",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty: io.netty/netty-codec-compression: io.netty/netty-codec: Netty: Denial of Service via excessive memory allocation in LZ4FrameDecoder"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Lz4FrameDecoder allocates a ByteBuf of size decompressedLength (up to 32 MB per block) before LZ4 runs. A peer only needs a 21-byte header plus compressedLength payload bytes - 22 bytes if compressedLength == 1 - to force that allocation. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42583",
+              "help": {
+                "text": "Vulnerability CVE-2026-42583\nSeverity: HIGH\nPackage: io.netty:netty-codec\nFixed Version: 4.1.133.Final\nLink: [CVE-2026-42583](https://avd.aquasec.com/nvd/cve-2026-42583)\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Lz4FrameDecoder allocates a ByteBuf of size decompressedLength (up to 32 MB per block) before LZ4 runs. A peer only needs a 21-byte header plus compressedLength payload bytes - 22 bytes if compressedLength == 1 - to force that allocation. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final.",
+                "markdown": "**Vulnerability CVE-2026-42583**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|io.netty:netty-codec|4.1.133.Final|[CVE-2026-42583](https://avd.aquasec.com/nvd/cve-2026-42583)|\n\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Lz4FrameDecoder allocates a ByteBuf of size decompressedLength (up to 32 MB per block) before LZ4 runs. A peer only needs a 21-byte header plus compressedLength payload bytes - 22 bytes if compressedLength == 1 - to force that allocation. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-33870",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "io.netty/netty-codec-http: Netty: Request smuggling via incorrect parsing of HTTP/1.1 chunked transfer encoding extension values"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. In versions prior to 4.1.132.Final and 4.2.10.Final, Netty incorrectly parses quoted strings in HTTP/1.1 chunked transfer encoding extension values, enabling request smuggling attacks. Versions 4.1.132.Final and 4.2.10.Final fix the issue."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-33870",
+              "help": {
+                "text": "Vulnerability CVE-2026-33870\nSeverity: HIGH\nPackage: io.netty:netty-codec-http\nFixed Version: 4.1.132.Final, 4.2.10.Final\nLink: [CVE-2026-33870](https://avd.aquasec.com/nvd/cve-2026-33870)\nNetty is an asynchronous, event-driven network application framework. In versions prior to 4.1.132.Final and 4.2.10.Final, Netty incorrectly parses quoted strings in HTTP/1.1 chunked transfer encoding extension values, enabling request smuggling attacks. Versions 4.1.132.Final and 4.2.10.Final fix the issue.",
+                "markdown": "**Vulnerability CVE-2026-33870**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|io.netty:netty-codec-http|4.1.132.Final, 4.2.10.Final|[CVE-2026-33870](https://avd.aquasec.com/nvd/cve-2026-33870)|\n\nNetty is an asynchronous, event-driven network application framework. In versions prior to 4.1.132.Final and 4.2.10.Final, Netty incorrectly parses quoted strings in HTTP/1.1 chunked transfer encoding extension values, enabling request smuggling attacks. Versions 4.1.132.Final and 4.2.10.Final fix the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42584",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty: io.netty/netty-codec-http: Netty: Incorrect HTTP response parsing leads to data confusion"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, HttpClientCodec pairs each inbound response with an outbound request by queue.poll() once per response, including for 1xx. If the client pipelines GET then HEAD and the server sends 103, then 200 with GET body, then 200 for HEAD, the queue pairs HEAD with the first 200. The HEAD rule then skips reading that message’s body, so the GET entity bytes stay on the stream and the following 200 is parsed from the wrong offset. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42584",
+              "help": {
+                "text": "Vulnerability CVE-2026-42584\nSeverity: HIGH\nPackage: io.netty:netty-codec-http\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42584](https://avd.aquasec.com/nvd/cve-2026-42584)\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, HttpClientCodec pairs each inbound response with an outbound request by queue.poll() once per response, including for 1xx. If the client pipelines GET then HEAD and the server sends 103, then 200 with GET body, then 200 for HEAD, the queue pairs HEAD with the first 200. The HEAD rule then skips reading that message’s body, so the GET entity bytes stay on the stream and the following 200 is parsed from the wrong offset. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final.",
+                "markdown": "**Vulnerability CVE-2026-42584**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|io.netty:netty-codec-http|4.2.13.Final, 4.1.133.Final|[CVE-2026-42584](https://avd.aquasec.com/nvd/cve-2026-42584)|\n\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, HttpClientCodec pairs each inbound response with an outbound request by queue.poll() once per response, including for 1xx. If the client pipelines GET then HEAD and the server sends 103, then 200 with GET body, then 200 for HEAD, the queue pairs HEAD with the first 200. The HEAD rule then skips reading that message’s body, so the GET entity bytes stay on the stream and the following 200 is parsed from the wrong offset. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L",
+                "precision": "very-high",
+                "security-severity": "7.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42587",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty: io.netty/netty-codec-http: io.netty/netty-codec-http2: Netty: Denial of Service via unbounded memory allocation in HTTP content decompression"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, HttpContentDecompressor accepts a maxAllocation parameter to limit decompression buffer size and prevent decompression bomb attacks. This limit is correctly enforced for gzip and deflate encodings via ZlibDecoder, but is silently ignored when the content encoding is br (Brotli), zstd, or snappy. An attacker can bypass the configured decompression limit by sending a compressed payload with Content-Encoding: br instead of Content-Encoding: gzip, causing unbounded memory allocation and out-of-memory denial of service. The same vulnerability exists in DelegatingDecompressorFrameListener for HTTP/2 connections. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42587",
+              "help": {
+                "text": "Vulnerability CVE-2026-42587\nSeverity: HIGH\nPackage: io.netty:netty-codec-http\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42587](https://avd.aquasec.com/nvd/cve-2026-42587)\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, HttpContentDecompressor accepts a maxAllocation parameter to limit decompression buffer size and prevent decompression bomb attacks. This limit is correctly enforced for gzip and deflate encodings via ZlibDecoder, but is silently ignored when the content encoding is br (Brotli), zstd, or snappy. An attacker can bypass the configured decompression limit by sending a compressed payload with Content-Encoding: br instead of Content-Encoding: gzip, causing unbounded memory allocation and out-of-memory denial of service. The same vulnerability exists in DelegatingDecompressorFrameListener for HTTP/2 connections. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final.",
+                "markdown": "**Vulnerability CVE-2026-42587**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|io.netty:netty-codec-http|4.2.13.Final, 4.1.133.Final|[CVE-2026-42587](https://avd.aquasec.com/nvd/cve-2026-42587)|\n\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, HttpContentDecompressor accepts a maxAllocation parameter to limit decompression buffer size and prevent decompression bomb attacks. This limit is correctly enforced for gzip and deflate encodings via ZlibDecoder, but is silently ignored when the content encoding is br (Brotli), zstd, or snappy. An attacker can bypass the configured decompression limit by sending a compressed payload with Content-Encoding: br instead of Content-Encoding: gzip, causing unbounded memory allocation and out-of-memory denial of service. The same vulnerability exists in DelegatingDecompressorFrameListener for HTTP/2 connections. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-67735",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty-codec-http: Netty (netty-codec-http): Request Smuggling via CRLF Injection"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. In versions prior to 4.1.129.Final and 4.2.8.Final, the `io.netty.handler.codec.http.HttpRequestEncoder` has a CRLF injection with the request URI when constructing a request. This leads to request smuggling when `HttpRequestEncoder` is used without proper sanitization of the URI. Any application / framework using `HttpRequestEncoder` can be subject to be abused to perform request smuggling using CRLF injection. Versions 4.1.129.Final and 4.2.8.Final fix the issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-67735",
+              "help": {
+                "text": "Vulnerability CVE-2025-67735\nSeverity: MEDIUM\nPackage: io.netty:netty-codec-http\nFixed Version: 4.2.8.Final, 4.1.129.Final\nLink: [CVE-2025-67735](https://avd.aquasec.com/nvd/cve-2025-67735)\nNetty is an asynchronous, event-driven network application framework. In versions prior to 4.1.129.Final and 4.2.8.Final, the `io.netty.handler.codec.http.HttpRequestEncoder` has a CRLF injection with the request URI when constructing a request. This leads to request smuggling when `HttpRequestEncoder` is used without proper sanitization of the URI. Any application / framework using `HttpRequestEncoder` can be subject to be abused to perform request smuggling using CRLF injection. Versions 4.1.129.Final and 4.2.8.Final fix the issue.",
+                "markdown": "**Vulnerability CVE-2025-67735**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|io.netty:netty-codec-http|4.2.8.Final, 4.1.129.Final|[CVE-2025-67735](https://avd.aquasec.com/nvd/cve-2025-67735)|\n\nNetty is an asynchronous, event-driven network application framework. In versions prior to 4.1.129.Final and 4.2.8.Final, the `io.netty.handler.codec.http.HttpRequestEncoder` has a CRLF injection with the request URI when constructing a request. This leads to request smuggling when `HttpRequestEncoder` is used without proper sanitization of the URI. Any application / framework using `HttpRequestEncoder` can be subject to be abused to perform request smuggling using CRLF injection. Versions 4.1.129.Final and 4.2.8.Final fix the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-41417",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty: Netty: HTTP request smuggling via URI manipulation and CRLF injection"
+              },
+              "fullDescription": {
+                "text": "Netty allows request-line validation to be bypassed when a `DefaultHttpRequest` or `DefaultFullHttpRequest` is created first and its URI is later changed via `setUri()`. The constructors reject CRLF and whitespace characters that would break the start-line, but `setUri()` does not apply the same validation. `HttpRequestEncoder` and `RtspEncoder` then write the URI into the request line verbatim. If attacker-controlled input reaches `setUri()`, this enables CRLF injection and insertion of additional HTTP or RTSP requests, leading to HTTP request smuggling or desynchronization on the HTTP side and request injection on the RTSP side. This issue is fixed in versions 4.2.13.Final and 4.1.133.Final."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-41417",
+              "help": {
+                "text": "Vulnerability CVE-2026-41417\nSeverity: MEDIUM\nPackage: io.netty:netty-codec-http\nFixed Version: 4.1.133.Final, 4.2.13.Final\nLink: [CVE-2026-41417](https://avd.aquasec.com/nvd/cve-2026-41417)\nNetty allows request-line validation to be bypassed when a `DefaultHttpRequest` or `DefaultFullHttpRequest` is created first and its URI is later changed via `setUri()`. The constructors reject CRLF and whitespace characters that would break the start-line, but `setUri()` does not apply the same validation. `HttpRequestEncoder` and `RtspEncoder` then write the URI into the request line verbatim. If attacker-controlled input reaches `setUri()`, this enables CRLF injection and insertion of additional HTTP or RTSP requests, leading to HTTP request smuggling or desynchronization on the HTTP side and request injection on the RTSP side. This issue is fixed in versions 4.2.13.Final and 4.1.133.Final.",
+                "markdown": "**Vulnerability CVE-2026-41417**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|io.netty:netty-codec-http|4.1.133.Final, 4.2.13.Final|[CVE-2026-41417](https://avd.aquasec.com/nvd/cve-2026-41417)|\n\nNetty allows request-line validation to be bypassed when a `DefaultHttpRequest` or `DefaultFullHttpRequest` is created first and its URI is later changed via `setUri()`. The constructors reject CRLF and whitespace characters that would break the start-line, but `setUri()` does not apply the same validation. `HttpRequestEncoder` and `RtspEncoder` then write the URI into the request line verbatim. If attacker-controlled input reaches `setUri()`, this enables CRLF injection and insertion of additional HTTP or RTSP requests, leading to HTTP request smuggling or desynchronization on the HTTP side and request injection on the RTSP side. This issue is fixed in versions 4.2.13.Final and 4.1.133.Final."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42580",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty: Netty: Request smuggling via chunk size parser integer overflow"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Netty's chunk size parser silently overflows int, enabling request smuggling attacks. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42580",
+              "help": {
+                "text": "Vulnerability CVE-2026-42580\nSeverity: MEDIUM\nPackage: io.netty:netty-codec-http\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42580](https://avd.aquasec.com/nvd/cve-2026-42580)\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Netty's chunk size parser silently overflows int, enabling request smuggling attacks. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final.",
+                "markdown": "**Vulnerability CVE-2026-42580**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|io.netty:netty-codec-http|4.2.13.Final, 4.1.133.Final|[CVE-2026-42580](https://avd.aquasec.com/nvd/cve-2026-42580)|\n\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Netty's chunk size parser silently overflows int, enabling request smuggling attacks. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42581",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty: io.netty/netty-codec-http: Netty: HTTP Request Smuggling due to improper handling of conflicting HTTP/1.0 headers"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, HttpObjectDecoder strips a conflicting Content-Length header when a request carries both Transfer-Encoding: chunked and Content-Length, but only for HTTP/1.1 messages. The guard is absent for HTTP/1.0. An attacker that sends an HTTP/1.0 request with both headers causes Netty to decode the body as chunked while leaving Content-Length intact in the forwarded HttpMessage. Any downstream proxy or handler that trusts Content-Length over Transfer-Encoding will disagree on message boundaries, enabling request smuggling. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42581",
+              "help": {
+                "text": "Vulnerability CVE-2026-42581\nSeverity: MEDIUM\nPackage: io.netty:netty-codec-http\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42581](https://avd.aquasec.com/nvd/cve-2026-42581)\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, HttpObjectDecoder strips a conflicting Content-Length header when a request carries both Transfer-Encoding: chunked and Content-Length, but only for HTTP/1.1 messages. The guard is absent for HTTP/1.0. An attacker that sends an HTTP/1.0 request with both headers causes Netty to decode the body as chunked while leaving Content-Length intact in the forwarded HttpMessage. Any downstream proxy or handler that trusts Content-Length over Transfer-Encoding will disagree on message boundaries, enabling request smuggling. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final.",
+                "markdown": "**Vulnerability CVE-2026-42581**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|io.netty:netty-codec-http|4.2.13.Final, 4.1.133.Final|[CVE-2026-42581](https://avd.aquasec.com/nvd/cve-2026-42581)|\n\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, HttpObjectDecoder strips a conflicting Content-Length header when a request carries both Transfer-Encoding: chunked and Content-Length, but only for HTTP/1.1 messages. The guard is absent for HTTP/1.0. An attacker that sends an HTTP/1.0 request with both headers causes Netty to decode the body as chunked while leaving Content-Length intact in the forwarded HttpMessage. Any downstream proxy or handler that trusts Content-Length over Transfer-Encoding will disagree on message boundaries, enabling request smuggling. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42585",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty: io.netty/netty-codec-http: Netty: Request smuggling via malformed Transfer-Encoding parsing"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Netty incorrectly parses malformed Transfer-Encoding, enabling request smuggling attacks. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42585",
+              "help": {
+                "text": "Vulnerability CVE-2026-42585\nSeverity: MEDIUM\nPackage: io.netty:netty-codec-http\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42585](https://avd.aquasec.com/nvd/cve-2026-42585)\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Netty incorrectly parses malformed Transfer-Encoding, enabling request smuggling attacks. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final.",
+                "markdown": "**Vulnerability CVE-2026-42585**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|io.netty:netty-codec-http|4.2.13.Final, 4.1.133.Final|[CVE-2026-42585](https://avd.aquasec.com/nvd/cve-2026-42585)|\n\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Netty incorrectly parses malformed Transfer-Encoding, enabling request smuggling attacks. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "properties": {
+                "cvssv3_baseScore": 6.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "6.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-50020",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty-codec-http: Netty: Data manipulation via request-boundary confusion in HttpObjectDecoder"
+              },
+              "fullDescription": {
+                "text": "Netty is a network application framework for development of protocol servers and clients. Prior to versions 4.1.135.Final and 4.2.15.Final, before reading the first request-line, `HttpObjectDecoder` skips every byte for which `Character.isISOControl(b)` is `true` (0x00–0x1F and 0x7F) as well as all whitespace. RFC 9112 §2.2 only asks servers to ignore empty CRLF lines preceding the request-line — a carefully scoped robustness allowance intended to handle HTTP/1.0 POST workarounds. Silently absorbing NUL bytes, SOH, STX, and other non-CRLF control characters goes significantly beyond this, and can be exploited for request-boundary confusion in pipelined or multiplexed transports where a front-end component treats those bytes differently. Versions 4.1.135.Final and 4.2.15.Final patch the issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-50020",
+              "help": {
+                "text": "Vulnerability CVE-2026-50020\nSeverity: MEDIUM\nPackage: io.netty:netty-codec-http\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-50020](https://avd.aquasec.com/nvd/cve-2026-50020)\nNetty is a network application framework for development of protocol servers and clients. Prior to versions 4.1.135.Final and 4.2.15.Final, before reading the first request-line, `HttpObjectDecoder` skips every byte for which `Character.isISOControl(b)` is `true` (0x00–0x1F and 0x7F) as well as all whitespace. RFC 9112 §2.2 only asks servers to ignore empty CRLF lines preceding the request-line — a carefully scoped robustness allowance intended to handle HTTP/1.0 POST workarounds. Silently absorbing NUL bytes, SOH, STX, and other non-CRLF control characters goes significantly beyond this, and can be exploited for request-boundary confusion in pipelined or multiplexed transports where a front-end component treats those bytes differently. Versions 4.1.135.Final and 4.2.15.Final patch the issue.",
+                "markdown": "**Vulnerability CVE-2026-50020**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|io.netty:netty-codec-http|4.2.15.Final, 4.1.135.Final|[CVE-2026-50020](https://avd.aquasec.com/nvd/cve-2026-50020)|\n\nNetty is a network application framework for development of protocol servers and clients. Prior to versions 4.1.135.Final and 4.2.15.Final, before reading the first request-line, `HttpObjectDecoder` skips every byte for which `Character.isISOControl(b)` is `true` (0x00–0x1F and 0x7F) as well as all whitespace. RFC 9112 §2.2 only asks servers to ignore empty CRLF lines preceding the request-line — a carefully scoped robustness allowance intended to handle HTTP/1.0 POST workarounds. Silently absorbing NUL bytes, SOH, STX, and other non-CRLF control characters goes significantly beyond this, and can be exploited for request-boundary confusion in pipelined or multiplexed transports where a front-end component treats those bytes differently. Versions 4.1.135.Final and 4.2.15.Final patch the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-44248",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty: io.netty/netty-codec-mqtt: Netty: Denial of Service due to excessive resource consumption from crafted MQTT 5 header"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, the MQTT 5 header Properties section is parsed and buffered before any message size limit is applied. Specifically, in MqttDecoder, the decodeVariableHeader() method is called before the bytesRemainingBeforeVariableHeader \u003e maxBytesInMessage check. The decodeVariableHeader() can call other methods which will call decodeProperties(). Effectively, Netty does not apply any limits to the size of the properties being decoded. Additionally, because MqttDecoder extends ReplayingDecoder, Netty will repeatedly re-parse the enormous Properties sections and buffer the bytes in memory, until the entire thing parses to completion. This can cause high resource usage in both CPU and memory. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-44248",
+              "help": {
+                "text": "Vulnerability CVE-2026-44248\nSeverity: MEDIUM\nPackage: io.netty:netty-codec-mqtt\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-44248](https://avd.aquasec.com/nvd/cve-2026-44248)\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, the MQTT 5 header Properties section is parsed and buffered before any message size limit is applied. Specifically, in MqttDecoder, the decodeVariableHeader() method is called before the bytesRemainingBeforeVariableHeader \u003e maxBytesInMessage check. The decodeVariableHeader() can call other methods which will call decodeProperties(). Effectively, Netty does not apply any limits to the size of the properties being decoded. Additionally, because MqttDecoder extends ReplayingDecoder, Netty will repeatedly re-parse the enormous Properties sections and buffer the bytes in memory, until the entire thing parses to completion. This can cause high resource usage in both CPU and memory. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final.",
+                "markdown": "**Vulnerability CVE-2026-44248**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|io.netty:netty-codec-mqtt|4.2.13.Final, 4.1.133.Final|[CVE-2026-44248](https://avd.aquasec.com/nvd/cve-2026-44248)|\n\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, the MQTT 5 header Properties section is parsed and buffered before any message size limit is applied. Specifically, in MqttDecoder, the decodeVariableHeader() method is called before the bytesRemainingBeforeVariableHeader \u003e maxBytesInMessage check. The decodeVariableHeader() can call other methods which will call decodeProperties(). Effectively, Netty does not apply any limits to the size of the properties being decoded. Additionally, because MqttDecoder extends ReplayingDecoder, Netty will repeatedly re-parse the enormous Properties sections and buffer the bytes in memory, until the entire thing parses to completion. This can cause high resource usage in both CPU and memory. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-50010",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty-handler: Netty: Improper trust manager handling leads to hostname verification bypass"
+              },
+              "fullDescription": {
+                "text": "Netty is a network application framework for development of protocol servers and clients. Prior to versions 4.1.135.Final and 4.2.15.Final, SimpleTrustManagerFactory.engineGetTrustManagers() and related paths wrap any user-supplied plain X509TrustManager in X509TrustManagerWrapper, which extends X509ExtendedTrustManager but implements the 3-arg checkServerTrusted(chain, authType, SSLEngine) by discarding the SSLEngine and calling the 2-arg delegate. Because the object now IS an X509ExtendedTrustManager, neither SunJSSE's internal AbstractTrustManagerWrapper nor Netty's own OpenSslX509TrustManagerWrapper will re-wrap it to add endpoint-identification. Consequently, even though Netty 4.2 sets endpointIdentificationAlgorithm=\"HTTPS\" by default, a client built with `SslContextBuilder.forClient().trustManager(somePlainX509TrustManager)` performs no hostname verification at all. Versions 4.1.135.Final and 4.2.15.Final patch the issue."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-50010",
+              "help": {
+                "text": "Vulnerability CVE-2026-50010\nSeverity: HIGH\nPackage: io.netty:netty-handler\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-50010](https://avd.aquasec.com/nvd/cve-2026-50010)\nNetty is a network application framework for development of protocol servers and clients. Prior to versions 4.1.135.Final and 4.2.15.Final, SimpleTrustManagerFactory.engineGetTrustManagers() and related paths wrap any user-supplied plain X509TrustManager in X509TrustManagerWrapper, which extends X509ExtendedTrustManager but implements the 3-arg checkServerTrusted(chain, authType, SSLEngine) by discarding the SSLEngine and calling the 2-arg delegate. Because the object now IS an X509ExtendedTrustManager, neither SunJSSE's internal AbstractTrustManagerWrapper nor Netty's own OpenSslX509TrustManagerWrapper will re-wrap it to add endpoint-identification. Consequently, even though Netty 4.2 sets endpointIdentificationAlgorithm=\"HTTPS\" by default, a client built with `SslContextBuilder.forClient().trustManager(somePlainX509TrustManager)` performs no hostname verification at all. Versions 4.1.135.Final and 4.2.15.Final patch the issue.",
+                "markdown": "**Vulnerability CVE-2026-50010**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|io.netty:netty-handler|4.2.15.Final, 4.1.135.Final|[CVE-2026-50010](https://avd.aquasec.com/nvd/cve-2026-50010)|\n\nNetty is a network application framework for development of protocol servers and clients. Prior to versions 4.1.135.Final and 4.2.15.Final, SimpleTrustManagerFactory.engineGetTrustManagers() and related paths wrap any user-supplied plain X509TrustManager in X509TrustManagerWrapper, which extends X509ExtendedTrustManager but implements the 3-arg checkServerTrusted(chain, authType, SSLEngine) by discarding the SSLEngine and calling the 2-arg delegate. Because the object now IS an X509ExtendedTrustManager, neither SunJSSE's internal AbstractTrustManagerWrapper nor Netty's own OpenSslX509TrustManagerWrapper will re-wrap it to add endpoint-identification. Consequently, even though Netty 4.2 sets endpointIdentificationAlgorithm=\"HTTPS\" by default, a client built with `SslContextBuilder.forClient().trustManager(somePlainX509TrustManager)` performs no hostname verification at all. Versions 4.1.135.Final and 4.2.15.Final patch the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-42578",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty: io.netty/netty-handler-proxy: Netty: HTTP Header Injection via HttpProxyHandler Disabled Validation"
+              },
+              "fullDescription": {
+                "text": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Netty's HttpProxyHandler constructs HTTP CONNECT requests with header validation explicitly disabled. The newInitialMessage() method creates headers using DefaultHttpHeadersFactory.headersFactory().withValidation(false), then adds user-provided outboundHeaders without any CRLF validation. This allows an attacker who can influence the outbound headers to inject arbitrary HTTP headers into the CONNECT request sent to the proxy server. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-42578",
+              "help": {
+                "text": "Vulnerability CVE-2026-42578\nSeverity: LOW\nPackage: io.netty:netty-handler-proxy\nFixed Version: 4.1.133.Final, 4.2.13.Final\nLink: [CVE-2026-42578](https://avd.aquasec.com/nvd/cve-2026-42578)\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Netty's HttpProxyHandler constructs HTTP CONNECT requests with header validation explicitly disabled. The newInitialMessage() method creates headers using DefaultHttpHeadersFactory.headersFactory().withValidation(false), then adds user-provided outboundHeaders without any CRLF validation. This allows an attacker who can influence the outbound headers to inject arbitrary HTTP headers into the CONNECT request sent to the proxy server. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final.",
+                "markdown": "**Vulnerability CVE-2026-42578**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|io.netty:netty-handler-proxy|4.1.133.Final, 4.2.13.Final|[CVE-2026-42578](https://avd.aquasec.com/nvd/cve-2026-42578)|\n\nNetty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, Netty's HttpProxyHandler constructs HTTP CONNECT requests with header validation explicitly disabled. The newInitialMessage() method creates headers using DefaultHttpHeadersFactory.headersFactory().withValidation(false), then adds user-provided outboundHeaders without any CRLF validation. This allows an attacker who can influence the outbound headers to inject arbitrary HTTP headers into the CONNECT request sent to the proxy server. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-45536",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "netty-transport-native-epoll: netty-transport-native-kqueue: Netty: Denial of Service due to file descriptor leak in SCM_RIGHTS message handling"
+              },
+              "fullDescription": {
+                "text": "Netty is a network application framework for development of protocol servers and clients. Prior to versions 4.1.135.Final and 4.2.15.Final, netty_unix_socket_recvFd sets msg_control to `char control[CMSG_SPACE(sizeof(int))]` (line 940) — 24 bytes on 64-bit Linux. A peer-sent SCM_RIGHTS cmsg carrying two ints has cmsg_len = CMSG_LEN(8) = 24, which fits exactly with no MSG_CTRUNC, so the kernel installs both fds in the receiving process. The subsequent check `cmsg-\u003ecmsg_len == CMSG_LEN(sizeof(int))` (line 972, expected 20) fails, the branch that would read the fd is skipped, and neither installed fd is closed. The for(;;) loop calls recvmsg again (non-blocking → EAGAIN → Java maps to 0 → read loop exits normally), leaving two leaked fds per message. There is no MSG_CTRUNC handling. Reachable via Epoll/KQueue DomainSocketChannel when the application opts into DomainSocketReadMode.FILE_DESCRIPTORS (non-default). Versions 4.1.135.Final and 4.2.15.Final patch the issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-45536",
+              "help": {
+                "text": "Vulnerability CVE-2026-45536\nSeverity: MEDIUM\nPackage: io.netty:netty-transport-native-kqueue\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-45536](https://avd.aquasec.com/nvd/cve-2026-45536)\nNetty is a network application framework for development of protocol servers and clients. Prior to versions 4.1.135.Final and 4.2.15.Final, netty_unix_socket_recvFd sets msg_control to `char control[CMSG_SPACE(sizeof(int))]` (line 940) — 24 bytes on 64-bit Linux. A peer-sent SCM_RIGHTS cmsg carrying two ints has cmsg_len = CMSG_LEN(8) = 24, which fits exactly with no MSG_CTRUNC, so the kernel installs both fds in the receiving process. The subsequent check `cmsg-\u003ecmsg_len == CMSG_LEN(sizeof(int))` (line 972, expected 20) fails, the branch that would read the fd is skipped, and neither installed fd is closed. The for(;;) loop calls recvmsg again (non-blocking → EAGAIN → Java maps to 0 → read loop exits normally), leaving two leaked fds per message. There is no MSG_CTRUNC handling. Reachable via Epoll/KQueue DomainSocketChannel when the application opts into DomainSocketReadMode.FILE_DESCRIPTORS (non-default). Versions 4.1.135.Final and 4.2.15.Final patch the issue.",
+                "markdown": "**Vulnerability CVE-2026-45536**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|io.netty:netty-transport-native-kqueue|4.2.15.Final, 4.1.135.Final|[CVE-2026-45536](https://avd.aquasec.com/nvd/cve-2026-45536)|\n\nNetty is a network application framework for development of protocol servers and clients. Prior to versions 4.1.135.Final and 4.2.15.Final, netty_unix_socket_recvFd sets msg_control to `char control[CMSG_SPACE(sizeof(int))]` (line 940) — 24 bytes on 64-bit Linux. A peer-sent SCM_RIGHTS cmsg carrying two ints has cmsg_len = CMSG_LEN(8) = 24, which fits exactly with no MSG_CTRUNC, so the kernel installs both fds in the receiving process. The subsequent check `cmsg-\u003ecmsg_len == CMSG_LEN(sizeof(int))` (line 972, expected 20) fails, the branch that would read the fd is skipped, and neither installed fd is closed. The for(;;) loop calls recvmsg again (non-blocking → EAGAIN → Java maps to 0 → read loop exits normally), leaving two leaked fds per message. There is no MSG_CTRUNC handling. Reachable via Epoll/KQueue DomainSocketChannel when the application opts into DomainSocketReadMode.FILE_DESCRIPTORS (non-default). Versions 4.1.135.Final and 4.2.15.Final patch the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 4,
+                "cvssv3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "4.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-39304",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Apache ActiveMQ Client: Apache ActiveMQ Broker: Apache ActiveMQ: Apache ActiveMQ: Denial of Service due to TLSv1.3 KeyUpdate memory exhaustion"
+              },
+              "fullDescription": {
+                "text": "Denial of Service via Out of Memory vulnerability in Apache ActiveMQ Client, Apache ActiveMQ Broker, Apache ActiveMQ.\n\nActiveMQ NIO SSL transports do not correctly handle TLSv1.3 handshake KeyUpdates triggered by clients. This makes it possible for a client to rapidly trigger updates which causes the broker to exhaust all its memory in the SSL engine leading to DoS.\n\nNote: TLS versions before TLSv1.3 (such as TLSv1.2) are broken but are not vulnerable to OOM. Previous TLS versions require a full handshake renegotiation which causes a connection to hang but not OOM. This is fixed as well.\nThis issue affects Apache ActiveMQ Client: before 5.19.4, from 6.0.0 before 6.2.4; Apache ActiveMQ Broker: before 5.19.4, from 6.0.0 before 6.2.4; Apache ActiveMQ: before 5.19.4, from 6.0.0 before 6.2.4.\n\nUsers are recommended to upgrade to version 6.2.4 or 5.19.5, which fixes the issue."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-39304",
+              "help": {
+                "text": "Vulnerability CVE-2026-39304\nSeverity: HIGH\nPackage: org.apache.activemq:activemq-client\nFixed Version: 5.19.4, 6.2.4\nLink: [CVE-2026-39304](https://avd.aquasec.com/nvd/cve-2026-39304)\nDenial of Service via Out of Memory vulnerability in Apache ActiveMQ Client, Apache ActiveMQ Broker, Apache ActiveMQ.\n\nActiveMQ NIO SSL transports do not correctly handle TLSv1.3 handshake KeyUpdates triggered by clients. This makes it possible for a client to rapidly trigger updates which causes the broker to exhaust all its memory in the SSL engine leading to DoS.\n\nNote: TLS versions before TLSv1.3 (such as TLSv1.2) are broken but are not vulnerable to OOM. Previous TLS versions require a full handshake renegotiation which causes a connection to hang but not OOM. This is fixed as well.\nThis issue affects Apache ActiveMQ Client: before 5.19.4, from 6.0.0 before 6.2.4; Apache ActiveMQ Broker: before 5.19.4, from 6.0.0 before 6.2.4; Apache ActiveMQ: before 5.19.4, from 6.0.0 before 6.2.4.\n\nUsers are recommended to upgrade to version 6.2.4 or 5.19.5, which fixes the issue.",
+                "markdown": "**Vulnerability CVE-2026-39304**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.apache.activemq:activemq-client|5.19.4, 6.2.4|[CVE-2026-39304](https://avd.aquasec.com/nvd/cve-2026-39304)|\n\nDenial of Service via Out of Memory vulnerability in Apache ActiveMQ Client, Apache ActiveMQ Broker, Apache ActiveMQ.\n\nActiveMQ NIO SSL transports do not correctly handle TLSv1.3 handshake KeyUpdates triggered by clients. This makes it possible for a client to rapidly trigger updates which causes the broker to exhaust all its memory in the SSL engine leading to DoS.\n\nNote: TLS versions before TLSv1.3 (such as TLSv1.2) are broken but are not vulnerable to OOM. Previous TLS versions require a full handshake renegotiation which causes a connection to hang but not OOM. This is fixed as well.\nThis issue affects Apache ActiveMQ Client: before 5.19.4, from 6.0.0 before 6.2.4; Apache ActiveMQ Broker: before 5.19.4, from 6.0.0 before 6.2.4; Apache ActiveMQ: before 5.19.4, from 6.0.0 before 6.2.4.\n\nUsers are recommended to upgrade to version 6.2.4 or 5.19.5, which fixes the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-33227",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.activemq/activemq-client: org.apache.activemq/activemq-broker: org.apache.activemq/activemq-all: org.apache.activemq/activemq-web: improper limitation of a pathname to a restricted classpath directory"
+              },
+              "fullDescription": {
+                "text": "Improper validation and restriction of a classpath path name vulnerability in \n\n Apache ActiveMQ Client, Apache ActiveMQ Broker, Apache ActiveMQ All, Apache ActiveMQ Web, Apache ActiveMQ.\n\n\n\nIn two instances (when creating a Stomp consumer and also browsing messages in the Web console) an authenticated user provided \"key\" value could be constructed to traverse the classpath due to path concatenation. As a result, the application is exposed to a classpath path resource loading vulnerability that could potentially be chained together with another attack to lead to exploit.\n\n\n\n\n\nThis issue affects Apache ActiveMQ Client: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ Broker: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ All: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ Web: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ: before 5.19.3, from 6.0.0 before 6.2.2.\n\nUsers are recommended to upgrade to version 5.19.4 or 6.2.3, which fixes the issue. Note: 5.19.3 and 6.2.2 also fix this issue, but that is limited to non-Windows environments due to a path separator resolution bug fixed in 5.19.4 and 6.2.3."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-33227",
+              "help": {
+                "text": "Vulnerability CVE-2026-33227\nSeverity: MEDIUM\nPackage: org.apache.activemq:activemq-client\nFixed Version: 5.19.3, 6.2.2\nLink: [CVE-2026-33227](https://avd.aquasec.com/nvd/cve-2026-33227)\nImproper validation and restriction of a classpath path name vulnerability in \n\n Apache ActiveMQ Client, Apache ActiveMQ Broker, Apache ActiveMQ All, Apache ActiveMQ Web, Apache ActiveMQ.\n\n\n\nIn two instances (when creating a Stomp consumer and also browsing messages in the Web console) an authenticated user provided \"key\" value could be constructed to traverse the classpath due to path concatenation. As a result, the application is exposed to a classpath path resource loading vulnerability that could potentially be chained together with another attack to lead to exploit.\n\n\n\n\n\nThis issue affects Apache ActiveMQ Client: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ Broker: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ All: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ Web: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ: before 5.19.3, from 6.0.0 before 6.2.2.\n\nUsers are recommended to upgrade to version 5.19.4 or 6.2.3, which fixes the issue. Note: 5.19.3 and 6.2.2 also fix this issue, but that is limited to non-Windows environments due to a path separator resolution bug fixed in 5.19.4 and 6.2.3.",
+                "markdown": "**Vulnerability CVE-2026-33227**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.activemq:activemq-client|5.19.3, 6.2.2|[CVE-2026-33227](https://avd.aquasec.com/nvd/cve-2026-33227)|\n\nImproper validation and restriction of a classpath path name vulnerability in \n\n Apache ActiveMQ Client, Apache ActiveMQ Broker, Apache ActiveMQ All, Apache ActiveMQ Web, Apache ActiveMQ.\n\n\n\nIn two instances (when creating a Stomp consumer and also browsing messages in the Web console) an authenticated user provided \"key\" value could be constructed to traverse the classpath due to path concatenation. As a result, the application is exposed to a classpath path resource loading vulnerability that could potentially be chained together with another attack to lead to exploit.\n\n\n\n\n\nThis issue affects Apache ActiveMQ Client: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ Broker: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ All: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ Web: before 5.19.3, from 6.0.0 before 6.2.2; Apache ActiveMQ: before 5.19.3, from 6.0.0 before 6.2.2.\n\nUsers are recommended to upgrade to version 5.19.4 or 6.2.3, which fixes the issue. Note: 5.19.3 and 6.2.2 also fix this issue, but that is limited to non-Windows environments due to a path separator resolution bug fixed in 5.19.4 and 6.2.3."
+              },
+              "properties": {
+                "cvssv3_baseScore": 4.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "4.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-32642",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Apache Artemis: Apache ActiveMQ Artemis: Apache Artemis and Apache ActiveMQ Artemis: Unauthorized address creation due to incorrect authorization during JMS topic subscription."
+              },
+              "fullDescription": {
+                "text": "Incorrect Authorization (CWE-863) vulnerability in Apache Artemis, Apache ActiveMQ Artemis exists when an application using the OpenWire protocol attempts to create a non-durable JMS topic subscription on an address that doesn't exist with an authenticated user which has the \"createDurableQueue\" permission but does not have the \"createAddress\" permission and address auto-creation is disabled. In this circumstance, a temporary address will be created whereas the attempt to create the non-durable subscription should instead fail since the user is not authorized to create the corresponding address. When the OpenWire connection is closed the address is removed.\n\nThis issue affects Apache Artemis: from 2.50.0 through 2.52.0; Apache ActiveMQ Artemis: from 2.0.0 through 2.44.0.\n\nUsers are recommended to upgrade to version 2.53.0, which fixes the issue."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-32642",
+              "help": {
+                "text": "Vulnerability CVE-2026-32642\nSeverity: LOW\nPackage: org.apache.activemq:artemis-openwire-protocol\nFixed Version: 2.53.0\nLink: [CVE-2026-32642](https://avd.aquasec.com/nvd/cve-2026-32642)\nIncorrect Authorization (CWE-863) vulnerability in Apache Artemis, Apache ActiveMQ Artemis exists when an application using the OpenWire protocol attempts to create a non-durable JMS topic subscription on an address that doesn't exist with an authenticated user which has the \"createDurableQueue\" permission but does not have the \"createAddress\" permission and address auto-creation is disabled. In this circumstance, a temporary address will be created whereas the attempt to create the non-durable subscription should instead fail since the user is not authorized to create the corresponding address. When the OpenWire connection is closed the address is removed.\n\nThis issue affects Apache Artemis: from 2.50.0 through 2.52.0; Apache ActiveMQ Artemis: from 2.0.0 through 2.44.0.\n\nUsers are recommended to upgrade to version 2.53.0, which fixes the issue.",
+                "markdown": "**Vulnerability CVE-2026-32642**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|org.apache.activemq:artemis-openwire-protocol|2.53.0|[CVE-2026-32642](https://avd.aquasec.com/nvd/cve-2026-32642)|\n\nIncorrect Authorization (CWE-863) vulnerability in Apache Artemis, Apache ActiveMQ Artemis exists when an application using the OpenWire protocol attempts to create a non-durable JMS topic subscription on an address that doesn't exist with an authenticated user which has the \"createDurableQueue\" permission but does not have the \"createAddress\" permission and address auto-creation is disabled. In this circumstance, a temporary address will be created whereas the attempt to create the non-durable subscription should instead fail since the user is not authorized to create the corresponding address. When the OpenWire connection is closed the address is removed.\n\nThis issue affects Apache Artemis: from 2.50.0 through 2.52.0; Apache ActiveMQ Artemis: from 2.0.0 through 2.44.0.\n\nUsers are recommended to upgrade to version 2.53.0, which fixes the issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:L/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-27446",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.artemis:artemis-server: org.apache.activemq:artemis-server: Apache Artemis, Apache ActiveMQ Artemis: Message injection and exfiltration due to missing authentication"
+              },
+              "fullDescription": {
+                "text": "Missing Authentication for Critical Function (CWE-306) vulnerability in Apache Artemis, Apache ActiveMQ Artemis. An unauthenticated remote attacker can use the Core protocol to force a target broker to establish an outbound Core federation connection to an attacker-controlled rogue broker. This could potentially result in message injection into any queue and/or message exfiltration from any queue via the rogue broker. This impacts environments that allow both:\n\n- incoming Core protocol connections from untrusted sources to the broker\n\n- outgoing Core protocol connections from the broker to untrusted targets\n\nThis issue affects:\n\n- Apache Artemis from 2.50.0 through 2.51.0\n\n- Apache ActiveMQ Artemis from 2.11.0 through 2.44.0.\n\nUsers are recommended to upgrade to Apache Artemis version 2.52.0, which fixes the issue.\n\nThe issue can be mitigated by one of the following:\n\n- Remove Core protocol support from any acceptor receiving connections from untrusted sources. Incoming Core protocol connections are supported by default via the \"artemis\" acceptor listening on port 61616. See the \"protocols\" URL parameter configured for the acceptor. An acceptor URL without this parameter supports all protocols by default, including Core.\n\n- Use two-way SSL (i.e. certificate-based authentication) in order to force every client to present the proper SSL certificate when establishing a connection before any message protocol handshake is attempted. This will prevent unauthenticated exploitation of this vulnerability.\n\n- Implement and deploy a Core interceptor to deny all Core downstream federation connect packets. Such packets have a type of (int) -16 or (byte) 0xfffffff0. Documentation for interceptors is available at  https://artemis.apache.org/components/artemis/documentation/latest/intercepting-operations.html ."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-27446",
+              "help": {
+                "text": "Vulnerability CVE-2026-27446\nSeverity: CRITICAL\nPackage: org.apache.activemq:artemis-server\nFixed Version: \nLink: [CVE-2026-27446](https://avd.aquasec.com/nvd/cve-2026-27446)\nMissing Authentication for Critical Function (CWE-306) vulnerability in Apache Artemis, Apache ActiveMQ Artemis. An unauthenticated remote attacker can use the Core protocol to force a target broker to establish an outbound Core federation connection to an attacker-controlled rogue broker. This could potentially result in message injection into any queue and/or message exfiltration from any queue via the rogue broker. This impacts environments that allow both:\n\n- incoming Core protocol connections from untrusted sources to the broker\n\n- outgoing Core protocol connections from the broker to untrusted targets\n\nThis issue affects:\n\n- Apache Artemis from 2.50.0 through 2.51.0\n\n- Apache ActiveMQ Artemis from 2.11.0 through 2.44.0.\n\nUsers are recommended to upgrade to Apache Artemis version 2.52.0, which fixes the issue.\n\nThe issue can be mitigated by one of the following:\n\n- Remove Core protocol support from any acceptor receiving connections from untrusted sources. Incoming Core protocol connections are supported by default via the \"artemis\" acceptor listening on port 61616. See the \"protocols\" URL parameter configured for the acceptor. An acceptor URL without this parameter supports all protocols by default, including Core.\n\n- Use two-way SSL (i.e. certificate-based authentication) in order to force every client to present the proper SSL certificate when establishing a connection before any message protocol handshake is attempted. This will prevent unauthenticated exploitation of this vulnerability.\n\n- Implement and deploy a Core interceptor to deny all Core downstream federation connect packets. Such packets have a type of (int) -16 or (byte) 0xfffffff0. Documentation for interceptors is available at  https://artemis.apache.org/components/artemis/documentation/latest/intercepting-operations.html .",
+                "markdown": "**Vulnerability CVE-2026-27446**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|org.apache.activemq:artemis-server||[CVE-2026-27446](https://avd.aquasec.com/nvd/cve-2026-27446)|\n\nMissing Authentication for Critical Function (CWE-306) vulnerability in Apache Artemis, Apache ActiveMQ Artemis. An unauthenticated remote attacker can use the Core protocol to force a target broker to establish an outbound Core federation connection to an attacker-controlled rogue broker. This could potentially result in message injection into any queue and/or message exfiltration from any queue via the rogue broker. This impacts environments that allow both:\n\n- incoming Core protocol connections from untrusted sources to the broker\n\n- outgoing Core protocol connections from the broker to untrusted targets\n\nThis issue affects:\n\n- Apache Artemis from 2.50.0 through 2.51.0\n\n- Apache ActiveMQ Artemis from 2.11.0 through 2.44.0.\n\nUsers are recommended to upgrade to Apache Artemis version 2.52.0, which fixes the issue.\n\nThe issue can be mitigated by one of the following:\n\n- Remove Core protocol support from any acceptor receiving connections from untrusted sources. Incoming Core protocol connections are supported by default via the \"artemis\" acceptor listening on port 61616. See the \"protocols\" URL parameter configured for the acceptor. An acceptor URL without this parameter supports all protocols by default, including Core.\n\n- Use two-way SSL (i.e. certificate-based authentication) in order to force every client to present the proper SSL certificate when establishing a connection before any message protocol handshake is attempted. This will prevent unauthenticated exploitation of this vulnerability.\n\n- Implement and deploy a Core interceptor to deny all Core downstream federation connect packets. Such packets have a type of (int) -16 or (byte) 0xfffffff0. Documentation for interceptors is available at  https://artemis.apache.org/components/artemis/documentation/latest/intercepting-operations.html ."
+              },
+              "properties": {
+                "cvssv3_baseScore": 9.8,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "cvssv40_baseScore": 9.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:L/SC:L/SI:L/SA:L",
+                "precision": "very-high",
+                "security-severity": "9.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-45205",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Uncontrolled Recursion vulnerability in Apache Commons.  When processi ..."
+              },
+              "fullDescription": {
+                "text": "Uncontrolled Recursion vulnerability in Apache Commons.\n\nWhen processing an untrusted configuration file, Commons Configuration will throw a StackOverflowError for YAML input with cycles.\nThis issue affects Apache Commons: from 2.2 before 2.15.0.\n\nUsers are recommended to upgrade to version 2.15.0, which fixes the issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-45205",
+              "help": {
+                "text": "Vulnerability CVE-2026-45205\nSeverity: MEDIUM\nPackage: org.apache.commons:commons-configuration2\nFixed Version: 2.15.0\nLink: [CVE-2026-45205](https://avd.aquasec.com/nvd/cve-2026-45205)\nUncontrolled Recursion vulnerability in Apache Commons.\n\nWhen processing an untrusted configuration file, Commons Configuration will throw a StackOverflowError for YAML input with cycles.\nThis issue affects Apache Commons: from 2.2 before 2.15.0.\n\nUsers are recommended to upgrade to version 2.15.0, which fixes the issue.",
+                "markdown": "**Vulnerability CVE-2026-45205**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.commons:commons-configuration2|2.15.0|[CVE-2026-45205](https://avd.aquasec.com/nvd/cve-2026-45205)|\n\nUncontrolled Recursion vulnerability in Apache Commons.\n\nWhen processing an untrusted configuration file, Commons Configuration will throw a StackOverflowError for YAML input with cycles.\nThis issue affects Apache Commons: from 2.2 before 2.15.0.\n\nUsers are recommended to upgrade to version 2.15.0, which fixes the issue."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-68161",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Apache Log4j: Apache Log4j Core: Information disclosure via missing TLS hostname verification"
+              },
+              "fullDescription": {
+                "text": "The Socket Appender in Apache Log4j Core versions 2.0-beta9 through 2.25.2 does not perform TLS hostname verification of the peer certificate, even when the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  configuration attribute or the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property is set to true.\n\nThis issue may allow a man-in-the-middle attacker to intercept or redirect log traffic under the following conditions:\n\n  *  The attacker is able to intercept or redirect network traffic between the client and the log receiver.\n  *  The attacker can present a server certificate issued by a certification authority trusted by the Socket Appender’s configured trust store (or by the default Java trust store if no custom trust store is configured).\n\n\nUsers are advised to upgrade to Apache Log4j Core version 2.25.3, which addresses this issue.\n\nAs an alternative mitigation, the Socket Appender may be configured to use a private or restricted trust root to limit the set of trusted certificates."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-68161",
+              "help": {
+                "text": "Vulnerability CVE-2025-68161\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.3\nLink: [CVE-2025-68161](https://avd.aquasec.com/nvd/cve-2025-68161)\nThe Socket Appender in Apache Log4j Core versions 2.0-beta9 through 2.25.2 does not perform TLS hostname verification of the peer certificate, even when the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  configuration attribute or the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property is set to true.\n\nThis issue may allow a man-in-the-middle attacker to intercept or redirect log traffic under the following conditions:\n\n  *  The attacker is able to intercept or redirect network traffic between the client and the log receiver.\n  *  The attacker can present a server certificate issued by a certification authority trusted by the Socket Appender’s configured trust store (or by the default Java trust store if no custom trust store is configured).\n\n\nUsers are advised to upgrade to Apache Log4j Core version 2.25.3, which addresses this issue.\n\nAs an alternative mitigation, the Socket Appender may be configured to use a private or restricted trust root to limit the set of trusted certificates.",
+                "markdown": "**Vulnerability CVE-2025-68161**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.3|[CVE-2025-68161](https://avd.aquasec.com/nvd/cve-2025-68161)|\n\nThe Socket Appender in Apache Log4j Core versions 2.0-beta9 through 2.25.2 does not perform TLS hostname verification of the peer certificate, even when the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  configuration attribute or the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property is set to true.\n\nThis issue may allow a man-in-the-middle attacker to intercept or redirect log traffic under the following conditions:\n\n  *  The attacker is able to intercept or redirect network traffic between the client and the log receiver.\n  *  The attacker can present a server certificate issued by a certification authority trusted by the Socket Appender’s configured trust store (or by the default Java trust store if no custom trust store is configured).\n\n\nUsers are advised to upgrade to Apache Log4j Core version 2.25.3, which addresses this issue.\n\nAs an alternative mitigation, the Socket Appender may be configured to use a private or restricted trust root to limit the set of trusted certificates."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34477",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Man-in-the-middle attack due to incomplete hostname verification"
+              },
+              "fullDescription": {
+                "text": "The fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34477",
+              "help": {
+                "text": "Vulnerability CVE-2026-34477\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)\nThe fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue.",
+                "markdown": "**Vulnerability CVE-2026-34477**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)|\n\nThe fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34478",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Log injection via CRLF sequences due to configuration attribute renames"
+              },
+              "fullDescription": {
+                "text": "Apache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34478",
+              "help": {
+                "text": "Vulnerability CVE-2026-34478\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)\nApache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue.",
+                "markdown": "**Vulnerability CVE-2026-34478**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)|\n\nApache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34480",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Invalid XML output causes denial of service in logging"
+              },
+              "fullDescription": {
+                "text": "Apache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34480",
+              "help": {
+                "text": "Vulnerability CVE-2026-34480\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)\nApache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output.",
+                "markdown": "**Vulnerability CVE-2026-34480**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)|\n\nApache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-24281",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Apache ZooKeeper: Apache ZooKeeper: Impersonation of servers or clients via reverse DNS spoofing"
+              },
+              "fullDescription": {
+                "text": "Hostname verification in Apache ZooKeeper ZKTrustManager falls back to reverse DNS (PTR) when IP SAN validation fails, allowing attackers who control or spoof PTR records to impersonate ZooKeeper servers or clients with a valid certificate for the PTR name. It's important to note that attacker must present a certificate which is trusted by ZKTrustManager which makes the attack vector harder to exploit. Users are recommended to upgrade to version 3.8.6 or 3.9.5, which fixes this issue by introducing a new configuration option to disable reverse DNS lookup in client and quorum protocols."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-24281",
+              "help": {
+                "text": "Vulnerability CVE-2026-24281\nSeverity: HIGH\nPackage: org.apache.zookeeper:zookeeper\nFixed Version: 3.8.6, 3.9.5\nLink: [CVE-2026-24281](https://avd.aquasec.com/nvd/cve-2026-24281)\nHostname verification in Apache ZooKeeper ZKTrustManager falls back to reverse DNS (PTR) when IP SAN validation fails, allowing attackers who control or spoof PTR records to impersonate ZooKeeper servers or clients with a valid certificate for the PTR name. It's important to note that attacker must present a certificate which is trusted by ZKTrustManager which makes the attack vector harder to exploit. Users are recommended to upgrade to version 3.8.6 or 3.9.5, which fixes this issue by introducing a new configuration option to disable reverse DNS lookup in client and quorum protocols.",
+                "markdown": "**Vulnerability CVE-2026-24281**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.apache.zookeeper:zookeeper|3.8.6, 3.9.5|[CVE-2026-24281](https://avd.aquasec.com/nvd/cve-2026-24281)|\n\nHostname verification in Apache ZooKeeper ZKTrustManager falls back to reverse DNS (PTR) when IP SAN validation fails, allowing attackers who control or spoof PTR records to impersonate ZooKeeper servers or clients with a valid certificate for the PTR name. It's important to note that attacker must present a certificate which is trusted by ZKTrustManager which makes the attack vector harder to exploit. Users are recommended to upgrade to version 3.8.6 or 3.9.5, which fixes this issue by introducing a new configuration option to disable reverse DNS lookup in client and quorum protocols."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.4,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.4",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-24308",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Apache ZooKeeper: Apache ZooKeeper: Information disclosure via improper handling of configuration values"
+              },
+              "fullDescription": {
+                "text": "Improper handling of configuration values in ZKConfig in Apache ZooKeeper 3.8.5 and 3.9.4 on all platforms allows an attacker to expose sensitive information stored in client configuration in the client's logfile. Configuration values are exposed at INFO level logging rendering potential production systems affected by the issue. Users are recommended to upgrade to version 3.8.6 or 3.9.5 which fixes this issue."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-24308",
+              "help": {
+                "text": "Vulnerability CVE-2026-24308\nSeverity: HIGH\nPackage: org.apache.zookeeper:zookeeper\nFixed Version: 3.9.5, 3.8.6\nLink: [CVE-2026-24308](https://avd.aquasec.com/nvd/cve-2026-24308)\nImproper handling of configuration values in ZKConfig in Apache ZooKeeper 3.8.5 and 3.9.4 on all platforms allows an attacker to expose sensitive information stored in client configuration in the client's logfile. Configuration values are exposed at INFO level logging rendering potential production systems affected by the issue. Users are recommended to upgrade to version 3.8.6 or 3.9.5 which fixes this issue.",
+                "markdown": "**Vulnerability CVE-2026-24308**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.apache.zookeeper:zookeeper|3.9.5, 3.8.6|[CVE-2026-24308](https://avd.aquasec.com/nvd/cve-2026-24308)|\n\nImproper handling of configuration values in ZKConfig in Apache ZooKeeper 3.8.5 and 3.9.4 on all platforms allows an attacker to expose sensitive information stored in client configuration in the client's logfile. Configuration values are exposed at INFO level logging rendering potential production systems affected by the issue. Users are recommended to upgrade to version 3.8.6 or 3.9.5 which fixes this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 8.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-2332",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.eclipse.jetty/jetty-http: HTTP request smuggling via chunked extension quoted-string parsing"
+              },
+              "fullDescription": {
+                "text": "In Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-2332",
+              "help": {
+                "text": "Vulnerability CVE-2026-2332\nSeverity: HIGH\nPackage: org.eclipse.jetty:jetty-http\nFixed Version: 12.1.7, 12.0.33\nLink: [CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)\nIn Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request.",
+                "markdown": "**Vulnerability CVE-2026-2332**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.eclipse.jetty:jetty-http|12.1.7, 12.0.33|[CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)|\n\nIn Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.4,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.4",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-11143",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.eclipse.jetty/jetty-http: org.eclipse.jetty: Security bypass due to differential URI parsing"
+              },
+              "fullDescription": {
+                "text": "The Jetty URI parser has some key differences to other common parsers when evaluating invalid or unusual URIs. Differential parsing of URIs in systems using multiple components may result in security by-pass. For example a component that enforces a black list may interpret the URIs differently from one that generates a response. At the very least, differential parsing may divulge implementation details."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-11143",
+              "help": {
+                "text": "Vulnerability CVE-2025-11143\nSeverity: LOW\nPackage: org.eclipse.jetty:jetty-http\nFixed Version: 12.0.31, 12.1.5\nLink: [CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)\nThe Jetty URI parser has some key differences to other common parsers when evaluating invalid or unusual URIs. Differential parsing of URIs in systems using multiple components may result in security by-pass. For example a component that enforces a black list may interpret the URIs differently from one that generates a response. At the very least, differential parsing may divulge implementation details.",
+                "markdown": "**Vulnerability CVE-2025-11143**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|org.eclipse.jetty:jetty-http|12.0.31, 12.1.5|[CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)|\n\nThe Jetty URI parser has some key differences to other common parsers when evaluating invalid or unusual URIs. Differential parsing of URIs in systems using multiple components may result in security by-pass. For example a component that enforces a black list may interpret the URIs differently from one that generates a response. At the very least, differential parsing may divulge implementation details."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.7,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "3.7",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-1605",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.eclipse.jetty/jetty-server: Eclipse Jetty: Denial of Service due to unreleased JDK Inflater from compressed HTTP requests"
+              },
+              "fullDescription": {
+                "text": "In Eclipse Jetty, versions 12.0.0-12.0.31 and 12.1.0-12.0.5, class GzipHandler exposes a vulnerability when a compressed HTTP request, with Content-Encoding: gzip, is processed and the corresponding response is not compressed.\n\n\nThis happens because the JDK Inflater is allocated for decompressing the request, but it is not released because the release mechanism is tied to the compressed response.\nIn this case, since the response is not compressed, the release mechanism does not trigger, causing the leak."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-1605",
+              "help": {
+                "text": "Vulnerability CVE-2026-1605\nSeverity: HIGH\nPackage: org.eclipse.jetty:jetty-server\nFixed Version: 12.1.6, 12.0.32\nLink: [CVE-2026-1605](https://avd.aquasec.com/nvd/cve-2026-1605)\nIn Eclipse Jetty, versions 12.0.0-12.0.31 and 12.1.0-12.0.5, class GzipHandler exposes a vulnerability when a compressed HTTP request, with Content-Encoding: gzip, is processed and the corresponding response is not compressed.\n\n\nThis happens because the JDK Inflater is allocated for decompressing the request, but it is not released because the release mechanism is tied to the compressed response.\nIn this case, since the response is not compressed, the release mechanism does not trigger, causing the leak.",
+                "markdown": "**Vulnerability CVE-2026-1605**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.eclipse.jetty:jetty-server|12.1.6, 12.0.32|[CVE-2026-1605](https://avd.aquasec.com/nvd/cve-2026-1605)|\n\nIn Eclipse Jetty, versions 12.0.0-12.0.31 and 12.1.0-12.0.5, class GzipHandler exposes a vulnerability when a compressed HTTP request, with Content-Encoding: gzip, is processed and the corresponding response is not compressed.\n\n\nThis happens because the JDK Inflater is allocated for decompressing the request, but it is not released because the release mechanism is tied to the compressed response.\nIn this case, since the response is not compressed, the release mechanism does not trigger, causing the leak."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CVE-2026-42583",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-codec\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42583\nSeverity: HIGH\nFixed Version: 4.1.133.Final\nLink: [CVE-2026-42583](https://avd.aquasec.com/nvd/cve-2026-42583)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-4.1.128.Final.jar: io.netty:netty-codec@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42583",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-codec\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42583\nSeverity: HIGH\nFixed Version: 4.1.133.Final\nLink: [CVE-2026-42583](https://avd.aquasec.com/nvd/cve-2026-42583)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-4.1.128.Final.jar: io.netty:netty-codec@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33870",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-33870\nSeverity: HIGH\nFixed Version: 4.1.132.Final, 4.2.10.Final\nLink: [CVE-2026-33870](https://avd.aquasec.com/nvd/cve-2026-33870)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33870",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-33870\nSeverity: HIGH\nFixed Version: 4.1.132.Final, 4.2.10.Final\nLink: [CVE-2026-33870](https://avd.aquasec.com/nvd/cve-2026-33870)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42584",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42584\nSeverity: HIGH\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42584](https://avd.aquasec.com/nvd/cve-2026-42584)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42584",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42584\nSeverity: HIGH\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42584](https://avd.aquasec.com/nvd/cve-2026-42584)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42587",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42587\nSeverity: HIGH\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42587](https://avd.aquasec.com/nvd/cve-2026-42587)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42587",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42587\nSeverity: HIGH\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42587](https://avd.aquasec.com/nvd/cve-2026-42587)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-67735",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2025-67735\nSeverity: MEDIUM\nFixed Version: 4.2.8.Final, 4.1.129.Final\nLink: [CVE-2025-67735](https://avd.aquasec.com/nvd/cve-2025-67735)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-67735",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2025-67735\nSeverity: MEDIUM\nFixed Version: 4.2.8.Final, 4.1.129.Final\nLink: [CVE-2025-67735](https://avd.aquasec.com/nvd/cve-2025-67735)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41417",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-41417\nSeverity: MEDIUM\nFixed Version: 4.1.133.Final, 4.2.13.Final\nLink: [CVE-2026-41417](https://avd.aquasec.com/nvd/cve-2026-41417)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-41417",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-41417\nSeverity: MEDIUM\nFixed Version: 4.1.133.Final, 4.2.13.Final\nLink: [CVE-2026-41417](https://avd.aquasec.com/nvd/cve-2026-41417)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42580",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42580\nSeverity: MEDIUM\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42580](https://avd.aquasec.com/nvd/cve-2026-42580)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42580",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42580\nSeverity: MEDIUM\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42580](https://avd.aquasec.com/nvd/cve-2026-42580)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42581",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42581\nSeverity: MEDIUM\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42581](https://avd.aquasec.com/nvd/cve-2026-42581)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42581",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42581\nSeverity: MEDIUM\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42581](https://avd.aquasec.com/nvd/cve-2026-42581)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42585",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42585\nSeverity: MEDIUM\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42585](https://avd.aquasec.com/nvd/cve-2026-42585)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42585",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42585\nSeverity: MEDIUM\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-42585](https://avd.aquasec.com/nvd/cve-2026-42585)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-50020",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-50020\nSeverity: MEDIUM\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-50020](https://avd.aquasec.com/nvd/cve-2026-50020)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-50020",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-http\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-50020\nSeverity: MEDIUM\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-50020](https://avd.aquasec.com/nvd/cve-2026-50020)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-http-4.1.128.Final.jar: io.netty:netty-codec-http@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44248",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-mqtt\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-44248\nSeverity: MEDIUM\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-44248](https://avd.aquasec.com/nvd/cve-2026-44248)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-codec-mqtt-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-codec-mqtt-4.1.128.Final.jar: io.netty:netty-codec-mqtt@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-44248",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-codec-mqtt\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-44248\nSeverity: MEDIUM\nFixed Version: 4.2.13.Final, 4.1.133.Final\nLink: [CVE-2026-44248](https://avd.aquasec.com/nvd/cve-2026-44248)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-mqtt-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-codec-mqtt-4.1.128.Final.jar: io.netty:netty-codec-mqtt@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-50010",
+          "ruleIndex": 11,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-handler\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-50010\nSeverity: HIGH\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-50010](https://avd.aquasec.com/nvd/cve-2026-50010)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-handler-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-handler-4.1.128.Final.jar: io.netty:netty-handler@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-50010",
+          "ruleIndex": 11,
+          "level": "error",
+          "message": {
+            "text": "Package: io.netty:netty-handler\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-50010\nSeverity: HIGH\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-50010](https://avd.aquasec.com/nvd/cve-2026-50010)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-handler-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-handler-4.1.128.Final.jar: io.netty:netty-handler@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42578",
+          "ruleIndex": 12,
+          "level": "note",
+          "message": {
+            "text": "Package: io.netty:netty-handler-proxy\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42578\nSeverity: LOW\nFixed Version: 4.1.133.Final, 4.2.13.Final\nLink: [CVE-2026-42578](https://avd.aquasec.com/nvd/cve-2026-42578)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-handler-proxy-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-handler-proxy-4.1.128.Final.jar: io.netty:netty-handler-proxy@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-42578",
+          "ruleIndex": 12,
+          "level": "note",
+          "message": {
+            "text": "Package: io.netty:netty-handler-proxy\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-42578\nSeverity: LOW\nFixed Version: 4.1.133.Final, 4.2.13.Final\nLink: [CVE-2026-42578](https://avd.aquasec.com/nvd/cve-2026-42578)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-handler-proxy-4.1.128.Final.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-handler-proxy-4.1.128.Final.jar: io.netty:netty-handler-proxy@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45536",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-transport-native-epoll\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-45536\nSeverity: MEDIUM\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-45536](https://avd.aquasec.com/nvd/cve-2026-45536)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-transport-native-epoll-4.1.128.Final-linux-x86_64.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-transport-native-epoll-4.1.128.Final-linux-x86_64.jar: io.netty:netty-transport-native-epoll@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45536",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-transport-native-epoll\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-45536\nSeverity: MEDIUM\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-45536](https://avd.aquasec.com/nvd/cve-2026-45536)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-transport-native-epoll-4.1.128.Final-linux-x86_64.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-transport-native-epoll-4.1.128.Final-linux-x86_64.jar: io.netty:netty-transport-native-epoll@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45536",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-transport-native-kqueue\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-45536\nSeverity: MEDIUM\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-45536](https://avd.aquasec.com/nvd/cve-2026-45536)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/netty-transport-native-kqueue-4.1.128.Final-osx-x86_64.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/netty-transport-native-kqueue-4.1.128.Final-osx-x86_64.jar: io.netty:netty-transport-native-kqueue@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45536",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: io.netty:netty-transport-native-kqueue\nInstalled Version: 4.1.128.Final\nVulnerability CVE-2026-45536\nSeverity: MEDIUM\nFixed Version: 4.2.15.Final, 4.1.135.Final\nLink: [CVE-2026-45536](https://avd.aquasec.com/nvd/cve-2026-45536)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-transport-native-kqueue-4.1.128.Final-osx-x86_64.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/netty-transport-native-kqueue-4.1.128.Final-osx-x86_64.jar: io.netty:netty-transport-native-kqueue@4.1.128.Final"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39304",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.activemq:activemq-client\nInstalled Version: 5.19.1\nVulnerability CVE-2026-39304\nSeverity: HIGH\nFixed Version: 5.19.4, 6.2.4\nLink: [CVE-2026-39304](https://avd.aquasec.com/nvd/cve-2026-39304)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/activemq-client-5.19.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/activemq-client-5.19.1.jar: org.apache.activemq:activemq-client@5.19.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39304",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.activemq:activemq-client\nInstalled Version: 5.19.1\nVulnerability CVE-2026-39304\nSeverity: HIGH\nFixed Version: 5.19.4, 6.2.4\nLink: [CVE-2026-39304](https://avd.aquasec.com/nvd/cve-2026-39304)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/artemis-openwire-protocol-2.44.0.jar/activemq-client-5.19.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/artemis-openwire-protocol-2.44.0.jar/activemq-client-5.19.1.jar: org.apache.activemq:activemq-client@5.19.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39304",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.activemq:activemq-client\nInstalled Version: 5.19.1\nVulnerability CVE-2026-39304\nSeverity: HIGH\nFixed Version: 5.19.4, 6.2.4\nLink: [CVE-2026-39304](https://avd.aquasec.com/nvd/cve-2026-39304)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/activemq-client-5.19.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/activemq-client-5.19.1.jar: org.apache.activemq:activemq-client@5.19.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-39304",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.activemq:activemq-client\nInstalled Version: 5.19.1\nVulnerability CVE-2026-39304\nSeverity: HIGH\nFixed Version: 5.19.4, 6.2.4\nLink: [CVE-2026-39304](https://avd.aquasec.com/nvd/cve-2026-39304)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/artemis-openwire-protocol-2.44.0.jar/activemq-client-5.19.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/artemis-openwire-protocol-2.44.0.jar/activemq-client-5.19.1.jar: org.apache.activemq:activemq-client@5.19.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33227",
+          "ruleIndex": 15,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.activemq:activemq-client\nInstalled Version: 5.19.1\nVulnerability CVE-2026-33227\nSeverity: MEDIUM\nFixed Version: 5.19.3, 6.2.2\nLink: [CVE-2026-33227](https://avd.aquasec.com/nvd/cve-2026-33227)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/activemq-client-5.19.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/activemq-client-5.19.1.jar: org.apache.activemq:activemq-client@5.19.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33227",
+          "ruleIndex": 15,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.activemq:activemq-client\nInstalled Version: 5.19.1\nVulnerability CVE-2026-33227\nSeverity: MEDIUM\nFixed Version: 5.19.3, 6.2.2\nLink: [CVE-2026-33227](https://avd.aquasec.com/nvd/cve-2026-33227)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/artemis-openwire-protocol-2.44.0.jar/activemq-client-5.19.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/artemis-openwire-protocol-2.44.0.jar/activemq-client-5.19.1.jar: org.apache.activemq:activemq-client@5.19.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33227",
+          "ruleIndex": 15,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.activemq:activemq-client\nInstalled Version: 5.19.1\nVulnerability CVE-2026-33227\nSeverity: MEDIUM\nFixed Version: 5.19.3, 6.2.2\nLink: [CVE-2026-33227](https://avd.aquasec.com/nvd/cve-2026-33227)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/activemq-client-5.19.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/activemq-client-5.19.1.jar: org.apache.activemq:activemq-client@5.19.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-33227",
+          "ruleIndex": 15,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.activemq:activemq-client\nInstalled Version: 5.19.1\nVulnerability CVE-2026-33227\nSeverity: MEDIUM\nFixed Version: 5.19.3, 6.2.2\nLink: [CVE-2026-33227](https://avd.aquasec.com/nvd/cve-2026-33227)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/artemis-openwire-protocol-2.44.0.jar/activemq-client-5.19.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/artemis-openwire-protocol-2.44.0.jar/activemq-client-5.19.1.jar: org.apache.activemq:activemq-client@5.19.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-32642",
+          "ruleIndex": 16,
+          "level": "note",
+          "message": {
+            "text": "Package: org.apache.activemq:artemis-openwire-protocol\nInstalled Version: 2.44.0\nVulnerability CVE-2026-32642\nSeverity: LOW\nFixed Version: 2.53.0\nLink: [CVE-2026-32642](https://avd.aquasec.com/nvd/cve-2026-32642)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/artemis-openwire-protocol-2.44.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/artemis-openwire-protocol-2.44.0.jar: org.apache.activemq:artemis-openwire-protocol@2.44.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-32642",
+          "ruleIndex": 16,
+          "level": "note",
+          "message": {
+            "text": "Package: org.apache.activemq:artemis-openwire-protocol\nInstalled Version: 2.44.0\nVulnerability CVE-2026-32642\nSeverity: LOW\nFixed Version: 2.53.0\nLink: [CVE-2026-32642](https://avd.aquasec.com/nvd/cve-2026-32642)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/artemis-openwire-protocol-2.44.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/artemis-openwire-protocol-2.44.0.jar: org.apache.activemq:artemis-openwire-protocol@2.44.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27446",
+          "ruleIndex": 17,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.activemq:artemis-server\nInstalled Version: 2.44.0\nVulnerability CVE-2026-27446\nSeverity: CRITICAL\nFixed Version: \nLink: [CVE-2026-27446](https://avd.aquasec.com/nvd/cve-2026-27446)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/artemis-server-2.44.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/artemis-server-2.44.0.jar: org.apache.activemq:artemis-server@2.44.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-27446",
+          "ruleIndex": 17,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.activemq:artemis-server\nInstalled Version: 2.44.0\nVulnerability CVE-2026-27446\nSeverity: CRITICAL\nFixed Version: \nLink: [CVE-2026-27446](https://avd.aquasec.com/nvd/cve-2026-27446)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/artemis-server-2.44.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/artemis-server-2.44.0.jar: org.apache.activemq:artemis-server@2.44.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45205",
+          "ruleIndex": 18,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.commons:commons-configuration2\nInstalled Version: 2.11.0\nVulnerability CVE-2026-45205\nSeverity: MEDIUM\nFixed Version: 2.15.0\nLink: [CVE-2026-45205](https://avd.aquasec.com/nvd/cve-2026-45205)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/commons-configuration2-2.11.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/commons-configuration2-2.11.0.jar: org.apache.commons:commons-configuration2@2.11.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-45205",
+          "ruleIndex": 18,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.commons:commons-configuration2\nInstalled Version: 2.11.0\nVulnerability CVE-2026-45205\nSeverity: MEDIUM\nFixed Version: 2.15.0\nLink: [CVE-2026-45205](https://avd.aquasec.com/nvd/cve-2026-45205)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/commons-configuration2-2.11.0.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/commons-configuration2-2.11.0.jar: org.apache.commons:commons-configuration2@2.11.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-68161",
+          "ruleIndex": 19,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.2\nVulnerability CVE-2025-68161\nSeverity: MEDIUM\nFixed Version: 2.25.3\nLink: [CVE-2025-68161](https://avd.aquasec.com/nvd/cve-2025-68161)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/log4j-core-2.25.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/log4j-core-2.25.2.jar: org.apache.logging.log4j:log4j-core@2.25.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-68161",
+          "ruleIndex": 19,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.2\nVulnerability CVE-2025-68161\nSeverity: MEDIUM\nFixed Version: 2.25.3\nLink: [CVE-2025-68161](https://avd.aquasec.com/nvd/cve-2025-68161)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/log4j-core-2.25.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/log4j-core-2.25.2.jar: org.apache.logging.log4j:log4j-core@2.25.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34477",
+          "ruleIndex": 20,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.2\nVulnerability CVE-2026-34477\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/log4j-core-2.25.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/log4j-core-2.25.2.jar: org.apache.logging.log4j:log4j-core@2.25.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34477",
+          "ruleIndex": 20,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.2\nVulnerability CVE-2026-34477\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/log4j-core-2.25.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/log4j-core-2.25.2.jar: org.apache.logging.log4j:log4j-core@2.25.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34478",
+          "ruleIndex": 21,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.2\nVulnerability CVE-2026-34478\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/log4j-core-2.25.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/log4j-core-2.25.2.jar: org.apache.logging.log4j:log4j-core@2.25.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34478",
+          "ruleIndex": 21,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.2\nVulnerability CVE-2026-34478\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/log4j-core-2.25.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/log4j-core-2.25.2.jar: org.apache.logging.log4j:log4j-core@2.25.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34480",
+          "ruleIndex": 22,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.2\nVulnerability CVE-2026-34480\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/log4j-core-2.25.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/log4j-core-2.25.2.jar: org.apache.logging.log4j:log4j-core@2.25.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34480",
+          "ruleIndex": 22,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.2\nVulnerability CVE-2026-34480\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/log4j-core-2.25.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/log4j-core-2.25.2.jar: org.apache.logging.log4j:log4j-core@2.25.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-24281",
+          "ruleIndex": 23,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.zookeeper:zookeeper\nInstalled Version: 3.9.4\nVulnerability CVE-2026-24281\nSeverity: HIGH\nFixed Version: 3.8.6, 3.9.5\nLink: [CVE-2026-24281](https://avd.aquasec.com/nvd/cve-2026-24281)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/zookeeper-3.9.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/zookeeper-3.9.4.jar: org.apache.zookeeper:zookeeper@3.9.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-24281",
+          "ruleIndex": 23,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.zookeeper:zookeeper\nInstalled Version: 3.9.4\nVulnerability CVE-2026-24281\nSeverity: HIGH\nFixed Version: 3.8.6, 3.9.5\nLink: [CVE-2026-24281](https://avd.aquasec.com/nvd/cve-2026-24281)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/zookeeper-3.9.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/zookeeper-3.9.4.jar: org.apache.zookeeper:zookeeper@3.9.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-24308",
+          "ruleIndex": 24,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.zookeeper:zookeeper\nInstalled Version: 3.9.4\nVulnerability CVE-2026-24308\nSeverity: HIGH\nFixed Version: 3.9.5, 3.8.6\nLink: [CVE-2026-24308](https://avd.aquasec.com/nvd/cve-2026-24308)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/zookeeper-3.9.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/zookeeper-3.9.4.jar: org.apache.zookeeper:zookeeper@3.9.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-24308",
+          "ruleIndex": 24,
+          "level": "error",
+          "message": {
+            "text": "Package: org.apache.zookeeper:zookeeper\nInstalled Version: 3.9.4\nVulnerability CVE-2026-24308\nSeverity: HIGH\nFixed Version: 3.9.5, 3.8.6\nLink: [CVE-2026-24308](https://avd.aquasec.com/nvd/cve-2026-24308)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/zookeeper-3.9.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/zookeeper-3.9.4.jar: org.apache.zookeeper:zookeeper@3.9.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-2332",
+          "ruleIndex": 25,
+          "level": "error",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 12.1.3\nVulnerability CVE-2026-2332\nSeverity: HIGH\nFixed Version: 12.1.7, 12.0.33\nLink: [CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/jetty-http-12.1.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/jetty-http-12.1.3.jar: org.eclipse.jetty:jetty-http@12.1.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-2332",
+          "ruleIndex": 25,
+          "level": "error",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 12.1.3\nVulnerability CVE-2026-2332\nSeverity: HIGH\nFixed Version: 12.1.7, 12.0.33\nLink: [CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/jetty-http-12.1.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/jetty-http-12.1.3.jar: org.eclipse.jetty:jetty-http@12.1.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-11143",
+          "ruleIndex": 26,
+          "level": "note",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 12.1.3\nVulnerability CVE-2025-11143\nSeverity: LOW\nFixed Version: 12.0.31, 12.1.5\nLink: [CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/jetty-http-12.1.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/jetty-http-12.1.3.jar: org.eclipse.jetty:jetty-http@12.1.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-11143",
+          "ruleIndex": 26,
+          "level": "note",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 12.1.3\nVulnerability CVE-2025-11143\nSeverity: LOW\nFixed Version: 12.0.31, 12.1.5\nLink: [CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/jetty-http-12.1.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/jetty-http-12.1.3.jar: org.eclipse.jetty:jetty-http@12.1.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-1605",
+          "ruleIndex": 27,
+          "level": "error",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-server\nInstalled Version: 12.1.3\nVulnerability CVE-2026-1605\nSeverity: HIGH\nFixed Version: 12.1.6, 12.0.32\nLink: [CVE-2026-1605](https://avd.aquasec.com/nvd/cve-2026-1605)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "artemis/lib/jetty-server-12.1.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "artemis/lib/jetty-server-12.1.3.jar: org.eclipse.jetty:jetty-server@12.1.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-1605",
+          "ruleIndex": 27,
+          "level": "error",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-server\nInstalled Version: 12.1.3\nVulnerability CVE-2026-1605\nSeverity: HIGH\nFixed Version: 12.1.6, 12.0.32\nLink: [CVE-2026-1605](https://avd.aquasec.com/nvd/cve-2026-1605)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/jetty-server-12.1.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/3j1f7wj1m1q47cxrg94drs7ighyd2nsj-apache-activemq-artemis-2.44.0/artemis/lib/jetty-server-12.1.3.jar: org.eclipse.jetty:jetty-server@12.1.3"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:0417c9b30423c97ad6a1477d31a420100b1586f991dd9ec37789dad40817479d",
+        "imageName": "ghcr.io/nix-containers/images/apache-activemq-artemis:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/apache-activemq-artemis@sha256:63ffe1aa261a9ab96ef8b9fc92f941b76610ff3a676c935509b4ee693d6db1e7"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/apache-activemq-artemis:latest"
+        ]
+      }
+    }
+  ]
+}
