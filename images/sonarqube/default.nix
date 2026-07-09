@@ -11,16 +11,28 @@
 let
   # SonarQube Community Build — the 10.x line was EOL'd; the same product
   # is now shipped as SonarQube Community Build with date-based (25.x)
-  # versions. 25.3 bundles Bouncy Castle 1.80+, which clears CVE-2025-14813
-  # (the critical inherited via bcprov-jdk18on 1.76 in 10.7).
+  # versions.
   version = "25.3.0.104237";
   majorVersion = builtins.head (lib.splitString "." version);
 
-  # Download SonarQube distribution
-  sonarqube = pkgs.fetchzip {
+  # Download SonarQube distribution, then strip the bundled Elasticsearch
+  # security-CLI tooling. SonarQube embeds Elasticsearch (still on the 7.17
+  # line) for search; ES 7.17 is EOL and its bundled bcprov/bcpkix/bcutil
+  # remain at 1.78.1, which triggers CVE-2025-14813 (critical). The tools
+  # in `security-cli/` (elasticsearch-users, elasticsearch-service-tokens,
+  # etc.) are admin utilities never executed at runtime by SonarQube (which
+  # starts ES with security disabled and manages users itself), so removing
+  # them clears the CVE with no functional impact.
+  sonarqubeSrc = pkgs.fetchzip {
     url = "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${version}.zip";
     hash = "sha256-mP2+Mf+6VK5mcpdkxUnxgOWOBIShhrpEYmRlcShV1bE=";
   };
+  sonarqube = pkgs.runCommand "sonarqube-${version}-stripped" {} ''
+    mkdir -p $out
+    cp -r ${sonarqubeSrc}/. $out/
+    chmod -R u+w $out
+    rm -rf $out/elasticsearch/lib/tools/security-cli
+  '';
 
   # Wrapper script for SonarQube. Community Build 25.x requires Java 17+;
   # keep openjdk17 pinned so we don't accidentally jump to 21 without
