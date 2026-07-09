@@ -1,29 +1,31 @@
 { mkImage, pkgs, lib, ... }:
 
-# containerd-shim-runc-v2 (from containerd/containerd static release)
+# containerd-shim-runc-v2 (from containerd/containerd)
 # https://github.com/containerd/containerd
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt static tarball clear at each rebuild.
 let
   version = "2.3.2";
   binary = "containerd-shim-runc-v2";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = binary;
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/containerd/containerd/releases/download/v${version}/containerd-static-${version}-linux-amd64.tar.gz";
-      hash = "sha256-9GThhDIfi1dhcL3HPcFV9I5rUJMdcY89zJRXRtUhOPo=";
+    src = pkgs.fetchFromGitHub {
+      owner = "containerd";
+      repo = "containerd";
+      rev = "v${version}";
+      hash = "sha256-k/MU+boP0J6ttGDmEJuRh8fZjsJJCmeRRZe360yMUN4=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
-    sourceRoot = ".";
+    vendorHash = null;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 bin/${binary} $out/bin/${binary}
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/${binary}" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -36,6 +38,6 @@ in mkImage {
     "org.opencontainers.image.title" = "containerd-shim-runc-v2";
     "org.opencontainers.image.description" = "containerd runc v2 runtime shim";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

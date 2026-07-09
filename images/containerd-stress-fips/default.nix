@@ -1,31 +1,32 @@
 { mkImage, pkgs, lib, ... }:
 
-# containerd-stress (fips variant) - stress testing tool shipped in the containerd release tarball
+# containerd-stress (fips variant) - stress testing tool shipped with containerd
 # https://github.com/containerd/containerd
-# Note: packages the upstream containerd-stress binary; no FIPS certification claimed.
+# -fips variant packages the upstream binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt static tarball clear at each rebuild.
 
 let
   version = "2.3.2";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "containerd-stress-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/containerd/containerd/releases/download/v${version}/containerd-${version}-linux-amd64.tar.gz";
-      hash = "sha256-dWJeb2WVu5Xz+5yBI6YFNK9KjZtS12FwZZZ7zv5xoXo=";
+    src = pkgs.fetchFromGitHub {
+      owner = "containerd";
+      repo = "containerd";
+      rev = "v${version}";
+      hash = "sha256-k/MU+boP0J6ttGDmEJuRh8fZjsJJCmeRRZe360yMUN4=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    vendorHash = null;
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 bin/containerd-stress $out/bin/containerd-stress
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/containerd-stress" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -36,6 +37,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "containerd-stress-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
