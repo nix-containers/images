@@ -1,30 +1,31 @@
 { mkImage, pkgs, lib, ... }:
 
 # InfluxDB CLI (influx) - https://github.com/influxdata/influx-cli
-# Upstream prebuilt linux/amd64 client tarball from dl.influxdata.com.
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "2.8.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "influx";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://dl.influxdata.com/influxdb/releases/influxdb2-client-${version}-linux-amd64.tar.gz";
-      hash = "sha256-/qoy4CyZgVQUV0Jl1UccTyVQsHrvb4sZkH2KGvmOXWE=";
+    src = pkgs.fetchFromGitHub {
+      owner = "influxdata";
+      repo = "influx-cli";
+      rev = "v${version}";
+      hash = "sha256-3DCvWaiGLw9OSs/b9za1jgrPDo2Txw5b5h46ElTMEks=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-jFZ3Cwt6SoV1juBe2Jfj6wzNAEvM+a87rhoFBh6rKWo=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 influx $out/bin/influx
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/influx" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -36,6 +37,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "influx";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
