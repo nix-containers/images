@@ -2,29 +2,40 @@
 
 # asoctl - CLI for Azure Service Operator
 # https://github.com/Azure/azure-service-operator
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild. The Go module lives
+# under the v2/ subdirectory.
 
 let
   version = "2.20.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "asoctl";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/Azure/azure-service-operator/releases/download/v${version}/asoctl-linux-amd64.gz";
-      hash = "sha256-u2SxKYboX/q9uCS+HQRSq4C3cEGzQLXOjEOe1A4w6vQ=";
+    src = pkgs.fetchFromGitHub {
+      owner = "Azure";
+      repo = "azure-service-operator";
+      rev = "v${version}";
+      hash = "sha256-cJlINnBBueZUjQmBxGE/jwqmS1COBiIan721uatAFUs=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    modRoot = "v2/cmd/asoctl";
+    proxyVendor = true;
+    vendorHash = "sha256-aO3xbrDtQbIq9iCPvMF61ccteUGvJvyJcmaVzk1b9Pk=";
 
-    dontUnpack = true;
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      gunzip -c $src > asoctl
-      install -Dm755 asoctl $out/bin/asoctl
-      runHook postInstall
+    postInstall = ''
+      if [ -e $out/bin/asoctl ]; then
+        :  # already correct name
+      elif [ -e $out/bin/cmd ]; then
+        mv $out/bin/cmd $out/bin/asoctl
+      fi
     '';
   };
 in mkImage {
@@ -37,6 +48,6 @@ in mkImage {
     "org.opencontainers.image.title" = "azure-service-operator";
     "org.opencontainers.image.description" = "asoctl CLI for Azure Service Operator";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }

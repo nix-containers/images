@@ -2,31 +2,34 @@
 
 # Azure Service Operator - asoctl CLI
 # https://github.com/Azure/azure-service-operator
-# Note: upstream prebuilt binary; FIPS compliance is not claimed.
+# -fips variant packages the upstream asoctl binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild. asoctl is a separate
+# Go module under v2/cmd/asoctl.
 
 let
   version = "2.20.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "azure-service-operator-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/Azure/azure-service-operator/releases/download/v${version}/asoctl-linux-amd64.gz";
-      hash = "sha256:1x7a607d97j3ik7bah5k85qbg05ba821vgi4p2yzlpz8hqlv2r5v";
+    src = pkgs.fetchFromGitHub {
+      owner = "Azure";
+      repo = "azure-service-operator";
+      rev = "v${version}";
+      hash = "sha256-cJlINnBBueZUjQmBxGE/jwqmS1COBiIan721uatAFUs=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook pkgs.gzip ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    modRoot = "v2/cmd/asoctl";
+    proxyVendor = true;
+    vendorHash = "sha256-aO3xbrDtQbIq9iCPvMF61ccteUGvJvyJcmaVzk1b9Pk=";
 
-    dontUnpack = true;
-
-    installPhase = ''
-      runHook preInstall
-      gunzip -c $src > asoctl
-      install -Dm755 asoctl $out/bin/asoctl
-      runHook postInstall
-    '';
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 
 in mkImage {
@@ -38,6 +41,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "azure-service-operator-fips";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
