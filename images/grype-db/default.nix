@@ -2,29 +2,31 @@
 
 # grype-db - builds the vulnerability database used by grype
 # https://github.com/anchore/grype-db
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "0.54.1";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "grype-db";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/anchore/grype-db/releases/download/v${version}/grype-db_${version}_linux_amd64.tar.gz";
-      hash = "sha256:07yrg3y1cb3acjcvl3r9xas0p96k2ravi8y8np7s03xi7vpmyymn";
+    src = pkgs.fetchFromGitHub {
+      owner = "anchore";
+      repo = "grype-db";
+      rev = "v${version}";
+      hash = "sha256-A0KSxnekw0wtSFpU6unRtZ0xzWlkQjQR8z5bU19EMBY=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-xgrwbK9xNnRT8htEyNTXkljcou1o/qV2lEgaXfiBhB4=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 grype-db $out/bin/grype-db
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/grype-db" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -35,6 +37,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "grype-db";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
