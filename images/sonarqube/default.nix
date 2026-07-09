@@ -9,16 +9,22 @@
 { nix2container, pkgs, lib, fetchzip, ... }:
 
 let
-  version = "10.7.0.96327";
+  # SonarQube Community Build — the 10.x line was EOL'd; the same product
+  # is now shipped as SonarQube Community Build with date-based (25.x)
+  # versions. 25.3 bundles Bouncy Castle 1.80+, which clears CVE-2025-14813
+  # (the critical inherited via bcprov-jdk18on 1.76 in 10.7).
+  version = "25.3.0.104237";
   majorVersion = builtins.head (lib.splitString "." version);
 
   # Download SonarQube distribution
   sonarqube = pkgs.fetchzip {
     url = "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${version}.zip";
-    hash = "sha256-RTd/etDpALKMpVCbIL8gF1u6n7gD+kdtRpsN4ujaGgk=";  # TODO: Fix hash after first build
+    hash = "sha256-mP2+Mf+6VK5mcpdkxUnxgOWOBIShhrpEYmRlcShV1bE=";
   };
 
-  # Wrapper script for SonarQube
+  # Wrapper script for SonarQube. Community Build 25.x requires Java 17+;
+  # keep openjdk17 pinned so we don't accidentally jump to 21 without
+  # verifying the SonarQube runtime supports it.
   sonarqubeWrapper = pkgs.writeShellScript "sonarqube-wrapper" ''
     #!/bin/bash
     set -e
