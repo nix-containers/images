@@ -67,6 +67,36 @@
     </div>
 
     <div class="card space-y-3">
+      <label class="block text-sm text-fg-muted">Architecture</label>
+      <div class="grid grid-cols-3 gap-2" id="arch-picker">
+        <label class="flex items-center justify-center gap-2 text-sm cursor-pointer
+                      p-3 border border-neutral-800 rounded hover:border-accent-ok">
+          <input type="radio" name="arch" value="amd64" checked
+                 class="accent-accent-ok">
+          <span class="font-mono">amd64</span>
+          <span class="text-xs text-fg-muted">(x86_64-linux)</span>
+        </label>
+        <label class="flex items-center justify-center gap-2 text-sm cursor-pointer
+                      p-3 border border-neutral-800 rounded hover:border-accent-ok">
+          <input type="radio" name="arch" value="arm64" class="accent-accent-ok">
+          <span class="font-mono">arm64</span>
+          <span class="text-xs text-fg-muted">(aarch64-linux)</span>
+        </label>
+        <label class="flex items-center justify-center gap-2 text-sm cursor-pointer
+                      p-3 border border-neutral-800 rounded hover:border-accent-ok">
+          <input type="radio" name="arch" value="both" class="accent-accent-ok">
+          <span class="font-mono">both</span>
+          <span class="text-xs text-fg-muted">(multi-arch manifest)</span>
+        </label>
+      </div>
+      <p class="text-xs text-fg-muted">
+        <span class="font-mono">both</span> generates two <code>nix build</code>
+        commands (one per arch) plus a follow-up <code>skopeo manifest</code>
+        push to combine them into one multi-arch image ref.
+      </p>
+    </div>
+
+    <div class="card space-y-3">
       <label class="block text-sm text-fg-muted">Layers</label>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="layers">
         <label class="flex items-start gap-2 text-sm cursor-pointer p-3 border

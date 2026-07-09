@@ -1,0 +1,165 @@
+2026-07-09T12:23:35Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:23:35Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:23:35Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:23:35Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:23:54Z	INFO	Number of language-specific files	num=1
+2026-07-09T12:23:54Z	INFO	[jar] Detecting vulnerabilities...
+2026-07-09T12:23:54Z	INFO	Table result includes only package filenames. Use '--format json' option to get the full path to the package file.
+2026-07-09T12:23:54Z	INFO	Some vulnerabilities have been ignored/suppressed. Use the "--show-suppressed" flag to display them.
+
+Report Summary
+
+┌────────────────────────────────────────────────────────────────────────────┬──────┬─────────────────┬─────────┐
+│                                   Target                                   │ Type │ Vulnerabilities │ Secrets │
+├────────────────────────────────────────────────────────────────────────────┼──────┼─────────────────┼─────────┤
+│ nix/store/d25y6pnyd7kdkjkmpyqh4dx5bs3g23qi-akhq-0.27.1/share/akhq/akhq.jar │ jar  │       14        │    -    │
+├────────────────────────────────────────────────────────────────────────────┼──────┼─────────────────┼─────────┤
+│ share/akhq/akhq.jar                                                        │ jar  │       14        │    -    │
+└────────────────────────────────────────────────────────────────────────────┴──────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+Java (jar)
+==========
+Total: 28 (HIGH: 28, CRITICAL: 0)
+
+┌────────────────────────────────────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬─────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│                        Library                         │ Vulnerability  │ Severity │ Status │ Installed Version │        Fixed Version        │                            Title                             │
+├────────────────────────────────────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ com.fasterxml.jackson.core:jackson-databind (akhq.jar) │ CVE-2026-54512 │ HIGH     │ fixed  │ 2.19.2            │ 2.18.8, 3.1.4, 2.21.4       │ jackson-databind: jackson-databind: Arbitrary code execution │
+│                                                        │                │          │        │                   │                             │ via PolymorphicTypeValidator bypass                          │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-54512                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        ├────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                                        │ CVE-2026-54513 │          │        │                   │ 2.18.8, 2.21.4, 3.1.4       │ jackson-databind: Jackson-databind: Security bypass allows   │
+│                                                        │                │          │        │                   │                             │ arbitrary code execution                                     │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-54513                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+├────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ commons-beanutils:commons-beanutils (akhq.jar)         │ CVE-2025-48734 │          │        │ 1.9.4             │ 1.11.0                      │ commons-beanutils: Apache Commons BeanUtils:                 │
+│                                                        │                │          │        │                   │                             │ PropertyUtilsBean does not suppresses an enum's              │
+│                                                        │                │          │        │                   │                             │ declaredClass property...                                    │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2025-48734                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+├────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-codec-compression (akhq.jar)            │ CVE-2026-42583 │          │        │ 4.2.9.Final       │ 4.2.13.Final                │ netty: io.netty/netty-codec-compression:                     │
+│                                                        │                │          │        │                   │                             │ io.netty/netty-codec: Netty: Denial of Service via excessive │
+│                                                        │                │          │        │                   │                             │ memory allocation in...                                      │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42583                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+├────────────────────────────────────────────────────────┼────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-codec-dns (akhq.jar)                    │ CVE-2026-42579 │          │        │                   │ 4.2.13.Final, 4.1.133.Final │ netty: Netty: High integrity impact due to improper DNS      │
+│                                                        │                │          │        │                   │                             │ domain name constraint...                                    │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42579                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+├────────────────────────────────────────────────────────┼────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-codec-http (akhq.jar)                   │ CVE-2026-33870 │          │        │                   │ 4.1.132.Final, 4.2.10.Final │ io.netty/netty-codec-http: Netty: Request smuggling via      │
+│                                                        │                │          │        │                   │                             │ incorrect parsing of HTTP/1.1 chunked transfer encoding...   │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-33870                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        ├────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                                        │ CVE-2026-42584 │          │        │                   │ 4.2.13.Final, 4.1.133.Final │ netty: io.netty/netty-codec-http: Netty: Incorrect HTTP      │
+│                                                        │                │          │        │                   │                             │ response parsing leads to data confusion                     │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42584                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        ├────────────────┤          │        │                   │                             ├──────────────────────────────────────────────────────────────┤
+│                                                        │ CVE-2026-42587 │          │        │                   │                             │ netty: io.netty/netty-codec-http:                            │
+│                                                        │                │          │        │                   │                             │ io.netty/netty-codec-http2: Netty: Denial of Service via     │
+│                                                        │                │          │        │                   │                             │ unbounded memory allocation in...                            │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42587                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+├────────────────────────────────────────────────────────┼────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-codec-http2 (akhq.jar)                  │ CVE-2026-33871 │          │        │                   │ 4.1.132.Final, 4.2.11.Final │ netty: Netty: Denial of Service via HTTP/2 CONTINUATION      │
+│                                                        │                │          │        │                   │                             │ frame flood                                                  │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-33871                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        ├────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                                                        │ CVE-2026-42587 │          │        │                   │ 4.2.13.Final, 4.1.133.Final │ netty: io.netty/netty-codec-http:                            │
+│                                                        │                │          │        │                   │                             │ io.netty/netty-codec-http2: Netty: Denial of Service via     │
+│                                                        │                │          │        │                   │                             │ unbounded memory allocation in...                            │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-42587                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+├────────────────────────────────────────────────────────┼────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ io.netty:netty-handler (akhq.jar)                      │ CVE-2026-50010 │          │        │                   │ 4.2.15.Final, 4.1.135.Final │ netty-handler: Netty: Improper trust manager handling leads  │
+│                                                        │                │          │        │                   │                             │ to hostname verification bypass                              │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-50010                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+├────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.codehaus.plexus:plexus-utils (akhq.jar)            │ CVE-2025-67030 │          │        │ 3.5.1             │ 4.0.3, 3.6.1                │ org.codehaus.plexus:plexus-utils: Plexus-utils: Directory    │
+│                                                        │                │          │        │                   │                             │ Traversal in extractFile method                              │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2025-67030                   │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+├────────────────────────────────────────────────────────┼────────────────┤          │        ├───────────────────┼─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.eclipse.jetty:jetty-http (akhq.jar)                │ CVE-2026-2332  │          │        │ 12.1.2            │ 12.1.7, 12.0.33             │ org.eclipse.jetty/jetty-http: HTTP request smuggling via     │
+│                                                        │                │          │        │                   │                             │ chunked extension quoted-string parsing                      │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-2332                    │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+├────────────────────────────────────────────────────────┼────────────────┤          │        │                   ├─────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ org.eclipse.jetty:jetty-server (akhq.jar)              │ CVE-2026-1605  │          │        │                   │ 12.1.6, 12.0.32             │ org.eclipse.jetty/jetty-server: Eclipse Jetty: Denial of     │
+│                                                        │                │          │        │                   │                             │ Service due to unreleased JDK Inflater from...               │
+│                                                        │                │          │        │                   │                             │ https://avd.aquasec.com/nvd/cve-2026-1605                    │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+│                                                        │                │          │        │                   │                             │                                                              │
+└────────────────────────────────────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴─────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

@@ -1,0 +1,1743 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "GHSA-8v2v-wjwg-vx6r",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "actix-files has a possible exposure of information vulnerability"
+              },
+              "fullDescription": {
+                "text": "### Summary\n\nWhen passing a non-existing folder to the `actix_files::Files::new()` method causes the actix server to expose unexpected files.\n\n### Details\n\nThe `actix-files` library exposes a [`Files` struct](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/files.rs#L38) that configures an actix `service` to serve the files in a folder as static assets. Below you can find the [signature of the `Files::new` method](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/files.rs#L98):\n\n```rust\npub fn new\u003cT: Into\u003cPathBuf\u003e\u003e(mount_path: \u0026str, serve_from: T) -\u003e Files\n```\n\nWhen the `mount_path` you pass to `Files` doesn't exist, [it defaults to an empty path](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/files.rs#L104) (`Path::new()`). When the service receives a HTTP request, it [joins the request information with the empty path](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/service.rs#L136) and calls `canonicalize`. Rust resolves this path as relative and returns any file that matches it.\n\nThis behavior causes the library to expose unexpected files when the folder is not present.\n\n### PoC\n\n_There is a working PoC on https://github.com/Angelmmiguel/actix-files-vuln, although the next steps can be followed to reproduce the issue_\n\n1. Clone the https://github.com/actix/examples repository.\n2. Change your directory to the `basics/static-files` folder.\n3. Edit the `src/main.rs` file and change the line 13 to mount a non-existing folder:\n\n    ```diff\n    -        .service(Files::new(\"/images\", \"static/images/\").show_files_listing())\n    +        .service(Files::new(\"/images\", \"static/missing/\").show_files_listing())\n    ```\n    \n4. Run the project with `cargo run`.\n5. Access the \u003chttp://localhost:8080/images/Cargo.toml\u003e URL.\n\n### Impact\n\nThis is an exposure of information vulnerability. It affects anyone using the `actix-files::Files` library that mounts a non-existing folder for any reason."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-8v2v-wjwg-vx6r",
+              "help": {
+                "text": "Vulnerability GHSA-8v2v-wjwg-vx6r\nSeverity: MEDIUM\nPackage: actix-files\nFixed Version: 0.6.10\nLink: [GHSA-8v2v-wjwg-vx6r](https://github.com/advisories/GHSA-8v2v-wjwg-vx6r)\n### Summary\n\nWhen passing a non-existing folder to the `actix_files::Files::new()` method causes the actix server to expose unexpected files.\n\n### Details\n\nThe `actix-files` library exposes a [`Files` struct](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/files.rs#L38) that configures an actix `service` to serve the files in a folder as static assets. Below you can find the [signature of the `Files::new` method](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/files.rs#L98):\n\n```rust\npub fn new\u003cT: Into\u003cPathBuf\u003e\u003e(mount_path: \u0026str, serve_from: T) -\u003e Files\n```\n\nWhen the `mount_path` you pass to `Files` doesn't exist, [it defaults to an empty path](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/files.rs#L104) (`Path::new()`). When the service receives a HTTP request, it [joins the request information with the empty path](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/service.rs#L136) and calls `canonicalize`. Rust resolves this path as relative and returns any file that matches it.\n\nThis behavior causes the library to expose unexpected files when the folder is not present.\n\n### PoC\n\n_There is a working PoC on https://github.com/Angelmmiguel/actix-files-vuln, although the next steps can be followed to reproduce the issue_\n\n1. Clone the https://github.com/actix/examples repository.\n2. Change your directory to the `basics/static-files` folder.\n3. Edit the `src/main.rs` file and change the line 13 to mount a non-existing folder:\n\n    ```diff\n    -        .service(Files::new(\"/images\", \"static/images/\").show_files_listing())\n    +        .service(Files::new(\"/images\", \"static/missing/\").show_files_listing())\n    ```\n    \n4. Run the project with `cargo run`.\n5. Access the \u003chttp://localhost:8080/images/Cargo.toml\u003e URL.\n\n### Impact\n\nThis is an exposure of information vulnerability. It affects anyone using the `actix-files::Files` library that mounts a non-existing folder for any reason.",
+                "markdown": "**Vulnerability GHSA-8v2v-wjwg-vx6r**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|actix-files|0.6.10|[GHSA-8v2v-wjwg-vx6r](https://github.com/advisories/GHSA-8v2v-wjwg-vx6r)|\n\n### Summary\n\nWhen passing a non-existing folder to the `actix_files::Files::new()` method causes the actix server to expose unexpected files.\n\n### Details\n\nThe `actix-files` library exposes a [`Files` struct](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/files.rs#L38) that configures an actix `service` to serve the files in a folder as static assets. Below you can find the [signature of the `Files::new` method](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/files.rs#L98):\n\n```rust\npub fn new\u003cT: Into\u003cPathBuf\u003e\u003e(mount_path: \u0026str, serve_from: T) -\u003e Files\n```\n\nWhen the `mount_path` you pass to `Files` doesn't exist, [it defaults to an empty path](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/files.rs#L104) (`Path::new()`). When the service receives a HTTP request, it [joins the request information with the empty path](https://github.com/actix/actix-web/blob/fba766b4beb92278665d58815c94d336015225c5/actix-files/src/service.rs#L136) and calls `canonicalize`. Rust resolves this path as relative and returns any file that matches it.\n\nThis behavior causes the library to expose unexpected files when the folder is not present.\n\n### PoC\n\n_There is a working PoC on https://github.com/Angelmmiguel/actix-files-vuln, although the next steps can be followed to reproduce the issue_\n\n1. Clone the https://github.com/actix/examples repository.\n2. Change your directory to the `basics/static-files` folder.\n3. Edit the `src/main.rs` file and change the line 13 to mount a non-existing folder:\n\n    ```diff\n    -        .service(Files::new(\"/images\", \"static/images/\").show_files_listing())\n    +        .service(Files::new(\"/images\", \"static/missing/\").show_files_listing())\n    ```\n    \n4. Run the project with `cargo run`.\n5. Access the \u003chttp://localhost:8080/images/Cargo.toml\u003e URL.\n\n### Impact\n\nThis is an exposure of information vulnerability. It affects anyone using the `actix-files::Files` library that mounts a non-existing folder for any reason."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-gcqf-3g44-vc9p",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "[actix-files] Panic triggered by empty Range header in GET request for static file"
+              },
+              "fullDescription": {
+                "text": "### Summary\nA GET request for a static file served by `actix-files` with an empty `Range` header triggers a panic. With `panic = \"abort\"`, a remote user may crash the process on-demand.\n\n### Details\n`actix-files` assumes that `HttpRange::parse()`, when `Ok`, always returns a vector with at least one element. When `parse()` is called on an empty string, it returns `Ok(vec![])`. This can cause a panic at named.rs:534 when handling an HTTP request with an empty `Range:` header. This shouldn't significantly impact programs built with the default `panic = \"unwind\"`, as the only effect is that the connection is closed when the worker thread panics and new threads are spooled up on demand. Programs built with `panic = \"abort\"` are vulnerable to being crashed on-demand by any user with permissions to perform a `GET` request for a static file served by `actix-files`.\nhttps://github.com/actix/actix-web/blob/0383f4bdd1210e726143ca1ebcf01169b67a4b6c/actix-files/src/named.rs#L530-L535\n\n### PoC\n\u003cdetails\u003e\n\u003csummary\u003eMinimal reproduction\u003c/summary\u003e\n\n`Cargo.toml`:\n```toml\n[package]\nname = \"example\"\nversion = \"0.1.0\"\nedition = \"2021\"\n\n[dependencies]\nactix-web = \"=4.5.1\"\nactix-files = \"=0.6.5\"\n\n[profile.dev]\npanic = \"abort\"\n```\n`src/main.rs`:\n```rust\nuse actix_files::NamedFile;\nuse actix_web::{get, Responder};\n\n#[get(\"/\")]\nasync fn index() -\u003e impl Responder {\n    NamedFile::open(\"test_file\")\n}\n\n#[actix_web::main]\nasync fn main() -\u003e std::io::Result\u003c()\u003e {\n    use actix_web::{App, HttpServer};\n\n    HttpServer::new(|| App::new().service(index))\n        .bind((\"127.0.0.1\", 8080))?\n        .run()\n        .await\n}\n```\n`test.sh`:\n```sh\n#!/bin/bash\n\necho foo \u003e test_file\ncargo b\ncargo r\u0026\nsleep 1\nnc 127.0.0.1 8080 \u003c\u003c EOF\nGET / HTTP/1.1\nRange:\n\nEOF\nkill %1\n```\n\nCreate these files, then run `chmod +x test.sh \u0026\u0026 ./test.sh`. The server should start, then crash upon receiving the `GET` request from `netcat`.\n\nThis assumes a reasonably UNIX-like system with Rust, `bash` and `netcat` installed.\n\u003c/details\u003e\n\n### Impact\nIt is believed that only programs compiled with panic = \"abort\" are affected significantly. The only potential impact that can be seen is Denial of Service, though an attacker able to repeatedly send GET requests without those requests getting blocked by rate limiting, DDoS protection, etc. would be able to keep a server down indefinitely. As only a single unblocked request is needed to trigger the panic, merely having a rate limiter may not be enough to prevent this.\n\nThough the impact in the worst case is significant, the real-world risk of this vulnerability appears to be limited, as it would be expected that anyone for whom uptime is a significant concern would not compile their program with panic = \"abort\"."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-gcqf-3g44-vc9p",
+              "help": {
+                "text": "Vulnerability GHSA-gcqf-3g44-vc9p\nSeverity: MEDIUM\nPackage: actix-files\nFixed Version: 0.6.10\nLink: [GHSA-gcqf-3g44-vc9p](https://github.com/advisories/GHSA-gcqf-3g44-vc9p)\n### Summary\nA GET request for a static file served by `actix-files` with an empty `Range` header triggers a panic. With `panic = \"abort\"`, a remote user may crash the process on-demand.\n\n### Details\n`actix-files` assumes that `HttpRange::parse()`, when `Ok`, always returns a vector with at least one element. When `parse()` is called on an empty string, it returns `Ok(vec![])`. This can cause a panic at named.rs:534 when handling an HTTP request with an empty `Range:` header. This shouldn't significantly impact programs built with the default `panic = \"unwind\"`, as the only effect is that the connection is closed when the worker thread panics and new threads are spooled up on demand. Programs built with `panic = \"abort\"` are vulnerable to being crashed on-demand by any user with permissions to perform a `GET` request for a static file served by `actix-files`.\nhttps://github.com/actix/actix-web/blob/0383f4bdd1210e726143ca1ebcf01169b67a4b6c/actix-files/src/named.rs#L530-L535\n\n### PoC\n\u003cdetails\u003e\n\u003csummary\u003eMinimal reproduction\u003c/summary\u003e\n\n`Cargo.toml`:\n```toml\n[package]\nname = \"example\"\nversion = \"0.1.0\"\nedition = \"2021\"\n\n[dependencies]\nactix-web = \"=4.5.1\"\nactix-files = \"=0.6.5\"\n\n[profile.dev]\npanic = \"abort\"\n```\n`src/main.rs`:\n```rust\nuse actix_files::NamedFile;\nuse actix_web::{get, Responder};\n\n#[get(\"/\")]\nasync fn index() -\u003e impl Responder {\n    NamedFile::open(\"test_file\")\n}\n\n#[actix_web::main]\nasync fn main() -\u003e std::io::Result\u003c()\u003e {\n    use actix_web::{App, HttpServer};\n\n    HttpServer::new(|| App::new().service(index))\n        .bind((\"127.0.0.1\", 8080))?\n        .run()\n        .await\n}\n```\n`test.sh`:\n```sh\n#!/bin/bash\n\necho foo \u003e test_file\ncargo b\ncargo r\u0026\nsleep 1\nnc 127.0.0.1 8080 \u003c\u003c EOF\nGET / HTTP/1.1\nRange:\n\nEOF\nkill %1\n```\n\nCreate these files, then run `chmod +x test.sh \u0026\u0026 ./test.sh`. The server should start, then crash upon receiving the `GET` request from `netcat`.\n\nThis assumes a reasonably UNIX-like system with Rust, `bash` and `netcat` installed.\n\u003c/details\u003e\n\n### Impact\nIt is believed that only programs compiled with panic = \"abort\" are affected significantly. The only potential impact that can be seen is Denial of Service, though an attacker able to repeatedly send GET requests without those requests getting blocked by rate limiting, DDoS protection, etc. would be able to keep a server down indefinitely. As only a single unblocked request is needed to trigger the panic, merely having a rate limiter may not be enough to prevent this.\n\nThough the impact in the worst case is significant, the real-world risk of this vulnerability appears to be limited, as it would be expected that anyone for whom uptime is a significant concern would not compile their program with panic = \"abort\".",
+                "markdown": "**Vulnerability GHSA-gcqf-3g44-vc9p**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|actix-files|0.6.10|[GHSA-gcqf-3g44-vc9p](https://github.com/advisories/GHSA-gcqf-3g44-vc9p)|\n\n### Summary\nA GET request for a static file served by `actix-files` with an empty `Range` header triggers a panic. With `panic = \"abort\"`, a remote user may crash the process on-demand.\n\n### Details\n`actix-files` assumes that `HttpRange::parse()`, when `Ok`, always returns a vector with at least one element. When `parse()` is called on an empty string, it returns `Ok(vec![])`. This can cause a panic at named.rs:534 when handling an HTTP request with an empty `Range:` header. This shouldn't significantly impact programs built with the default `panic = \"unwind\"`, as the only effect is that the connection is closed when the worker thread panics and new threads are spooled up on demand. Programs built with `panic = \"abort\"` are vulnerable to being crashed on-demand by any user with permissions to perform a `GET` request for a static file served by `actix-files`.\nhttps://github.com/actix/actix-web/blob/0383f4bdd1210e726143ca1ebcf01169b67a4b6c/actix-files/src/named.rs#L530-L535\n\n### PoC\n\u003cdetails\u003e\n\u003csummary\u003eMinimal reproduction\u003c/summary\u003e\n\n`Cargo.toml`:\n```toml\n[package]\nname = \"example\"\nversion = \"0.1.0\"\nedition = \"2021\"\n\n[dependencies]\nactix-web = \"=4.5.1\"\nactix-files = \"=0.6.5\"\n\n[profile.dev]\npanic = \"abort\"\n```\n`src/main.rs`:\n```rust\nuse actix_files::NamedFile;\nuse actix_web::{get, Responder};\n\n#[get(\"/\")]\nasync fn index() -\u003e impl Responder {\n    NamedFile::open(\"test_file\")\n}\n\n#[actix_web::main]\nasync fn main() -\u003e std::io::Result\u003c()\u003e {\n    use actix_web::{App, HttpServer};\n\n    HttpServer::new(|| App::new().service(index))\n        .bind((\"127.0.0.1\", 8080))?\n        .run()\n        .await\n}\n```\n`test.sh`:\n```sh\n#!/bin/bash\n\necho foo \u003e test_file\ncargo b\ncargo r\u0026\nsleep 1\nnc 127.0.0.1 8080 \u003c\u003c EOF\nGET / HTTP/1.1\nRange:\n\nEOF\nkill %1\n```\n\nCreate these files, then run `chmod +x test.sh \u0026\u0026 ./test.sh`. The server should start, then crash upon receiving the `GET` request from `netcat`.\n\nThis assumes a reasonably UNIX-like system with Rust, `bash` and `netcat` installed.\n\u003c/details\u003e\n\n### Impact\nIt is believed that only programs compiled with panic = \"abort\" are affected significantly. The only potential impact that can be seen is Denial of Service, though an attacker able to repeatedly send GET requests without those requests getting blocked by rate limiting, DDoS protection, etc. would be able to keep a server down indefinitely. As only a single unblocked request is needed to trigger the panic, merely having a rate limiter may not be enough to prevent this.\n\nThough the impact in the worst case is significant, the real-world risk of this vulnerability appears to be limited, as it would be expected that anyone for whom uptime is a significant concern would not compile their program with panic = \"abort\"."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-xhj4-vrgc-hr34",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "actix-http has HTTP/1.1 CL.TE Request Smuggling "
+              },
+              "fullDescription": {
+                "text": "A vulnerability in `actix-http`'s HTTP/1.1 request parser allows an unauthenticated remote client to smuggle requests in deployments where a front-end HTTP intermediary and the Actix backend disagree about whether `Content-Length` or `Transfer-Encoding: chunked` defines the request body length.\n\n## Severity\n\n**Medium**.\nThis is an HTTP request smuggling vulnerability that can be triggered over the network without application-level credentials. Exploitation requires a specific proxy topology: an upstream proxy, WAF, load balancer, or similar intermediary must use `Content-Length` framing while forwarding the conflicting `Transfer-Encoding: chunked` request to an Actix backend over a reused HTTP/1.1 connection.\n\n## Affected Versions\n\n- `actix-http`: versions up to and including **3.12.0**\n\n## Description\n\nHTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` are ambiguous and must be rejected by recipients to avoid request smuggling.\n\nAffected versions of `actix-http` accepted a request with a syntactically valid `Content-Length` header and `Transfer-Encoding: chunked` on the same HTTP/1.1 message. The parser then selected chunked decoding instead of rejecting the conflicting framing signals.\n\nIn a CL.TE proxy topology, an intermediary may treat bytes after the declared `Content-Length` body as part of the first request, while the Actix backend stops at the terminating chunk marker and parses the remaining bytes on the backend connection as a second HTTP request. This creates a backend-side request desynchronization primitive.\n\nThe issue is limited to HTTP/1.1 request parsing.\n\n## Impact\n\n**HTTP request smuggling**\n\n* **Attack Vector:** Network, unauthenticated.\n* **Effect:** Backend request desynchronization with low integrity impact to requests processed by the vulnerable Actix service.\n* **Scope:** Actix services using affected `actix-http` versions behind an HTTP/1.1 intermediary that forwards ambiguous `Content-Length` plus `Transfer-Encoding: chunked` requests and reuses backend connections.\n\nNo direct confidentiality, availability, or subsequent-system impact is scored for this advisory.\n\n## Fixed Versions\n\nThis issue is fixed in **actix-http 3.12.1**.\n\nThe fix rejects HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` instead of choosing one framing interpretation.\n\n## Mitigation\n\nUsers should upgrade to **actix-http 3.12.1** or later.\n\nApplications that depend on `actix-http` through `actix-web`, `awc`, or another Actix crate should ensure dependency resolution selects `actix-http` 3.12.1 or later. For example:\n\n```bash\ncargo update -p actix-http\n```\n\nIf an immediate upgrade is not possible, configure all upstream HTTP intermediaries to reject HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding`, and avoid forwarding ambiguous request framing to Actix backends.\n## Credits\n\nActix thanks [mufeedvh](https://github.com/mufeedvh) who disclosed this issue through coordinated disclosure."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-xhj4-vrgc-hr34",
+              "help": {
+                "text": "Vulnerability GHSA-xhj4-vrgc-hr34\nSeverity: MEDIUM\nPackage: actix-http\nFixed Version: 3.12.1\nLink: [GHSA-xhj4-vrgc-hr34](https://github.com/advisories/GHSA-xhj4-vrgc-hr34)\nA vulnerability in `actix-http`'s HTTP/1.1 request parser allows an unauthenticated remote client to smuggle requests in deployments where a front-end HTTP intermediary and the Actix backend disagree about whether `Content-Length` or `Transfer-Encoding: chunked` defines the request body length.\n\n## Severity\n\n**Medium**.\nThis is an HTTP request smuggling vulnerability that can be triggered over the network without application-level credentials. Exploitation requires a specific proxy topology: an upstream proxy, WAF, load balancer, or similar intermediary must use `Content-Length` framing while forwarding the conflicting `Transfer-Encoding: chunked` request to an Actix backend over a reused HTTP/1.1 connection.\n\n## Affected Versions\n\n- `actix-http`: versions up to and including **3.12.0**\n\n## Description\n\nHTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` are ambiguous and must be rejected by recipients to avoid request smuggling.\n\nAffected versions of `actix-http` accepted a request with a syntactically valid `Content-Length` header and `Transfer-Encoding: chunked` on the same HTTP/1.1 message. The parser then selected chunked decoding instead of rejecting the conflicting framing signals.\n\nIn a CL.TE proxy topology, an intermediary may treat bytes after the declared `Content-Length` body as part of the first request, while the Actix backend stops at the terminating chunk marker and parses the remaining bytes on the backend connection as a second HTTP request. This creates a backend-side request desynchronization primitive.\n\nThe issue is limited to HTTP/1.1 request parsing.\n\n## Impact\n\n**HTTP request smuggling**\n\n* **Attack Vector:** Network, unauthenticated.\n* **Effect:** Backend request desynchronization with low integrity impact to requests processed by the vulnerable Actix service.\n* **Scope:** Actix services using affected `actix-http` versions behind an HTTP/1.1 intermediary that forwards ambiguous `Content-Length` plus `Transfer-Encoding: chunked` requests and reuses backend connections.\n\nNo direct confidentiality, availability, or subsequent-system impact is scored for this advisory.\n\n## Fixed Versions\n\nThis issue is fixed in **actix-http 3.12.1**.\n\nThe fix rejects HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` instead of choosing one framing interpretation.\n\n## Mitigation\n\nUsers should upgrade to **actix-http 3.12.1** or later.\n\nApplications that depend on `actix-http` through `actix-web`, `awc`, or another Actix crate should ensure dependency resolution selects `actix-http` 3.12.1 or later. For example:\n\n```bash\ncargo update -p actix-http\n```\n\nIf an immediate upgrade is not possible, configure all upstream HTTP intermediaries to reject HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding`, and avoid forwarding ambiguous request framing to Actix backends.\n## Credits\n\nActix thanks [mufeedvh](https://github.com/mufeedvh) who disclosed this issue through coordinated disclosure.",
+                "markdown": "**Vulnerability GHSA-xhj4-vrgc-hr34**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|actix-http|3.12.1|[GHSA-xhj4-vrgc-hr34](https://github.com/advisories/GHSA-xhj4-vrgc-hr34)|\n\nA vulnerability in `actix-http`'s HTTP/1.1 request parser allows an unauthenticated remote client to smuggle requests in deployments where a front-end HTTP intermediary and the Actix backend disagree about whether `Content-Length` or `Transfer-Encoding: chunked` defines the request body length.\n\n## Severity\n\n**Medium**.\nThis is an HTTP request smuggling vulnerability that can be triggered over the network without application-level credentials. Exploitation requires a specific proxy topology: an upstream proxy, WAF, load balancer, or similar intermediary must use `Content-Length` framing while forwarding the conflicting `Transfer-Encoding: chunked` request to an Actix backend over a reused HTTP/1.1 connection.\n\n## Affected Versions\n\n- `actix-http`: versions up to and including **3.12.0**\n\n## Description\n\nHTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` are ambiguous and must be rejected by recipients to avoid request smuggling.\n\nAffected versions of `actix-http` accepted a request with a syntactically valid `Content-Length` header and `Transfer-Encoding: chunked` on the same HTTP/1.1 message. The parser then selected chunked decoding instead of rejecting the conflicting framing signals.\n\nIn a CL.TE proxy topology, an intermediary may treat bytes after the declared `Content-Length` body as part of the first request, while the Actix backend stops at the terminating chunk marker and parses the remaining bytes on the backend connection as a second HTTP request. This creates a backend-side request desynchronization primitive.\n\nThe issue is limited to HTTP/1.1 request parsing.\n\n## Impact\n\n**HTTP request smuggling**\n\n* **Attack Vector:** Network, unauthenticated.\n* **Effect:** Backend request desynchronization with low integrity impact to requests processed by the vulnerable Actix service.\n* **Scope:** Actix services using affected `actix-http` versions behind an HTTP/1.1 intermediary that forwards ambiguous `Content-Length` plus `Transfer-Encoding: chunked` requests and reuses backend connections.\n\nNo direct confidentiality, availability, or subsequent-system impact is scored for this advisory.\n\n## Fixed Versions\n\nThis issue is fixed in **actix-http 3.12.1**.\n\nThe fix rejects HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding: chunked` instead of choosing one framing interpretation.\n\n## Mitigation\n\nUsers should upgrade to **actix-http 3.12.1** or later.\n\nApplications that depend on `actix-http` through `actix-web`, `awc`, or another Actix crate should ensure dependency resolution selects `actix-http` 3.12.1 or later. For example:\n\n```bash\ncargo update -p actix-http\n```\n\nIf an immediate upgrade is not possible, configure all upstream HTTP intermediaries to reject HTTP/1.1 requests that contain both `Content-Length` and `Transfer-Encoding`, and avoid forwarding ambiguous request framing to Actix backends.\n## Credits\n\nActix thanks [mufeedvh](https://github.com/mufeedvh) who disclosed this issue through coordinated disclosure."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-25541",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Bytes is a utility library for working with bytes. From version 1.2.1  ..."
+              },
+              "fullDescription": {
+                "text": "Bytes is a utility library for working with bytes. From version 1.2.1 to before 1.11.1, Bytes is vulnerable to integer overflow in BytesMut::reserve. In the unique reclaim path of BytesMut::reserve, if the condition \"v_capacity \u003e= new_cap + offset\" uses an unchecked addition. When new_cap + offset overflows usize in release builds, this condition may incorrectly pass, causing self.cap to be set to a value that exceeds the actual allocated capacity. Subsequent APIs such as spare_capacity_mut() then trust this corrupted cap value and may create out-of-bounds slices, leading to UB. This behavior is observable in release builds (integer overflow wraps), whereas debug builds panic due to overflow checks. This issue has been patched in version 1.11.1."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-25541",
+              "help": {
+                "text": "Vulnerability CVE-2026-25541\nSeverity: MEDIUM\nPackage: bytes\nFixed Version: 1.11.1\nLink: [CVE-2026-25541](https://avd.aquasec.com/nvd/cve-2026-25541)\nBytes is a utility library for working with bytes. From version 1.2.1 to before 1.11.1, Bytes is vulnerable to integer overflow in BytesMut::reserve. In the unique reclaim path of BytesMut::reserve, if the condition \"v_capacity \u003e= new_cap + offset\" uses an unchecked addition. When new_cap + offset overflows usize in release builds, this condition may incorrectly pass, causing self.cap to be set to a value that exceeds the actual allocated capacity. Subsequent APIs such as spare_capacity_mut() then trust this corrupted cap value and may create out-of-bounds slices, leading to UB. This behavior is observable in release builds (integer overflow wraps), whereas debug builds panic due to overflow checks. This issue has been patched in version 1.11.1.",
+                "markdown": "**Vulnerability CVE-2026-25541**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|bytes|1.11.1|[CVE-2026-25541](https://avd.aquasec.com/nvd/cve-2026-25541)|\n\nBytes is a utility library for working with bytes. From version 1.2.1 to before 1.11.1, Bytes is vulnerable to integer overflow in BytesMut::reserve. In the unique reclaim path of BytesMut::reserve, if the condition \"v_capacity \u003e= new_cap + offset\" uses an unchecked addition. When new_cap + offset overflows usize in release builds, this condition may incorrectly pass, causing self.cap to be set to a value that exceeds the actual allocated capacity. Subsequent APIs such as spare_capacity_mut() then trust this corrupted cap value and may create out-of-bounds slices, leading to UB. This behavior is observable in release builds (integer overflow wraps), whereas debug builds panic due to overflow checks. This issue has been patched in version 1.11.1."
+              },
+              "properties": {
+                "cvssv40_baseScore": 5.5,
+                "cvssv40_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N/E:P",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-h5x4-m2qf-r4f2",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Diesel's SQLite backend has possible UTF-8 corruption"
+              },
+              "fullDescription": {
+                "text": "Diesel uses the `sqlite3_value_text` function to receive strings from SQLite while deserializing query results. We misinterpreted the corresponding [SQLite](https://sqlite.org/c3ref/value_blob.html) documentation that this function always returns a UTF-8 encoded string values as `*const c_char`. Based on that we used `str::from_utf8_unchecked` to construct a Rust string slice without any additional UTF-8 checks in place. It turned out that this function doesn't always return correct UTF-8 strings. For field of the SQLite side storage type `BLOB` this pointer can contain arbitrary bytes, which makes the usage of `str::from_utf8_unchecked` unsound as this violates the safety contract of `str` to only contain valid UTF-8 encoded Strings.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly checks whether the provides byte buffer is actually valid UTF-8, instead of relying on SQLite's documentation. This fix is included in the `2.3.8` release."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-h5x4-m2qf-r4f2",
+              "help": {
+                "text": "Vulnerability GHSA-h5x4-m2qf-r4f2\nSeverity: HIGH\nPackage: diesel\nFixed Version: 2.3.8\nLink: [GHSA-h5x4-m2qf-r4f2](https://github.com/advisories/GHSA-h5x4-m2qf-r4f2)\nDiesel uses the `sqlite3_value_text` function to receive strings from SQLite while deserializing query results. We misinterpreted the corresponding [SQLite](https://sqlite.org/c3ref/value_blob.html) documentation that this function always returns a UTF-8 encoded string values as `*const c_char`. Based on that we used `str::from_utf8_unchecked` to construct a Rust string slice without any additional UTF-8 checks in place. It turned out that this function doesn't always return correct UTF-8 strings. For field of the SQLite side storage type `BLOB` this pointer can contain arbitrary bytes, which makes the usage of `str::from_utf8_unchecked` unsound as this violates the safety contract of `str` to only contain valid UTF-8 encoded Strings.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly checks whether the provides byte buffer is actually valid UTF-8, instead of relying on SQLite's documentation. This fix is included in the `2.3.8` release.",
+                "markdown": "**Vulnerability GHSA-h5x4-m2qf-r4f2**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|diesel|2.3.8|[GHSA-h5x4-m2qf-r4f2](https://github.com/advisories/GHSA-h5x4-m2qf-r4f2)|\n\nDiesel uses the `sqlite3_value_text` function to receive strings from SQLite while deserializing query results. We misinterpreted the corresponding [SQLite](https://sqlite.org/c3ref/value_blob.html) documentation that this function always returns a UTF-8 encoded string values as `*const c_char`. Based on that we used `str::from_utf8_unchecked` to construct a Rust string slice without any additional UTF-8 checks in place. It turned out that this function doesn't always return correct UTF-8 strings. For field of the SQLite side storage type `BLOB` this pointer can contain arbitrary bytes, which makes the usage of `str::from_utf8_unchecked` unsound as this violates the safety contract of `str` to only contain valid UTF-8 encoded Strings.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly checks whether the provides byte buffer is actually valid UTF-8, instead of relying on SQLite's documentation. This fix is included in the `2.3.8` release."
+              },
+              "properties": {
+                "cvssv40_baseScore": 8.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-wq9x-qwcq-mmgf",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Diesel vulnerable to Binary Protocol Misinterpretation caused by Truncating or Overflowing Casts"
+              },
+              "fullDescription": {
+                "text": "The following presentation at this year's DEF CON was brought to our attention on the Diesel Gitter Channel:\n\n\u003e SQL Injection isn't Dead: Smuggling Queries at the Protocol Level  \n\u003e \u003chttp://web.archive.org/web/20240812130923/https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn't%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf\u003e  \n\u003e (Archive link for posterity.)\nEssentially, encoding a value larger than 4GiB can cause the length prefix in the protocol to overflow, \ncausing the server to interpret the rest of the string as binary protocol commands or other data.\n\nIt appears Diesel _does_ perform truncating casts in a way that could be problematic, \nfor example: \u003chttps://github.com/diesel-rs/diesel/blob/ae82c4a5a133db65612b7436356f549bfecda1c7/diesel/src/pg/connection/stmt/mod.rs#L36\u003e\n\nThis code has existed essentially since the beginning, \nso it is reasonable to assume that all published versions `\u003c= 2.2.2` are affected.\n\n## Mitigation\n\nThe prefered migration to the outlined problem is to update to a Diesel version newer than 2.2.2, which includes \nfixes for the problem. \n\nAs always, you should make sure your application is validating untrustworthy user input. \nReject any input over 4 GiB, or any input that could _encode_ to a string longer than 4 GiB. \nDynamically built queries are also potentially problematic if it pushes the message size over this 4 GiB bound.\n\nFor web application backends, consider adding some middleware that limits the size of request bodies by default.\n\n## Resolution\n\nDiesel now uses `#[deny]` directives for the following Clippy lints:\n\n* [`cast_possible_truncation`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_truncation)\n* [`cast_possible_wrap`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_wrap)\n* [`cast_sign_loss`](https://rust-lang.github.io/rust-clippy/master/#/cast_sign_loss)\n\nto prevent casts that will lead to precision loss or other trunctations. Additionally we performed an \naudit of the relevant code.\n\nA fix is included in the `2.2.3` release.\n"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-wq9x-qwcq-mmgf",
+              "help": {
+                "text": "Vulnerability GHSA-wq9x-qwcq-mmgf\nSeverity: HIGH\nPackage: diesel\nFixed Version: 2.2.3\nLink: [GHSA-wq9x-qwcq-mmgf](https://github.com/advisories/GHSA-wq9x-qwcq-mmgf)\nThe following presentation at this year's DEF CON was brought to our attention on the Diesel Gitter Channel:\n\n\u003e SQL Injection isn't Dead: Smuggling Queries at the Protocol Level  \n\u003e \u003chttp://web.archive.org/web/20240812130923/https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn't%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf\u003e  \n\u003e (Archive link for posterity.)\nEssentially, encoding a value larger than 4GiB can cause the length prefix in the protocol to overflow, \ncausing the server to interpret the rest of the string as binary protocol commands or other data.\n\nIt appears Diesel _does_ perform truncating casts in a way that could be problematic, \nfor example: \u003chttps://github.com/diesel-rs/diesel/blob/ae82c4a5a133db65612b7436356f549bfecda1c7/diesel/src/pg/connection/stmt/mod.rs#L36\u003e\n\nThis code has existed essentially since the beginning, \nso it is reasonable to assume that all published versions `\u003c= 2.2.2` are affected.\n\n## Mitigation\n\nThe prefered migration to the outlined problem is to update to a Diesel version newer than 2.2.2, which includes \nfixes for the problem. \n\nAs always, you should make sure your application is validating untrustworthy user input. \nReject any input over 4 GiB, or any input that could _encode_ to a string longer than 4 GiB. \nDynamically built queries are also potentially problematic if it pushes the message size over this 4 GiB bound.\n\nFor web application backends, consider adding some middleware that limits the size of request bodies by default.\n\n## Resolution\n\nDiesel now uses `#[deny]` directives for the following Clippy lints:\n\n* [`cast_possible_truncation`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_truncation)\n* [`cast_possible_wrap`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_wrap)\n* [`cast_sign_loss`](https://rust-lang.github.io/rust-clippy/master/#/cast_sign_loss)\n\nto prevent casts that will lead to precision loss or other trunctations. Additionally we performed an \naudit of the relevant code.\n\nA fix is included in the `2.2.3` release.\n",
+                "markdown": "**Vulnerability GHSA-wq9x-qwcq-mmgf**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|diesel|2.2.3|[GHSA-wq9x-qwcq-mmgf](https://github.com/advisories/GHSA-wq9x-qwcq-mmgf)|\n\nThe following presentation at this year's DEF CON was brought to our attention on the Diesel Gitter Channel:\n\n\u003e SQL Injection isn't Dead: Smuggling Queries at the Protocol Level  \n\u003e \u003chttp://web.archive.org/web/20240812130923/https://media.defcon.org/DEF%20CON%2032/DEF%20CON%2032%20presentations/DEF%20CON%2032%20-%20Paul%20Gerste%20-%20SQL%20Injection%20Isn't%20Dead%20Smuggling%20Queries%20at%20the%20Protocol%20Level.pdf\u003e  \n\u003e (Archive link for posterity.)\nEssentially, encoding a value larger than 4GiB can cause the length prefix in the protocol to overflow, \ncausing the server to interpret the rest of the string as binary protocol commands or other data.\n\nIt appears Diesel _does_ perform truncating casts in a way that could be problematic, \nfor example: \u003chttps://github.com/diesel-rs/diesel/blob/ae82c4a5a133db65612b7436356f549bfecda1c7/diesel/src/pg/connection/stmt/mod.rs#L36\u003e\n\nThis code has existed essentially since the beginning, \nso it is reasonable to assume that all published versions `\u003c= 2.2.2` are affected.\n\n## Mitigation\n\nThe prefered migration to the outlined problem is to update to a Diesel version newer than 2.2.2, which includes \nfixes for the problem. \n\nAs always, you should make sure your application is validating untrustworthy user input. \nReject any input over 4 GiB, or any input that could _encode_ to a string longer than 4 GiB. \nDynamically built queries are also potentially problematic if it pushes the message size over this 4 GiB bound.\n\nFor web application backends, consider adding some middleware that limits the size of request bodies by default.\n\n## Resolution\n\nDiesel now uses `#[deny]` directives for the following Clippy lints:\n\n* [`cast_possible_truncation`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_truncation)\n* [`cast_possible_wrap`](https://rust-lang.github.io/rust-clippy/master/#/cast_possible_wrap)\n* [`cast_sign_loss`](https://rust-lang.github.io/rust-clippy/master/#/cast_sign_loss)\n\nto prevent casts that will lead to precision loss or other trunctations. Additionally we performed an \naudit of the relevant code.\n\nA fix is included in the `2.2.3` release.\n"
+              },
+              "properties": {
+                "cvssv3_baseScore": 8.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "cvssv40_baseScore": 8.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:P",
+                "precision": "very-high",
+                "security-severity": "8.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-m9p2-fxp5-v3fp",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Diesel: Command injection in Diesel's implementation of `COPY FROM`/`COPY TO`"
+              },
+              "fullDescription": {
+                "text": "Diesel allows users to configure various options for PostgreSQL's `COPY FROM` and `COPY TO` statements. These configurations are partially provided as strings or characters. \n\nDiesel did not check if any these user-provided options contain a quote character `'`, which can lead to the injection of additional options in the current `COPY FROM`/`COPY TO` statement. \n\nThis vulnerability affects any user of `COPY FROM`/`COPY TO` that passes user-provided input to any of the affected functions. It can result in modifications of options in the current statement, but it is not possible inject additional statements.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly escapes any quotes contained in the provided arguments."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-m9p2-fxp5-v3fp",
+              "help": {
+                "text": "Vulnerability GHSA-m9p2-fxp5-v3fp\nSeverity: MEDIUM\nPackage: diesel\nFixed Version: 2.3.8\nLink: [GHSA-m9p2-fxp5-v3fp](https://github.com/advisories/GHSA-m9p2-fxp5-v3fp)\nDiesel allows users to configure various options for PostgreSQL's `COPY FROM` and `COPY TO` statements. These configurations are partially provided as strings or characters. \n\nDiesel did not check if any these user-provided options contain a quote character `'`, which can lead to the injection of additional options in the current `COPY FROM`/`COPY TO` statement. \n\nThis vulnerability affects any user of `COPY FROM`/`COPY TO` that passes user-provided input to any of the affected functions. It can result in modifications of options in the current statement, but it is not possible inject additional statements.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly escapes any quotes contained in the provided arguments.",
+                "markdown": "**Vulnerability GHSA-m9p2-fxp5-v3fp**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|diesel|2.3.8|[GHSA-m9p2-fxp5-v3fp](https://github.com/advisories/GHSA-m9p2-fxp5-v3fp)|\n\nDiesel allows users to configure various options for PostgreSQL's `COPY FROM` and `COPY TO` statements. These configurations are partially provided as strings or characters. \n\nDiesel did not check if any these user-provided options contain a quote character `'`, which can lead to the injection of additional options in the current `COPY FROM`/`COPY TO` statement. \n\nThis vulnerability affects any user of `COPY FROM`/`COPY TO` that passes user-provided input to any of the affected functions. It can result in modifications of options in the current statement, but it is not possible inject additional statements.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now correctly escapes any quotes contained in the provided arguments."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-q8x8-jrhj-fh9p",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Diesel: Possible unaligned data access for implementations of `SqliteAggregate`"
+              },
+              "fullDescription": {
+                "text": "Diesel allows to register custom aggregate SQL functions for SQLite via the `SqliteAggregate` interface.\n\nTo store an instance of the custom aggregate processor Diesel relied on the `sqlite3_aggregate_context` function provided by sqlite. This function doesn't provide any guarantees about alignment of the returned allocation, which in turn can lead to problems if the type implementing requires a special alignment, e.g. via a custom `#[align(x)]` attribute on the type implementing this trait. This affects any user of `SqliteAggregate` that registers the custom aggregate function with an SQLite connection, while using a non-standard alignment on the type implementing this trait.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now allocates the corresponding memory on Rust side to get a correctly aligned allocation."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-q8x8-jrhj-fh9p",
+              "help": {
+                "text": "Vulnerability GHSA-q8x8-jrhj-fh9p\nSeverity: MEDIUM\nPackage: diesel\nFixed Version: 2.3.8\nLink: [GHSA-q8x8-jrhj-fh9p](https://github.com/advisories/GHSA-q8x8-jrhj-fh9p)\nDiesel allows to register custom aggregate SQL functions for SQLite via the `SqliteAggregate` interface.\n\nTo store an instance of the custom aggregate processor Diesel relied on the `sqlite3_aggregate_context` function provided by sqlite. This function doesn't provide any guarantees about alignment of the returned allocation, which in turn can lead to problems if the type implementing requires a special alignment, e.g. via a custom `#[align(x)]` attribute on the type implementing this trait. This affects any user of `SqliteAggregate` that registers the custom aggregate function with an SQLite connection, while using a non-standard alignment on the type implementing this trait.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now allocates the corresponding memory on Rust side to get a correctly aligned allocation.",
+                "markdown": "**Vulnerability GHSA-q8x8-jrhj-fh9p**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|diesel|2.3.8|[GHSA-q8x8-jrhj-fh9p](https://github.com/advisories/GHSA-q8x8-jrhj-fh9p)|\n\nDiesel allows to register custom aggregate SQL functions for SQLite via the `SqliteAggregate` interface.\n\nTo store an instance of the custom aggregate processor Diesel relied on the `sqlite3_aggregate_context` function provided by sqlite. This function doesn't provide any guarantees about alignment of the returned allocation, which in turn can lead to problems if the type implementing requires a special alignment, e.g. via a custom `#[align(x)]` attribute on the type implementing this trait. This affects any user of `SqliteAggregate` that registers the custom aggregate function with an SQLite connection, while using a non-standard alignment on the type implementing this trait.\n\n## Mitigation\n\nThe preferred mitigation to the outlined problem is to update to a Diesel version 2.3.8 or newer, which includes fixes for the problem.\n\n## Resolution\n\nDiesel now allocates the corresponding memory on Rust side to get a correctly aligned allocation."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:N/VI:L/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-8r5v-vm4m-4g25",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Resource exhaustion vulnerability in h2 may lead to Denial of Service (DoS)"
+              },
+              "fullDescription": {
+                "text": "An attacker with an HTTP/2 connection to an affected endpoint can send a steady stream of invalid frames to force the\ngeneration of reset frames on the victim endpoint.\nBy closing their recv window, the attacker could then force these resets to be queued in an unbounded fashion,\nresulting in Out Of Memory (OOM) and high CPU usage.\n\nThis fix is corrected in [hyperium/h2#737](https://github.com/hyperium/h2/pull/737), which limits the total number of\ninternal error resets emitted by default before the connection is closed.\n"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-8r5v-vm4m-4g25",
+              "help": {
+                "text": "Vulnerability GHSA-8r5v-vm4m-4g25\nSeverity: MEDIUM\nPackage: h2\nFixed Version: 0.3.24, 0.4.2\nLink: [GHSA-8r5v-vm4m-4g25](https://github.com/advisories/GHSA-8r5v-vm4m-4g25)\nAn attacker with an HTTP/2 connection to an affected endpoint can send a steady stream of invalid frames to force the\ngeneration of reset frames on the victim endpoint.\nBy closing their recv window, the attacker could then force these resets to be queued in an unbounded fashion,\nresulting in Out Of Memory (OOM) and high CPU usage.\n\nThis fix is corrected in [hyperium/h2#737](https://github.com/hyperium/h2/pull/737), which limits the total number of\ninternal error resets emitted by default before the connection is closed.\n",
+                "markdown": "**Vulnerability GHSA-8r5v-vm4m-4g25**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|h2|0.3.24, 0.4.2|[GHSA-8r5v-vm4m-4g25](https://github.com/advisories/GHSA-8r5v-vm4m-4g25)|\n\nAn attacker with an HTTP/2 connection to an affected endpoint can send a steady stream of invalid frames to force the\ngeneration of reset frames on the victim endpoint.\nBy closing their recv window, the attacker could then force these resets to be queued in an unbounded fashion,\nresulting in Out Of Memory (OOM) and high CPU usage.\n\nThis fix is corrected in [hyperium/h2#737](https://github.com/hyperium/h2/pull/737), which limits the total number of\ninternal error resets emitted by default before the connection is closed.\n"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-q6cp-qfwq-4gcv",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "h2 servers vulnerable to degradation of service with CONTINUATION Flood"
+              },
+              "fullDescription": {
+                "text": "An attacker can send a flood of CONTINUATION frames, causing `h2` to process them indefinitely. This results in an increase in CPU usage.\n\nTokio task budget helps prevent this from a complete denial-of-service, as the server can still respond to legitimate requests, albeit with increased latency.\n\nMore details at https://seanmonstar.com/blog/hyper-http2-continuation-flood/.\n\nPatches available for 0.4.x and 0.3.x versions.\n"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-q6cp-qfwq-4gcv",
+              "help": {
+                "text": "Vulnerability GHSA-q6cp-qfwq-4gcv\nSeverity: MEDIUM\nPackage: h2\nFixed Version: 0.3.26, 0.4.4\nLink: [GHSA-q6cp-qfwq-4gcv](https://github.com/advisories/GHSA-q6cp-qfwq-4gcv)\nAn attacker can send a flood of CONTINUATION frames, causing `h2` to process them indefinitely. This results in an increase in CPU usage.\n\nTokio task budget helps prevent this from a complete denial-of-service, as the server can still respond to legitimate requests, albeit with increased latency.\n\nMore details at https://seanmonstar.com/blog/hyper-http2-continuation-flood/.\n\nPatches available for 0.4.x and 0.3.x versions.\n",
+                "markdown": "**Vulnerability GHSA-q6cp-qfwq-4gcv**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|h2|0.3.26, 0.4.4|[GHSA-q6cp-qfwq-4gcv](https://github.com/advisories/GHSA-q6cp-qfwq-4gcv)|\n\nAn attacker can send a flood of CONTINUATION frames, causing `h2` to process them indefinitely. This results in an increase in CPU usage.\n\nTokio task budget helps prevent this from a complete denial-of-service, as the server can still respond to legitimate requests, albeit with increased latency.\n\nMore details at https://seanmonstar.com/blog/hyper-http2-continuation-flood/.\n\nPatches available for 0.4.x and 0.3.x versions.\n"
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-12224",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "idna: idna accepts Punycode labels that do not produce any non-ASCII when decoded"
+              },
+              "fullDescription": {
+                "text": "Improper Validation of Unsafe Equivalence in punycode by the idna crate from Servo rust-url allows an attacker to create a punycode hostname that one part of a system might treat as distinct while another part of that system would treat as equivalent to another hostname."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-12224",
+              "help": {
+                "text": "Vulnerability CVE-2024-12224\nSeverity: MEDIUM\nPackage: idna\nFixed Version: 1.0.0\nLink: [CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)\nImproper Validation of Unsafe Equivalence in punycode by the idna crate from Servo rust-url allows an attacker to create a punycode hostname that one part of a system might treat as distinct while another part of that system would treat as equivalent to another hostname.",
+                "markdown": "**Vulnerability CVE-2024-12224**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|idna|1.0.0|[CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)|\n\nImproper Validation of Unsafe Equivalence in punycode by the idna crate from Servo rust-url allows an attacker to create a punycode hostname that one part of a system might treat as distinct while another part of that system would treat as equivalent to another hostname."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-27308",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "CVE-2024-27308 affecting package rpm-ostree for versions less than 2024.4-1"
+              },
+              "fullDescription": {
+                "text": "Mio is a Metal I/O library for Rust. When using named pipes on Windows, mio will under some circumstances return invalid tokens that correspond to named pipes that have already been deregistered from the mio registry. The impact of this vulnerability depends on how mio is used. For some applications, invalid tokens may be ignored or cause a warning or a crash. On the other hand, for applications that store pointers in the tokens, this vulnerability may result in a use-after-free. For users of Tokio, this vulnerability is serious and can result in a use-after-free in Tokio. The vulnerability is Windows-specific, and can only happen if you are using named pipes. Other IO resources are not affected. This vulnerability has been fixed in mio v0.8.11. All versions of mio between v0.7.2 and v0.8.10 are vulnerable. Tokio is vulnerable when you are using a vulnerable version of mio AND you are using at least Tokio v1.30.0. Versions of Tokio prior to v1.30.0 will ignore invalid tokens, so they are not vulnerable. Vulnerable libraries that use mio can work around this issue by detecting and ignoring invalid tokens."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-27308",
+              "help": {
+                "text": "Vulnerability CVE-2024-27308\nSeverity: HIGH\nPackage: mio\nFixed Version: 0.8.11\nLink: [CVE-2024-27308](https://avd.aquasec.com/nvd/cve-2024-27308)\nMio is a Metal I/O library for Rust. When using named pipes on Windows, mio will under some circumstances return invalid tokens that correspond to named pipes that have already been deregistered from the mio registry. The impact of this vulnerability depends on how mio is used. For some applications, invalid tokens may be ignored or cause a warning or a crash. On the other hand, for applications that store pointers in the tokens, this vulnerability may result in a use-after-free. For users of Tokio, this vulnerability is serious and can result in a use-after-free in Tokio. The vulnerability is Windows-specific, and can only happen if you are using named pipes. Other IO resources are not affected. This vulnerability has been fixed in mio v0.8.11. All versions of mio between v0.7.2 and v0.8.10 are vulnerable. Tokio is vulnerable when you are using a vulnerable version of mio AND you are using at least Tokio v1.30.0. Versions of Tokio prior to v1.30.0 will ignore invalid tokens, so they are not vulnerable. Vulnerable libraries that use mio can work around this issue by detecting and ignoring invalid tokens.",
+                "markdown": "**Vulnerability CVE-2024-27308**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|mio|0.8.11|[CVE-2024-27308](https://avd.aquasec.com/nvd/cve-2024-27308)|\n\nMio is a Metal I/O library for Rust. When using named pipes on Windows, mio will under some circumstances return invalid tokens that correspond to named pipes that have already been deregistered from the mio registry. The impact of this vulnerability depends on how mio is used. For some applications, invalid tokens may be ignored or cause a warning or a crash. On the other hand, for applications that store pointers in the tokens, this vulnerability may result in a use-after-free. For users of Tokio, this vulnerability is serious and can result in a use-after-free in Tokio. The vulnerability is Windows-specific, and can only happen if you are using named pipes. Other IO resources are not affected. This vulnerability has been fixed in mio v0.8.11. All versions of mio between v0.7.2 and v0.8.10 are vulnerable. Tokio is vulnerable when you are using a vulnerable version of mio AND you are using at least Tokio v1.30.0. Versions of Tokio prior to v1.30.0 will ignore invalid tokens, so they are not vulnerable. Vulnerable libraries that use mio can work around this issue by detecting and ignoring invalid tokens."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-cq8v-f236-94qc",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Rand is unsound with a custom logger using rand::rng()"
+              },
+              "fullDescription": {
+                "text": "It has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-cq8v-f236-94qc",
+              "help": {
+                "text": "Vulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nPackage: rand\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)\nIt has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict.",
+                "markdown": "**Vulnerability GHSA-cq8v-f236-94qc**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rand|0.9.3, 0.10.1, 0.8.6|[GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)|\n\nIt has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-4432",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "ring: Some AES functions may panic when overflow checking is enabled in ring"
+              },
+              "fullDescription": {
+                "text": "A flaw was found in Rust's Ring package. A panic may be triggered when overflow checking is enabled. In the QUIC protocol, this flaw allows an attacker to induce this panic by sending a specially crafted packet. It will likely occur unintentionally in 1 out of every 2**32 packets sent or received."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-4432",
+              "help": {
+                "text": "Vulnerability CVE-2025-4432\nSeverity: MEDIUM\nPackage: ring\nFixed Version: 0.17.12\nLink: [CVE-2025-4432](https://avd.aquasec.com/nvd/cve-2025-4432)\nA flaw was found in Rust's Ring package. A panic may be triggered when overflow checking is enabled. In the QUIC protocol, this flaw allows an attacker to induce this panic by sending a specially crafted packet. It will likely occur unintentionally in 1 out of every 2**32 packets sent or received.",
+                "markdown": "**Vulnerability CVE-2025-4432**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|ring|0.17.12|[CVE-2025-4432](https://avd.aquasec.com/nvd/cve-2025-4432)|\n\nA flaw was found in Rust's Ring package. A panic may be triggered when overflow checking is enabled. In the QUIC protocol, this flaw allows an attacker to induce this panic by sending a specially crafted packet. It will likely occur unintentionally in 1 out of every 2**32 packets sent or received."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.6,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-32650",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Rustls is a modern TLS library written in Rust. `rustls::ConnectionCom ..."
+              },
+              "fullDescription": {
+                "text": "Rustls is a modern TLS library written in Rust. `rustls::ConnectionCommon::complete_io` could fall into an infinite loop based on network input. When using a blocking rustls server, if a client send a `close_notify` message immediately after `client_hello`, the server's `complete_io` will get in an infinite loop. This vulnerability is fixed in 0.23.5, 0.22.4, and 0.21.11."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-32650",
+              "help": {
+                "text": "Vulnerability CVE-2024-32650\nSeverity: HIGH\nPackage: rustls\nFixed Version: 0.23.5, 0.22.4, 0.21.11\nLink: [CVE-2024-32650](https://avd.aquasec.com/nvd/cve-2024-32650)\nRustls is a modern TLS library written in Rust. `rustls::ConnectionCommon::complete_io` could fall into an infinite loop based on network input. When using a blocking rustls server, if a client send a `close_notify` message immediately after `client_hello`, the server's `complete_io` will get in an infinite loop. This vulnerability is fixed in 0.23.5, 0.22.4, and 0.21.11.",
+                "markdown": "**Vulnerability CVE-2024-32650**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|rustls|0.23.5, 0.22.4, 0.21.11|[CVE-2024-32650](https://avd.aquasec.com/nvd/cve-2024-32650)|\n\nRustls is a modern TLS library written in Rust. `rustls::ConnectionCommon::complete_io` could fall into an infinite loop based on network input. When using a blocking rustls server, if a client send a `close_notify` message immediately after `client_hello`, the server's `complete_io` will get in an infinite loop. This vulnerability is fixed in 0.23.5, 0.22.4, and 0.21.11."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-965h-392x-2mh5",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "webpki: Name constraints for URI names were incorrectly accepted"
+              },
+              "fullDescription": {
+                "text": "Name constraints for URI names were ignored and therefore accepted.\n\nNote this library does not provide an API for asserting URI names, and URI name constraints are otherwise not implemented.  URI name constraints are now rejected unconditionally.\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-965h-392x-2mh5",
+              "help": {
+                "text": "Vulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nPackage: rustls-webpki\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)\nName constraints for URI names were ignored and therefore accepted.\n\nNote this library does not provide an API for asserting URI names, and URI name constraints are otherwise not implemented.  URI name constraints are now rejected unconditionally.\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit.",
+                "markdown": "**Vulnerability GHSA-965h-392x-2mh5**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rustls-webpki|0.103.12, 0.104.0-alpha.6|[GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)|\n\nName constraints for URI names were ignored and therefore accepted.\n\nNote this library does not provide an API for asserting URI names, and URI name constraints are otherwise not implemented.  URI name constraints are now rejected unconditionally.\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "properties": {
+                "cvssv3_baseScore": 2.2,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "2.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-xgp8-3hg3-c2mh",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "webpki: Name constraints were accepted for certificates asserting a wildcard name"
+              },
+              "fullDescription": {
+                "text": "Permitted subtree name constraints for DNS names were accepted for certificates asserting a wildcard name.\n\nThis was incorrect because, given a name constraint of `accept.example.com`, `*.example.com` could feasibly allow a name of `reject.example.com` which is outside the constraint.\nThis is very similar to [CVE-2025-61727](https://go.dev/issue/76442).\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-xgp8-3hg3-c2mh",
+              "help": {
+                "text": "Vulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nPackage: rustls-webpki\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)\nPermitted subtree name constraints for DNS names were accepted for certificates asserting a wildcard name.\n\nThis was incorrect because, given a name constraint of `accept.example.com`, `*.example.com` could feasibly allow a name of `reject.example.com` which is outside the constraint.\nThis is very similar to [CVE-2025-61727](https://go.dev/issue/76442).\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit.",
+                "markdown": "**Vulnerability GHSA-xgp8-3hg3-c2mh**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rustls-webpki|0.103.12, 0.104.0-alpha.6|[GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)|\n\nPermitted subtree name constraints for DNS names were accepted for certificates asserting a wildcard name.\n\nThis was incorrect because, given a name constraint of `accept.example.com`, `*.example.com` could feasibly allow a name of `reject.example.com` which is outside the constraint.\nThis is very similar to [CVE-2025-61727](https://go.dev/issue/76442).\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "properties": {
+                "cvssv3_baseScore": 2.2,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "2.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-25727",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "time: time affected by a stack exhaustion denial of service attack"
+              },
+              "fullDescription": {
+                "text": "time provides date and time handling in Rust. From 0.3.6 to before 0.3.47, when user-provided input is provided to any type that parses with the RFC 2822 format, a denial of service attack via stack exhaustion is possible. The attack relies on formally deprecated and rarely-used features that are part of the RFC 2822 format used in a malicious manner. Ordinary, non-malicious input will never encounter this scenario. A limit to the depth of recursion was added in v0.3.47. From this version, an error will be returned rather than exhausting the stack."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-25727",
+              "help": {
+                "text": "Vulnerability CVE-2026-25727\nSeverity: MEDIUM\nPackage: time\nFixed Version: 0.3.47\nLink: [CVE-2026-25727](https://avd.aquasec.com/nvd/cve-2026-25727)\ntime provides date and time handling in Rust. From 0.3.6 to before 0.3.47, when user-provided input is provided to any type that parses with the RFC 2822 format, a denial of service attack via stack exhaustion is possible. The attack relies on formally deprecated and rarely-used features that are part of the RFC 2822 format used in a malicious manner. Ordinary, non-malicious input will never encounter this scenario. A limit to the depth of recursion was added in v0.3.47. From this version, an error will be returned rather than exhausting the stack.",
+                "markdown": "**Vulnerability CVE-2026-25727**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|time|0.3.47|[CVE-2026-25727](https://avd.aquasec.com/nvd/cve-2026-25727)|\n\ntime provides date and time handling in Rust. From 0.3.6 to before 0.3.47, when user-provided input is provided to any type that parses with the RFC 2822 format, a denial of service attack via stack exhaustion is possible. The attack relies on formally deprecated and rarely-used features that are part of the RFC 2822 format used in a malicious manner. Ordinary, non-malicious input will never encounter this scenario. A limit to the depth of recursion was added in v0.3.47. From this version, an error will be returned rather than exhausting the stack."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.8,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:L/UI:A/VC:N/VI:N/VA:H/SC:N/SI:N/SA:H",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-rr8g-9fpq-6wmg",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Tokio broadcast channel calls clone in parallel, but does not require `Sync`"
+              },
+              "fullDescription": {
+                "text": "The broadcast channel internally calls `clone` on the stored value when receiving it, and only requires `T:Send`. This means that using the broadcast channel with values that are `Send` but not `Sync` can trigger unsoundness if the `clone` implementation makes use of the value being `!Sync`.\n\nThank you to Austin Bonander for finding and reporting this issue."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-rr8g-9fpq-6wmg",
+              "help": {
+                "text": "Vulnerability GHSA-rr8g-9fpq-6wmg\nSeverity: LOW\nPackage: tokio\nFixed Version: 1.44.2, 1.38.2, 1.43.1\nLink: [GHSA-rr8g-9fpq-6wmg](https://github.com/advisories/GHSA-rr8g-9fpq-6wmg)\nThe broadcast channel internally calls `clone` on the stored value when receiving it, and only requires `T:Send`. This means that using the broadcast channel with values that are `Send` but not `Sync` can trigger unsoundness if the `clone` implementation makes use of the value being `!Sync`.\n\nThank you to Austin Bonander for finding and reporting this issue.",
+                "markdown": "**Vulnerability GHSA-rr8g-9fpq-6wmg**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|tokio|1.44.2, 1.38.2, 1.43.1|[GHSA-rr8g-9fpq-6wmg](https://github.com/advisories/GHSA-rr8g-9fpq-6wmg)|\n\nThe broadcast channel internally calls `clone` on the stored value when receiving it, and only requires `T:Send`. This means that using the broadcast channel with values that are `Send` but not `Sync` can trigger unsoundness if the `clone` implementation makes use of the value being `!Sync`.\n\nThank you to Austin Bonander for finding and reporting this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 2.7,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:U",
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-8qv2-5vq6-g2g7",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "webpki: CPU denial of service in certificate path building"
+              },
+              "fullDescription": {
+                "text": "When this crate is given a pathological certificate chain to validate, it will spend CPU time exponential with the number of candidate certificates at each step of path building.\n\nBoth TLS clients and TLS servers that accept client certificate are affected.\n\nThis was previously reported in https://github.com/briansmith/webpki/issues/69.\n\n`rustls-webpki` is a fork of this crate which contains a fix for this issue and is actively maintained."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-8qv2-5vq6-g2g7",
+              "help": {
+                "text": "Vulnerability GHSA-8qv2-5vq6-g2g7\nSeverity: HIGH\nPackage: webpki\nFixed Version: 0.22.2\nLink: [GHSA-8qv2-5vq6-g2g7](https://github.com/advisories/GHSA-8qv2-5vq6-g2g7)\nWhen this crate is given a pathological certificate chain to validate, it will spend CPU time exponential with the number of candidate certificates at each step of path building.\n\nBoth TLS clients and TLS servers that accept client certificate are affected.\n\nThis was previously reported in https://github.com/briansmith/webpki/issues/69.\n\n`rustls-webpki` is a fork of this crate which contains a fix for this issue and is actively maintained.",
+                "markdown": "**Vulnerability GHSA-8qv2-5vq6-g2g7**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|webpki|0.22.2|[GHSA-8qv2-5vq6-g2g7](https://github.com/advisories/GHSA-8qv2-5vq6-g2g7)|\n\nWhen this crate is given a pathological certificate chain to validate, it will spend CPU time exponential with the number of candidate certificates at each step of path building.\n\nBoth TLS clients and TLS servers that accept client certificate are affected.\n\nThis was previously reported in https://github.com/briansmith/webpki/issues/69.\n\n`rustls-webpki` is a fork of this crate which contains a fix for this issue and is actively maintained."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "GHSA-8v2v-wjwg-vx6r",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: actix-files\nInstalled Version: 0.6.2\nVulnerability GHSA-8v2v-wjwg-vx6r\nSeverity: MEDIUM\nFixed Version: 0.6.10\nLink: [GHSA-8v2v-wjwg-vx6r](https://github.com/advisories/GHSA-8v2v-wjwg-vx6r)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: actix-files@0.6.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-gcqf-3g44-vc9p",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: actix-files\nInstalled Version: 0.6.2\nVulnerability GHSA-gcqf-3g44-vc9p\nSeverity: MEDIUM\nFixed Version: 0.6.10\nLink: [GHSA-gcqf-3g44-vc9p](https://github.com/advisories/GHSA-gcqf-3g44-vc9p)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: actix-files@0.6.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xhj4-vrgc-hr34",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: actix-http\nInstalled Version: 3.4.0\nVulnerability GHSA-xhj4-vrgc-hr34\nSeverity: MEDIUM\nFixed Version: 3.12.1\nLink: [GHSA-xhj4-vrgc-hr34](https://github.com/advisories/GHSA-xhj4-vrgc-hr34)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: actix-http@3.4.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25541",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: bytes\nInstalled Version: 1.5.0\nVulnerability CVE-2026-25541\nSeverity: MEDIUM\nFixed Version: 1.11.1\nLink: [CVE-2026-25541](https://avd.aquasec.com/nvd/cve-2026-25541)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: bytes@1.5.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-h5x4-m2qf-r4f2",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.1\nVulnerability GHSA-h5x4-m2qf-r4f2\nSeverity: HIGH\nFixed Version: 2.3.8\nLink: [GHSA-h5x4-m2qf-r4f2](https://github.com/advisories/GHSA-h5x4-m2qf-r4f2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: diesel@2.1.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-wq9x-qwcq-mmgf",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.1\nVulnerability GHSA-wq9x-qwcq-mmgf\nSeverity: HIGH\nFixed Version: 2.2.3\nLink: [GHSA-wq9x-qwcq-mmgf](https://github.com/advisories/GHSA-wq9x-qwcq-mmgf)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: diesel@2.1.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-m9p2-fxp5-v3fp",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.1\nVulnerability GHSA-m9p2-fxp5-v3fp\nSeverity: MEDIUM\nFixed Version: 2.3.8\nLink: [GHSA-m9p2-fxp5-v3fp](https://github.com/advisories/GHSA-m9p2-fxp5-v3fp)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: diesel@2.1.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q8x8-jrhj-fh9p",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.1\nVulnerability GHSA-q8x8-jrhj-fh9p\nSeverity: MEDIUM\nFixed Version: 2.3.8\nLink: [GHSA-q8x8-jrhj-fh9p](https://github.com/advisories/GHSA-q8x8-jrhj-fh9p)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: diesel@2.1.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-8r5v-vm4m-4g25",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.21\nVulnerability GHSA-8r5v-vm4m-4g25\nSeverity: MEDIUM\nFixed Version: 0.3.24, 0.4.2\nLink: [GHSA-8r5v-vm4m-4g25](https://github.com/advisories/GHSA-8r5v-vm4m-4g25)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: h2@0.3.21"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q6cp-qfwq-4gcv",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.21\nVulnerability GHSA-q6cp-qfwq-4gcv\nSeverity: MEDIUM\nFixed Version: 0.3.26, 0.4.4\nLink: [GHSA-q6cp-qfwq-4gcv](https://github.com/advisories/GHSA-q6cp-qfwq-4gcv)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: h2@0.3.21"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-12224",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: idna\nInstalled Version: 0.2.3\nVulnerability CVE-2024-12224\nSeverity: MEDIUM\nFixed Version: 1.0.0\nLink: [CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: idna@0.2.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-12224",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: idna\nInstalled Version: 0.4.0\nVulnerability CVE-2024-12224\nSeverity: MEDIUM\nFixed Version: 1.0.0\nLink: [CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: idna@0.4.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-27308",
+          "ruleIndex": 11,
+          "level": "error",
+          "message": {
+            "text": "Package: mio\nInstalled Version: 0.8.8\nVulnerability CVE-2024-27308\nSeverity: HIGH\nFixed Version: 0.8.11\nLink: [CVE-2024-27308](https://avd.aquasec.com/nvd/cve-2024-27308)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: mio@0.8.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 12,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-4432",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: ring\nInstalled Version: 0.16.20\nVulnerability CVE-2025-4432\nSeverity: MEDIUM\nFixed Version: 0.17.12\nLink: [CVE-2025-4432](https://avd.aquasec.com/nvd/cve-2025-4432)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: ring@0.16.20"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-32650",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: rustls\nInstalled Version: 0.21.7\nVulnerability CVE-2024-32650\nSeverity: HIGH\nFixed Version: 0.23.5, 0.22.4, 0.21.11\nLink: [CVE-2024-32650](https://avd.aquasec.com/nvd/cve-2024-32650)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: rustls@0.21.7"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-965h-392x-2mh5",
+          "ruleIndex": 15,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.101.4\nVulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: rustls-webpki@0.101.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xgp8-3hg3-c2mh",
+          "ruleIndex": 16,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.101.4\nVulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: rustls-webpki@0.101.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25727",
+          "ruleIndex": 17,
+          "level": "warning",
+          "message": {
+            "text": "Package: time\nInstalled Version: 0.3.36\nVulnerability CVE-2026-25727\nSeverity: MEDIUM\nFixed Version: 0.3.47\nLink: [CVE-2026-25727](https://avd.aquasec.com/nvd/cve-2026-25727)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: time@0.3.36"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-rr8g-9fpq-6wmg",
+          "ruleIndex": 18,
+          "level": "note",
+          "message": {
+            "text": "Package: tokio\nInstalled Version: 1.32.0\nVulnerability GHSA-rr8g-9fpq-6wmg\nSeverity: LOW\nFixed Version: 1.44.2, 1.38.2, 1.43.1\nLink: [GHSA-rr8g-9fpq-6wmg](https://github.com/advisories/GHSA-rr8g-9fpq-6wmg)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: tokio@1.32.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-8qv2-5vq6-g2g7",
+          "ruleIndex": 19,
+          "level": "error",
+          "message": {
+            "text": "Package: webpki\nInstalled Version: 0.21.4\nVulnerability GHSA-8qv2-5vq6-g2g7\nSeverity: HIGH\nFixed Version: 0.22.2\nLink: [GHSA-8qv2-5vq6-g2g7](https://github.com/advisories/GHSA-8qv2-5vq6-g2g7)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/polaris: webpki@0.21.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-8v2v-wjwg-vx6r",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: actix-files\nInstalled Version: 0.6.2\nVulnerability GHSA-8v2v-wjwg-vx6r\nSeverity: MEDIUM\nFixed Version: 0.6.10\nLink: [GHSA-8v2v-wjwg-vx6r](https://github.com/advisories/GHSA-8v2v-wjwg-vx6r)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: actix-files@0.6.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-gcqf-3g44-vc9p",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "Package: actix-files\nInstalled Version: 0.6.2\nVulnerability GHSA-gcqf-3g44-vc9p\nSeverity: MEDIUM\nFixed Version: 0.6.10\nLink: [GHSA-gcqf-3g44-vc9p](https://github.com/advisories/GHSA-gcqf-3g44-vc9p)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: actix-files@0.6.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xhj4-vrgc-hr34",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: actix-http\nInstalled Version: 3.4.0\nVulnerability GHSA-xhj4-vrgc-hr34\nSeverity: MEDIUM\nFixed Version: 3.12.1\nLink: [GHSA-xhj4-vrgc-hr34](https://github.com/advisories/GHSA-xhj4-vrgc-hr34)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: actix-http@3.4.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25541",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: bytes\nInstalled Version: 1.5.0\nVulnerability CVE-2026-25541\nSeverity: MEDIUM\nFixed Version: 1.11.1\nLink: [CVE-2026-25541](https://avd.aquasec.com/nvd/cve-2026-25541)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: bytes@1.5.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-h5x4-m2qf-r4f2",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.1\nVulnerability GHSA-h5x4-m2qf-r4f2\nSeverity: HIGH\nFixed Version: 2.3.8\nLink: [GHSA-h5x4-m2qf-r4f2](https://github.com/advisories/GHSA-h5x4-m2qf-r4f2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: diesel@2.1.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-wq9x-qwcq-mmgf",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.1\nVulnerability GHSA-wq9x-qwcq-mmgf\nSeverity: HIGH\nFixed Version: 2.2.3\nLink: [GHSA-wq9x-qwcq-mmgf](https://github.com/advisories/GHSA-wq9x-qwcq-mmgf)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: diesel@2.1.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-m9p2-fxp5-v3fp",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.1\nVulnerability GHSA-m9p2-fxp5-v3fp\nSeverity: MEDIUM\nFixed Version: 2.3.8\nLink: [GHSA-m9p2-fxp5-v3fp](https://github.com/advisories/GHSA-m9p2-fxp5-v3fp)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: diesel@2.1.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q8x8-jrhj-fh9p",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: diesel\nInstalled Version: 2.1.1\nVulnerability GHSA-q8x8-jrhj-fh9p\nSeverity: MEDIUM\nFixed Version: 2.3.8\nLink: [GHSA-q8x8-jrhj-fh9p](https://github.com/advisories/GHSA-q8x8-jrhj-fh9p)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: diesel@2.1.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-8r5v-vm4m-4g25",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.21\nVulnerability GHSA-8r5v-vm4m-4g25\nSeverity: MEDIUM\nFixed Version: 0.3.24, 0.4.2\nLink: [GHSA-8r5v-vm4m-4g25](https://github.com/advisories/GHSA-8r5v-vm4m-4g25)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: h2@0.3.21"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-q6cp-qfwq-4gcv",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Package: h2\nInstalled Version: 0.3.21\nVulnerability GHSA-q6cp-qfwq-4gcv\nSeverity: MEDIUM\nFixed Version: 0.3.26, 0.4.4\nLink: [GHSA-q6cp-qfwq-4gcv](https://github.com/advisories/GHSA-q6cp-qfwq-4gcv)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: h2@0.3.21"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-12224",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: idna\nInstalled Version: 0.2.3\nVulnerability CVE-2024-12224\nSeverity: MEDIUM\nFixed Version: 1.0.0\nLink: [CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: idna@0.2.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-12224",
+          "ruleIndex": 10,
+          "level": "warning",
+          "message": {
+            "text": "Package: idna\nInstalled Version: 0.4.0\nVulnerability CVE-2024-12224\nSeverity: MEDIUM\nFixed Version: 1.0.0\nLink: [CVE-2024-12224](https://avd.aquasec.com/nvd/cve-2024-12224)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: idna@0.4.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-27308",
+          "ruleIndex": 11,
+          "level": "error",
+          "message": {
+            "text": "Package: mio\nInstalled Version: 0.8.8\nVulnerability CVE-2024-27308\nSeverity: HIGH\nFixed Version: 0.8.11\nLink: [CVE-2024-27308](https://avd.aquasec.com/nvd/cve-2024-27308)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: mio@0.8.8"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 12,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-4432",
+          "ruleIndex": 13,
+          "level": "warning",
+          "message": {
+            "text": "Package: ring\nInstalled Version: 0.16.20\nVulnerability CVE-2025-4432\nSeverity: MEDIUM\nFixed Version: 0.17.12\nLink: [CVE-2025-4432](https://avd.aquasec.com/nvd/cve-2025-4432)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: ring@0.16.20"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-32650",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: rustls\nInstalled Version: 0.21.7\nVulnerability CVE-2024-32650\nSeverity: HIGH\nFixed Version: 0.23.5, 0.22.4, 0.21.11\nLink: [CVE-2024-32650](https://avd.aquasec.com/nvd/cve-2024-32650)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: rustls@0.21.7"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-965h-392x-2mh5",
+          "ruleIndex": 15,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.101.4\nVulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: rustls-webpki@0.101.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xgp8-3hg3-c2mh",
+          "ruleIndex": 16,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.101.4\nVulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: rustls-webpki@0.101.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-25727",
+          "ruleIndex": 17,
+          "level": "warning",
+          "message": {
+            "text": "Package: time\nInstalled Version: 0.3.36\nVulnerability CVE-2026-25727\nSeverity: MEDIUM\nFixed Version: 0.3.47\nLink: [CVE-2026-25727](https://avd.aquasec.com/nvd/cve-2026-25727)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: time@0.3.36"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-rr8g-9fpq-6wmg",
+          "ruleIndex": 18,
+          "level": "note",
+          "message": {
+            "text": "Package: tokio\nInstalled Version: 1.32.0\nVulnerability GHSA-rr8g-9fpq-6wmg\nSeverity: LOW\nFixed Version: 1.44.2, 1.38.2, 1.43.1\nLink: [GHSA-rr8g-9fpq-6wmg](https://github.com/advisories/GHSA-rr8g-9fpq-6wmg)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: tokio@1.32.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-8qv2-5vq6-g2g7",
+          "ruleIndex": 19,
+          "level": "error",
+          "message": {
+            "text": "Package: webpki\nInstalled Version: 0.21.4\nVulnerability GHSA-8qv2-5vq6-g2g7\nSeverity: HIGH\nFixed Version: 0.22.2\nLink: [GHSA-8qv2-5vq6-g2g7](https://github.com/advisories/GHSA-8qv2-5vq6-g2g7)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/6h5d4n3jylimadc4h3b10q1044mnr7xk-polaris-0.14.3/bin/polaris: webpki@0.21.4"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:3bfc35ec6f8aa7173d136780ae71f235f9c6776a3cdfa9bbe88215d99f23dc5e",
+        "imageName": "ghcr.io/nix-containers/images/polaris:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/polaris@sha256:eafee6463147baf27de65b9b0f966a852716d132bb5056c57f16bfdb7d5aa247"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/polaris:latest"
+        ]
+      }
+    }
+  ]
+}

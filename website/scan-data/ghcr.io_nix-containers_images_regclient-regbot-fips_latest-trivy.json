@@ -1,0 +1,587 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.71.2"
+  },
+  "ReportID": "019f46d8-1c2a-738c-86f1-e3d5b9a935c3",
+  "CreatedAt": "2026-07-09T12:26:35.94623427Z",
+  "ArtifactID": "sha256:02e4456ebc2595e427ef5d7f9a505507de19a258d361f911a245751a4bd26e04",
+  "ArtifactName": "ghcr.io/nix-containers/images/regclient-regbot-fips:latest",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 72443904,
+    "ImageID": "sha256:46d0c6718f2c938fc37136a0b0309ba3330ca68990570eccd4713d6641288c8b",
+    "DiffIDs": [
+      "sha256:6f984cb1851136514d370ed9e15fc97d0fac9da5842f4133bd1825579158d8b6",
+      "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115",
+      "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+    ],
+    "RepoTags": [
+      "ghcr.io/nix-containers/images/regclient-regbot-fips:latest"
+    ],
+    "RepoDigests": [
+      "ghcr.io/nix-containers/images/regclient-regbot-fips@sha256:dfa253d3220b76d7cf19b3d6e16617dad5efcdfc92f3c62f18aae9bc749203ab"
+    ],
+    "Reference": "ghcr.io/nix-containers/images/regclient-regbot-fips:latest",
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "0001-01-01T00:00:00Z",
+      "history": [
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        },
+        {
+          "created": "0001-01-01T00:00:00Z",
+          "created_by": "nix2container"
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:6f984cb1851136514d370ed9e15fc97d0fac9da5842f4133bd1825579158d8b6",
+          "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115",
+          "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+        ]
+      },
+      "config": {
+        "Cmd": [
+          "--help"
+        ],
+        "Entrypoint": [
+          "/nix/store/kiimf0z299hqc0y6wl2v40i8vspi2f1r-regclient-regbot-fips-0.11.5/bin/regbot"
+        ],
+        "Env": [
+          "SSL_CERT_FILE=/nix/store/zdl7dn1gmi1cxdw5a8hw6xsf4cz0rjmg-nss-cacert-3.123/etc/ssl/certs/ca-bundle.crt",
+          "PATH=/nix/store/z3j0v07sa6pnsbwq782a9cyjrmrisj1i-busybox-1.37.0/bin:/nix/store/kiimf0z299hqc0y6wl2v40i8vspi2f1r-regclient-regbot-fips-0.11.5/bin"
+        ],
+        "Labels": {
+          "io.nix-containers.build-method": "Built from source using Nix",
+          "io.nix-containers.build-type": "source",
+          "io.nix-containers.source": "upstream-source",
+          "org.label-schema.vcs-url": "https://github.com/drduker/nix-containers",
+          "org.opencontainers.image.source": "https://github.com/drduker/nix-containers",
+          "org.opencontainers.image.title": "regclient-regbot-fips",
+          "org.opencontainers.image.version": "0.11.5"
+        },
+        "User": "65534:65534"
+      }
+    },
+    "Layers": [
+      {
+        "Size": 40483840,
+        "Digest": "sha256:cb5009502356cf66c863f2db5ba611b7e9e7187970158bfd661cee01ff5bd4fb",
+        "DiffID": "sha256:6f984cb1851136514d370ed9e15fc97d0fac9da5842f4133bd1825579158d8b6"
+      },
+      {
+        "Size": 16722944,
+        "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+        "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+      },
+      {
+        "Size": 15237120,
+        "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+        "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "bin/regbot",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "github.com/regclient/regclient",
+          "Name": "github.com/regclient/regclient",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/regclient/regclient",
+            "UID": "ef8c06d91405e6b3"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "github.com/docker/libtrust@v0.0.0-20160708172513-aabc10ec26b7",
+            "github.com/goccy/go-yaml@v1.19.2",
+            "github.com/klauspost/compress@v1.18.6",
+            "github.com/opencontainers/go-digest@v1.0.0",
+            "github.com/robfig/cron/v3@v3.0.1",
+            "github.com/sirupsen/logrus@v1.9.4",
+            "github.com/spf13/cobra@v1.10.2",
+            "github.com/spf13/pflag@v1.0.10",
+            "github.com/ulikunitz/xz@v0.5.15",
+            "github.com/yuin/gopher-lua@v1.1.2",
+            "golang.org/x/sys@v0.45.0",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "3baf6eb9b1290b4a"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/docker/libtrust@v0.0.0-20160708172513-aabc10ec26b7",
+          "Name": "github.com/docker/libtrust",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/docker/libtrust@v0.0.0-20160708172513-aabc10ec26b7",
+            "UID": "214a75963b5f0a92"
+          },
+          "Version": "v0.0.0-20160708172513-aabc10ec26b7",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/goccy/go-yaml@v1.19.2",
+          "Name": "github.com/goccy/go-yaml",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/goccy/go-yaml@v1.19.2",
+            "UID": "c887a48a325e9bc8"
+          },
+          "Version": "v1.19.2",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/klauspost/compress@v1.18.6",
+          "Name": "github.com/klauspost/compress",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/klauspost/compress@v1.18.6",
+            "UID": "c45aa1d874e89874"
+          },
+          "Version": "v1.18.6",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/opencontainers/go-digest@v1.0.0",
+          "Name": "github.com/opencontainers/go-digest",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/opencontainers/go-digest@v1.0.0",
+            "UID": "a239d4e7adf4724f"
+          },
+          "Version": "v1.0.0",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/robfig/cron/v3@v3.0.1",
+          "Name": "github.com/robfig/cron/v3",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/robfig/cron/v3@v3.0.1",
+            "UID": "34b3a1d409588132"
+          },
+          "Version": "v3.0.1",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/sirupsen/logrus@v1.9.4",
+          "Name": "github.com/sirupsen/logrus",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/sirupsen/logrus@v1.9.4",
+            "UID": "a03eeddc7c9b3ab9"
+          },
+          "Version": "v1.9.4",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/spf13/cobra@v1.10.2",
+          "Name": "github.com/spf13/cobra",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/spf13/cobra@v1.10.2",
+            "UID": "8ca241faab544445"
+          },
+          "Version": "v1.10.2",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/spf13/pflag@v1.0.10",
+          "Name": "github.com/spf13/pflag",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/spf13/pflag@v1.0.10",
+            "UID": "ff701a0ce5c034ed"
+          },
+          "Version": "v1.0.10",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/ulikunitz/xz@v0.5.15",
+          "Name": "github.com/ulikunitz/xz",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/ulikunitz/xz@v0.5.15",
+            "UID": "12bd6c605ef191a0"
+          },
+          "Version": "v0.5.15",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/yuin/gopher-lua@v1.1.2",
+          "Name": "github.com/yuin/gopher-lua",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/yuin/gopher-lua@v1.1.2",
+            "UID": "259e3be12a19764c"
+          },
+          "Version": "v1.1.2",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.45.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.45.0",
+            "UID": "9d7a51167f915306"
+          },
+          "Version": "v0.45.0",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "3baf6eb9b1290b4a"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:d8daa62398b0f317770d0e21234aea9ad2c55ea015aadb3dfd96b9f4186e38d2",
+            "DiffID": "sha256:0ba06192f7780cc4f43bd98fad25ff2e3646cd51b5c3b95f4027c44b03929115"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:4ecc66bc6a67687b8c95b86229866ab7fb4a31b080ea8fdcdad76b02f7fdc728",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    },
+    {
+      "Target": "nix/store/kiimf0z299hqc0y6wl2v40i8vspi2f1r-regclient-regbot-fips-0.11.5/bin/regbot",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "github.com/regclient/regclient",
+          "Name": "github.com/regclient/regclient",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/regclient/regclient",
+            "UID": "48abf0af3ecc4f60"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "github.com/docker/libtrust@v0.0.0-20160708172513-aabc10ec26b7",
+            "github.com/goccy/go-yaml@v1.19.2",
+            "github.com/klauspost/compress@v1.18.6",
+            "github.com/opencontainers/go-digest@v1.0.0",
+            "github.com/robfig/cron/v3@v3.0.1",
+            "github.com/sirupsen/logrus@v1.9.4",
+            "github.com/spf13/cobra@v1.10.2",
+            "github.com/spf13/pflag@v1.0.10",
+            "github.com/ulikunitz/xz@v0.5.15",
+            "github.com/yuin/gopher-lua@v1.1.2",
+            "golang.org/x/sys@v0.45.0",
+            "stdlib@v1.26.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.26.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "8c1b81195abacafd"
+          },
+          "Version": "v1.26.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/docker/libtrust@v0.0.0-20160708172513-aabc10ec26b7",
+          "Name": "github.com/docker/libtrust",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/docker/libtrust@v0.0.0-20160708172513-aabc10ec26b7",
+            "UID": "34c95fb0d8ab0f45"
+          },
+          "Version": "v0.0.0-20160708172513-aabc10ec26b7",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/goccy/go-yaml@v1.19.2",
+          "Name": "github.com/goccy/go-yaml",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/goccy/go-yaml@v1.19.2",
+            "UID": "274b7287912c6f07"
+          },
+          "Version": "v1.19.2",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/klauspost/compress@v1.18.6",
+          "Name": "github.com/klauspost/compress",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/klauspost/compress@v1.18.6",
+            "UID": "a30f864a38ab6dd3"
+          },
+          "Version": "v1.18.6",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/opencontainers/go-digest@v1.0.0",
+          "Name": "github.com/opencontainers/go-digest",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/opencontainers/go-digest@v1.0.0",
+            "UID": "fe2db06a8ce78604"
+          },
+          "Version": "v1.0.0",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/robfig/cron/v3@v3.0.1",
+          "Name": "github.com/robfig/cron/v3",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/robfig/cron/v3@v3.0.1",
+            "UID": "45a8c812053f808d"
+          },
+          "Version": "v3.0.1",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/sirupsen/logrus@v1.9.4",
+          "Name": "github.com/sirupsen/logrus",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/sirupsen/logrus@v1.9.4",
+            "UID": "ad1d61026ed1c42a"
+          },
+          "Version": "v1.9.4",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/spf13/cobra@v1.10.2",
+          "Name": "github.com/spf13/cobra",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/spf13/cobra@v1.10.2",
+            "UID": "2d02afa5ab65736"
+          },
+          "Version": "v1.10.2",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/spf13/pflag@v1.0.10",
+          "Name": "github.com/spf13/pflag",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/spf13/pflag@v1.0.10",
+            "UID": "afea61990018dae6"
+          },
+          "Version": "v1.0.10",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/ulikunitz/xz@v0.5.15",
+          "Name": "github.com/ulikunitz/xz",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/ulikunitz/xz@v0.5.15",
+            "UID": "bc587c3e54734a1b"
+          },
+          "Version": "v0.5.15",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/yuin/gopher-lua@v1.1.2",
+          "Name": "github.com/yuin/gopher-lua",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/yuin/gopher-lua@v1.1.2",
+            "UID": "106f1f79ce5728b"
+          },
+          "Version": "v1.1.2",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sys@v0.45.0",
+          "Name": "golang.org/x/sys",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sys@v0.45.0",
+            "UID": "19112492e8954649"
+          },
+          "Version": "v0.45.0",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-39822",
+          "VendorIDs": [
+            "GO-2026-4970"
+          ],
+          "PkgID": "stdlib@v1.26.4",
+          "PkgName": "stdlib",
+          "PkgIdentifier": {
+            "PURL": "pkg:golang/stdlib@v1.26.4",
+            "UID": "8c1b81195abacafd"
+          },
+          "InstalledVersion": "v1.26.4",
+          "FixedVersion": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "Status": "fixed",
+          "Layer": {
+            "Digest": "sha256:7a9acf6473e2286830f66014c8bfaf1d5bf6286a4c56b261ad4e164e59f426a0",
+            "DiffID": "sha256:2a53736cba3162985a27c8c7227cc59d75d2cea63684c5f2428b56a14d2eac94"
+          },
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-39822",
+          "DataSource": {
+            "ID": "govulndb",
+            "Name": "The Go Vulnerability Database",
+            "URL": "https://pkg.go.dev/vuln/"
+          },
+          "Fingerprint": "sha256:3d5ef6a54dca6a90dcc7aca1fece1f8cb0fff0ca6250097b61e05d5280ae1e6e",
+          "Title": "On Unix systems, opening a file in an os.Root improperly follows symli ...",
+          "Description": "On Unix systems, opening a file in an os.Root improperly follows symlinks to locations outside of the Root when the final path component of the a path is a symbolic link and the path ends in /. For example, 'root.Open(\"symlink/\")' will open \"symlink\" even when \"symlink\" is a symbolic link pointing outside of the root.",
+          "Severity": "UNKNOWN",
+          "CweIDs": [
+            "CWE-61"
+          ],
+          "References": [
+            "https://go.dev/cl/797880",
+            "https://go.dev/issue/79005",
+            "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",
+            "https://pkg.go.dev/vuln/GO-2026-4970"
+          ],
+          "PublishedDate": "2026-07-08T17:17:21.31Z",
+          "LastModifiedDate": "2026-07-08T20:16:49.06Z"
+        }
+      ]
+    }
+  ]
+}

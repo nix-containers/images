@@ -1,0 +1,198 @@
+2026-07-09T12:02:25Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:02:25Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:02:25Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:02:25Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:02:41Z	INFO	Number of language-specific files	num=8
+2026-07-09T12:02:41Z	INFO	[gobinary] Detecting vulnerabilities...
+2026-07-09T12:02:41Z	INFO	[python-pkg] Detecting vulnerabilities...
+2026-07-09T12:02:41Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.71/guide/scanner/vulnerability#severity-selection for details.
+2026-07-09T12:02:41Z	INFO	Some vulnerabilities have been ignored/suppressed. Use the "--show-suppressed" flag to display them.
+
+Report Summary
+
+┌──────────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
+│                                      Target                                      │    Type    │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/xrnir0r9asp1gyf5qali282gg3l36hlf-libapparmor-4.1.7/lib/python3.13/sit- │ python-pkg │        0        │    -    │
+│ e-packages/LibAppArmor-4.1.7-py3.13.egg-info/PKG-INFO                            │            │                 │         │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ bin/tbot                                                                         │  gobinary  │        3        │    -    │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ bin/tctl                                                                         │  gobinary  │        2        │    -    │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ bin/teleport                                                                     │  gobinary  │        5        │    -    │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/46gdnilp9d8f5rqggg2ixnwajcwjhiyr-teleport-18.9.1/bin/tbot              │  gobinary  │        3        │    -    │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/46gdnilp9d8f5rqggg2ixnwajcwjhiyr-teleport-18.9.1/bin/tctl              │  gobinary  │        2        │    -    │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/46gdnilp9d8f5rqggg2ixnwajcwjhiyr-teleport-18.9.1/bin/teleport          │  gobinary  │        5        │    -    │
+├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+│ nix/store/kcpbkbrzhzbpbakv2p1knkyb0r0f2w46-teleport-18.9.1-client/bin/.tsh-wrap- │  gobinary  │        2        │    -    │
+│ ped                                                                              │            │                 │         │
+└──────────────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+bin/tbot (gobinary)
+===================
+Total: 3 (HIGH: 3, CRITICAL: 0)
+
+┌───────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│          Library          │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├───────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/sigstore/rekor │ CVE-2026-48702 │ HIGH     │ fixed  │ v1.5.0            │ 1.5.2         │ Rekor has an OOM Condition due to Unbounded gzip             │
+│                           │                │          │        │                   │               │ Decompression in Alpine...                                   │
+│                           │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-48702                   │
+├───────────────────────────┼────────────────┤          │        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto       │ CVE-2026-39828 │          │        │ v0.51.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                           │                │          │        │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                           │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                           ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                           │ CVE-2026-39835 │          │        │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                           │                │          │        │                   │               │ Denial of Service via crafted SSH certificate                │
+│                           │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+└───────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+bin/tctl (gobinary)
+===================
+Total: 2 (HIGH: 2, CRITICAL: 0)
+
+┌─────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│       Library       │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├─────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto │ CVE-2026-39828 │ HIGH     │ fixed  │ v0.51.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                     │                │          │        │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                     ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2026-39835 │          │        │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                     │                │          │        │                   │               │ Denial of Service via crafted SSH certificate                │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+└─────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+bin/teleport (gobinary)
+=======================
+Total: 5 (HIGH: 5, CRITICAL: 0)
+
+┌──────────────────────────────────┬────────────────┬──────────┬──────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│             Library              │ Vulnerability  │ Severity │  Status  │ Installed Version │ Fixed Version │                            Title                             │
+├──────────────────────────────────┼────────────────┼──────────┼──────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/containerd/containerd │ CVE-2026-53488 │ HIGH     │ fixed    │ v1.7.32           │ 1.7.33        │ github.com/containerd/containerd: containerd: Host-root      │
+│                                  │                │          │          │                   │               │ command execution via unvalidated image config labels in     │
+│                                  │                │          │          │                   │               │ CRI...                                                       │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-53488                   │
+├──────────────────────────────────┼────────────────┤          │          ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto              │ CVE-2026-39828 │          │          │ v0.51.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                                  │                │          │          │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                                  ├────────────────┤          │          │                   │               ├──────────────────────────────────────────────────────────────┤
+│                                  │ CVE-2026-39835 │          │          │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                                  │                │          │          │                   │               │ Denial of Service via crafted SSH certificate                │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+├──────────────────────────────────┼────────────────┤          │          ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ oras.land/oras-go/v2             │ CVE-2026-50151 │          │          │ v2.6.0            │ 2.6.1         │ oras-go blob upload vulnerable to credential forwarding via  │
+│                                  │                │          │          │                   │               │ unvalidated Location header                                  │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-50151                   │
+│                                  ├────────────────┤          ├──────────┤                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│                                  │ CVE-2026-50163 │          │ affected │                   │               │ `oras-go` tar extraction: Hardlink entry with relative       │
+│                                  │                │          │          │                   │               │ Linkname escapes extract dir via...                          │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-50163                   │
+└──────────────────────────────────┴────────────────┴──────────┴──────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/46gdnilp9d8f5rqggg2ixnwajcwjhiyr-teleport-18.9.1/bin/tbot (gobinary)
+==============================================================================
+Total: 3 (HIGH: 3, CRITICAL: 0)
+
+┌───────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│          Library          │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├───────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/sigstore/rekor │ CVE-2026-48702 │ HIGH     │ fixed  │ v1.5.0            │ 1.5.2         │ Rekor has an OOM Condition due to Unbounded gzip             │
+│                           │                │          │        │                   │               │ Decompression in Alpine...                                   │
+│                           │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-48702                   │
+├───────────────────────────┼────────────────┤          │        ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto       │ CVE-2026-39828 │          │        │ v0.51.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                           │                │          │        │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                           │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                           ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                           │ CVE-2026-39835 │          │        │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                           │                │          │        │                   │               │ Denial of Service via crafted SSH certificate                │
+│                           │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+└───────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/46gdnilp9d8f5rqggg2ixnwajcwjhiyr-teleport-18.9.1/bin/tctl (gobinary)
+==============================================================================
+Total: 2 (HIGH: 2, CRITICAL: 0)
+
+┌─────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│       Library       │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├─────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto │ CVE-2026-39828 │ HIGH     │ fixed  │ v0.51.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                     │                │          │        │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                     ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2026-39835 │          │        │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                     │                │          │        │                   │               │ Denial of Service via crafted SSH certificate                │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+└─────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/46gdnilp9d8f5rqggg2ixnwajcwjhiyr-teleport-18.9.1/bin/teleport (gobinary)
+==================================================================================
+Total: 5 (HIGH: 5, CRITICAL: 0)
+
+┌──────────────────────────────────┬────────────────┬──────────┬──────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│             Library              │ Vulnerability  │ Severity │  Status  │ Installed Version │ Fixed Version │                            Title                             │
+├──────────────────────────────────┼────────────────┼──────────┼──────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/containerd/containerd │ CVE-2026-53488 │ HIGH     │ fixed    │ v1.7.32           │ 1.7.33        │ github.com/containerd/containerd: containerd: Host-root      │
+│                                  │                │          │          │                   │               │ command execution via unvalidated image config labels in     │
+│                                  │                │          │          │                   │               │ CRI...                                                       │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-53488                   │
+├──────────────────────────────────┼────────────────┤          │          ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto              │ CVE-2026-39828 │          │          │ v0.51.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                                  │                │          │          │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                                  ├────────────────┤          │          │                   │               ├──────────────────────────────────────────────────────────────┤
+│                                  │ CVE-2026-39835 │          │          │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                                  │                │          │          │                   │               │ Denial of Service via crafted SSH certificate                │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+├──────────────────────────────────┼────────────────┤          │          ├───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ oras.land/oras-go/v2             │ CVE-2026-50151 │          │          │ v2.6.0            │ 2.6.1         │ oras-go blob upload vulnerable to credential forwarding via  │
+│                                  │                │          │          │                   │               │ unvalidated Location header                                  │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-50151                   │
+│                                  ├────────────────┤          ├──────────┤                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│                                  │ CVE-2026-50163 │          │ affected │                   │               │ `oras-go` tar extraction: Hardlink entry with relative       │
+│                                  │                │          │          │                   │               │ Linkname escapes extract dir via...                          │
+│                                  │                │          │          │                   │               │ https://avd.aquasec.com/nvd/cve-2026-50163                   │
+└──────────────────────────────────┴────────────────┴──────────┴──────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/kcpbkbrzhzbpbakv2p1knkyb0r0f2w46-teleport-18.9.1-client/bin/.tsh-wrapped (gobinary)
+=============================================================================================
+Total: 2 (HIGH: 2, CRITICAL: 0)
+
+┌─────────────────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│       Library       │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├─────────────────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/crypto │ CVE-2026-39828 │ HIGH     │ fixed  │ v0.51.0           │ 0.52.0        │ golang.org/x/crypto/ssh: golang.org/x/crypto/ssh:            │
+│                     │                │          │        │                   │               │ Unauthorized command execution via discarded SSH permissions │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39828                   │
+│                     ├────────────────┤          │        │                   │               ├──────────────────────────────────────────────────────────────┤
+│                     │ CVE-2026-39835 │          │        │                   │               │ golang.org/x/crypto/ssh: golang: golang.org/x/crypto/ssh:    │
+│                     │                │          │        │                   │               │ Denial of Service via crafted SSH certificate                │
+│                     │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-39835                   │
+└─────────────────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

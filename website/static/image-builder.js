@@ -41,6 +41,16 @@
   const extUrl = $('ext-url');
   const extHash = $('ext-hash');
   const extInstallPath = $('ext-installpath');
+  const archPicker = $('arch-picker');
+
+  const ARCH_SYSTEM = {
+    amd64: 'x86_64-linux',
+    arm64: 'aarch64-linux',
+  };
+  function currentArch() {
+    const el = archPicker.querySelector('input[name="arch"]:checked');
+    return el ? el.value : 'amd64';
+  }
 
   // Populate <datalist> for the base input (native browser autocomplete)
   for (const name of SUGGESTED_BASES) {
@@ -66,11 +76,16 @@
     const base = q.get('base') || stored.base || '';
     const extra = q.get('extra') || stored.extra || '';
     const layers = (q.get('layers') || stored.layers || '').split(/[,\s]+/).filter(Boolean);
+    const arch = q.get('arch') || stored.arch || 'amd64';
     baseInput.value = base;
     extraInput.value = extra;
     layersContainer.querySelectorAll('input[data-layer]').forEach((cb) => {
       cb.checked = layers.includes(cb.dataset.layer);
     });
+    // Restore arch radio (fall back to amd64 if the stored value is unknown)
+    const archRadio = archPicker.querySelector(`input[name="arch"][value="${arch}"]`) ||
+                      archPicker.querySelector('input[name="arch"][value="amd64"]');
+    if (archRadio) archRadio.checked = true;
     // External-package state
     const ext = stored.ext || {};
     const on = q.get('ext_on') || ext.on || '';
@@ -94,10 +109,12 @@
       hash: extHash.value.trim(),
       installpath: extInstallPath.value.trim(),
     };
+    const arch = currentArch();
     const state = {
       base: baseInput.value.trim(),
       extra: extraInput.value.trim(),
       layers: layers.join(','),
+      arch,
       ext,
     };
     try { sessionStorage.setItem('imgb', JSON.stringify(state)); } catch {}
@@ -105,6 +122,7 @@
     if (state.base) q.set('base', state.base);
     if (state.extra) q.set('extra', state.extra);
     if (state.layers) q.set('layers', state.layers);
+    if (arch && arch !== 'amd64') q.set('arch', arch);
     if (ext.on) {
       q.set('ext_on', '1');
       for (const k of ['name', 'version', 'url', 'hash', 'installpath']) {
@@ -274,29 +292,67 @@ ${installBody}
     const extraLine = extras.length
       ? `      extraPkgs = with pkgs; [ ${extras.join(' ')} ];\n`
       : '';
+    const arch = currentArch();
 
-    const cmd = `nix build --impure --expr '
+    // Build a single `nix build` command for a given target system. When the
+    // user picks "both" we emit two of these (one per arch) and a follow-up
+    // `skopeo manifest create` to combine them into a multi-arch ref.
+    function nixBuildFor(system, outLink) {
+      return `nix build --impure --system ${system} --out-link ${outLink} --expr '
   let
     flake = builtins.getFlake "github:nix-containers/images";
-    system = builtins.currentSystem;
-    pkgs = flake.legacyPackages.\${system} or flake.inputs.nixpkgs.legacyPackages.\${system};
-    mkImage = (flake.lib.\${system} or flake.lib.x86_64-linux).mkImage or (import \${flake}/lib/mkImage.nix {
+    pkgs = flake.legacyPackages.${system} or flake.inputs.nixpkgs.legacyPackages.${system};
+    mkImage = (flake.lib.${system} or flake.lib.x86_64-linux).mkImage or (import \${flake}/lib/mkImage.nix {
       inherit (pkgs) lib busybox;
       base = import \${flake}/lib/base.nix { inherit pkgs; };
-      nix2container = flake.inputs.nix2container.packages.\${system}.nix2container;
+      nix2container = flake.inputs.nix2container.packages.${system}.nix2container;
     });
 ${extBinding}  in mkImage {
     name = "${imgName}";
     drv = pkgs.${base};
 ${extraLine}${extraContentsLine}  }
-'
+'`;
+    }
+
+    let cmd;
+    if (arch === 'both') {
+      const amdCmd = nixBuildFor('x86_64-linux', 'result-amd64');
+      const armCmd = nixBuildFor('aarch64-linux', 'result-arm64');
+      cmd = `# 1. Build both architectures
+${amdCmd}
+
+${armCmd}
+
+# 2. Load each into local docker (or copy directly to a registry with
+#    "nix run .#..." if the derivation exposes copyTo).
+docker load < ./result-amd64
+docker load < ./result-arm64
+
+# 3. Combine into a multi-arch manifest (requires a target registry ref):
+#    Replace <registry>/<image>:<tag> below with your destination.
+docker tag ${imgName}-amd64:latest <registry>/${imgName}:latest-amd64
+docker tag ${imgName}-arm64:latest <registry>/${imgName}:latest-arm64
+docker push <registry>/${imgName}:latest-amd64
+docker push <registry>/${imgName}:latest-arm64
+docker manifest create <registry>/${imgName}:latest \\
+  <registry>/${imgName}:latest-amd64 \\
+  <registry>/${imgName}:latest-arm64
+docker manifest push <registry>/${imgName}:latest${ext ? `
+
+# NOTE: if the sha256 was left blank, nix build will fail with the real
+# hash on stderr — copy the "got:" value into the "sha256:" field and re-run.` : ''}`;
+    } else {
+      const system = ARCH_SYSTEM[arch] || 'x86_64-linux';
+      cmd = `${nixBuildFor(system, 'result')}
 # → ./result is the image; load into docker with:
 #   docker load < ./result   # nix2container writes a docker-loadable tar${ext ? `
 # If the sha256 was left blank, nix build will fail with the real hash on
 # stderr — copy the "got:" value into the "sha256:" field and re-run.` : ''}`;
+    }
 
     cmdOutput.textContent = cmd;
-    cmdStatus.textContent = `base = pkgs.${base}${extras.length ? ` · ${extras.length} extra` : ''}`;
+    const archLabel = arch === 'both' ? 'amd64 + arm64' : arch;
+    cmdStatus.textContent = `base = pkgs.${base} · ${archLabel}${extras.length ? ` · ${extras.length} extra` : ''}`;
     copyBtn.disabled = false;
     renderCves(base, extras);
     writeState();
@@ -393,6 +449,7 @@ ${extraLine}${extraContentsLine}  }
 
   baseInput.addEventListener('input', render);
   layersContainer.addEventListener('change', render);
+  archPicker.addEventListener('change', render);
 
   // External-package section toggle + field wiring
   extEnable.addEventListener('change', () => {

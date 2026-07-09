@@ -1,0 +1,103 @@
+2026-07-09T12:24:05Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-07-09T12:24:05Z	INFO	[secret] Secret scanning is enabled
+2026-07-09T12:24:05Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-07-09T12:24:05Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-07-09T12:24:06Z	INFO	Number of language-specific files	num=3
+2026-07-09T12:24:06Z	INFO	[gobinary] Detecting vulnerabilities...
+2026-07-09T12:24:06Z	WARN	Using severities from other vendors for some vulnerabilities. Read https://trivy.dev/docs/v0.71/guide/scanner/vulnerability#severity-selection for details.
+2026-07-09T12:24:06Z	INFO	Some vulnerabilities have been ignored/suppressed. Use the "--show-suppressed" flag to display them.
+
+Report Summary
+
+┌───────────────────────────────────────────────────────────────────────────┬──────────┬─────────────────┬─────────┐
+│                                  Target                                   │   Type   │ Vulnerabilities │ Secrets │
+├───────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ bin/captree                                                               │ gobinary │        0        │    -    │
+├───────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ bin/nginx                                                                 │ gobinary │        6        │    -    │
+├───────────────────────────────────────────────────────────────────────────┼──────────┼─────────────────┼─────────┤
+│ nix/store/xidzdpw4jkxim3rm0rsw7z4l4yf0z214-ingress-nginx-1.12.0/bin/nginx │ gobinary │        6        │    -    │
+└───────────────────────────────────────────────────────────────────────────┴──────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/docs/v0.71/guide/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+bin/nginx (gobinary)
+====================
+Total: 6 (HIGH: 6, CRITICAL: 0)
+
+┌────────────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬──────────────────────────┬──────────────────────────────────────────────────────────────┐
+│            Library             │ Vulnerability  │ Severity │ Status │ Installed Version │      Fixed Version       │                            Title                             │
+├────────────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼──────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/opencontainers/runc │ CVE-2025-31133 │ HIGH     │ fixed  │ v1.2.3            │ 1.2.8, 1.3.3, 1.4.0-rc.3 │ runc: container escape via 'masked path' abuse due to mount  │
+│                                │                │          │        │                   │                          │ race conditions...                                           │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2025-31133                   │
+│                                ├────────────────┤          │        │                   │                          ├──────────────────────────────────────────────────────────────┤
+│                                │ CVE-2025-52565 │          │        │                   │                          │ runc: container escape with malicious config due to          │
+│                                │                │          │        │                   │                          │ /dev/console mount and related...                            │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2025-52565                   │
+│                                ├────────────────┤          │        │                   │                          ├──────────────────────────────────────────────────────────────┤
+│                                │ CVE-2025-52881 │          │        │                   │                          │ runc: opencontainers/selinux: container escape and denial of │
+│                                │                │          │        │                   │                          │ service due to arbitrary write...                            │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2025-52881                   │
+├────────────────────────────────┼────────────────┤          │        ├───────────────────┼──────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/net               │ CVE-2026-25681 │          │        │ v0.33.0           │ 0.55.0                   │ golang.org/x/net/html: golang.org/x/net/html: Arbitrary code │
+│                                │                │          │        │                   │                          │ execution via Cross-Site Scripting                           │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2026-25681                   │
+│                                ├────────────────┤          │        │                   │                          ├──────────────────────────────────────────────────────────────┤
+│                                │ CVE-2026-27136 │          │        │                   │                          │ golang.org/x/net/html: golang: golang.org/x/net/html:        │
+│                                │                │          │        │                   │                          │ Cross-Site Scripting via HTML parsing bypass                 │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2026-27136                   │
+├────────────────────────────────┼────────────────┤          │        ├───────────────────┼──────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/oauth2            │ CVE-2025-22868 │          │        │ v0.24.0           │ 0.27.0                   │ golang.org/x/oauth2/jws: Unexpected memory consumption       │
+│                                │                │          │        │                   │                          │ during token parsing in golang.org/x/oauth2/jws              │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2025-22868                   │
+└────────────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴──────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+nix/store/xidzdpw4jkxim3rm0rsw7z4l4yf0z214-ingress-nginx-1.12.0/bin/nginx (gobinary)
+====================================================================================
+Total: 6 (HIGH: 6, CRITICAL: 0)
+
+┌────────────────────────────────┬────────────────┬──────────┬────────┬───────────────────┬──────────────────────────┬──────────────────────────────────────────────────────────────┐
+│            Library             │ Vulnerability  │ Severity │ Status │ Installed Version │      Fixed Version       │                            Title                             │
+├────────────────────────────────┼────────────────┼──────────┼────────┼───────────────────┼──────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ github.com/opencontainers/runc │ CVE-2025-31133 │ HIGH     │ fixed  │ v1.2.3            │ 1.2.8, 1.3.3, 1.4.0-rc.3 │ runc: container escape via 'masked path' abuse due to mount  │
+│                                │                │          │        │                   │                          │ race conditions...                                           │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2025-31133                   │
+│                                ├────────────────┤          │        │                   │                          ├──────────────────────────────────────────────────────────────┤
+│                                │ CVE-2025-52565 │          │        │                   │                          │ runc: container escape with malicious config due to          │
+│                                │                │          │        │                   │                          │ /dev/console mount and related...                            │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2025-52565                   │
+│                                ├────────────────┤          │        │                   │                          ├──────────────────────────────────────────────────────────────┤
+│                                │ CVE-2025-52881 │          │        │                   │                          │ runc: opencontainers/selinux: container escape and denial of │
+│                                │                │          │        │                   │                          │ service due to arbitrary write...                            │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2025-52881                   │
+├────────────────────────────────┼────────────────┤          │        ├───────────────────┼──────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/net               │ CVE-2026-25681 │          │        │ v0.33.0           │ 0.55.0                   │ golang.org/x/net/html: golang.org/x/net/html: Arbitrary code │
+│                                │                │          │        │                   │                          │ execution via Cross-Site Scripting                           │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2026-25681                   │
+│                                ├────────────────┤          │        │                   │                          ├──────────────────────────────────────────────────────────────┤
+│                                │ CVE-2026-27136 │          │        │                   │                          │ golang.org/x/net/html: golang: golang.org/x/net/html:        │
+│                                │                │          │        │                   │                          │ Cross-Site Scripting via HTML parsing bypass                 │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2026-27136                   │
+├────────────────────────────────┼────────────────┤          │        ├───────────────────┼──────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ golang.org/x/oauth2            │ CVE-2025-22868 │          │        │ v0.24.0           │ 0.27.0                   │ golang.org/x/oauth2/jws: Unexpected memory consumption       │
+│                                │                │          │        │                   │                          │ during token parsing in golang.org/x/oauth2/jws              │
+│                                │                │          │        │                   │                          │ https://avd.aquasec.com/nvd/cve-2025-22868                   │
+└────────────────────────────────┴────────────────┴──────────┴────────┴───────────────────┴──────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+📣 [34mNotices:[0m
+  - Version 0.72.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+

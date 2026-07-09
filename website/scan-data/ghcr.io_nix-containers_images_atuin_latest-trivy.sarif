@@ -1,0 +1,714 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "GHSA-cq8v-f236-94qc",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "Rand is unsound with a custom logger using rand::rng()"
+              },
+              "fullDescription": {
+                "text": "It has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-cq8v-f236-94qc",
+              "help": {
+                "text": "Vulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nPackage: rand\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)\nIt has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict.",
+                "markdown": "**Vulnerability GHSA-cq8v-f236-94qc**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rand|0.9.3, 0.10.1, 0.8.6|[GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)|\n\nIt has been reported (by @lopopolo) that the `rand` library is [unsound](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#soundness-of-code--of-a-library) (i.e. that safe code using the public API can cause Undefined Behaviour) when all the following conditions are met:\n\n- The `log` and `thread_rng` features are enabled\n- A [custom logger](https://docs.rs/log/latest/log/#implementing-a-logger) is defined\n- The custom logger accesses `rand::rng()` (previously `rand::thread_rng()`) and calls any `TryRng` (previously `RngCore`) methods on `ThreadRng`\n- The `ThreadRng` (attempts to) reseed while called from the custom logger (this happens every 64 kB of generated data)\n- Trace-level logging is enabled or warn-level logging is enabled and the random source (the `getrandom` crate) is unable to provide a new seed\n\n`TryRng` (previously `RngCore`) methods for `ThreadRng` use `unsafe` code to cast `*mut BlockRng\u003cReseedingCore\u003e` to `\u0026mut BlockRng\u003cReseedingCore\u003e`. When all the above conditions are met this results in an aliased mutable reference, violating the Stacked Borrows rules. Miri is able to detect this violation in sample code. Since construction of [aliased mutable references is Undefined Behaviour](https://doc.rust-lang.org/stable/nomicon/references.html), the behaviour of optimized builds is hard to predict."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "2.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-2p6r-x3vv-xqm2",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "rpassword affected by partial password reveal when input is interrupted "
+              },
+              "fullDescription": {
+                "text": "rpassword maintainers were made aware of a possible issue with a partial password reveal when input is interrupted.\n\nTo quote @squell:\n\n\u003e @conradkleinespel I've confirmed this problem with SequoiaPGP, which I think uses rpassword, e.g.:\n\u003e\n\u003e Suppose we use pkill -9 sq in a different terminal right after the password has been typed in:\n\u003e\n\u003e $ sq key generate --userid \"barf\" --with-password\n\u003e Enter password to protect the key: Killed\n\u003e $ hello^C\n\u003e\n\u003e Where the password I typed in is \"hello\".\n\nThis has been fixed in version v7.5.0 and above."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-2p6r-x3vv-xqm2",
+              "help": {
+                "text": "Vulnerability GHSA-2p6r-x3vv-xqm2\nSeverity: LOW\nPackage: rpassword\nFixed Version: 7.5.0\nLink: [GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)\nrpassword maintainers were made aware of a possible issue with a partial password reveal when input is interrupted.\n\nTo quote @squell:\n\n\u003e @conradkleinespel I've confirmed this problem with SequoiaPGP, which I think uses rpassword, e.g.:\n\u003e\n\u003e Suppose we use pkill -9 sq in a different terminal right after the password has been typed in:\n\u003e\n\u003e $ sq key generate --userid \"barf\" --with-password\n\u003e Enter password to protect the key: Killed\n\u003e $ hello^C\n\u003e\n\u003e Where the password I typed in is \"hello\".\n\nThis has been fixed in version v7.5.0 and above.",
+                "markdown": "**Vulnerability GHSA-2p6r-x3vv-xqm2**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rpassword|7.5.0|[GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)|\n\nrpassword maintainers were made aware of a possible issue with a partial password reveal when input is interrupted.\n\nTo quote @squell:\n\n\u003e @conradkleinespel I've confirmed this problem with SequoiaPGP, which I think uses rpassword, e.g.:\n\u003e\n\u003e Suppose we use pkill -9 sq in a different terminal right after the password has been typed in:\n\u003e\n\u003e $ sq key generate --userid \"barf\" --with-password\n\u003e Enter password to protect the key: Killed\n\u003e $ hello^C\n\u003e\n\u003e Where the password I typed in is \"hello\".\n\nThis has been fixed in version v7.5.0 and above."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.8,
+                "cvssv3_vector": "CVSS:3.1/AV:P/AC:H/PR:H/UI:R/S:U/C:H/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "3.8",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-pwjx-qhcg-rvj4",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "webpki: CRLs not considered authoritative by Distribution Point due to faulty matching logic"
+              },
+              "fullDescription": {
+                "text": "If a certificate had more than one `distributionPoint`, then only the first `distributionPoint` would be considered against each CRL's `IssuingDistributionPoint` `distributionPoint`, and then the certificate's subsequent `distributionPoint`s would be ignored.\n\nThe impact was that correct provided CRLs would not be consulted to check revocation. With `UnknownStatusPolicy::Deny` (the default) this would lead to incorrect but safe `Error::UnknownRevocationStatus`. With `UnknownStatusPolicy::Allow` this would lead to inappropriate acceptance of revoked certificates.\n\nThis vulnerability is thought to be of limited impact. This is because both the certificate and CRL are signed -- an attacker would need to compromise a trusted issuing authority to trigger this bug.  An attacker with such capabilities could likely bypass revocation checking through other more impactful means (such as publishing a valid, empty CRL.)\n\nMore likely, this bug would be latent in normal use, and an attacker could leverage faulty revocation checking to continue using a revoked credential."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-pwjx-qhcg-rvj4",
+              "help": {
+                "text": "Vulnerability GHSA-pwjx-qhcg-rvj4\nSeverity: MEDIUM\nPackage: rustls-webpki\nFixed Version: 0.103.10, 0.104.0-alpha.5\nLink: [GHSA-pwjx-qhcg-rvj4](https://github.com/advisories/GHSA-pwjx-qhcg-rvj4)\nIf a certificate had more than one `distributionPoint`, then only the first `distributionPoint` would be considered against each CRL's `IssuingDistributionPoint` `distributionPoint`, and then the certificate's subsequent `distributionPoint`s would be ignored.\n\nThe impact was that correct provided CRLs would not be consulted to check revocation. With `UnknownStatusPolicy::Deny` (the default) this would lead to incorrect but safe `Error::UnknownRevocationStatus`. With `UnknownStatusPolicy::Allow` this would lead to inappropriate acceptance of revoked certificates.\n\nThis vulnerability is thought to be of limited impact. This is because both the certificate and CRL are signed -- an attacker would need to compromise a trusted issuing authority to trigger this bug.  An attacker with such capabilities could likely bypass revocation checking through other more impactful means (such as publishing a valid, empty CRL.)\n\nMore likely, this bug would be latent in normal use, and an attacker could leverage faulty revocation checking to continue using a revoked credential.",
+                "markdown": "**Vulnerability GHSA-pwjx-qhcg-rvj4**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|rustls-webpki|0.103.10, 0.104.0-alpha.5|[GHSA-pwjx-qhcg-rvj4](https://github.com/advisories/GHSA-pwjx-qhcg-rvj4)|\n\nIf a certificate had more than one `distributionPoint`, then only the first `distributionPoint` would be considered against each CRL's `IssuingDistributionPoint` `distributionPoint`, and then the certificate's subsequent `distributionPoint`s would be ignored.\n\nThe impact was that correct provided CRLs would not be consulted to check revocation. With `UnknownStatusPolicy::Deny` (the default) this would lead to incorrect but safe `Error::UnknownRevocationStatus`. With `UnknownStatusPolicy::Allow` this would lead to inappropriate acceptance of revoked certificates.\n\nThis vulnerability is thought to be of limited impact. This is because both the certificate and CRL are signed -- an attacker would need to compromise a trusted issuing authority to trigger this bug.  An attacker with such capabilities could likely bypass revocation checking through other more impactful means (such as publishing a valid, empty CRL.)\n\nMore likely, this bug would be latent in normal use, and an attacker could leverage faulty revocation checking to continue using a revoked credential."
+              },
+              "properties": {
+                "cvssv3_baseScore": 4.4,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "4.4",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-965h-392x-2mh5",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "webpki: Name constraints for URI names were incorrectly accepted"
+              },
+              "fullDescription": {
+                "text": "Name constraints for URI names were ignored and therefore accepted.\n\nNote this library does not provide an API for asserting URI names, and URI name constraints are otherwise not implemented.  URI name constraints are now rejected unconditionally.\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-965h-392x-2mh5",
+              "help": {
+                "text": "Vulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nPackage: rustls-webpki\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)\nName constraints for URI names were ignored and therefore accepted.\n\nNote this library does not provide an API for asserting URI names, and URI name constraints are otherwise not implemented.  URI name constraints are now rejected unconditionally.\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit.",
+                "markdown": "**Vulnerability GHSA-965h-392x-2mh5**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rustls-webpki|0.103.12, 0.104.0-alpha.6|[GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)|\n\nName constraints for URI names were ignored and therefore accepted.\n\nNote this library does not provide an API for asserting URI names, and URI name constraints are otherwise not implemented.  URI name constraints are now rejected unconditionally.\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "properties": {
+                "cvssv3_baseScore": 2.2,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "2.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-xgp8-3hg3-c2mh",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "webpki: Name constraints were accepted for certificates asserting a wildcard name"
+              },
+              "fullDescription": {
+                "text": "Permitted subtree name constraints for DNS names were accepted for certificates asserting a wildcard name.\n\nThis was incorrect because, given a name constraint of `accept.example.com`, `*.example.com` could feasibly allow a name of `reject.example.com` which is outside the constraint.\nThis is very similar to [CVE-2025-61727](https://go.dev/issue/76442).\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-xgp8-3hg3-c2mh",
+              "help": {
+                "text": "Vulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nPackage: rustls-webpki\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)\nPermitted subtree name constraints for DNS names were accepted for certificates asserting a wildcard name.\n\nThis was incorrect because, given a name constraint of `accept.example.com`, `*.example.com` could feasibly allow a name of `reject.example.com` which is outside the constraint.\nThis is very similar to [CVE-2025-61727](https://go.dev/issue/76442).\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit.",
+                "markdown": "**Vulnerability GHSA-xgp8-3hg3-c2mh**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|rustls-webpki|0.103.12, 0.104.0-alpha.6|[GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)|\n\nPermitted subtree name constraints for DNS names were accepted for certificates asserting a wildcard name.\n\nThis was incorrect because, given a name constraint of `accept.example.com`, `*.example.com` could feasibly allow a name of `reject.example.com` which is outside the constraint.\nThis is very similar to [CVE-2025-61727](https://go.dev/issue/76442).\n\nSince name constraints are restrictions on otherwise properly-issued certificates, this bug is reachable only after signature verification and requires misissuance to exploit."
+              },
+              "properties": {
+                "cvssv3_baseScore": 2.2,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "2.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2p6r-x3vv-xqm2",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: rpassword\nInstalled Version: 7.4.0\nVulnerability GHSA-2p6r-x3vv-xqm2\nSeverity: LOW\nFixed Version: 7.5.0\nLink: [GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin: rpassword@7.4.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-pwjx-qhcg-rvj4",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-pwjx-qhcg-rvj4\nSeverity: MEDIUM\nFixed Version: 0.103.10, 0.104.0-alpha.5\nLink: [GHSA-pwjx-qhcg-rvj4](https://github.com/advisories/GHSA-pwjx-qhcg-rvj4)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-965h-392x-2mh5",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xgp8-3hg3-c2mh",
+          "ruleIndex": 4,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin-server: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.9.2\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin-server: rand@0.9.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-pwjx-qhcg-rvj4",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-pwjx-qhcg-rvj4\nSeverity: MEDIUM\nFixed Version: 0.103.10, 0.104.0-alpha.5\nLink: [GHSA-pwjx-qhcg-rvj4](https://github.com/advisories/GHSA-pwjx-qhcg-rvj4)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin-server: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-965h-392x-2mh5",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin-server: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xgp8-3hg3-c2mh",
+          "ruleIndex": 4,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "bin/atuin-server: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2p6r-x3vv-xqm2",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: rpassword\nInstalled Version: 7.4.0\nVulnerability GHSA-2p6r-x3vv-xqm2\nSeverity: LOW\nFixed Version: 7.5.0\nLink: [GHSA-2p6r-x3vv-xqm2](https://github.com/advisories/GHSA-2p6r-x3vv-xqm2)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin: rpassword@7.4.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-pwjx-qhcg-rvj4",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-pwjx-qhcg-rvj4\nSeverity: MEDIUM\nFixed Version: 0.103.10, 0.104.0-alpha.5\nLink: [GHSA-pwjx-qhcg-rvj4](https://github.com/advisories/GHSA-pwjx-qhcg-rvj4)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-965h-392x-2mh5",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xgp8-3hg3-c2mh",
+          "ruleIndex": 4,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.8.5\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server: rand@0.8.5"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-cq8v-f236-94qc",
+          "ruleIndex": 0,
+          "level": "note",
+          "message": {
+            "text": "Package: rand\nInstalled Version: 0.9.2\nVulnerability GHSA-cq8v-f236-94qc\nSeverity: LOW\nFixed Version: 0.9.3, 0.10.1, 0.8.6\nLink: [GHSA-cq8v-f236-94qc](https://github.com/advisories/GHSA-cq8v-f236-94qc)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server: rand@0.9.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-pwjx-qhcg-rvj4",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-pwjx-qhcg-rvj4\nSeverity: MEDIUM\nFixed Version: 0.103.10, 0.104.0-alpha.5\nLink: [GHSA-pwjx-qhcg-rvj4](https://github.com/advisories/GHSA-pwjx-qhcg-rvj4)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-965h-392x-2mh5",
+          "ruleIndex": 3,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-965h-392x-2mh5\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-965h-392x-2mh5](https://github.com/advisories/GHSA-965h-392x-2mh5)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-xgp8-3hg3-c2mh",
+          "ruleIndex": 4,
+          "level": "note",
+          "message": {
+            "text": "Package: rustls-webpki\nInstalled Version: 0.103.9\nVulnerability GHSA-xgp8-3hg3-c2mh\nSeverity: LOW\nFixed Version: 0.103.12, 0.104.0-alpha.6\nLink: [GHSA-xgp8-3hg3-c2mh](https://github.com/advisories/GHSA-xgp8-3hg3-c2mh)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/49488wcvg45dg7f5431iyr8hq77nwsaj-atuin-18.16.1/bin/atuin-server: rustls-webpki@0.103.9"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:bbee50484e8f4c45d62f428f5aa390683ca5b1010c64edf2f72bb4c4c700be41",
+        "imageName": "ghcr.io/nix-containers/images/atuin:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/atuin@sha256:c5ddf0a7cf9619978dfe31933c5f7efa746fda71b82f5ae5b99d067782382e1d"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/atuin:latest"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1274 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "GHSA-72hv-8253-57qq",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-core: Number Length Constraint Bypass in Async Parser Leads to Potential DoS Condition"
+              },
+              "fullDescription": {
+                "text": "### Summary\nThe non-blocking (async) JSON parser in `jackson-core` bypasses the `maxNumberLength` constraint (default: 1000 characters) defined in `StreamReadConstraints`. This allows an attacker to send JSON with arbitrarily long numbers through the async parser API, leading to excessive memory allocation and potential CPU exhaustion, resulting in a Denial of Service (DoS).\n\nThe standard synchronous parser correctly enforces this limit, but the async parser fails to do so, creating an inconsistent enforcement policy.\n\n### Details\nThe root cause is that the async parsing path in `NonBlockingUtf8JsonParserBase` (and related classes) does not call the methods responsible for number length validation.\n\n- The number parsing methods (e.g., `_finishNumberIntegralPart`) accumulate digits into the `TextBuffer` without any length checks.\n- After parsing, they call `_valueComplete()`, which finalizes the token but does **not** call `resetInt()` or `resetFloat()`.\n- The `resetInt()`/`resetFloat()` methods in `ParserBase` are where the `validateIntegerLength()` and `validateFPLength()` checks are performed.\n- Because this validation step is skipped, the `maxNumberLength` constraint is never enforced in the async code path.\n\n### PoC\nThe following JUnit 5 test demonstrates the vulnerability. It shows that the async parser accepts a 5,000-digit number, whereas the limit should be 1,000.\n\n```java\npackage tools.jackson.core.unittest.dos;\n\nimport java.nio.charset.StandardCharsets;\n\nimport org.junit.jupiter.api.Test;\n\nimport tools.jackson.core.*;\nimport tools.jackson.core.exc.StreamConstraintsException;\nimport tools.jackson.core.json.JsonFactory;\nimport tools.jackson.core.json.async.NonBlockingByteArrayJsonParser;\n\nimport static org.junit.jupiter.api.Assertions.*;\n\n/**\n * POC: Number Length Constraint Bypass in Non-Blocking (Async) JSON Parsers\n *\n * Authors: sprabhav7, rohan-repos\n * \n * maxNumberLength default = 1000 characters (digits).\n * A number with more than 1000 digits should be rejected by any parser.\n *\n * BUG: The async parser never calls resetInt()/resetFloat() which is where\n * validateIntegerLength()/validateFPLength() lives. Instead it calls\n * _valueComplete() which skips all number length validation.\n *\n * CWE-770: Allocation of Resources Without Limits or Throttling\n */\nclass AsyncParserNumberLengthBypassTest {\n\n    private static final int MAX_NUMBER_LENGTH = 1000;\n    private static final int TEST_NUMBER_LENGTH = 5000;\n\n    private final JsonFactory factory = new JsonFactory();\n\n    // CONTROL: Sync parser correctly rejects a number exceeding maxNumberLength\n    @Test\n    void syncParserRejectsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\t\t\n\t\t// Output to console\n        System.out.println(\"[SYNC] Parsing \" + TEST_NUMBER_LENGTH + \"-digit number (limit: \" + MAX_NUMBER_LENGTH + \")\");\n        try {\n            try (JsonParser p = factory.createParser(ObjectReadContext.empty(), payload)) {\n                while (p.nextToken() != null) {\n                    if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                        System.out.println(\"[SYNC] Accepted number with \" + p.getText().length() + \" digits — UNEXPECTED\");\n                    }\n                }\n            }\n            fail(\"Sync parser must reject a \" + TEST_NUMBER_LENGTH + \"-digit number\");\n        } catch (StreamConstraintsException e) {\n            System.out.println(\"[SYNC] Rejected with StreamConstraintsException: \" + e.getMessage());\n        }\n    }\n\n    // VULNERABILITY: Async parser accepts the SAME number that sync rejects\n    @Test\n    void asyncParserAcceptsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\n        NonBlockingByteArrayJsonParser p =\n            (NonBlockingByteArrayJsonParser) factory.createNonBlockingByteArrayParser(ObjectReadContext.empty());\n        p.feedInput(payload, 0, payload.length);\n        p.endOfInput();\n\n        boolean foundNumber = false;\n        try {\n            while (p.nextToken() != null) {\n                if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                    foundNumber = true;\n                    String numberText = p.getText();\n                    assertEquals(TEST_NUMBER_LENGTH, numberText.length(),\n                        \"Async parser silently accepted all \" + TEST_NUMBER_LENGTH + \" digits\");\n                }\n            }\n            // Output to console\n            System.out.println(\"[ASYNC INT] Accepted number with \" + TEST_NUMBER_LENGTH + \" digits — BUG CONFIRMED\");\n            assertTrue(foundNumber, \"Parser should have produced a VALUE_NUMBER_INT token\");\n        } catch (StreamConstraintsException e) {\n            fail(\"Bug is fixed — async parser now correctly rejects long numbers: \" + e.getMessage());\n        }\n        p.close();\n    }\n\n    private byte[] buildPayloadWithLongInteger(int numDigits) {\n        StringBuilder sb = new StringBuilder(numDigits + 10);\n        sb.append(\"{\\\"v\\\":\");\n        for (int i = 0; i \u003c numDigits; i++) {\n            sb.append((char) ('1' + (i % 9)));\n        }\n        sb.append('}');\n        return sb.toString().getBytes(StandardCharsets.UTF_8);\n    }\n}\n\n```\n\n\n### Impact\nA malicious actor can send a JSON document with an arbitrarily long number to an application using the async parser (e.g., in a Spring WebFlux or other reactive application). This can cause:\n1.  **Memory Exhaustion:** Unbounded allocation of memory in the `TextBuffer` to store the number's digits, leading to an `OutOfMemoryError`.\n2.  **CPU Exhaustion:** If the application subsequently calls `getBigIntegerValue()` or `getDecimalValue()`, the JVM can be tied up in O(n^2) `BigInteger` parsing operations, leading to a CPU-based DoS.\n\n### Suggested Remediation\n\nThe async parsing path should be updated to respect the `maxNumberLength` constraint. The simplest fix appears to ensure that `_valueComplete()` or a similar method in the async path calls the appropriate validation methods (`resetInt()` or `resetFloat()`) already present in `ParserBase`, mirroring the behavior of the synchronous parsers.\n\n**NOTE:** This research was performed in collaboration with [rohan-repos](https://github.com/rohan-repos)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-72hv-8253-57qq",
+              "help": {
+                "text": "Vulnerability GHSA-72hv-8253-57qq\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-core\nFixed Version: 2.21.1, 2.18.6\nLink: [GHSA-72hv-8253-57qq](https://github.com/advisories/GHSA-72hv-8253-57qq)\n### Summary\nThe non-blocking (async) JSON parser in `jackson-core` bypasses the `maxNumberLength` constraint (default: 1000 characters) defined in `StreamReadConstraints`. This allows an attacker to send JSON with arbitrarily long numbers through the async parser API, leading to excessive memory allocation and potential CPU exhaustion, resulting in a Denial of Service (DoS).\n\nThe standard synchronous parser correctly enforces this limit, but the async parser fails to do so, creating an inconsistent enforcement policy.\n\n### Details\nThe root cause is that the async parsing path in `NonBlockingUtf8JsonParserBase` (and related classes) does not call the methods responsible for number length validation.\n\n- The number parsing methods (e.g., `_finishNumberIntegralPart`) accumulate digits into the `TextBuffer` without any length checks.\n- After parsing, they call `_valueComplete()`, which finalizes the token but does **not** call `resetInt()` or `resetFloat()`.\n- The `resetInt()`/`resetFloat()` methods in `ParserBase` are where the `validateIntegerLength()` and `validateFPLength()` checks are performed.\n- Because this validation step is skipped, the `maxNumberLength` constraint is never enforced in the async code path.\n\n### PoC\nThe following JUnit 5 test demonstrates the vulnerability. It shows that the async parser accepts a 5,000-digit number, whereas the limit should be 1,000.\n\n```java\npackage tools.jackson.core.unittest.dos;\n\nimport java.nio.charset.StandardCharsets;\n\nimport org.junit.jupiter.api.Test;\n\nimport tools.jackson.core.*;\nimport tools.jackson.core.exc.StreamConstraintsException;\nimport tools.jackson.core.json.JsonFactory;\nimport tools.jackson.core.json.async.NonBlockingByteArrayJsonParser;\n\nimport static org.junit.jupiter.api.Assertions.*;\n\n/**\n * POC: Number Length Constraint Bypass in Non-Blocking (Async) JSON Parsers\n *\n * Authors: sprabhav7, rohan-repos\n * \n * maxNumberLength default = 1000 characters (digits).\n * A number with more than 1000 digits should be rejected by any parser.\n *\n * BUG: The async parser never calls resetInt()/resetFloat() which is where\n * validateIntegerLength()/validateFPLength() lives. Instead it calls\n * _valueComplete() which skips all number length validation.\n *\n * CWE-770: Allocation of Resources Without Limits or Throttling\n */\nclass AsyncParserNumberLengthBypassTest {\n\n    private static final int MAX_NUMBER_LENGTH = 1000;\n    private static final int TEST_NUMBER_LENGTH = 5000;\n\n    private final JsonFactory factory = new JsonFactory();\n\n    // CONTROL: Sync parser correctly rejects a number exceeding maxNumberLength\n    @Test\n    void syncParserRejectsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\t\t\n\t\t// Output to console\n        System.out.println(\"[SYNC] Parsing \" + TEST_NUMBER_LENGTH + \"-digit number (limit: \" + MAX_NUMBER_LENGTH + \")\");\n        try {\n            try (JsonParser p = factory.createParser(ObjectReadContext.empty(), payload)) {\n                while (p.nextToken() != null) {\n                    if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                        System.out.println(\"[SYNC] Accepted number with \" + p.getText().length() + \" digits — UNEXPECTED\");\n                    }\n                }\n            }\n            fail(\"Sync parser must reject a \" + TEST_NUMBER_LENGTH + \"-digit number\");\n        } catch (StreamConstraintsException e) {\n            System.out.println(\"[SYNC] Rejected with StreamConstraintsException: \" + e.getMessage());\n        }\n    }\n\n    // VULNERABILITY: Async parser accepts the SAME number that sync rejects\n    @Test\n    void asyncParserAcceptsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\n        NonBlockingByteArrayJsonParser p =\n            (NonBlockingByteArrayJsonParser) factory.createNonBlockingByteArrayParser(ObjectReadContext.empty());\n        p.feedInput(payload, 0, payload.length);\n        p.endOfInput();\n\n        boolean foundNumber = false;\n        try {\n            while (p.nextToken() != null) {\n                if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                    foundNumber = true;\n                    String numberText = p.getText();\n                    assertEquals(TEST_NUMBER_LENGTH, numberText.length(),\n                        \"Async parser silently accepted all \" + TEST_NUMBER_LENGTH + \" digits\");\n                }\n            }\n            // Output to console\n            System.out.println(\"[ASYNC INT] Accepted number with \" + TEST_NUMBER_LENGTH + \" digits — BUG CONFIRMED\");\n            assertTrue(foundNumber, \"Parser should have produced a VALUE_NUMBER_INT token\");\n        } catch (StreamConstraintsException e) {\n            fail(\"Bug is fixed — async parser now correctly rejects long numbers: \" + e.getMessage());\n        }\n        p.close();\n    }\n\n    private byte[] buildPayloadWithLongInteger(int numDigits) {\n        StringBuilder sb = new StringBuilder(numDigits + 10);\n        sb.append(\"{\\\"v\\\":\");\n        for (int i = 0; i \u003c numDigits; i++) {\n            sb.append((char) ('1' + (i % 9)));\n        }\n        sb.append('}');\n        return sb.toString().getBytes(StandardCharsets.UTF_8);\n    }\n}\n\n```\n\n\n### Impact\nA malicious actor can send a JSON document with an arbitrarily long number to an application using the async parser (e.g., in a Spring WebFlux or other reactive application). This can cause:\n1.  **Memory Exhaustion:** Unbounded allocation of memory in the `TextBuffer` to store the number's digits, leading to an `OutOfMemoryError`.\n2.  **CPU Exhaustion:** If the application subsequently calls `getBigIntegerValue()` or `getDecimalValue()`, the JVM can be tied up in O(n^2) `BigInteger` parsing operations, leading to a CPU-based DoS.\n\n### Suggested Remediation\n\nThe async parsing path should be updated to respect the `maxNumberLength` constraint. The simplest fix appears to ensure that `_valueComplete()` or a similar method in the async path calls the appropriate validation methods (`resetInt()` or `resetFloat()`) already present in `ParserBase`, mirroring the behavior of the synchronous parsers.\n\n**NOTE:** This research was performed in collaboration with [rohan-repos](https://github.com/rohan-repos)",
+                "markdown": "**Vulnerability GHSA-72hv-8253-57qq**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-core|2.21.1, 2.18.6|[GHSA-72hv-8253-57qq](https://github.com/advisories/GHSA-72hv-8253-57qq)|\n\n### Summary\nThe non-blocking (async) JSON parser in `jackson-core` bypasses the `maxNumberLength` constraint (default: 1000 characters) defined in `StreamReadConstraints`. This allows an attacker to send JSON with arbitrarily long numbers through the async parser API, leading to excessive memory allocation and potential CPU exhaustion, resulting in a Denial of Service (DoS).\n\nThe standard synchronous parser correctly enforces this limit, but the async parser fails to do so, creating an inconsistent enforcement policy.\n\n### Details\nThe root cause is that the async parsing path in `NonBlockingUtf8JsonParserBase` (and related classes) does not call the methods responsible for number length validation.\n\n- The number parsing methods (e.g., `_finishNumberIntegralPart`) accumulate digits into the `TextBuffer` without any length checks.\n- After parsing, they call `_valueComplete()`, which finalizes the token but does **not** call `resetInt()` or `resetFloat()`.\n- The `resetInt()`/`resetFloat()` methods in `ParserBase` are where the `validateIntegerLength()` and `validateFPLength()` checks are performed.\n- Because this validation step is skipped, the `maxNumberLength` constraint is never enforced in the async code path.\n\n### PoC\nThe following JUnit 5 test demonstrates the vulnerability. It shows that the async parser accepts a 5,000-digit number, whereas the limit should be 1,000.\n\n```java\npackage tools.jackson.core.unittest.dos;\n\nimport java.nio.charset.StandardCharsets;\n\nimport org.junit.jupiter.api.Test;\n\nimport tools.jackson.core.*;\nimport tools.jackson.core.exc.StreamConstraintsException;\nimport tools.jackson.core.json.JsonFactory;\nimport tools.jackson.core.json.async.NonBlockingByteArrayJsonParser;\n\nimport static org.junit.jupiter.api.Assertions.*;\n\n/**\n * POC: Number Length Constraint Bypass in Non-Blocking (Async) JSON Parsers\n *\n * Authors: sprabhav7, rohan-repos\n * \n * maxNumberLength default = 1000 characters (digits).\n * A number with more than 1000 digits should be rejected by any parser.\n *\n * BUG: The async parser never calls resetInt()/resetFloat() which is where\n * validateIntegerLength()/validateFPLength() lives. Instead it calls\n * _valueComplete() which skips all number length validation.\n *\n * CWE-770: Allocation of Resources Without Limits or Throttling\n */\nclass AsyncParserNumberLengthBypassTest {\n\n    private static final int MAX_NUMBER_LENGTH = 1000;\n    private static final int TEST_NUMBER_LENGTH = 5000;\n\n    private final JsonFactory factory = new JsonFactory();\n\n    // CONTROL: Sync parser correctly rejects a number exceeding maxNumberLength\n    @Test\n    void syncParserRejectsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\t\t\n\t\t// Output to console\n        System.out.println(\"[SYNC] Parsing \" + TEST_NUMBER_LENGTH + \"-digit number (limit: \" + MAX_NUMBER_LENGTH + \")\");\n        try {\n            try (JsonParser p = factory.createParser(ObjectReadContext.empty(), payload)) {\n                while (p.nextToken() != null) {\n                    if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                        System.out.println(\"[SYNC] Accepted number with \" + p.getText().length() + \" digits — UNEXPECTED\");\n                    }\n                }\n            }\n            fail(\"Sync parser must reject a \" + TEST_NUMBER_LENGTH + \"-digit number\");\n        } catch (StreamConstraintsException e) {\n            System.out.println(\"[SYNC] Rejected with StreamConstraintsException: \" + e.getMessage());\n        }\n    }\n\n    // VULNERABILITY: Async parser accepts the SAME number that sync rejects\n    @Test\n    void asyncParserAcceptsLongNumber() throws Exception {\n        byte[] payload = buildPayloadWithLongInteger(TEST_NUMBER_LENGTH);\n\n        NonBlockingByteArrayJsonParser p =\n            (NonBlockingByteArrayJsonParser) factory.createNonBlockingByteArrayParser(ObjectReadContext.empty());\n        p.feedInput(payload, 0, payload.length);\n        p.endOfInput();\n\n        boolean foundNumber = false;\n        try {\n            while (p.nextToken() != null) {\n                if (p.currentToken() == JsonToken.VALUE_NUMBER_INT) {\n                    foundNumber = true;\n                    String numberText = p.getText();\n                    assertEquals(TEST_NUMBER_LENGTH, numberText.length(),\n                        \"Async parser silently accepted all \" + TEST_NUMBER_LENGTH + \" digits\");\n                }\n            }\n            // Output to console\n            System.out.println(\"[ASYNC INT] Accepted number with \" + TEST_NUMBER_LENGTH + \" digits — BUG CONFIRMED\");\n            assertTrue(foundNumber, \"Parser should have produced a VALUE_NUMBER_INT token\");\n        } catch (StreamConstraintsException e) {\n            fail(\"Bug is fixed — async parser now correctly rejects long numbers: \" + e.getMessage());\n        }\n        p.close();\n    }\n\n    private byte[] buildPayloadWithLongInteger(int numDigits) {\n        StringBuilder sb = new StringBuilder(numDigits + 10);\n        sb.append(\"{\\\"v\\\":\");\n        for (int i = 0; i \u003c numDigits; i++) {\n            sb.append((char) ('1' + (i % 9)));\n        }\n        sb.append('}');\n        return sb.toString().getBytes(StandardCharsets.UTF_8);\n    }\n}\n\n```\n\n\n### Impact\nA malicious actor can send a JSON document with an arbitrarily long number to an application using the async parser (e.g., in a Spring WebFlux or other reactive application). This can cause:\n1.  **Memory Exhaustion:** Unbounded allocation of memory in the `TextBuffer` to store the number's digits, leading to an `OutOfMemoryError`.\n2.  **CPU Exhaustion:** If the application subsequently calls `getBigIntegerValue()` or `getDecimalValue()`, the JVM can be tied up in O(n^2) `BigInteger` parsing operations, leading to a CPU-based DoS.\n\n### Suggested Remediation\n\nThe async parsing path should be updated to respect the `maxNumberLength` constraint. The simplest fix appears to ensure that `_valueComplete()` or a similar method in the async path calls the appropriate validation methods (`resetInt()` or `resetFloat()`) already present in `ParserBase`, mirroring the behavior of the synchronous parsers.\n\n**NOTE:** This research was performed in collaboration with [rohan-repos](https://github.com/rohan-repos)"
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54512",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Arbitrary code execution via PolymorphicTypeValidator bypass"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, jackson-databind's PolymorphicTypeValidator (PTV) is the primary safety mechanism guarding polymorphic deserialization. When polymorphic typing is enabled and a type identifier contains generic parameters (i.e. the type ID string contains \u003c), DatabindContext._resolveAndValidateGeneric() validates only the raw container class name (the substring before \u003c) against the configured PTV. If the container type is approved, the method parses the full canonical type string via TypeFactory.constructFromCanonical() and returns the fully parameterized type without ever validating the nested type arguments against the PTV. The nested type arguments are then resolved, instantiated, and populated as beans during deserialization. An attacker who controls the type ID can therefore place a denied class as a generic type parameter of an allowed container — for example java.util.ArrayList\u003ccom.evil.Gadget\u003e when only java.util.ArrayList is allow-listed. The container passes the PTV check; com.evil.Gadget is loaded via Class.forName(name, true, loader), instantiated, and its properties are set from attacker-controlled JSON. This completely bypasses an explicitly configured PTV allow-list. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54512",
+              "help": {
+                "text": "Vulnerability CVE-2026-54512\nSeverity: HIGH\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.18.8, 3.1.4, 2.21.4\nLink: [CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, jackson-databind's PolymorphicTypeValidator (PTV) is the primary safety mechanism guarding polymorphic deserialization. When polymorphic typing is enabled and a type identifier contains generic parameters (i.e. the type ID string contains \u003c), DatabindContext._resolveAndValidateGeneric() validates only the raw container class name (the substring before \u003c) against the configured PTV. If the container type is approved, the method parses the full canonical type string via TypeFactory.constructFromCanonical() and returns the fully parameterized type without ever validating the nested type arguments against the PTV. The nested type arguments are then resolved, instantiated, and populated as beans during deserialization. An attacker who controls the type ID can therefore place a denied class as a generic type parameter of an allowed container — for example java.util.ArrayList\u003ccom.evil.Gadget\u003e when only java.util.ArrayList is allow-listed. The container passes the PTV check; com.evil.Gadget is loaded via Class.forName(name, true, loader), instantiated, and its properties are set from attacker-controlled JSON. This completely bypasses an explicitly configured PTV allow-list. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54512**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|com.fasterxml.jackson.core:jackson-databind|2.18.8, 3.1.4, 2.21.4|[CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, jackson-databind's PolymorphicTypeValidator (PTV) is the primary safety mechanism guarding polymorphic deserialization. When polymorphic typing is enabled and a type identifier contains generic parameters (i.e. the type ID string contains \u003c), DatabindContext._resolveAndValidateGeneric() validates only the raw container class name (the substring before \u003c) against the configured PTV. If the container type is approved, the method parses the full canonical type string via TypeFactory.constructFromCanonical() and returns the fully parameterized type without ever validating the nested type arguments against the PTV. The nested type arguments are then resolved, instantiated, and populated as beans during deserialization. An attacker who controls the type ID can therefore place a denied class as a generic type parameter of an allowed container — for example java.util.ArrayList\u003ccom.evil.Gadget\u003e when only java.util.ArrayList is allow-listed. The container passes the PTV check; com.evil.Gadget is loaded via Class.forName(name, true, loader), instantiated, and its properties are set from attacker-controlled JSON. This completely bypasses an explicitly configured PTV allow-list. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 8.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "8.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54513",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: Jackson-databind: Security bypass allows arbitrary code execution"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, BasicPolymorphicTypeValidator.Builder.allowIfSubTypeIsArray() allowlists any array type based only on clazz.isArray(), without validating the array's component (element) type against the configured allowlist. A PTV built with allowIfSubTypeIsArray() plus an explicit concrete-type allowlist therefore still permits EvilType[] even though EvilType is not allowlisted. When Jackson deserializes the elements and no per-element type IDs are present, it instantiates the component type directly with no further PTV check, bypassing the allowlist. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54513",
+              "help": {
+                "text": "Vulnerability CVE-2026-54513\nSeverity: HIGH\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, BasicPolymorphicTypeValidator.Builder.allowIfSubTypeIsArray() allowlists any array type based only on clazz.isArray(), without validating the array's component (element) type against the configured allowlist. A PTV built with allowIfSubTypeIsArray() plus an explicit concrete-type allowlist therefore still permits EvilType[] even though EvilType is not allowlisted. When Jackson deserializes the elements and no per-element type IDs are present, it instantiates the component type directly with no further PTV check, bypassing the allowlist. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54513**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|com.fasterxml.jackson.core:jackson-databind|2.18.8, 2.21.4, 3.1.4|[CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.10.0 until 2.18.8, 2.21.4, and 3.1.4, BasicPolymorphicTypeValidator.Builder.allowIfSubTypeIsArray() allowlists any array type based only on clazz.isArray(), without validating the array's component (element) type against the configured allowlist. A PTV built with allowIfSubTypeIsArray() plus an explicit concrete-type allowlist therefore still permits EvilType[] even though EvilType is not allowlisted. When Jackson deserializes the elements and no per-element type IDs are present, it instantiates the component type directly with no further PTV check, bypassing the allowlist. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 8.1,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                "precision": "very-high",
+                "security-severity": "8.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54514",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Information Disclosure via Eager DNS Resolution"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.0.0 until 2.18.8, 2.21.4, and 3.1.4, JDKFromStringDeserializer constructed InetSocketAddress with new InetSocketAddress(host, port), which performs eager DNS name resolution for hostname inputs at deserialization time. An application that binds untrusted JSON into a type containing an InetSocketAddress field issues an attacker-chosen DNS query during readValue, before any application-level validation or connect logic. The fix uses InetSocketAddress.createUnresolved(host, port), deferring DNS to an explicit connect. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54514",
+              "help": {
+                "text": "Vulnerability CVE-2026-54514\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.0.0 until 2.18.8, 2.21.4, and 3.1.4, JDKFromStringDeserializer constructed InetSocketAddress with new InetSocketAddress(host, port), which performs eager DNS name resolution for hostname inputs at deserialization time. An application that binds untrusted JSON into a type containing an InetSocketAddress field issues an attacker-chosen DNS query during readValue, before any application-level validation or connect logic. The fix uses InetSocketAddress.createUnresolved(host, port), deferring DNS to an explicit connect. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54514**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|2.18.8, 2.21.4, 3.1.4|[CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.0.0 until 2.18.8, 2.21.4, and 3.1.4, JDKFromStringDeserializer constructed InetSocketAddress with new InetSocketAddress(host, port), which performs eager DNS name resolution for hostname inputs at deserialization time. An application that binds untrusted JSON into a type containing an InetSocketAddress field issues an attacker-chosen DNS query during readValue, before any application-level validation or connect logic. The fix uses InetSocketAddress.createUnresolved(host, port), deferring DNS to an explicit connect. This vulnerability is fixed in 2.18.8, 2.21.4, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-54515",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "jackson-databind: jackson-databind: Ignored properties can be unexpectedly modified"
+              },
+              "fullDescription": {
+                "text": "jackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.8.0 until 2.18.9, 2.21.5, and 3.1.4, in BeanDeserializerBase.createContextual(), per-property @JsonIgnoreProperties exclusions are applied by _handleByNameInclusion(), producing a contextual deserializer whose BeanPropertyMap has the ignored properties removed. The subsequent per-property case-insensitivity block (triggered by @JsonFormat(ACCEPT_CASE_INSENSITIVE_PROPERTIES)) rebuilds from this._beanProperties (the original, unfiltered map) instead of contextual._beanProperties, then overwrites the filtered map — restoring every property _handleByNameInclusion had just removed. The ignored property becomes writable again. This vulnerability is fixed in 2.18.9, 2.21.5, and 3.1.4."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-54515",
+              "help": {
+                "text": "Vulnerability CVE-2026-54515\nSeverity: MEDIUM\nPackage: com.fasterxml.jackson.core:jackson-databind\nFixed Version: 3.1.4, 2.18.9, 2.21.5, 2.22.1\nLink: [CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.8.0 until 2.18.9, 2.21.5, and 3.1.4, in BeanDeserializerBase.createContextual(), per-property @JsonIgnoreProperties exclusions are applied by _handleByNameInclusion(), producing a contextual deserializer whose BeanPropertyMap has the ignored properties removed. The subsequent per-property case-insensitivity block (triggered by @JsonFormat(ACCEPT_CASE_INSENSITIVE_PROPERTIES)) rebuilds from this._beanProperties (the original, unfiltered map) instead of contextual._beanProperties, then overwrites the filtered map — restoring every property _handleByNameInclusion had just removed. The ignored property becomes writable again. This vulnerability is fixed in 2.18.9, 2.21.5, and 3.1.4.",
+                "markdown": "**Vulnerability CVE-2026-54515**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|com.fasterxml.jackson.core:jackson-databind|3.1.4, 2.18.9, 2.21.5, 2.22.1|[CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)|\n\njackson-databind contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor. From 2.8.0 until 2.18.9, 2.21.5, and 3.1.4, in BeanDeserializerBase.createContextual(), per-property @JsonIgnoreProperties exclusions are applied by _handleByNameInclusion(), producing a contextual deserializer whose BeanPropertyMap has the ignored properties removed. The subsequent per-property case-insensitivity block (triggered by @JsonFormat(ACCEPT_CASE_INSENSITIVE_PROPERTIES)) rebuilds from this._beanProperties (the original, unfiltered map) instead of contextual._beanProperties, then overwrites the filtered map — restoring every property _handleByNameInclusion had just removed. The ignored property becomes writable again. This vulnerability is fixed in 2.18.9, 2.21.5, and 3.1.4."
+              },
+              "properties": {
+                "cvssv3_baseScore": 5.3,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "5.3",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34479",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-1.2-api: Apache Log4j 1-to-Log4j 2 bridge: Log processing denial of service due to improper XML escaping"
+              },
+              "fullDescription": {
+                "text": "The Log4j1XmlLayout from the Apache Log4j 1-to-Log4j 2 bridge fails to escape characters forbidden by the XML 1.0 standard, producing malformed XML output. Conforming XML parsers are required to reject documents containing such characters with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nTwo groups of users are affected:\n\n  *  Those using Log4j1XmlLayout directly in a Log4j Core 2 configuration file.\n  *  Those using the Log4j 1 configuration compatibility layer with org.apache.log4j.xml.XMLLayout specified as the layout class.\n\n\nUsers are advised to upgrade to Apache Log4j 1-to-Log4j 2 bridge version 2.25.4, which corrects this issue.\n\nNote: The Apache Log4j 1-to-Log4j 2 bridge is deprecated and will not be present in Log4j 3. Users are encouraged to consult the  Log4j 1 to Log4j 2 migration guide https://logging.apache.org/log4j/2.x/migrate-from-log4j1.html , and specifically the section on eliminating reliance on the bridge."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34479",
+              "help": {
+                "text": "Vulnerability CVE-2026-34479\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-1.2-api\nFixed Version: 2.25.4\nLink: [CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)\nThe Log4j1XmlLayout from the Apache Log4j 1-to-Log4j 2 bridge fails to escape characters forbidden by the XML 1.0 standard, producing malformed XML output. Conforming XML parsers are required to reject documents containing such characters with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nTwo groups of users are affected:\n\n  *  Those using Log4j1XmlLayout directly in a Log4j Core 2 configuration file.\n  *  Those using the Log4j 1 configuration compatibility layer with org.apache.log4j.xml.XMLLayout specified as the layout class.\n\n\nUsers are advised to upgrade to Apache Log4j 1-to-Log4j 2 bridge version 2.25.4, which corrects this issue.\n\nNote: The Apache Log4j 1-to-Log4j 2 bridge is deprecated and will not be present in Log4j 3. Users are encouraged to consult the  Log4j 1 to Log4j 2 migration guide https://logging.apache.org/log4j/2.x/migrate-from-log4j1.html , and specifically the section on eliminating reliance on the bridge.",
+                "markdown": "**Vulnerability CVE-2026-34479**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-1.2-api|2.25.4|[CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)|\n\nThe Log4j1XmlLayout from the Apache Log4j 1-to-Log4j 2 bridge fails to escape characters forbidden by the XML 1.0 standard, producing malformed XML output. Conforming XML parsers are required to reject documents containing such characters with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nTwo groups of users are affected:\n\n  *  Those using Log4j1XmlLayout directly in a Log4j Core 2 configuration file.\n  *  Those using the Log4j 1 configuration compatibility layer with org.apache.log4j.xml.XMLLayout specified as the layout class.\n\n\nUsers are advised to upgrade to Apache Log4j 1-to-Log4j 2 bridge version 2.25.4, which corrects this issue.\n\nNote: The Apache Log4j 1-to-Log4j 2 bridge is deprecated and will not be present in Log4j 3. Users are encouraged to consult the  Log4j 1 to Log4j 2 migration guide https://logging.apache.org/log4j/2.x/migrate-from-log4j1.html , and specifically the section on eliminating reliance on the bridge."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34477",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Man-in-the-middle attack due to incomplete hostname verification"
+              },
+              "fullDescription": {
+                "text": "The fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34477",
+              "help": {
+                "text": "Vulnerability CVE-2026-34477\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)\nThe fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue.",
+                "markdown": "**Vulnerability CVE-2026-34477**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)|\n\nThe fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the \u003cSsl\u003e element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested \u003cSsl\u003e element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.3,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34478",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Log injection via CRLF sequences due to configuration attribute renames"
+              },
+              "fullDescription": {
+                "text": "Apache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34478",
+              "help": {
+                "text": "Vulnerability CVE-2026-34478\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)\nApache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue.",
+                "markdown": "**Vulnerability CVE-2026-34478**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)|\n\nApache Log4j Core's  Rfc5424Layout https://logging.apache.org/log4j/2.x/manual/layouts.html#RFC5424Layout , in versions 2.21.0 through 2.25.3, is vulnerable to log injection via CRLF sequences due to undocumented renames of security-relevant configuration attributes.\n\nTwo distinct issues affect users of stream-based syslog services who configure Rfc5424Layout directly:\n\n  *  The newLineEscape attribute was silently renamed, causing newline escaping to stop working for users of TCP framing (RFC 6587), exposing them to CRLF injection in log output.\n  *  The useTlsMessageFormat attribute was silently renamed, causing users of TLS framing (RFC 5425) to be silently downgraded to unframed TCP (RFC 6587), without newline escaping.\n\n\nUsers of the SyslogAppender are not affected, as its configuration attributes were not modified.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-34480",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.apache.logging.log4j/log4j-core: Apache Log4j Core: Invalid XML output causes denial of service in logging"
+              },
+              "fullDescription": {
+                "text": "Apache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-34480",
+              "help": {
+                "text": "Vulnerability CVE-2026-34480\nSeverity: MEDIUM\nPackage: org.apache.logging.log4j:log4j-core\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)\nApache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output.",
+                "markdown": "**Vulnerability CVE-2026-34480**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|org.apache.logging.log4j:log4j-core|2.25.4|[CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)|\n\nApache Log4j Core's  XmlLayout https://logging.apache.org/log4j/2.x/manual/layouts.html#XmlLayout , in versions up to and including 2.25.3, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  producing invalid XML output whenever a log message or MDC value contains such characters.\n\nThe impact depends on the StAX implementation in use:\n\n  *  JRE built-in StAX: Forbidden characters are silently written to the output, producing malformed XML. Conforming parsers must reject such documents with a fatal error, which may cause downstream log-processing systems to drop the affected records.\n  *  Alternative StAX implementations (e.g.,  Woodstox https://github.com/FasterXML/woodstox , a transitive dependency of the Jackson XML Dataformat module): An exception is thrown during the logging call, and the log event is never delivered to its intended appender, only to Log4j's internal status logger.\n\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue by sanitizing forbidden characters before XML output."
+              },
+              "properties": {
+                "cvssv40_baseScore": 6.9,
+                "cvssv40_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N",
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-67030",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.codehaus.plexus:plexus-utils: Plexus-utils: Directory Traversal in extractFile method"
+              },
+              "fullDescription": {
+                "text": "Directory Traversal vulnerability in the extractFile method of org.codehaus.plexus.util.Expand in plexus-utils before 6d780b3378829318ba5c2d29547e0012d5b29642. This allows an attacker to execute arbitrary code"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-67030",
+              "help": {
+                "text": "Vulnerability CVE-2025-67030\nSeverity: HIGH\nPackage: org.codehaus.plexus:plexus-utils\nFixed Version: 4.0.3, 3.6.1\nLink: [CVE-2025-67030](https://avd.aquasec.com/nvd/cve-2025-67030)\nDirectory Traversal vulnerability in the extractFile method of org.codehaus.plexus.util.Expand in plexus-utils before 6d780b3378829318ba5c2d29547e0012d5b29642. This allows an attacker to execute arbitrary code",
+                "markdown": "**Vulnerability CVE-2025-67030**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.codehaus.plexus:plexus-utils|4.0.3, 3.6.1|[CVE-2025-67030](https://avd.aquasec.com/nvd/cve-2025-67030)|\n\nDirectory Traversal vulnerability in the extractFile method of org.codehaus.plexus.util.Expand in plexus-utils before 6d780b3378829318ba5c2d29547e0012d5b29642. This allows an attacker to execute arbitrary code"
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-2332",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.eclipse.jetty/jetty-http: HTTP request smuggling via chunked extension quoted-string parsing"
+              },
+              "fullDescription": {
+                "text": "In Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-2332",
+              "help": {
+                "text": "Vulnerability CVE-2026-2332\nSeverity: HIGH\nPackage: org.eclipse.jetty:jetty-http\nFixed Version: 12.1.7, 12.0.33\nLink: [CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)\nIn Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request.",
+                "markdown": "**Vulnerability CVE-2026-2332**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.eclipse.jetty:jetty-http|12.1.7, 12.0.33|[CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)|\n\nIn Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.4,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
+                "precision": "very-high",
+                "security-severity": "7.4",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2025-11143",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.eclipse.jetty/jetty-http: org.eclipse.jetty: Security bypass due to differential URI parsing"
+              },
+              "fullDescription": {
+                "text": "The Jetty URI parser has some key differences to other common parsers when evaluating invalid or unusual URIs. Differential parsing of URIs in systems using multiple components may result in security by-pass. For example a component that enforces a black list may interpret the URIs differently from one that generates a response. At the very least, differential parsing may divulge implementation details."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2025-11143",
+              "help": {
+                "text": "Vulnerability CVE-2025-11143\nSeverity: LOW\nPackage: org.eclipse.jetty:jetty-http\nFixed Version: 12.0.31, 12.1.5\nLink: [CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)\nThe Jetty URI parser has some key differences to other common parsers when evaluating invalid or unusual URIs. Differential parsing of URIs in systems using multiple components may result in security by-pass. For example a component that enforces a black list may interpret the URIs differently from one that generates a response. At the very least, differential parsing may divulge implementation details.",
+                "markdown": "**Vulnerability CVE-2025-11143**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|org.eclipse.jetty:jetty-http|12.0.31, 12.1.5|[CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)|\n\nThe Jetty URI parser has some key differences to other common parsers when evaluating invalid or unusual URIs. Differential parsing of URIs in systems using multiple components may result in security by-pass. For example a component that enforces a black list may interpret the URIs differently from one that generates a response. At the very least, differential parsing may divulge implementation details."
+              },
+              "properties": {
+                "cvssv3_baseScore": 3.7,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N",
+                "precision": "very-high",
+                "security-severity": "3.7",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2026-1605",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "org.eclipse.jetty/jetty-server: Eclipse Jetty: Denial of Service due to unreleased JDK Inflater from compressed HTTP requests"
+              },
+              "fullDescription": {
+                "text": "In Eclipse Jetty, versions 12.0.0-12.0.31 and 12.1.0-12.0.5, class GzipHandler exposes a vulnerability when a compressed HTTP request, with Content-Encoding: gzip, is processed and the corresponding response is not compressed.\n\n\nThis happens because the JDK Inflater is allocated for decompressing the request, but it is not released because the release mechanism is tied to the compressed response.\nIn this case, since the response is not compressed, the release mechanism does not trigger, causing the leak."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2026-1605",
+              "help": {
+                "text": "Vulnerability CVE-2026-1605\nSeverity: HIGH\nPackage: org.eclipse.jetty:jetty-server\nFixed Version: 12.1.6, 12.0.32\nLink: [CVE-2026-1605](https://avd.aquasec.com/nvd/cve-2026-1605)\nIn Eclipse Jetty, versions 12.0.0-12.0.31 and 12.1.0-12.0.5, class GzipHandler exposes a vulnerability when a compressed HTTP request, with Content-Encoding: gzip, is processed and the corresponding response is not compressed.\n\n\nThis happens because the JDK Inflater is allocated for decompressing the request, but it is not released because the release mechanism is tied to the compressed response.\nIn this case, since the response is not compressed, the release mechanism does not trigger, causing the leak.",
+                "markdown": "**Vulnerability CVE-2026-1605**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.eclipse.jetty:jetty-server|12.1.6, 12.0.32|[CVE-2026-1605](https://avd.aquasec.com/nvd/cve-2026-1605)|\n\nIn Eclipse Jetty, versions 12.0.0-12.0.31 and 12.1.0-12.0.5, class GzipHandler exposes a vulnerability when a compressed HTTP request, with Content-Encoding: gzip, is processed and the corresponding response is not compressed.\n\n\nThis happens because the JDK Inflater is allocated for decompressing the request, but it is not released because the release mechanism is tied to the compressed response.\nIn this case, since the response is not compressed, the release mechanism does not trigger, causing the leak."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-2r2c-cx56-8933",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "JLine3 Telnet server: Unauthenticated Remote DoS via Unbounded Telnet NAWS Terminal Geometry"
+              },
+              "fullDescription": {
+                "text": "### Summary\n\nThe JLine3 Telnet server (`remote-telnet` module) does not apply an upper bound to\nterminal dimensions received via the Telnet NAWS (Negotiate About Window Size) option.\nAn unauthenticated remote attacker can send a NAWS subnegotiation advertising a\n65535×65535 terminal and repeatedly alternate values to trigger continuous, expensive\nrendering work on the server, causing CPU exhaustion and denial of service.\n\n### Details\n\n`TelnetIO.handleNAWS()` (TelnetIO.java:856-879) reads the client-supplied width and\nheight as 16-bit unsigned integers and passes them to `setTerminalGeometry()`:\n\n```java\n// TelnetIO.java:869-875\nprivate void setTerminalGeometry(int columns, int rows) {\n    if (columns \u003c SMALLEST_BELIEVABLE_WIDTH) columns = DEFAULT_WIDTH;  // lower bound only\n    if (rows    \u003c SMALLEST_BELIEVABLE_HEIGHT) rows    = DEFAULT_HEIGHT;\n    connectionData.setTerminalGeometry(columns, rows);\n    connection.processConnectionEvent(\n        new ConnectionEvent(connection, ConnectionEvent.Type.CONNECTION_TERMINAL_GEOMETRY_CHANGED));\n}\n```\n\nOnly a *lower* bound is enforced (minimum 20 columns / 6 rows). Values up to 65535 are\naccepted and stored. The geometry change event propagates to Telnet.java:153-158 where\nit calls:\n\n    terminal.setSize(new Size(65535, 65535));\n    terminal.raise(Signal.WINCH);\n\nThe WINCH signal triggers `LineReaderImpl.handleSignal()` → `redisplay()`. Inside\n`redisplay()`, multiple paths iterate up to `size.getColumns()` times:\n\n- `freshLine()` (LineReaderImpl.java:937,953): loops `size.getColumns()-1` = **65534\n  iterations**, building and writing a space-padding string across the network socket.\n- `columnSplitLength(terminal, size.getColumns(), ...)`: called multiple times,\n  each processing all characters against the 65535-wide line width.\n\nBecause WINCH only fires on *change*, the attacker alternates between two large values\n(e.g., 65535 and 65534) to trigger an unlimited stream of expensive render cycles.\nNo authentication is required; the NAWS option is negotiated before any login sequence.\n\nAffected source files:\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/TelnetIO.java` lines 856-879\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/Telnet.java` lines 140-175\n- `reader/src/main/java/org/jline/reader/impl/LineReaderImpl.java` lines 929-962, 1293-1313\n\n### PoC\n\nSend the following two raw Telnet packets in a loop to a running JLine Telnet server.\nNo login or authentication is required.\n\nPacket 1 — NAWS 65535 × 65535:\n  FF FA 1F FF FF FF FF FF F0\n  (IAC SB NAWS 0xFF 0xFF 0xFF 0xFF IAC SE)\n\nPacket 2 — NAWS 65534 × 65534:\n  FF FA 1F FF FE FF FE FF F0\n  (IAC SB NAWS 0xFF 0xFE 0xFF 0xFE IAC SE)\n\nSending these alternately at ~10 packets/second is sufficient to peg one CPU core on\nthe server. The server remains in this state for as long as the connection is open.\n\nReproduction environment:\n- JLine3 built from current master on x86_64 Linux, OpenJDK 25.0.2\n- `remote-telnet` module started with its default `Telnet` server configuration\n- Test confirmed by source-code analysis and tracing the call chain at runtime\n\n### Impact\n\n**Type**: Denial of Service (CPU exhaustion)\n**Who is affected**: Any application that embeds the JLine3 `remote-telnet` module and\nexposes its Telnet server on a network interface. The attacker requires no credentials.\nA single connection making ~10 alternating NAWS packets per second fully occupies the\nconnection-handling thread and produces continuous I/O on the server's output stream.\nBecause connection threads are re-used for the life of the session, one attacker per\navailable connection slot can deny service to all users of that slot.\n\n### Credits\nThis issue was identified by Michał Majchrowicz and Marcin Wyczechowski, members of the AFINE Team."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-2r2c-cx56-8933",
+              "help": {
+                "text": "Vulnerability GHSA-2r2c-cx56-8933\nSeverity: HIGH\nPackage: org.jline:jline-remote-telnet\nFixed Version: 4.2.1\nLink: [GHSA-2r2c-cx56-8933](https://github.com/advisories/GHSA-2r2c-cx56-8933)\n### Summary\n\nThe JLine3 Telnet server (`remote-telnet` module) does not apply an upper bound to\nterminal dimensions received via the Telnet NAWS (Negotiate About Window Size) option.\nAn unauthenticated remote attacker can send a NAWS subnegotiation advertising a\n65535×65535 terminal and repeatedly alternate values to trigger continuous, expensive\nrendering work on the server, causing CPU exhaustion and denial of service.\n\n### Details\n\n`TelnetIO.handleNAWS()` (TelnetIO.java:856-879) reads the client-supplied width and\nheight as 16-bit unsigned integers and passes them to `setTerminalGeometry()`:\n\n```java\n// TelnetIO.java:869-875\nprivate void setTerminalGeometry(int columns, int rows) {\n    if (columns \u003c SMALLEST_BELIEVABLE_WIDTH) columns = DEFAULT_WIDTH;  // lower bound only\n    if (rows    \u003c SMALLEST_BELIEVABLE_HEIGHT) rows    = DEFAULT_HEIGHT;\n    connectionData.setTerminalGeometry(columns, rows);\n    connection.processConnectionEvent(\n        new ConnectionEvent(connection, ConnectionEvent.Type.CONNECTION_TERMINAL_GEOMETRY_CHANGED));\n}\n```\n\nOnly a *lower* bound is enforced (minimum 20 columns / 6 rows). Values up to 65535 are\naccepted and stored. The geometry change event propagates to Telnet.java:153-158 where\nit calls:\n\n    terminal.setSize(new Size(65535, 65535));\n    terminal.raise(Signal.WINCH);\n\nThe WINCH signal triggers `LineReaderImpl.handleSignal()` → `redisplay()`. Inside\n`redisplay()`, multiple paths iterate up to `size.getColumns()` times:\n\n- `freshLine()` (LineReaderImpl.java:937,953): loops `size.getColumns()-1` = **65534\n  iterations**, building and writing a space-padding string across the network socket.\n- `columnSplitLength(terminal, size.getColumns(), ...)`: called multiple times,\n  each processing all characters against the 65535-wide line width.\n\nBecause WINCH only fires on *change*, the attacker alternates between two large values\n(e.g., 65535 and 65534) to trigger an unlimited stream of expensive render cycles.\nNo authentication is required; the NAWS option is negotiated before any login sequence.\n\nAffected source files:\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/TelnetIO.java` lines 856-879\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/Telnet.java` lines 140-175\n- `reader/src/main/java/org/jline/reader/impl/LineReaderImpl.java` lines 929-962, 1293-1313\n\n### PoC\n\nSend the following two raw Telnet packets in a loop to a running JLine Telnet server.\nNo login or authentication is required.\n\nPacket 1 — NAWS 65535 × 65535:\n  FF FA 1F FF FF FF FF FF F0\n  (IAC SB NAWS 0xFF 0xFF 0xFF 0xFF IAC SE)\n\nPacket 2 — NAWS 65534 × 65534:\n  FF FA 1F FF FE FF FE FF F0\n  (IAC SB NAWS 0xFF 0xFE 0xFF 0xFE IAC SE)\n\nSending these alternately at ~10 packets/second is sufficient to peg one CPU core on\nthe server. The server remains in this state for as long as the connection is open.\n\nReproduction environment:\n- JLine3 built from current master on x86_64 Linux, OpenJDK 25.0.2\n- `remote-telnet` module started with its default `Telnet` server configuration\n- Test confirmed by source-code analysis and tracing the call chain at runtime\n\n### Impact\n\n**Type**: Denial of Service (CPU exhaustion)\n**Who is affected**: Any application that embeds the JLine3 `remote-telnet` module and\nexposes its Telnet server on a network interface. The attacker requires no credentials.\nA single connection making ~10 alternating NAWS packets per second fully occupies the\nconnection-handling thread and produces continuous I/O on the server's output stream.\nBecause connection threads are re-used for the life of the session, one attacker per\navailable connection slot can deny service to all users of that slot.\n\n### Credits\nThis issue was identified by Michał Majchrowicz and Marcin Wyczechowski, members of the AFINE Team.",
+                "markdown": "**Vulnerability GHSA-2r2c-cx56-8933**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.jline:jline-remote-telnet|4.2.1|[GHSA-2r2c-cx56-8933](https://github.com/advisories/GHSA-2r2c-cx56-8933)|\n\n### Summary\n\nThe JLine3 Telnet server (`remote-telnet` module) does not apply an upper bound to\nterminal dimensions received via the Telnet NAWS (Negotiate About Window Size) option.\nAn unauthenticated remote attacker can send a NAWS subnegotiation advertising a\n65535×65535 terminal and repeatedly alternate values to trigger continuous, expensive\nrendering work on the server, causing CPU exhaustion and denial of service.\n\n### Details\n\n`TelnetIO.handleNAWS()` (TelnetIO.java:856-879) reads the client-supplied width and\nheight as 16-bit unsigned integers and passes them to `setTerminalGeometry()`:\n\n```java\n// TelnetIO.java:869-875\nprivate void setTerminalGeometry(int columns, int rows) {\n    if (columns \u003c SMALLEST_BELIEVABLE_WIDTH) columns = DEFAULT_WIDTH;  // lower bound only\n    if (rows    \u003c SMALLEST_BELIEVABLE_HEIGHT) rows    = DEFAULT_HEIGHT;\n    connectionData.setTerminalGeometry(columns, rows);\n    connection.processConnectionEvent(\n        new ConnectionEvent(connection, ConnectionEvent.Type.CONNECTION_TERMINAL_GEOMETRY_CHANGED));\n}\n```\n\nOnly a *lower* bound is enforced (minimum 20 columns / 6 rows). Values up to 65535 are\naccepted and stored. The geometry change event propagates to Telnet.java:153-158 where\nit calls:\n\n    terminal.setSize(new Size(65535, 65535));\n    terminal.raise(Signal.WINCH);\n\nThe WINCH signal triggers `LineReaderImpl.handleSignal()` → `redisplay()`. Inside\n`redisplay()`, multiple paths iterate up to `size.getColumns()` times:\n\n- `freshLine()` (LineReaderImpl.java:937,953): loops `size.getColumns()-1` = **65534\n  iterations**, building and writing a space-padding string across the network socket.\n- `columnSplitLength(terminal, size.getColumns(), ...)`: called multiple times,\n  each processing all characters against the 65535-wide line width.\n\nBecause WINCH only fires on *change*, the attacker alternates between two large values\n(e.g., 65535 and 65534) to trigger an unlimited stream of expensive render cycles.\nNo authentication is required; the NAWS option is negotiated before any login sequence.\n\nAffected source files:\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/TelnetIO.java` lines 856-879\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/Telnet.java` lines 140-175\n- `reader/src/main/java/org/jline/reader/impl/LineReaderImpl.java` lines 929-962, 1293-1313\n\n### PoC\n\nSend the following two raw Telnet packets in a loop to a running JLine Telnet server.\nNo login or authentication is required.\n\nPacket 1 — NAWS 65535 × 65535:\n  FF FA 1F FF FF FF FF FF F0\n  (IAC SB NAWS 0xFF 0xFF 0xFF 0xFF IAC SE)\n\nPacket 2 — NAWS 65534 × 65534:\n  FF FA 1F FF FE FF FE FF F0\n  (IAC SB NAWS 0xFF 0xFE 0xFF 0xFE IAC SE)\n\nSending these alternately at ~10 packets/second is sufficient to peg one CPU core on\nthe server. The server remains in this state for as long as the connection is open.\n\nReproduction environment:\n- JLine3 built from current master on x86_64 Linux, OpenJDK 25.0.2\n- `remote-telnet` module started with its default `Telnet` server configuration\n- Test confirmed by source-code analysis and tracing the call chain at runtime\n\n### Impact\n\n**Type**: Denial of Service (CPU exhaustion)\n**Who is affected**: Any application that embeds the JLine3 `remote-telnet` module and\nexposes its Telnet server on a network interface. The attacker requires no credentials.\nA single connection making ~10 alternating NAWS packets per second fully occupies the\nconnection-handling thread and produces continuous I/O on the server's output stream.\nBecause connection threads are re-used for the life of the session, one attacker per\navailable connection slot can deny service to all users of that slot.\n\n### Credits\nThis issue was identified by Michał Majchrowicz and Marcin Wyczechowski, members of the AFINE Team."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "GHSA-47qp-hqvx-6r3f",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "JLine3 Telnet server: Unauthenticated Remote Memory Exhaustion via Unbounded Telnet NEW-ENVIRON Variables"
+              },
+              "fullDescription": {
+                "text": "### Summary\n\nThe JLine3 Telnet server (`remote-telnet` module) does not limit the number of\nenvironment variables a client may inject via the Telnet NEW-ENVIRON option. An\nunauthenticated attacker can flood the server with a large number of unique\nvariable pairs before sending the terminating IAC SE byte, exhausting JVM heap\nmemory and causing an OutOfMemoryError (denial of service). Approximately 3–4 MB of\nnetwork traffic is sufficient to consume a 512 MB JVM heap.\n\n### Details\n\n`TelnetIO.readNEVariables()` (TelnetIO.java:1127-1180) processes incoming NEW-ENVIRON\nvariable pairs in a loop and stores each pair in a `HashMap` held by `ConnectionData`:\n\n```java\n// TelnetIO.java:1139-1178\nboolean cont = true;\nif (i == NE_VAR || i == NE_USERVAR) {\n    do {\n        switch (readNEVariableName(sbuf)) {\n            case NE_VAR_OK:\n                TelnetIO.this.connectionData.getEnvironment().put(str, sbuf.toString());\n                // ← no per-connection count limit\n                break;\n            case NE_VAR_UNDEFINED:\n                break; // cont remains true, loop continues\n        }\n    } while (cont);  // cont is never set to false; only exits via return\n}\n```\n\nThe variable accumulator map is a plain `HashMap` initialized with capacity 20 and\n**no maximum size**:\n\n```java\n// ConnectionData.java:98\nenvironment = new HashMap\u003cString, String\u003e(20);\n```\n\nPer-variable limits exist (name: max 50 chars, value: max 1000 chars), but there is no\ncap on the *count* of variables. Each map entry occupies approximately 2 KB of heap\n(String headers + `Map.Entry` + backing char arrays). On a JVM with a 512 MB heap,\napproximately 250,000 unique entries trigger an `OutOfMemoryError`.\n\nNetwork cost: using sequential 1-byte names (e.g., `\\x01`, `\\x02`, ...) and 1-byte\nvalues, each variable pair requires roughly 13 protocol bytes. Sending 250,000 pairs\nrequires only ~3.25 MB of network traffic — feasible in seconds over any reasonable\nnetwork connection.\n\nNo authentication is required. NEW-ENVIRON negotiation occurs before login.\n\nAffected source files:\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/TelnetIO.java` lines 1127-1180\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/ConnectionData.java` line 98\n\n### PoC\n\nConnect to the JLine3 Telnet server and, after completing WILL/DO option negotiation,\nsend a NEW-ENVIRON SEND subneg followed by a single large IS subneg containing\nthousands of unique variable pairs before the final IAC SE.\n\nProtocol structure (no authentication required):\n1. Standard Telnet option negotiation (IAC DO NEW-ENVIRON, IAC WILL NEW-ENVIRON)\n2. Server sends IAC SB NEW-ENVIRON SEND IAC SE\n3. Client responds with: IAC SB NEW-ENVIRON IS\n     [NE_VAR 0x01 NE_VALUE 0x01]  ← variable pair 1\n     [NE_VAR 0x02 NE_VALUE 0x01]  ← variable pair 2\n     ... repeated N times ...\n     IAC SE                        ← only sent after N pairs\n\nEach iteration adds one entry to the per-connection environment map. The connection\nthread blocks reading from the socket while accumulating pairs, so the attacker\ncontrols the timing of the OOM.\n\nReproduction environment:\n- JLine3 built from current master on x86_64 Linux, OpenJDK 25.0.2\n- `remote-telnet` module started with its default configuration\n- Confirmed by source-code analysis; loop exit condition and missing count guard\n  verified by inspection of `readNEVariables()` and `ConnectionData` constructor\n\n### Impact\n\n**Type**: Denial of Service (heap memory exhaustion / OutOfMemoryError)\n**Who is affected**: Any application embedding the JLine3 `remote-telnet` module and\nexposing its Telnet server. No credentials are required. A single connection can exhaust\nthe entire JVM heap, crashing the host process or triggering JVM out-of-memory\nhandling that impacts all users sharing that JVM instance.\n\n### Credits \n\nThis issue was identified by Michał Majchrowicz and Marcin Wyczechowski, members of the AFINE Team."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-47qp-hqvx-6r3f",
+              "help": {
+                "text": "Vulnerability GHSA-47qp-hqvx-6r3f\nSeverity: HIGH\nPackage: org.jline:jline-remote-telnet\nFixed Version: 4.2.1\nLink: [GHSA-47qp-hqvx-6r3f](https://github.com/advisories/GHSA-47qp-hqvx-6r3f)\n### Summary\n\nThe JLine3 Telnet server (`remote-telnet` module) does not limit the number of\nenvironment variables a client may inject via the Telnet NEW-ENVIRON option. An\nunauthenticated attacker can flood the server with a large number of unique\nvariable pairs before sending the terminating IAC SE byte, exhausting JVM heap\nmemory and causing an OutOfMemoryError (denial of service). Approximately 3–4 MB of\nnetwork traffic is sufficient to consume a 512 MB JVM heap.\n\n### Details\n\n`TelnetIO.readNEVariables()` (TelnetIO.java:1127-1180) processes incoming NEW-ENVIRON\nvariable pairs in a loop and stores each pair in a `HashMap` held by `ConnectionData`:\n\n```java\n// TelnetIO.java:1139-1178\nboolean cont = true;\nif (i == NE_VAR || i == NE_USERVAR) {\n    do {\n        switch (readNEVariableName(sbuf)) {\n            case NE_VAR_OK:\n                TelnetIO.this.connectionData.getEnvironment().put(str, sbuf.toString());\n                // ← no per-connection count limit\n                break;\n            case NE_VAR_UNDEFINED:\n                break; // cont remains true, loop continues\n        }\n    } while (cont);  // cont is never set to false; only exits via return\n}\n```\n\nThe variable accumulator map is a plain `HashMap` initialized with capacity 20 and\n**no maximum size**:\n\n```java\n// ConnectionData.java:98\nenvironment = new HashMap\u003cString, String\u003e(20);\n```\n\nPer-variable limits exist (name: max 50 chars, value: max 1000 chars), but there is no\ncap on the *count* of variables. Each map entry occupies approximately 2 KB of heap\n(String headers + `Map.Entry` + backing char arrays). On a JVM with a 512 MB heap,\napproximately 250,000 unique entries trigger an `OutOfMemoryError`.\n\nNetwork cost: using sequential 1-byte names (e.g., `\\x01`, `\\x02`, ...) and 1-byte\nvalues, each variable pair requires roughly 13 protocol bytes. Sending 250,000 pairs\nrequires only ~3.25 MB of network traffic — feasible in seconds over any reasonable\nnetwork connection.\n\nNo authentication is required. NEW-ENVIRON negotiation occurs before login.\n\nAffected source files:\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/TelnetIO.java` lines 1127-1180\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/ConnectionData.java` line 98\n\n### PoC\n\nConnect to the JLine3 Telnet server and, after completing WILL/DO option negotiation,\nsend a NEW-ENVIRON SEND subneg followed by a single large IS subneg containing\nthousands of unique variable pairs before the final IAC SE.\n\nProtocol structure (no authentication required):\n1. Standard Telnet option negotiation (IAC DO NEW-ENVIRON, IAC WILL NEW-ENVIRON)\n2. Server sends IAC SB NEW-ENVIRON SEND IAC SE\n3. Client responds with: IAC SB NEW-ENVIRON IS\n     [NE_VAR 0x01 NE_VALUE 0x01]  ← variable pair 1\n     [NE_VAR 0x02 NE_VALUE 0x01]  ← variable pair 2\n     ... repeated N times ...\n     IAC SE                        ← only sent after N pairs\n\nEach iteration adds one entry to the per-connection environment map. The connection\nthread blocks reading from the socket while accumulating pairs, so the attacker\ncontrols the timing of the OOM.\n\nReproduction environment:\n- JLine3 built from current master on x86_64 Linux, OpenJDK 25.0.2\n- `remote-telnet` module started with its default configuration\n- Confirmed by source-code analysis; loop exit condition and missing count guard\n  verified by inspection of `readNEVariables()` and `ConnectionData` constructor\n\n### Impact\n\n**Type**: Denial of Service (heap memory exhaustion / OutOfMemoryError)\n**Who is affected**: Any application embedding the JLine3 `remote-telnet` module and\nexposing its Telnet server. No credentials are required. A single connection can exhaust\nthe entire JVM heap, crashing the host process or triggering JVM out-of-memory\nhandling that impacts all users sharing that JVM instance.\n\n### Credits \n\nThis issue was identified by Michał Majchrowicz and Marcin Wyczechowski, members of the AFINE Team.",
+                "markdown": "**Vulnerability GHSA-47qp-hqvx-6r3f**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|org.jline:jline-remote-telnet|4.2.1|[GHSA-47qp-hqvx-6r3f](https://github.com/advisories/GHSA-47qp-hqvx-6r3f)|\n\n### Summary\n\nThe JLine3 Telnet server (`remote-telnet` module) does not limit the number of\nenvironment variables a client may inject via the Telnet NEW-ENVIRON option. An\nunauthenticated attacker can flood the server with a large number of unique\nvariable pairs before sending the terminating IAC SE byte, exhausting JVM heap\nmemory and causing an OutOfMemoryError (denial of service). Approximately 3–4 MB of\nnetwork traffic is sufficient to consume a 512 MB JVM heap.\n\n### Details\n\n`TelnetIO.readNEVariables()` (TelnetIO.java:1127-1180) processes incoming NEW-ENVIRON\nvariable pairs in a loop and stores each pair in a `HashMap` held by `ConnectionData`:\n\n```java\n// TelnetIO.java:1139-1178\nboolean cont = true;\nif (i == NE_VAR || i == NE_USERVAR) {\n    do {\n        switch (readNEVariableName(sbuf)) {\n            case NE_VAR_OK:\n                TelnetIO.this.connectionData.getEnvironment().put(str, sbuf.toString());\n                // ← no per-connection count limit\n                break;\n            case NE_VAR_UNDEFINED:\n                break; // cont remains true, loop continues\n        }\n    } while (cont);  // cont is never set to false; only exits via return\n}\n```\n\nThe variable accumulator map is a plain `HashMap` initialized with capacity 20 and\n**no maximum size**:\n\n```java\n// ConnectionData.java:98\nenvironment = new HashMap\u003cString, String\u003e(20);\n```\n\nPer-variable limits exist (name: max 50 chars, value: max 1000 chars), but there is no\ncap on the *count* of variables. Each map entry occupies approximately 2 KB of heap\n(String headers + `Map.Entry` + backing char arrays). On a JVM with a 512 MB heap,\napproximately 250,000 unique entries trigger an `OutOfMemoryError`.\n\nNetwork cost: using sequential 1-byte names (e.g., `\\x01`, `\\x02`, ...) and 1-byte\nvalues, each variable pair requires roughly 13 protocol bytes. Sending 250,000 pairs\nrequires only ~3.25 MB of network traffic — feasible in seconds over any reasonable\nnetwork connection.\n\nNo authentication is required. NEW-ENVIRON negotiation occurs before login.\n\nAffected source files:\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/TelnetIO.java` lines 1127-1180\n- `remote-telnet/src/main/java/org/jline/builtins/telnet/ConnectionData.java` line 98\n\n### PoC\n\nConnect to the JLine3 Telnet server and, after completing WILL/DO option negotiation,\nsend a NEW-ENVIRON SEND subneg followed by a single large IS subneg containing\nthousands of unique variable pairs before the final IAC SE.\n\nProtocol structure (no authentication required):\n1. Standard Telnet option negotiation (IAC DO NEW-ENVIRON, IAC WILL NEW-ENVIRON)\n2. Server sends IAC SB NEW-ENVIRON SEND IAC SE\n3. Client responds with: IAC SB NEW-ENVIRON IS\n     [NE_VAR 0x01 NE_VALUE 0x01]  ← variable pair 1\n     [NE_VAR 0x02 NE_VALUE 0x01]  ← variable pair 2\n     ... repeated N times ...\n     IAC SE                        ← only sent after N pairs\n\nEach iteration adds one entry to the per-connection environment map. The connection\nthread blocks reading from the socket while accumulating pairs, so the attacker\ncontrols the timing of the OOM.\n\nReproduction environment:\n- JLine3 built from current master on x86_64 Linux, OpenJDK 25.0.2\n- `remote-telnet` module started with its default configuration\n- Confirmed by source-code analysis; loop exit condition and missing count guard\n  verified by inspection of `readNEVariables()` and `ConnectionData` constructor\n\n### Impact\n\n**Type**: Denial of Service (heap memory exhaustion / OutOfMemoryError)\n**Who is affected**: Any application embedding the JLine3 `remote-telnet` module and\nexposing its Telnet server. No credentials are required. A single connection can exhaust\nthe entire JVM heap, crashing the host process or triggering JVM out-of-memory\nhandling that impacts all users sharing that JVM instance.\n\n### Credits \n\nThis issue was identified by Michał Majchrowicz and Marcin Wyczechowski, members of the AFINE Team."
+              },
+              "properties": {
+                "cvssv3_baseScore": 7.5,
+                "cvssv3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            }
+          ],
+          "version": "0.71.2"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "GHSA-72hv-8253-57qq",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-core\nInstalled Version: 2.19.2\nVulnerability GHSA-72hv-8253-57qq\nSeverity: MEDIUM\nFixed Version: 2.21.1, 2.18.6\nLink: [GHSA-72hv-8253-57qq](https://github.com/advisories/GHSA-72hv-8253-57qq)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jackson-core-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jackson-core-2.19.2.jar: com.fasterxml.jackson.core:jackson-core@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-72hv-8253-57qq",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-core\nInstalled Version: 2.19.2\nVulnerability GHSA-72hv-8253-57qq\nSeverity: MEDIUM\nFixed Version: 2.21.1, 2.18.6\nLink: [GHSA-72hv-8253-57qq](https://github.com/advisories/GHSA-72hv-8253-57qq)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-core-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-core-2.19.2.jar: com.fasterxml.jackson.core:jackson-core@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54512",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.19.2\nVulnerability CVE-2026-54512\nSeverity: HIGH\nFixed Version: 2.18.8, 3.1.4, 2.21.4\nLink: [CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jackson-databind-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jackson-databind-2.19.2.jar: com.fasterxml.jackson.core:jackson-databind@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54512",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.19.2\nVulnerability CVE-2026-54512\nSeverity: HIGH\nFixed Version: 2.18.8, 3.1.4, 2.21.4\nLink: [CVE-2026-54512](https://avd.aquasec.com/nvd/cve-2026-54512)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-databind-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-databind-2.19.2.jar: com.fasterxml.jackson.core:jackson-databind@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54513",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.19.2\nVulnerability CVE-2026-54513\nSeverity: HIGH\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jackson-databind-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jackson-databind-2.19.2.jar: com.fasterxml.jackson.core:jackson-databind@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54513",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.19.2\nVulnerability CVE-2026-54513\nSeverity: HIGH\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54513](https://avd.aquasec.com/nvd/cve-2026-54513)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-databind-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-databind-2.19.2.jar: com.fasterxml.jackson.core:jackson-databind@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54514",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.19.2\nVulnerability CVE-2026-54514\nSeverity: MEDIUM\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jackson-databind-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jackson-databind-2.19.2.jar: com.fasterxml.jackson.core:jackson-databind@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54514",
+          "ruleIndex": 3,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.19.2\nVulnerability CVE-2026-54514\nSeverity: MEDIUM\nFixed Version: 2.18.8, 2.21.4, 3.1.4\nLink: [CVE-2026-54514](https://avd.aquasec.com/nvd/cve-2026-54514)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-databind-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-databind-2.19.2.jar: com.fasterxml.jackson.core:jackson-databind@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54515",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.19.2\nVulnerability CVE-2026-54515\nSeverity: MEDIUM\nFixed Version: 3.1.4, 2.18.9, 2.21.5, 2.22.1\nLink: [CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jackson-databind-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jackson-databind-2.19.2.jar: com.fasterxml.jackson.core:jackson-databind@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-54515",
+          "ruleIndex": 4,
+          "level": "warning",
+          "message": {
+            "text": "Package: com.fasterxml.jackson.core:jackson-databind\nInstalled Version: 2.19.2\nVulnerability CVE-2026-54515\nSeverity: MEDIUM\nFixed Version: 3.1.4, 2.18.9, 2.21.5, 2.22.1\nLink: [CVE-2026-54515](https://avd.aquasec.com/nvd/cve-2026-54515)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-databind-2.19.2.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jackson-databind-2.19.2.jar: com.fasterxml.jackson.core:jackson-databind@2.19.2"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34479",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-1.2-api\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34479\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/log4j-1.2-api-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/log4j-1.2-api-2.25.3.jar: org.apache.logging.log4j:log4j-1.2-api@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34479",
+          "ruleIndex": 5,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-1.2-api\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34479\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34479](https://avd.aquasec.com/nvd/cve-2026-34479)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/log4j-1.2-api-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/log4j-1.2-api-2.25.3.jar: org.apache.logging.log4j:log4j-1.2-api@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34477",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34477\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34477",
+          "ruleIndex": 6,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34477\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34477](https://avd.aquasec.com/nvd/cve-2026-34477)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34478",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34478\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34478",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34478\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34478](https://avd.aquasec.com/nvd/cve-2026-34478)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34480",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34480\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-34480",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Package: org.apache.logging.log4j:log4j-core\nInstalled Version: 2.25.3\nVulnerability CVE-2026-34480\nSeverity: MEDIUM\nFixed Version: 2.25.4\nLink: [CVE-2026-34480](https://avd.aquasec.com/nvd/cve-2026-34480)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/log4j-core-2.25.3.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/log4j-core-2.25.3.jar: org.apache.logging.log4j:log4j-core@2.25.3"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-67030",
+          "ruleIndex": 9,
+          "level": "error",
+          "message": {
+            "text": "Package: org.codehaus.plexus:plexus-utils\nInstalled Version: 3.5.1\nVulnerability CVE-2025-67030\nSeverity: HIGH\nFixed Version: 4.0.3, 3.6.1\nLink: [CVE-2025-67030](https://avd.aquasec.com/nvd/cve-2025-67030)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/plexus-utils-3.5.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/plexus-utils-3.5.1.jar: org.codehaus.plexus:plexus-utils@3.5.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-67030",
+          "ruleIndex": 9,
+          "level": "error",
+          "message": {
+            "text": "Package: org.codehaus.plexus:plexus-utils\nInstalled Version: 3.5.1\nVulnerability CVE-2025-67030\nSeverity: HIGH\nFixed Version: 4.0.3, 3.6.1\nLink: [CVE-2025-67030](https://avd.aquasec.com/nvd/cve-2025-67030)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/plexus-utils-3.5.1.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/plexus-utils-3.5.1.jar: org.codehaus.plexus:plexus-utils@3.5.1"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-2332",
+          "ruleIndex": 10,
+          "level": "error",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 12.0.22\nVulnerability CVE-2026-2332\nSeverity: HIGH\nFixed Version: 12.1.7, 12.0.33\nLink: [CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jetty-http-12.0.22.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jetty-http-12.0.22.jar: org.eclipse.jetty:jetty-http@12.0.22"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-2332",
+          "ruleIndex": 10,
+          "level": "error",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 12.0.22\nVulnerability CVE-2026-2332\nSeverity: HIGH\nFixed Version: 12.1.7, 12.0.33\nLink: [CVE-2026-2332](https://avd.aquasec.com/nvd/cve-2026-2332)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jetty-http-12.0.22.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jetty-http-12.0.22.jar: org.eclipse.jetty:jetty-http@12.0.22"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-11143",
+          "ruleIndex": 11,
+          "level": "note",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 12.0.22\nVulnerability CVE-2025-11143\nSeverity: LOW\nFixed Version: 12.0.31, 12.1.5\nLink: [CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jetty-http-12.0.22.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jetty-http-12.0.22.jar: org.eclipse.jetty:jetty-http@12.0.22"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2025-11143",
+          "ruleIndex": 11,
+          "level": "note",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-http\nInstalled Version: 12.0.22\nVulnerability CVE-2025-11143\nSeverity: LOW\nFixed Version: 12.0.31, 12.1.5\nLink: [CVE-2025-11143](https://avd.aquasec.com/nvd/cve-2025-11143)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jetty-http-12.0.22.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jetty-http-12.0.22.jar: org.eclipse.jetty:jetty-http@12.0.22"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-1605",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-server\nInstalled Version: 12.0.22\nVulnerability CVE-2026-1605\nSeverity: HIGH\nFixed Version: 12.1.6, 12.0.32\nLink: [CVE-2026-1605](https://avd.aquasec.com/nvd/cve-2026-1605)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jetty-server-12.0.22.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jetty-server-12.0.22.jar: org.eclipse.jetty:jetty-server@12.0.22"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2026-1605",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "Package: org.eclipse.jetty:jetty-server\nInstalled Version: 12.0.22\nVulnerability CVE-2026-1605\nSeverity: HIGH\nFixed Version: 12.1.6, 12.0.32\nLink: [CVE-2026-1605](https://avd.aquasec.com/nvd/cve-2026-1605)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jetty-server-12.0.22.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jetty-server-12.0.22.jar: org.eclipse.jetty:jetty-server@12.0.22"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2r2c-cx56-8933",
+          "ruleIndex": 13,
+          "level": "error",
+          "message": {
+            "text": "Package: org.jline:jline-remote-telnet\nInstalled Version: 3.30.4\nVulnerability GHSA-2r2c-cx56-8933\nSeverity: HIGH\nFixed Version: 4.2.1\nLink: [GHSA-2r2c-cx56-8933](https://github.com/advisories/GHSA-2r2c-cx56-8933)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jline-3.30.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jline-3.30.4.jar: org.jline:jline-remote-telnet@3.30.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-2r2c-cx56-8933",
+          "ruleIndex": 13,
+          "level": "error",
+          "message": {
+            "text": "Package: org.jline:jline-remote-telnet\nInstalled Version: 3.30.4\nVulnerability GHSA-2r2c-cx56-8933\nSeverity: HIGH\nFixed Version: 4.2.1\nLink: [GHSA-2r2c-cx56-8933](https://github.com/advisories/GHSA-2r2c-cx56-8933)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jline-3.30.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jline-3.30.4.jar: org.jline:jline-remote-telnet@3.30.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-47qp-hqvx-6r3f",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: org.jline:jline-remote-telnet\nInstalled Version: 3.30.4\nVulnerability GHSA-47qp-hqvx-6r3f\nSeverity: HIGH\nFixed Version: 4.2.1\nLink: [GHSA-47qp-hqvx-6r3f](https://github.com/advisories/GHSA-47qp-hqvx-6r3f)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "libs/jline-3.30.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "libs/jline-3.30.4.jar: org.jline:jline-remote-telnet@3.30.4"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "GHSA-47qp-hqvx-6r3f",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Package: org.jline:jline-remote-telnet\nInstalled Version: 3.30.4\nVulnerability GHSA-47qp-hqvx-6r3f\nSeverity: HIGH\nFixed Version: 4.2.1\nLink: [GHSA-47qp-hqvx-6r3f](https://github.com/advisories/GHSA-47qp-hqvx-6r3f)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jline-3.30.4.jar",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "nix/store/vk9z7ddqy92c4kvap0lmxx26sqfhvmf0-apache-kafka-2.13-4.2.0/libs/jline-3.30.4.jar: org.jline:jline-remote-telnet@3.30.4"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "imageID": "sha256:f5dd955404a99f1946828ba288eb30c1592f9c5733bfaf319a49bf6aaca107c6",
+        "imageName": "ghcr.io/nix-containers/images/kafka:latest",
+        "repoDigests": [
+          "ghcr.io/nix-containers/images/kafka@sha256:5d0137c1a325191b58dcc1e486a764cc3675a5bd1d7d1d40dd3e8d75423c279c"
+        ],
+        "repoTags": [
+          "ghcr.io/nix-containers/images/kafka:latest"
+        ]
+      }
+    }
+  ]
+}
