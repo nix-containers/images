@@ -9,6 +9,12 @@ on:
   schedule:
     - cron: '23 */3 * * *'   # every 3 hours
   workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Runner for the build + publish jobs (ubuntu-latest default; or a self-hosted label like nixtop).'
+        required: false
+        default: 'ubuntu-latest'
+        type: string
 
 permissions:
   contents: read
@@ -21,7 +27,7 @@ concurrency:
 
 jobs:
   build-website:
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -374,7 +380,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runner || 'ubuntu-latest' }}
     needs: build-website
     steps:
       - name: Deploy to GitHub Pages
