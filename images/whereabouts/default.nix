@@ -1,29 +1,55 @@
 { mkImage, pkgs, lib, ... }:
 
-# whereabouts — built from the upstream release artifact (#618).
+# whereabouts — IPAM CNI plugin for Kubernetes multus setups
+# https://github.com/k8snetworkplumbingwg/whereabouts
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild. Also bumps 0.6.1 → 0.9.4
+# (latest release); the 0.6.1 line vendored a large stale x/net + x/crypto
+# tree responsible for the 8-critical / 60-high CVE count.
 let
-  version = "0.6.1";
-  src = pkgs.fetchurl { url = "https://github.com/k8snetworkplumbingwg/whereabouts/releases/download/v0.6.1/whereabouts-amd64"; hash = "sha256-vcc0dofhWa9n+pTPpM+6K4CGxSNcCx2lCaxJ7yyrw+8="; };
-  drv = pkgs.runCommand "whereabouts-0.6.1" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
-    mkdir -p $out/bin extract
-    cp ${src} extract/whereabouts
-    chmod -R +x extract 2>/dev/null || true
-    f=$(find extract -type f -name 'whereabouts' | head -1)
-    [ -z "$f" ] && f=$(find extract -type f -name 'whereabouts*' | head -1)
-    [ -z "$f" ] && f=$(find extract -type f -perm -u+x | head -1)
-    [ -z "$f" ] && f=$(find extract -type f | head -1)
-    install -m755 "$f" $out/bin/whereabouts
-  '';
+  version = "0.9.4";
+
+  drv = pkgs.buildGoModule {
+    pname = "whereabouts";
+    inherit version;
+
+    src = pkgs.fetchFromGitHub {
+      owner = "k8snetworkplumbingwg";
+      repo = "whereabouts";
+      rev = "v${version}";
+      hash = "sha256-Sb3Wr1HYxfnvoIwNqMW8gaDJE+8j9f8GANcBHne8W0Q=";
+    };
+
+    # Upstream's vendor/modules.txt is out of sync with go.mod — refetch
+    # via the module proxy instead of trusting the in-tree vendor.
+    proxyVendor = true;
+    vendorHash = "sha256-tkjizI9j9BcxDUsfu457Q5DnHkLABxbGlvBc2eNIpCs=";
+
+    subPackages = [ "cmd" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
+
+    # cmd/ builds as `cmd` since main.go is at cmd/whereabouts.go with
+    # `package main`. Rename to `whereabouts` to match the entrypoint.
+    postInstall = ''
+      if [ -e $out/bin/cmd ]; then
+        mv $out/bin/cmd $out/bin/whereabouts
+      fi
+    '';
+  };
 in
 mkImage {
-  drv = drv;
+  inherit drv;
   name = "whereabouts";
-  tag = "0.6.1";
+  tag = "v${version}";
   entrypoint = [ "${drv}/bin/whereabouts" ];
   cmd = [];
   extraPkgs = with pkgs; [ cacert tzdata ];
   labels = {
-    "org.opencontainers.image.version" = "0.6.1";
-    "org.opencontainers.image.description" = "whereabouts (built from upstream release v0.6.1)";
+    "org.opencontainers.image.version" = version;
+    "org.opencontainers.image.description" = "whereabouts IPAM CNI plugin (built from source)";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
