@@ -1,0 +1,74 @@
+name: Republish gap (real build + push → public + linked)
+
+# Mirrors build-shard, but feeds the EXACT gap list (scripts/scratch-init-names.txt)
+# into the real build-and-push pipeline (nix2container copyTo via GITHUB_TOKEN →
+# the ONLY thing that links packages to the repo). Chunked to stay under the
+# 256-job matrix cap. Dispatch one chunk at a time (chunk=0,1,2,...).
+
+on:
+  workflow_dispatch:
+    inputs:
+      chunk:
+        description: '0-based chunk index (256 images per chunk).'
+        required: true
+        default: '0'
+        type: string
+      runner:
+        description: 'Runner (nixtop self-hosted default).'
+        required: false
+        default: 'nixtop'
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: republish-gap-${{ github.event.inputs.chunk }}
+  cancel-in-progress: true
+
+jobs:
+  matrix:
+    runs-on: ${{ github.event.inputs.runner || 'nixtop' }}
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+      count: ${{ steps.set.outputs.count }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build chunk matrix from the gap list
+        id: set
+        env:
+          CHUNK: ${{ github.event.inputs.chunk }}
+        run: |
+          set -euo pipefail
+          SIZE=256
+          start=$(( CHUNK * SIZE )); end=$(( start + SIZE ))
+          # only names that still have a buildable dir (skip removed + upstream-refs)
+          mapfile -t ALL < <(
+            while read -r n; do
+              [ -z "$n" ] && continue
+              [ -f "images/$n/default.nix" ] || continue
+              grep -q 'io\.nix-containers\.upstream-image' "images/$n/default.nix" 2>/dev/null && continue
+              echo "$n"
+            done < scripts/scratch-init-names.txt
+          )
+          NAMES=("${ALL[@]:$start:$SIZE}")
+          COUNT=${#NAMES[@]}
+          echo "chunk $CHUNK: images ${start}..${end} → ${COUNT} buildable"
+          echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
+          if [ "$COUNT" -eq 0 ]; then echo 'matrix={"include":[]}' >> "$GITHUB_OUTPUT"; exit 0; fi
+          MATRIX=$(printf '%s\n' "${NAMES[@]}" | jq -R '{name: ., path: ("images/" + .)}' | jq -s '{include: .}' -c)
+          echo "matrix=${MATRIX}" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: matrix
+    if: needs.matrix.outputs.count != '0'
+    uses: ./.github/workflows/build-and-push.yml
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    with:
+      matrix: ${{ needs.matrix.outputs.matrix }}
+      runner: ${{ github.event.inputs.runner || 'nixtop' }}
+    secrets: inherit
