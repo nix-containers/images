@@ -1120,6 +1120,16 @@ def main():
         (out / "auto-updates").mkdir(parents=True, exist_ok=True)
         (out / "auto-updates" / "index.html").write_text(rendered_auto_updates)
 
+    # /image-builder/ page — client-side composer that generates a `nix build`
+    # command from a base package + optional layers. Preview feature; the
+    # curated base-package list lives inside static/image-builder.js.
+    image_builder_template_path = Path(args.templates, "image-builder.html")
+    if image_builder_template_path.exists():
+        image_builder_template = image_builder_template_path.read_text()
+        rendered_image_builder = fill_template(image_builder_template, {"BASE": base})
+        (out / "image-builder").mkdir(parents=True, exist_ok=True)
+        (out / "image-builder" / "index.html").write_text(rendered_image_builder)
+
     # Charts pages — one index + one per-chart detail page. Feeds the
     # "Charts" nav link and the clickable chips on per-image pages
     # showing which nix-containers charts consume each image.
