@@ -286,16 +286,26 @@ jobs:
       - name: Install Trivy + Grype + Syft
         run: |
           set -euo pipefail
-          # Trivy via apt
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq wget apt-transport-https gnupg lsb-release
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add - 2>/dev/null
-          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list >/dev/null
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq trivy
-          # Grype + Syft via official installers
-          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin >/dev/null
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin >/dev/null
+          if command -v nix >/dev/null 2>&1; then
+            # Self-hosted / NixOS (nixtop) has no apt — provision the scanners
+            # from nixpkgs and add each to PATH for the subsequent scan steps.
+            for t in trivy grype syft; do
+              p=$(nix build --no-link --print-out-paths \
+                    --extra-experimental-features 'nix-command flakes' "nixpkgs#$t")
+              echo "$p/bin" >> "$GITHUB_PATH"
+              export PATH="$p/bin:$PATH"
+            done
+          else
+            # Ubuntu: apt for Trivy + official installers for Grype/Syft.
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq wget apt-transport-https gnupg lsb-release
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add - 2>/dev/null
+            echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list >/dev/null
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq trivy
+            curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin >/dev/null
+            curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin >/dev/null
+          fi
           trivy --version | head -1
           grype version | head -1
           syft version | head -1
