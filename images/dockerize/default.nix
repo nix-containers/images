@@ -2,29 +2,31 @@
 
 # dockerize - utility to simplify running apps in containers
 # https://github.com/jwilder/dockerize
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "0.13.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "dockerize";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/jwilder/dockerize/releases/download/v${version}/dockerize-linux-amd64-v${version}.tar.gz";
-      hash = "sha256-P5sBzB6w3vgR/Z3psvrvfrMRW1F4W6aQvr8UehXkzao=";
+    src = pkgs.fetchFromGitHub {
+      owner = "jwilder";
+      repo = "dockerize";
+      rev = "v${version}";
+      hash = "sha256-f/9nE5qKL6g/hHRYLS8kwCWF9ULWlyAWGxx7e/mxTcw=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-ehelUqhUoJS5GsZi4pIY3BP/Za02UrdKkomzNDv8FJw=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 dockerize $out/bin/dockerize
-      runHook postInstall
-    '';
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
     meta = with lib; {
       description = "Utility to simplify running applications in Docker containers";
@@ -42,6 +44,6 @@ in mkImage {
   labels = {
     "org.opencontainers.image.title" = "dockerize";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
