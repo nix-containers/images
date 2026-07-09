@@ -2,29 +2,39 @@
 
 # Open Policy Agent (OPA) - general-purpose policy engine
 # https://github.com/open-policy-agent/opa
-# opa-fips packages the upstream opa linux/amd64 binary.
+# -fips variant packages the upstream opa binary (no FIPS claim made).
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 
 let
   version = "1.18.1";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "opa-fips";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/open-policy-agent/opa/releases/download/v${version}/opa_linux_amd64";
-      sha256 = "1vga16l04mnn64n0nqjl6sb86y8vzkf3kmq0h6x0gp1zzsiqbaqz";
+    src = pkgs.fetchFromGitHub {
+      owner = "open-policy-agent";
+      repo = "opa";
+      rev = "v${version}";
+      hash = "sha256-CBBshLgx+v9uFVr57jksaYSIID5GQGYthd3j61bpcXU=";
     };
 
-    dontUnpack = true;
+    proxyVendor = true;
+    vendorHash = "sha256-7HFxGKSzDB7LlvkccHVzgwIpp/fKuMrKJuDlVtrNvb0=";
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    subPackages = [ "." ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
 
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 $src $out/bin/opa
-      runHook postInstall
+    postInstall = ''
+      if [ -e $out/bin/opa ]; then
+        :
+      elif [ -e $out/bin/open-policy-agent ]; then
+        mv $out/bin/open-policy-agent $out/bin/opa
+      fi
     '';
   };
 in mkImage {
@@ -43,6 +53,6 @@ in mkImage {
     "org.opencontainers.image.title" = "opa-fips";
     "org.opencontainers.image.description" = "Open Policy Agent policy engine";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
