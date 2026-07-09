@@ -2,29 +2,30 @@
 
 # pulumi-language-yaml - Pulumi YAML language host plugin
 # https://github.com/pulumi/pulumi-yaml
-
+#
+# Built from source with current nixpkgs Go so Go-stdlib CVEs from the
+# upstream prebuilt binary clear at each rebuild.
 let
   version = "1.37.0";
 
-  drv = pkgs.stdenv.mkDerivation {
+  drv = pkgs.buildGoModule {
     pname = "pulumi-language-yaml";
     inherit version;
 
-    src = pkgs.fetchurl {
-      url = "https://github.com/pulumi/pulumi-yaml/releases/download/v${version}/pulumi-language-yaml-v${version}-linux-amd64.tar.gz";
-      hash = "sha256-KTJLJvsAN6SkkJPudUN5wqO/UU+mgVegmL7URmuvjp4=";
+    src = pkgs.fetchFromGitHub {
+      owner = "pulumi";
+      repo = "pulumi-yaml";
+      rev = "v${version}";
+      hash = "sha256-M81TporoBWcu6+yzLgZivKxOhiImYURlFWNo5f/5IF0=";
     };
 
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+    proxyVendor = true;
+    vendorHash = "sha256-b6qZyCvk3jAJMk+1Zn/h0cTjaWN3knUFOlzTbPsuyiI=";
 
-    sourceRoot = ".";
-
-    installPhase = ''
-      runHook preInstall
-      install -Dm755 pulumi-language-yaml $out/bin/pulumi-language-yaml
-      runHook postInstall
-    '';
+    subPackages = [ "cmd/pulumi-language-yaml" ];
+    ldflags = [ "-s" "-w" ];
+    env.CGO_ENABLED = 0;
+    doCheck = false;
   };
 in mkImage {
   inherit drv;
@@ -36,6 +37,6 @@ in mkImage {
     "org.opencontainers.image.title" = "pulumi-language-yaml";
     "org.opencontainers.image.description" = "Pulumi YAML language host plugin";
     "org.opencontainers.image.version" = version;
-    "io.nix-containers.source" = "upstream-binary";
+    "io.nix-containers.source" = "upstream-source";
   };
 }
