@@ -1,0 +1,60 @@
+name: Scratch-init packages (public + linked placeholders)
+
+# Fast path to get every catalog package CREATED, public, and linked WITHOUT
+# waiting for full builds: a CI job (GITHUB_TOKEN → auto-links, like the real
+# builds) server-side-copies a tiny placeholder (our own busybox) to each
+# package name. Real image content overwrites these later. Runs on a chosen
+# runner (nixtop by default; ubuntu-latest when GitHub capacity exists).
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Runner (nixtop self-hosted default, or ubuntu-latest).'
+        required: false
+        default: 'nixtop'
+        type: string
+      names:
+        description: 'Comma-separated names, or "gap" to use scripts/scratch-init-names.txt.'
+        required: false
+        default: 'gap'
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: scratch-init
+  cancel-in-progress: false
+
+jobs:
+  init:
+    runs-on: ${{ github.event.inputs.runner || 'nixtop' }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Push scratch placeholders (creates public+linked packages)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          mkdir -p ~/.docker
+          auth=$(printf '%s:%s' '${{ github.actor }}' "$GH_TOKEN" | base64 -w0)
+          printf '{"auths":{"ghcr.io":{"auth":"%s"}}}' "$auth" > ~/.docker/config.json
+          SRC="docker://ghcr.io/nix-containers/images/busybox:latest"
+          if [ "${{ github.event.inputs.names }}" = "gap" ]; then
+            mapfile -t NAMES < scripts/scratch-init-names.txt
+          else
+            IFS=',' read -ra NAMES <<< "${{ github.event.inputs.names }}"
+          fi
+          echo "Initializing ${#NAMES[@]} packages..."
+          ok=0; fail=0
+          for n in "${NAMES[@]}"; do
+            n="${n// /}"; [ -z "$n" ] && continue
+            if skopeo copy --quiet "$SRC" "docker://ghcr.io/nix-containers/images/$n:latest" 2>/dev/null; then
+              ok=$((ok+1))
+            else
+              echo "FAIL $n"; fail=$((fail+1))
+            fi
+          done
+          echo "scratch-init done: $ok ok, $fail fail"
