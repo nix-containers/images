@@ -4,7 +4,7 @@
 # Kubernetes component
 
 let
-  version = "1.32.0";
+  version = "1.36.2";
   component = buildGoModule {
     pname = "kubernetes-event-exporter-nixchart-fips";
     inherit version;

@@ -8,7 +8,7 @@
 # Mattermost Operator manages Mattermost deployments on Kubernetes
 
 let
-  version = "1.21.0";
+  version = "1.25.7";
   mattermost-operator = buildGoModule {
     pname = "mattermost-operator";
     inherit version;
@@ -17,10 +17,10 @@ let
       owner = "mattermost";
       repo = "mattermost-operator";
       rev = "v${version}";
-      hash = "sha256-h2v1e2dyh4N28Xp0Rk5pxciv+VlKKYTHkCEWPc8tW8A=";  # TODO: Fix hash after first build
+      hash = "sha256-KjKiL2WuxdTfkho/XEqN/hK/e1GKRqOIM3aCdRO/nMg=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-6m9UCX/AlPEbBhOGSaUaIbMy6ocHal+P1KSNovHmzCQ=";  # TODO: Fix hash after first build
 
     subPackages = [ "." ];
 

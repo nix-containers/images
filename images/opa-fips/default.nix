@@ -8,7 +8,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "1.18.1";
+  version = "1.18.2";
 
   drv = pkgs.buildGoModule {
     pname = "opa-fips";
@@ -18,7 +18,7 @@ let
       owner = "open-policy-agent";
       repo = "opa";
       rev = "v${version}";
-      hash = "sha256-CBBshLgx+v9uFVr57jksaYSIID5GQGYthd3j61bpcXU=";
+      hash = "sha256-z4zLeSVDULl2uYOURD8Cmq3qj7XJxXMd/jk5CaCrbUU=";
     };
 
     proxyVendor = true;

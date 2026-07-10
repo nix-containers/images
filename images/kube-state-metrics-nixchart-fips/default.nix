@@ -4,7 +4,7 @@
 # Kubernetes component
 
 let
-  version = "1.32.0";
+  version = "1.36.2";
   component = buildGoModule {
     pname = "kube-state-metrics-nixchart-fips";
     inherit version;
