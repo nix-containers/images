@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "kyverno";
-  version = "1.18.1";
+  version = "1.18.2";
 
   src = fetchFromGitHub {
     owner = "kyverno";
     repo = "kyverno";
     rev = "v${version}";
-    hash = "sha256-zo02ABieJ+CykuqGJlnthXibgBzNGB3t3UdlKMTIkFo=";
+    hash = "sha256-vcZdrvtM9SnjR9MJOGZ892fXtsMDY7V/1gNqvZmB6To=";
   };
 
   vendorHash = null;

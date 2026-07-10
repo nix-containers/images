@@ -5,13 +5,13 @@
 
 buildGoModule rec {
   pname = "kube-rbac-proxy";
-  version = "0.22.0";
+  version = "0.22.1";
 
   src = fetchFromGitHub {
     owner = "brancz";
     repo = "kube-rbac-proxy";
     rev = "v${version}";
-    hash = "sha256-YjMD+5Le4kt4Y4+KIKK+kIw0oNURVU1l1l+mFpql8z4=";
+    hash = "sha256-+9xme8LKUpPYN9zFFcGEVMUqHhProqhScogNJI+mrow=";
   };
 
   vendorHash = "sha256-n7L7cW7Xe1TShLB60vSVI0kDgN9MJM8mRkS/08MSm9A=";
