@@ -9,7 +9,7 @@
 # Packages NOT in nixpkgs - must build from source
 
 let
-  version = "3.3.2";
+  version = "3.8.1";
   policy-reporter = buildGoModule {
     pname = "policy-reporter";
     inherit version;
@@ -18,10 +18,10 @@ let
       owner = "kyverno";
       repo = "policy-reporter";
       rev = "policy-reporter-${version}";
-      hash = "sha256-p5li2A4NKEokXjqSVGCmOpUkEfsjX0KHlmqG9WZqD00=";
+      hash = "sha256-ZtZj30q3Mzsq2F4FHRBoK90J0cHreA8wLMttfsqcr0U=";
     };
 
-    vendorHash = "sha256-N4VgV0vAkbVwsIzWN9oEETktYEdL3WIYpmrkpce237A=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-cQn/aQ9ykcYyKZijAHzuSrOyE3eQvPjnNylBIrxQsiA=";  # TODO: Fix hash after first build
 
     subPackages = [ "." ];
 

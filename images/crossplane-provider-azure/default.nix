@@ -6,7 +6,7 @@
 { mkImage, fetchFromGitHub, buildGoModule, pkgs, lib, ... }:
 
 let
-  version = "0.20.1";
+  version = "0.20.0";
   provider-azure = buildGoModule {
     pname = "provider-azure";
     inherit version;
@@ -15,7 +15,7 @@ let
       owner = "crossplane-contrib";
       repo = "provider-azure";
       rev = "v${version}";
-      hash = "sha256-qg+6pIWsRpO0mXjdzn4JtcHD97y7C2pKgnwqvBxc2IU=";  # TODO: Fix hash after first build
+      hash = "sha256-nq9ME3PrUK269QT666RbCEKdA1OuDPn405qU8SLPWYs=";  # TODO: Fix hash after first build
     };
 
     vendorHash = "sha256-orQzhW4IFOdBm1roRr/80PBQSwAJCynPHhmSkEnma6M=";  # TODO: Fix hash after first build

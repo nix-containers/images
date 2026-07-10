@@ -6,7 +6,7 @@
 #   envoy-gateway (1.6.1-r0)
 
 let
-  version = "1.6.1";
+  version = "1.8.2";
   envoyGateway = buildGoModule {
     pname = "envoy-gateway";
     inherit version;
@@ -15,10 +15,10 @@ let
       owner = "envoyproxy";
       repo = "gateway";
       rev = "v${version}";
-      hash = "sha256-ZLUC90on8HCKdO3+dbt1GVA8INfwExVW4/18EP21sMk=";
+      hash = "sha256-givYesuucfw/gumEwxpU/NTtyfZQgmGXg7u+xg9Yx0s=";
     };
 
-    vendorHash = "sha256-1EgjJW/sRWLTZ1jP2iVBtnqEK5A2ptMPdfMiOpjk6Ik=";
+    vendorHash = "sha256-TOXg5P0fG1I0weOmTdOmgQRoHs+hAYyrv9sFN9T83Hw=";
 
     subPackages = [ "cmd/envoy-gateway" ];
 
