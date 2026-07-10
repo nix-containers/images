@@ -1,7 +1,7 @@
 { mkImage, fetchFromGitHub, buildGoModule, lib, ... }:
 
 let
-  version = "5.1.0";
+  version = "6.3.0";
   csi-provisioner = buildGoModule {
     pname = "csi-provisioner";
     inherit version;
@@ -10,7 +10,7 @@ let
       owner = "kubernetes-csi";
       repo = "external-provisioner";
       rev = "v${version}";
-      hash = "sha256-NmKfRgnVj4auBZp3SRX5yb3r4clMN7gNenPaaz3ZyTY=";
+      hash = "sha256-akUg/j82I0VhSNHQ2n/OChiHwUkPvhpva329zh1Gce8=";
     };
 
     vendorHash = null;
