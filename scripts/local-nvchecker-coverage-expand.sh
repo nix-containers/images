@@ -127,12 +127,16 @@ for img in sorted(os.listdir('images')):
         skipped["already-mapped-differently"].append(img)
         continue
 
+    # TOML bare table keys allow only [A-Za-z0-9_-]. Names with `+`, `.`,
+    # or other punctuation (e.g. `mosquitto-libs++`) need quoting.
+    key_toml = key if re.fullmatch(r'[A-Za-z0-9_-]+', key) else f'"{key}"'
+
     if info["kind"] == "github":
         owner, repo = info["owner"], info["repo"].removesuffix(".git")
         m = RE_VERSION.search(info["src"])
         ver = m.group(1) if m else ""
         added_toml.append(
-            f'[{key}]\n'
+            f'[{key_toml}]\n'
             f'source = "github"\n'
             f'github = "{owner}/{repo}"\n'
             f'use_latest_release = true\n'
@@ -146,7 +150,7 @@ for img in sorted(os.listdir('images')):
         m = RE_TAG_LINE.search(info["src"])
         ver = m.group(1) if m else ""
         added_toml.append(
-            f'[{key}]\n'
+            f'[{key_toml}]\n'
             f'source = "container"\n'
             f'container = "{info["container"]}"\n'
             f'include_regex = "v?[0-9]+\\\\.[0-9]+(\\\\.[0-9]+)?"\n'
