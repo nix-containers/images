@@ -88,18 +88,21 @@ def image_source(default_nix_path):
     m = RE_UPSTREAM_LABEL.search(s)
     if m:
         # Value is "REGISTRY/OWNER/REPO:TAG" or "REGISTRY/REPO:TAG" (library image).
-        # Only DockerHub (docker.io) images are enrolled here; other registries
-        # (quay, gcr, ghcr) mostly require auth and aren't broadly pollable.
+        # nvchecker 2.20's container source supports Bearer-token auth only —
+        # that covers docker.io, quay.io, ghcr.io. registry.k8s.io uses a
+        # different scheme ("Only Bearer authentication supported" error);
+        # mcr/ecr/nvcr/gcr/gitlab-registry/elastic aren't broadly pollable.
+        POLLABLE = {"docker.io", "quay.io", "ghcr.io"}
         upstream = m.group(1)
-        if not upstream.startswith("docker.io/"):
+        registry, _, rest = upstream.partition("/")
+        if not rest or registry not in POLLABLE:
             return {"kind": "unknown", "src": s}
-        upstream = upstream[len("docker.io/"):]
-        container, _, _ = upstream.partition(":")
+        container, _, _ = rest.partition(":")
         # DockerHub's registry API rejects single-name paths ("nginx" → 401);
         # library images must be queried as "library/<name>".
-        if "/" not in container:
+        if registry == "docker.io" and "/" not in container:
             container = f"library/{container}"
-        return {"kind": "container", "container": container, "src": s}
+        return {"kind": "container", "container": container, "registry": registry, "src": s}
     return {"kind": "unknown", "src": s}
 
 added_toml = []
@@ -149,13 +152,20 @@ for img in sorted(os.listdir('images')):
         # that look like a SemVer with an optional `v` prefix.
         m = RE_TAG_LINE.search(info["src"])
         ver = m.group(1) if m else ""
-        added_toml.append(
+        stanza = (
             f'[{key_toml}]\n'
             f'source = "container"\n'
             f'container = "{info["container"]}"\n'
+        )
+        # docker.io is nvchecker's default registry — only emit `registry =`
+        # for the others so we don't clutter the diff.
+        if info["registry"] != "docker.io":
+            stanza += f'registry = "{info["registry"]}"\n'
+        stanza += (
             f'include_regex = "v?[0-9]+\\\\.[0-9]+(\\\\.[0-9]+)?"\n'
             f'prefix = "v"\n'
         )
+        added_toml.append(stanza)
         counts["container"] += 1
 
     added_mapping[key] = [img]
