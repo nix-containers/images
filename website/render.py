@@ -758,6 +758,10 @@ def main():
                     help="ISO timestamp of the last successful build-containers.yml run on main. When omitted, freshness-gates assume build is recent.")
     ap.add_argument("--charts-data", default=None,
                     help="Optional path to charts-data.json (charts/ index + per-chart pages)")
+    ap.add_argument("--clean-upstream", default=None,
+                    help="Optional path to data/clean-upstream-status.json (drives the "
+                         "golden '★ 0 CVE upstream' badge). Defaults to <repo>/data/"
+                         "clean-upstream-status.json when present.")
     args = ap.parse_args()
     base = args.base_path if args.base_path.endswith("/") else args.base_path + "/"
 
@@ -770,6 +774,24 @@ def main():
             print(f"render: failed to load popularity data ({e}); continuing without",
                   file=sys.stderr)
             popularity = {}
+
+    # Clean-upstream status: which images have an official upstream image that
+    # scans clean (0 crit/high/med). Drives the golden "★ 0 CVE upstream" badge.
+    # Keyed by image name → {ref, total, critical, high, medium, tier}.
+    clean_upstream: dict = {}
+    clean_upstream_path = args.clean_upstream
+    if not clean_upstream_path:
+        _default = Path(__file__).resolve().parent.parent / "data" / "clean-upstream-status.json"
+        if _default.exists():
+            clean_upstream_path = str(_default)
+    if clean_upstream_path:
+        try:
+            with open(clean_upstream_path) as f:
+                clean_upstream = json.load(f).get("images", {})
+        except (OSError, json.JSONDecodeError) as e:
+            print(f"render: failed to load clean-upstream data ({e}); continuing without",
+                  file=sys.stderr)
+            clean_upstream = {}
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -871,7 +893,20 @@ def main():
             "BASE": base,
             # Defaults; overwritten below once the scan lookup runs.
             "ZERO_CVE_BADGE_HTML": "",
+            "ZERO_CVE_UPSTREAM_BADGE_HTML": "",
         }
+        # Golden "★ 0 CVE upstream" badge: the project's official upstream image
+        # scans clean (0 critical/high/medium). See data/clean-upstream-status.json.
+        cu = clean_upstream.get(name)
+        if cu and cu.get("upstreamZeroCve"):
+            _tot = cu.get("total", 0)
+            _detail = "0 CVEs" if _tot == 0 else f"0 critical/high/medium ({_tot} low/unknown)"
+            _ref = _html_escape(cu.get("ref", ""))
+            mapping["ZERO_CVE_UPSTREAM_BADGE_HTML"] = (
+                '<span class="badge-zero-cve-upstream" '
+                f'title="Gold-standard upstream: the official image ({_ref}) '
+                f'scans clean — {_detail}">★ 0 CVE upstream</span>'
+            )
         # "Used by" section — two lists:
         #   1. nix-containers charts (in charts/): clickable → /charts/<name>/
         #   2. Upstream tracked charts (from chart-image-mapping.nix): static chips
@@ -1005,6 +1040,9 @@ def main():
             "fromNixpkgs": img.get("fromNixpkgs", False),
             "upstreamUrl": upstream,
             "upstreamImage": img.get("upstreamImage", ""),
+            # Golden "★ 0 CVE upstream" badge inputs (see clean_upstream above).
+            "upstreamZeroCve": bool(cu and cu.get("upstreamZeroCve")),
+            "upstreamCveRef": (cu or {}).get("ref", ""),
             # Per-image SBOM package count — lets the homepage stat cards
             # recompute the packages total when a filter is active.
             "packageCount": len(sbom or []),
