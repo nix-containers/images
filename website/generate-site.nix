@@ -3,6 +3,8 @@
 let
   imagesPath = ../images;
   allFiles = lib.filesystem.listFilesRecursive imagesPath;
+  # Golden "★ 0 CVE upstream" badge data (repo-root data/, outside website/ src).
+  cleanUpstreamJson = ../data/clean-upstream-status.json;
 
   # Curated image-name -> version map (same source the version-tagged image
   # builds use). Consulted as a fallback when the OCI-label regexes below can't
@@ -300,6 +302,7 @@ pkgs.stdenv.mkDerivation {
     python3 render.py \
       --data ${imagesJsonFull} \
       --charts-data ${chartsJson} \
+      --clean-upstream ${cleanUpstreamJson} \
       --templates ./templates \
       --out $OUT_DIR \
       --cmark ${pkgs.cmark}/bin/cmark \

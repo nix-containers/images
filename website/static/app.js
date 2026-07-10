@@ -338,6 +338,12 @@ function render() {
     const zeroCve = (i.scan && i.scan.total === 0)
       ? `<span class="badge-zero-cve" title="No known CVEs in the latest scan">0 CVE</span>`
       : '';
+    // "★ 0 CVE upstream" golden badge: the project's official upstream image
+    // scans clean (0 critical/high/medium). Gold-standard upstream posture,
+    // distinct from our own emerald build badge above.
+    const zeroCveUpstream = i.upstreamZeroCve
+      ? `<span class="badge-zero-cve-upstream" title="Gold-standard upstream — the official image scans clean${i.upstreamCveRef ? ' (' + escapeAttr(i.upstreamCveRef) + ')' : ''}">★ 0 CVE upstream</span>`
+      : '';
     // Critical-CVE count badge — links straight to the image's vulnerabilities.
     const critBadge = criticalCount > 0
       ? `<span class="badge bg-accent-bad/20 text-accent-bad font-mono"
@@ -366,6 +372,7 @@ function render() {
           ${rank}
           ${critBadge}
           ${highBadge}
+          ${zeroCveUpstream}
           ${zeroCve}
           ${nixBadge}
           ${upstreamBadge}
