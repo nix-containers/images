@@ -64,6 +64,19 @@ RE_FETCH_GH_URL = re.compile(
     re.DOTALL)
 RE_VERSION = re.compile(r'^\s*version\s*=\s*"([^"]+)"', re.MULTILINE)
 RE_DRV_PKGS = re.compile(r'drv\s*=\s*pkgs\.[a-zA-Z0-9_.-]+')
+# `drv = X;` where X is a let-bound name whose right-hand side comes from
+# `pkgs.something`. Effectively also nixpkgs-tracked, one indirection deeper.
+RE_DRV_BINDING = re.compile(
+    r'drv\s*=\s*([a-zA-Z][a-zA-Z0-9_-]*)(?:\.[a-zA-Z0-9_-]+)?\s*;')
+RE_LET_BINDING = lambda name: re.compile(
+    rf'^\s*{re.escape(name)}\s*=\s*(?:pkgs\.[a-zA-Z0-9_.-]+|[a-zA-Z][a-zA-Z0-9_-]*\.[a-zA-Z0-9_.-]+)',
+    re.MULTILINE)
+# For "argo-workflows.argo-cli" style: track "argo-workflows" the let-name
+# resolves through — if that name itself is `= pkgs.<attr>` in the file,
+# it's nixpkgs-indirect.
+RE_LET_PKGS_BINDING = lambda name: re.compile(
+    rf'^\s*{re.escape(name)}\s*=\s*pkgs\.[a-zA-Z0-9_.-]+',
+    re.MULTILINE)
 # Upstream-reference stubs: docker.io/OWNER/REPO or docker.io/REPO (library images).
 # The tag itself is the "version" we want to track — nvchecker's container source
 # polls the registry for the newest matching tag.
@@ -73,6 +86,26 @@ RE_TAG_LINE = re.compile(r'^\s*tag\s*=\s*"([^"]+)"', re.MULTILINE)
 
 # Owners that are false positives (our own repo, generic mirrors, etc.).
 BAD_OWNERS = {"nix-containers"}
+
+# registry.k8s.io hand-mappings from image path → GitHub owner/repo. These
+# fill the gap while nvchecker's container source can't authenticate against
+# registry.k8s.io.
+K8SIO_MAP = {
+    "autoscaling/vpa-admission-controller":     "kubernetes/autoscaler",
+    "autoscaling/vpa-recommender":              "kubernetes/autoscaler",
+    "autoscaling/vpa-updater":                  "kubernetes/autoscaler",
+    "csi-secrets-store/driver":                 "kubernetes-sigs/secrets-store-csi-driver",
+    "descheduler/descheduler":                  "kubernetes-sigs/descheduler",
+    "ingress-nginx/controller":                 "kubernetes/ingress-nginx",
+    "ingress-nginx/opentelemetry":              "kubernetes/ingress-nginx",
+    "networking/ip-masq-agent":                 "kubernetes-sigs/ip-masq-agent",
+    "provider-aws/cloud-controller-manager":    "kubernetes/cloud-provider-aws",
+    "sig-storage/local-volume-node-cleanup":    "kubernetes-sigs/sig-storage-local-static-provisioner",
+    "sig-storage/local-volume-provisioner":     "kubernetes-sigs/sig-storage-local-static-provisioner",
+    "sig-storage/nfs-subdir-external-provisioner": "kubernetes-sigs/nfs-subdir-external-provisioner",
+    "sig-storage/objectstorage-controller":     "kubernetes-sigs/container-object-storage-interface-controller",
+    "sig-storage/objectstorage-sidecar":        "kubernetes-sigs/container-object-storage-interface-provisioner-sidecar",
+}
 
 def image_source(default_nix_path):
     with open(default_nix_path) as f:
@@ -85,24 +118,56 @@ def image_source(default_nix_path):
         return {"kind": "github", "owner": m.group(1), "repo": m.group(2).rstrip('.'), "src": s}
     if RE_DRV_PKGS.search(s):
         return {"kind": "nixpkgs", "src": s}
+    # Indirect nixpkgs: `drv = X;` where X is a let-bound `pkgs.<attr>` (or
+    # a sub-attribute like `argo-workflows.argo-cli` whose root binds to
+    # pkgs). Walk one hop of the resolution chain.
+    m_drv = RE_DRV_BINDING.search(s)
+    if m_drv:
+        name = m_drv.group(1)
+        # Direct: <name> = pkgs.<attr>
+        if RE_LET_PKGS_BINDING(name).search(s):
+            return {"kind": "nixpkgs", "src": s}
+        # Two-hop: <name> = <name2>.<...>  and <name2> = pkgs.<attr>
+        m_alias = re.search(
+            rf'^\s*{re.escape(name)}\s*=\s*([a-zA-Z][a-zA-Z0-9_-]*)\.',
+            s, re.MULTILINE)
+        if m_alias and RE_LET_PKGS_BINDING(m_alias.group(1)).search(s):
+            return {"kind": "nixpkgs", "src": s}
+    # Composite images assembled from buildEnv/copyToRoot without a `drv =`.
+    # Heuristic: if the image directory name (with any -fips suffix stripped)
+    # matches a `pkgs.<attr>` reference in the file, treat as nixpkgs-indirect —
+    # the image tracks whatever nixpkgs version of that attribute.
+    img_name = os.path.basename(os.path.dirname(default_nix_path))
+    stem = re.sub(r'-fips$', '', img_name)
+    if stem and re.search(rf'pkgs\.{re.escape(stem)}\b', s):
+        return {"kind": "nixpkgs", "src": s}
     m = RE_UPSTREAM_LABEL.search(s)
     if m:
         # Value is "REGISTRY/OWNER/REPO:TAG" or "REGISTRY/REPO:TAG" (library image).
         # nvchecker 2.20's container source supports Bearer-token auth only —
-        # that covers docker.io, quay.io, ghcr.io. registry.k8s.io uses a
-        # different scheme ("Only Bearer authentication supported" error);
-        # mcr/ecr/nvcr/gcr/gitlab-registry/elastic aren't broadly pollable.
+        # that covers docker.io, quay.io, ghcr.io. Other registries fall back
+        # to a github-repo mapping (K8SIO_MAP) or stay unknown.
         POLLABLE = {"docker.io", "quay.io", "ghcr.io"}
         upstream = m.group(1)
         registry, _, rest = upstream.partition("/")
-        if not rest or registry not in POLLABLE:
+        if not rest:
             return {"kind": "unknown", "src": s}
         container, _, _ = rest.partition(":")
-        # DockerHub's registry API rejects single-name paths ("nginx" → 401);
-        # library images must be queried as "library/<name>".
-        if registry == "docker.io" and "/" not in container:
-            container = f"library/{container}"
-        return {"kind": "container", "container": container, "registry": registry, "src": s}
+        if registry in POLLABLE:
+            # DockerHub's registry API rejects single-name paths ("nginx" → 401);
+            # library images must be queried as "library/<name>".
+            if registry == "docker.io" and "/" not in container:
+                container = f"library/{container}"
+            return {"kind": "container", "container": container, "registry": registry, "src": s}
+        # registry.k8s.io images are Kubernetes SIG projects — hand-mapped to
+        # their github source for github-source polling. Path stripped down to
+        # the sub-project (e.g. "descheduler/descheduler" → "descheduler").
+        if registry == "registry.k8s.io":
+            gh = K8SIO_MAP.get(container)
+            if gh:
+                owner, repo = gh.split("/", 1)
+                return {"kind": "github", "owner": owner, "repo": repo, "src": s}
+        return {"kind": "unknown", "src": s}
     return {"kind": "unknown", "src": s}
 
 added_toml = []
