@@ -84,7 +84,7 @@ for ATTR in $(printf '%s' "$PKGS" | jq -r '.[]'); do
   # --version=stable: only follow stable upstream releases.
   # --src-only: just bump src/version/hash; don't try to regenerate vendored
   #             cargo/go/npm deps (mostly prebuilt-binary derivations).
-  if "${NIX_UPDATE[@]}" --version=stable --src-only "$ATTR" > "/tmp/local-nix-update-$ATTR.log" 2>&1; then
+  if "${NIX_UPDATE[@]}" -f ./pkgs/_update.nix --version=stable --src-only "$ATTR" > "/tmp/local-nix-update-$ATTR.log" 2>&1; then
     AFTER=$(git hash-object "pkgs/$ATTR/default.nix" 2>/dev/null || echo "")
     if [ "$BEFORE" != "$AFTER" ]; then
       echo "- $ATTR" >> updated.md
