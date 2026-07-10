@@ -36,6 +36,15 @@ revert() { printf '%s' "$ORIG" > "$F"; }
 
 OLD=$(grep -oE '^[[:space:]]*version = "[^"]+"' "$F" | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
 [ -z "$OLD" ] && { echo "$IMG: no version line"; exit 2; }
+
+# Normalize the incoming version to match the local convention. Upstream
+# nvchecker returns tags verbatim ("v1.2.3"); if the local file's version
+# has no `v` prefix (and typically uses `rev = "v${version}"` to reconstruct
+# the tag), stripping matches the local convention and avoids double-v regressions.
+if [[ "$OLD" != v* && "$NEW" == v* ]]; then
+  NEW="${NEW#v}"
+fi
+
 [ "$OLD" = "$NEW" ] && { echo "$IMG: already $NEW"; exit 0; }
 
 # 1. bump the version
