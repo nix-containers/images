@@ -27,6 +27,13 @@ if [ -z "$owner" ] || [ -z "$repo" ]; then
   fi
 fi
 
+# Fail loudly if the tool we need to query GitHub is missing — otherwise the
+# lookups below silently return empty and every image looks "already latest".
+if [ "$host" = "github" ] && ! command -v gh >/dev/null 2>&1; then
+  echo "image-latest-version: 'gh' not found in PATH — cannot query GitHub for '$img'" >&2
+  exit 3
+fi
+
 # latest STABLE tag: prefer releases/latest, fall back to tags (semver, no rc/beta/alpha)
 latest=""
 if [ "$host" = "github" ] && [ -n "$owner" ] && [ -n "$repo" ]; then
