@@ -39,17 +39,21 @@ INLINE_LIMIT=500
 SKIP_NIXPKGS=0
 SKIP_INLINE=0
 SKIP_EXPAND=0
+COMMIT_AND_PUSH=0
+COMMIT_BRANCH="auto-update-nightly"
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --cycles)       CYCLES="$2"; shift 2 ;;
-    --sleep)        SLEEP="$2"; shift 2 ;;
-    --inline-limit) INLINE_LIMIT="$2"; shift 2 ;;
-    --skip-nixpkgs) SKIP_NIXPKGS=1; shift ;;
-    --skip-inline)  SKIP_INLINE=1; shift ;;
-    --skip-expand)  SKIP_EXPAND=1; shift ;;
-    -h|--help)      sed -n '1,40p' "$0"; exit 0 ;;
-    *)              echo "unknown arg: $1" >&2; exit 2 ;;
+    --cycles)         CYCLES="$2"; shift 2 ;;
+    --sleep)          SLEEP="$2"; shift 2 ;;
+    --inline-limit)   INLINE_LIMIT="$2"; shift 2 ;;
+    --skip-nixpkgs)   SKIP_NIXPKGS=1; shift ;;
+    --skip-inline)    SKIP_INLINE=1; shift ;;
+    --skip-expand)    SKIP_EXPAND=1; shift ;;
+    --commit-and-push) COMMIT_AND_PUSH=1; shift ;;
+    --commit-branch)  COMMIT_BRANCH="$2"; shift 2 ;;
+    -h|--help)        sed -n '1,45p' "$0"; exit 0 ;;
+    *)                echo "unknown arg: $1" >&2; exit 2 ;;
   esac
 done
 
@@ -104,6 +108,37 @@ while true; do
       log_stamp "  nixpkgs: ${upd:-0} packages bumped"
     else
       log_stamp "  nixpkgs: exited non-zero (see /tmp/orch-nixpkgs.log)"
+    fi
+  fi
+
+  if [ "$COMMIT_AND_PUSH" -eq 1 ]; then
+    # Stage image bumps + nvchecker state + flake.lock; skip runtime scan
+    # artifacts (tags-data / scan-data) that a background scan may be writing.
+    added=$(git status --short \
+      | grep -vE '^\?\?|website/tags-data/|website/scan-data/|scan-data/' \
+      | grep -E '^ ?M (flake\.lock|nvchecker(\.toml|-images\.json)|old_versions\.json|new_versions\.json|(images|pkgs)/)' \
+      | awk '{print $2}')
+    if [ -n "$added" ]; then
+      echo "$added" | xargs -r git add
+      # Only push if the staged tree is non-empty
+      if ! git diff --cached --quiet; then
+        SUMMARY=$(git diff --cached --name-only | wc -l)
+        MSG="chore(auto-update): cycle $cycle — $SUMMARY files bumped by orchestrator"
+        if git -c user.name=itpick -c user.email=lucaspick@gmail.com commit -m "$MSG" >>/tmp/orch-commit.log 2>&1; then
+          log_stamp "  commit: $SUMMARY files"
+          # Ensure branch exists locally; then push (creates upstream branch on first push).
+          git branch -f "$COMMIT_BRANCH" HEAD >/dev/null 2>&1 || true
+          if git push -u origin "$COMMIT_BRANCH":"$COMMIT_BRANCH" >>/tmp/orch-commit.log 2>&1; then
+            log_stamp "  push: $COMMIT_BRANCH → origin"
+          else
+            log_stamp "  push: FAILED (see /tmp/orch-commit.log)"
+          fi
+        else
+          log_stamp "  commit: FAILED (see /tmp/orch-commit.log)"
+        fi
+      fi
+    else
+      log_stamp "  commit: nothing to stage"
     fi
   fi
 
