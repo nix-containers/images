@@ -64,6 +64,12 @@ RE_FETCH_GH_URL = re.compile(
     re.DOTALL)
 RE_VERSION = re.compile(r'^\s*version\s*=\s*"([^"]+)"', re.MULTILINE)
 RE_DRV_PKGS = re.compile(r'drv\s*=\s*pkgs\.[a-zA-Z0-9_.-]+')
+# Upstream-reference stubs: docker.io/OWNER/REPO or docker.io/REPO (library images).
+# The tag itself is the "version" we want to track — nvchecker's container source
+# polls the registry for the newest matching tag.
+RE_UPSTREAM_LABEL = re.compile(
+    r'"io\.nix-containers\.upstream-image"\s*=\s*"([^"]+)"')
+RE_TAG_LINE = re.compile(r'^\s*tag\s*=\s*"([^"]+)"', re.MULTILINE)
 
 # Owners that are false positives (our own repo, generic mirrors, etc.).
 BAD_OWNERS = {"nix-containers"}
@@ -79,11 +85,27 @@ def image_source(default_nix_path):
         return {"kind": "github", "owner": m.group(1), "repo": m.group(2).rstrip('.'), "src": s}
     if RE_DRV_PKGS.search(s):
         return {"kind": "nixpkgs", "src": s}
+    m = RE_UPSTREAM_LABEL.search(s)
+    if m:
+        # Value is "REGISTRY/OWNER/REPO:TAG" or "REGISTRY/REPO:TAG" (library image).
+        # Only DockerHub (docker.io) images are enrolled here; other registries
+        # (quay, gcr, ghcr) mostly require auth and aren't broadly pollable.
+        upstream = m.group(1)
+        if not upstream.startswith("docker.io/"):
+            return {"kind": "unknown", "src": s}
+        upstream = upstream[len("docker.io/"):]
+        container, _, _ = upstream.partition(":")
+        # DockerHub's registry API rejects single-name paths ("nginx" → 401);
+        # library images must be queried as "library/<name>".
+        if "/" not in container:
+            container = f"library/{container}"
+        return {"kind": "container", "container": container, "src": s}
     return {"kind": "unknown", "src": s}
 
 added_toml = []
 added_mapping = {}
 skipped = {"pkgs.attr": [], "unknown": [], "already-mapped-differently": []}
+counts = {"github": 0, "container": 0}
 
 for img in sorted(os.listdir('images')):
     d = f'images/{img}'
@@ -100,30 +122,43 @@ for img in sorted(os.listdir('images')):
         skipped["unknown"].append(img)
         continue
 
-    # GitHub-sourced. Use the image name as the nvchecker entry key so it's
-    # 1:1 mappable back to the image dir; if the key clashes with an existing
-    # entry, sidecar-mark and skip (operator's judgment call).
     key = img
     if key in existing_entries:
         skipped["already-mapped-differently"].append(img)
         continue
 
-    owner, repo = info["owner"], info["repo"].removesuffix(".git")
-    m = RE_VERSION.search(info["src"])
-    ver = m.group(1) if m else ""
+    if info["kind"] == "github":
+        owner, repo = info["owner"], info["repo"].removesuffix(".git")
+        m = RE_VERSION.search(info["src"])
+        ver = m.group(1) if m else ""
+        added_toml.append(
+            f'[{key}]\n'
+            f'source = "github"\n'
+            f'github = "{owner}/{repo}"\n'
+            f'use_latest_release = true\n'
+            f'prefix = "v"\n'
+        )
+        counts["github"] += 1
+    elif info["kind"] == "container":
+        # Track the upstream tag. `include_regex` gates against date-based /
+        # channel tags ("latest", "nightly", "20250107") — accept only tags
+        # that look like a SemVer with an optional `v` prefix.
+        m = RE_TAG_LINE.search(info["src"])
+        ver = m.group(1) if m else ""
+        added_toml.append(
+            f'[{key}]\n'
+            f'source = "container"\n'
+            f'container = "{info["container"]}"\n'
+            f'include_regex = "v?[0-9]+\\\\.[0-9]+(\\\\.[0-9]+)?"\n'
+            f'prefix = "v"\n'
+        )
+        counts["container"] += 1
 
-    added_toml.append(
-        f'[{key}]\n'
-        f'source = "github"\n'
-        f'github = "{owner}/{repo}"\n'
-        f'use_latest_release = true\n'
-        f'prefix = "v"\n'
-    )
     added_mapping[key] = [img]
     if ver and key not in old_ver:
         old_ver[key] = ver
 
-print(f'== to add: {len(added_toml)} entries')
+print(f'== to add: {len(added_toml)} entries (github={counts["github"]}, container={counts["container"]})')
 print(f'== skipped: pkgs.attr={len(skipped["pkgs.attr"])}  unknown={len(skipped["unknown"])}  already-mapped-differently={len(skipped["already-mapped-differently"])}')
 
 if dry:
