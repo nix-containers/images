@@ -29,6 +29,21 @@
 
 set -uo pipefail
 
+# skopeo (used by nix2container's copyTo) refuses to load
+# /etc/containers/registries.conf when it's still in v1 format
+# (NixOS ships v1). Materialize a v2 file in /tmp and point
+# CONTAINERS_REGISTRIES_CONF at it — otherwise every push fails with
+# "registries.conf must be in v2 format but is in v1" and the state
+# file lands as fail-push despite the image being fine.
+if [ ! -r "${CONTAINERS_REGISTRIES_CONF:-}" ]; then
+  mkdir -p /tmp/containers
+  cat > /tmp/containers/registries.conf <<'REG_EOF'
+unqualified-search-registries = ["docker.io"]
+short-name-mode = "permissive"
+REG_EOF
+  export CONTAINERS_REGISTRIES_CONF=/tmp/containers/registries.conf
+fi
+
 if [ $# -lt 1 ]; then
   echo "usage: $0 <image-list> [--batch-size N] [--push-every M]" >&2
   exit 2
