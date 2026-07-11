@@ -138,6 +138,21 @@ function updateStats(data) {
   const highEl = document.getElementById('high-count');
   if (highEl) highEl.textContent = totalHigh.toLocaleString();
 
+  // Auto-updater impact: how many of these CRIT+HIGH CVEs will clear on the
+  // next auto-update cycle (nvchecker sees a fix, or the image is
+  // nixpkgs-tracked and moves with the flake).
+  const afEl = document.getElementById('auto-fix-count');
+  if (afEl) {
+    const afCrit = data.autoFixCritical ?? 0;
+    const afHigh = data.autoFixHigh ?? 0;
+    const afTotal = afCrit + afHigh;
+    const grand = totalCritical + totalHigh;
+    const pct = grand > 0 ? Math.round(100 * afTotal / grand) : 0;
+    afEl.textContent = afTotal > 0
+      ? `${afTotal.toLocaleString()} auto-fix pending (${pct}%)`
+      : '';
+  }
+
   // Last scan: the most recent per-image scannedAt across the catalog, shown
   // with an exact timestamp and an "N hours ago" relative age.
   const scanEl = document.getElementById('last-scan');
