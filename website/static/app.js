@@ -236,9 +236,14 @@ function updateStats(data) {
   if (pkgEl) {
     pkgEl.textContent = pkgUnique > 0 ? pkgUnique.toLocaleString() : '–';
   }
-  // Mirror the packages total under the Total images card (requested).
+  // Mirror the packages total under the Total images card (requested): unique
+  // names as the headline, total instances as a sub-line.
   const pkgTotEl = document.getElementById('total-images-packages');
   if (pkgTotEl) pkgTotEl.textContent = pkgUnique > 0 ? pkgUnique.toLocaleString() : '–';
+  const pkgTotInstEl = document.getElementById('total-images-instances');
+  if (pkgTotInstEl && pkgInstances > 0) {
+    pkgTotInstEl.textContent = `${pkgInstances.toLocaleString()} instances`;
+  }
   if (pkgInstEl && pkgInstances > 0) {
     pkgInstEl.textContent = `${pkgInstances.toLocaleString()} instances`;
   }
@@ -330,12 +335,16 @@ function updateReactiveStats(imgs) {
   if (ce) ce.textContent = crit.toLocaleString();
   const he = document.getElementById('high-count');
   if (he) he.textContent = high.toLocaleString();
+  // Package INSTANCES react to the filtered set (sum of per-image counts).
+  // The unique-NAME totals aren't recomputable per-filter, so leave those to
+  // updateStats — overwriting them here with the instances sum was the bug that
+  // made the "Unique packages" card show the instances number.
   const pkgs = imgs.reduce((a, i) => a + (i.packageCount || 0), 0);
-  const disp = pkgs > 0 ? pkgs.toLocaleString() : '–';
-  const pe = document.getElementById('total-packages');
-  if (pe) pe.textContent = disp;
-  const pte = document.getElementById('total-images-packages');
-  if (pte) pte.textContent = disp;
+  const disp = pkgs > 0 ? `${pkgs.toLocaleString()} instances` : '';
+  const pie = document.getElementById('total-package-instances');
+  if (pie) pie.textContent = disp;
+  const pie2 = document.getElementById('total-images-instances');
+  if (pie2) pie2.textContent = disp;
 }
 
 function render() {
