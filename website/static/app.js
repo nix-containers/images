@@ -3,6 +3,8 @@ let filteredImages = [];
 let criticalsOnly = false;
 let bigbangSet = new Set();
 let exampleClusterSet = new Set();
+let reframeAwaiting = true;   // "awaiting upstream fix" reframe — on by default
+let siteData = null;
 const BASE = window.SITE_BASE || '/';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,6 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (ecEl) ecEl.addEventListener('change', filter);
   const zcEl = document.getElementById('zerocve-filter');
   if (zcEl) zcEl.addEventListener('change', filter);
+  const awEl = document.getElementById('awaiting-filter');
+  if (awEl) {
+    reframeAwaiting = awEl.checked;
+    awEl.addEventListener('change', () => {
+      reframeAwaiting = awEl.checked;
+      if (siteData) updateStats(siteData);
+      filter();
+    });
+  }
   const critCard = document.getElementById('critical-card');
   if (critCard) {
     const toggleCrit = () => {
@@ -82,12 +93,23 @@ async function fetchAutoUpdateCount() {
   }
 }
 
+// When the "awaiting upstream fix" reframe is on (default), the critical/high
+// counts we surface exclude CVEs the auto-updater can't reach — those are the
+// upstream maintainer's to fix, shown separately under a badge. Toggle off to
+// see raw totals.
 function imgCritical(i) {
-  return (i.scan && i.scan.critical) || 0;
+  const c = (i.scan && i.scan.critical) || 0;
+  return reframeAwaiting ? c - ((i.scan && i.scan.awaitingCritical) || 0) : c;
+}
+
+function imgAwaiting(i) {
+  return ((i.scan && i.scan.awaitingCritical) || 0) +
+         ((i.scan && i.scan.awaitingHigh) || 0);
 }
 
 function imgHigh(i) {
-  return (i.scan && i.scan.high) || 0;
+  const h = (i.scan && i.scan.high) || 0;
+  return reframeAwaiting ? h - ((i.scan && i.scan.awaitingHigh) || 0) : h;
 }
 
 async function loadImages() {
@@ -95,6 +117,7 @@ async function loadImages() {
     const r = await fetch(BASE + 'images-data.json');
     const data = await r.json();
     allImages = data.images || [];
+    siteData = data;
     filteredImages = [...allImages];
     updateStats(data);
     updateReactiveStats(allImages);
@@ -344,7 +367,7 @@ function render() {
     // Status dot: RED when the latest scan found critical CVEs (this
     // overrides freshness — a fresh-but-vulnerable image is not "good"),
     // otherwise GREEN when scan + sbom + dep-check are all recent (≤7d).
-    const criticalCount = (i.scan && i.scan.critical) || 0;
+    const criticalCount = imgCritical(i);
     const dot = criticalCount > 0
       ? `<span class="inline-block w-2 h-2 rounded-full bg-accent-bad mr-2 align-middle"
                title="${criticalCount} critical CVE${criticalCount === 1 ? '' : 's'} in the latest scan"></span>`
@@ -391,7 +414,14 @@ function render() {
       : '';
     // High-CVE count badge (only in the criticals/highs filtered view, to
     // avoid cluttering every card in the full catalog).
-    const highCount = (i.scan && i.scan.high) || 0;
+    const highCount = imgHigh(i);
+    // "⏳ awaiting upstream" badge — CVEs the auto-updater can't reach (fix is
+    // the upstream maintainer's job). Only shown while the reframe is on.
+    const awaitCount = reframeAwaiting ? imgAwaiting(i) : 0;
+    const awaitBadge = awaitCount > 0
+      ? `<span class="badge bg-neutral-700 text-neutral-300 font-mono"
+               title="${awaitCount} critical/high CVE${awaitCount === 1 ? '' : 's'} with no upstream fix yet — awaiting the maintainer, not counted against us">⏳ ${awaitCount} awaiting upstream</span>`
+      : '';
     const highBadge = (criticalsOnly && highCount > 0)
       ? `<span class="badge bg-accent-warn/20 text-accent-warn font-mono"
                title="${highCount} high CVE${highCount === 1 ? '' : 's'} — click the image to see them">${highCount} high</span>`
@@ -412,6 +442,7 @@ function render() {
           ${rank}
           ${critBadge}
           ${highBadge}
+          ${awaitBadge}
           ${zeroCveUpstream}
           ${zeroCve}
           ${nixBadge}
