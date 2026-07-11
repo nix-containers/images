@@ -116,11 +116,17 @@ refresh_ghcr_login
 batch_num=0
 while true; do
   batch_num=$((batch_num + 1))
-  # Refresh docker/GHCR credentials every 20 batches (~20-40 min).
-  if [ $((batch_num % 20)) -eq 1 ] && [ "$batch_num" -gt 1 ]; then
-    refresh_ghcr_login
-    stamp "refreshed GHCR docker login"
-  fi
+  # Refresh docker/GHCR credentials every batch — `gh auth token` sessions
+  # expired even at 20-batch intervals (51 fresh fail-push after batch 70).
+  # Cheap HTTP round-trip; do it every batch.
+  refresh_ghcr_login
+  # Auto-clear fail-push each iteration: those failures were nearly always
+  # credential-expiry, and with per-batch refresh a retry usually succeeds.
+  # fail-build / fail-scan / fail-attach persist (those are truly stuck).
+  for f in "$STATE_DIR"/*.state; do
+    [ -f "$f" ] || continue
+    [ "$(cat "$f")" = "fail-push" ] && rm -f "$f"
+  done
   reclaim_if_tight
 
   # Pick the next N high-CVE images that we haven't rebuilt this session.
