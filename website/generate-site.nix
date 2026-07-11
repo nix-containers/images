@@ -309,6 +309,10 @@ pkgs.stdenv.mkDerivation {
       --cmark ${pkgs.cmark}/bin/cmark \
       --pygmentize ${pkgs.python3Packages.pygments}/bin/pygmentize \
       --popularity $TMPDIR/popularity.json \
+      --new-versions ${../new_versions.json} \
+      --old-versions ${../old_versions.json} \
+      --nvchecker-images ${../nvchecker-images.json} \
+      --images-dir ${../images} \
       $BASE_ARG \
       $SCAN_ARG \
       $TAGS_ARG \
