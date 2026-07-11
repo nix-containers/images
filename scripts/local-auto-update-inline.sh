@@ -115,11 +115,19 @@ while read -r entry old arrow new; do
     [ "$count" -ge "$LIMIT" ] && { entry_ok=0; break; }
     log="/tmp/local-bump-${img}.log"
     printf '  -> %-40s %-15s -> %s\n' "$img" "$old" "$new"
-    if bash scripts/bump-inline-image.sh "$img" "$new" > "$log" 2>&1; then
+    # Hard-timeout each bump at 15 min. A stuck hash-repair loop (e.g. a Java
+    # image with a huge maven fetch) can otherwise eat the whole overnight run;
+    # timeout 124 (from coreutils) means the bumper was killed after 15 min.
+    if timeout --kill-after=30s 15m bash scripts/bump-inline-image.sh "$img" "$new" > "$log" 2>&1; then
       echo "- \`$img\` ${old} → ${new}" >> bumped.md
       count=$((count+1))
     else
-      echo "- \`$img\` (${entry} → ${new}): $(tail -1 "$log")" >> failed.md
+      rc=$?
+      if [ "$rc" = "124" ] || [ "$rc" = "137" ]; then
+        echo "- \`$img\` (${entry} → ${new}): timed out after 15m" >> failed.md
+      else
+        echo "- \`$img\` (${entry} → ${new}): $(tail -1 "$log")" >> failed.md
+      fi
       entry_ok=0
     fi
 
