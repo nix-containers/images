@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPackages();
   document.getElementById('search').addEventListener('input', filter);
   document.getElementById('type-filter').addEventListener('change', filter);
+  const cveEl = document.getElementById('cve-filter');
+  if (cveEl) cveEl.addEventListener('change', filter);
 
   // Honor ?q=<name> from URL so links from per-image SBOM tables land
   // pre-filtered (e.g. /packages/?q=openssl).
@@ -53,12 +55,23 @@ function populateTypeFilter() {
 function filter() {
   const q = document.getElementById('search').value.toLowerCase().trim();
   const typeF = document.getElementById('type-filter').value;
+  const cveEl = document.getElementById('cve-filter');
+  const cveOnly = cveEl && cveEl.checked;
   filteredPackages = allPackages.filter(p => {
     if (typeF && p.type !== typeF) return false;
+    if (cveOnly && !(p.cveTotal > 0)) return false;
     if (!q) return true;
     return p.name.toLowerCase().includes(q) ||
            (p.version || '').toLowerCase().includes(q);
   });
+  // When filtering to vulnerable packages, surface the worst first
+  // (criticals, then highs, then total) — otherwise keep the a-z order.
+  if (cveOnly) {
+    filteredPackages.sort((a, b) =>
+      (b.cveCritical || 0) - (a.cveCritical || 0) ||
+      (b.cveHigh || 0) - (a.cveHigh || 0) ||
+      (b.cveTotal || 0) - (a.cveTotal || 0));
+  }
   render();
 }
 
