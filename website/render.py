@@ -190,6 +190,25 @@ def scan_for_image(image_name: str, scan_dir: str | None) -> dict | None:
     return counts
 
 
+def _pkg_cve_fields(rec: dict | None) -> dict:
+    """CVE summary for a /packages/ row: severity counts + a capped,
+    severity-sorted CVE list. All-zero/empty when the package has no CVEs."""
+    if not rec or not rec.get("ids"):
+        return {"cveCritical": 0, "cveHigh": 0, "cveMedium": 0,
+                "cveLow": 0, "cveTotal": 0, "cves": []}
+    ordered = sorted(
+        rec["ids"].values(),
+        key=lambda c: (_SEVERITY_ORDER.get(c["severity"].lower(), 99), c["id"]))
+    return {
+        "cveCritical": rec.get("critical", 0),
+        "cveHigh": rec.get("high", 0),
+        "cveMedium": rec.get("medium", 0),
+        "cveLow": rec.get("low", 0),
+        "cveTotal": len(ordered),
+        "cves": ordered[:40],
+    }
+
+
 def render_cve_list(cves: list[dict]) -> str:
     """Render a `<details>`-wrapped table of CVE rows (collapsed by default).
 
@@ -827,6 +846,10 @@ def main():
     # /packages/ directory page generated below.
     pkg_index: dict[tuple[str, str, str], set[str]] = {}
     total_package_instances = 0
+    # Package → CVE map for the /packages/ page. Keyed by (PkgName,
+    # InstalledVersion) — the same identity trivy reports — so each package
+    # row can show the CVEs affecting that exact version, deduped across images.
+    pkg_cve_map: dict[tuple[str, str], dict] = {}
 
     # Reverse map: which nix-containers charts (in charts/) consume each image.
     # Empty if --charts-data was not passed. Populated by scanning the charts
@@ -997,6 +1020,21 @@ def main():
                     continue
                 pkg_index.setdefault(key, set()).add(name)
 
+        # Fold this image's CVEs into the package → CVE map, deduped by CVE id.
+        for v in (scan or {}).get("cves", []) or []:
+            pk = (v.get("package", ""), v.get("installed", ""))
+            if not pk[0]:
+                continue
+            rec = pkg_cve_map.setdefault(
+                pk, {"ids": {}, "critical": 0, "high": 0, "medium": 0, "low": 0})
+            vid = v.get("id", "")
+            if vid and vid not in rec["ids"]:
+                sev = (v.get("severity", "") or "UNKNOWN").upper()
+                rec["ids"][vid] = {"id": vid, "severity": sev, "fixed": v.get("fixed", "")}
+                sk = sev.lower()
+                if sk in rec:
+                    rec[sk] += 1
+
         # tags-data was already fetched up top for version resolution.
         tags = tags_for_version
         mapping["TAGS_HTML"] = render_tags_panel(tags, name)
@@ -1094,6 +1132,7 @@ def main():
                 "type": k[2],
                 "images": sorted(images),
                 "imageCount": len(images),
+                **_pkg_cve_fields(pkg_cve_map.get((k[0], k[1]))),
             }
             for k, images in pkg_index.items()
         ],
