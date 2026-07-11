@@ -150,7 +150,102 @@ _CVE_LIST_MAX = 100  # cap per-image; truncation note disclosed in UI.
 _SEVERITY_ORDER = {"critical": 0, "high": 1, "medium": 2, "low": 3, "unknown": 4}
 
 
-def scan_for_image(image_name: str, scan_dir: str | None) -> dict | None:
+def _parse_semver(s: str) -> tuple:
+    """Best-effort semver parse for auto-fix reachability comparison."""
+    if not s:
+        return ()
+    s = s.lstrip("vV").split("+", 1)[0]
+    parts = re.split(r"[.\-]", s)[:3]
+    return tuple(int(x) if x.isdigit() else 0 for x in parts)
+
+
+def _ver_gte(a: str, b: str) -> bool:
+    try:
+        return _parse_semver(a) >= _parse_semver(b)
+    except Exception:
+        return False
+
+
+def _load_auto_update_state(repo_root: str) -> dict:
+    """Load the nvchecker/nixpkgs auto-update state so we can annotate each
+    CVE with whether the auto-updater's next run would clear it."""
+    state = {"nv_latest": {}, "img_to_entry": {}, "img_tracker_installed": {},
+             "nixpkgs_indirect": set()}
+    try:
+        with open(os.path.join(repo_root, "new_versions.json")) as f:
+            state["nv_latest"] = {k: v.get("version", "")
+                                  for k, v in (json.load(f).get("data") or {}).items()}
+    except Exception:
+        pass
+    try:
+        with open(os.path.join(repo_root, "nvchecker-images.json")) as f:
+            idx = json.load(f)
+        for entry, imgs in idx.items():
+            for i in imgs:
+                state["img_to_entry"][i] = entry
+    except Exception:
+        pass
+    try:
+        with open(os.path.join(repo_root, "old_versions.json")) as f:
+            state["img_tracker_installed"] = json.load(f)
+    except Exception:
+        pass
+    # Nixpkgs-indirect: images whose default.nix binds `drv = pkgs.<attr>` (direct
+    # or via a let-alias). They auto-update when nixpkgs bumps, not nvchecker.
+    RE_DRV_PKGS = re.compile(r"drv\s*=\s*pkgs\.[a-zA-Z0-9_.-]+")
+    RE_DRV_BINDING = re.compile(r"drv\s*=\s*([a-zA-Z][a-zA-Z0-9_-]*)(?:\.[a-zA-Z0-9_-]+)?\s*;")
+    images_dir = os.path.join(repo_root, "images")
+    if os.path.isdir(images_dir):
+        for d in os.listdir(images_dir):
+            f = os.path.join(images_dir, d, "default.nix")
+            if not os.path.exists(f):
+                continue
+            try:
+                with open(f) as fh:
+                    s = fh.read()
+            except Exception:
+                continue
+            if RE_DRV_PKGS.search(s):
+                state["nixpkgs_indirect"].add(d); continue
+            m = RE_DRV_BINDING.search(s)
+            if m and re.search(rf"^\s*{re.escape(m.group(1))}\s*=\s*pkgs\.", s, re.MULTILINE):
+                state["nixpkgs_indirect"].add(d); continue
+            stem = re.sub(r"-fips$", "", d)
+            if stem and re.search(rf"pkgs\.{re.escape(stem)}\b", s):
+                state["nixpkgs_indirect"].add(d)
+    return state
+
+
+_AUTO_STATE_CACHE: dict | None = None
+
+
+def _auto_fix_status(image_name: str, fixed_version: str,
+                     state: dict) -> str:
+    """Classify a CVE against the auto-updater. Returns one of:
+      - "bump-pending"   — nvchecker sees a newer version >= FixedVersion
+      - "bump-below-fix" — nvchecker sees a bump, but it's still < FixedVersion
+      - "at-latest"      — nvchecker-tracked but already at the tracked version
+      - "nixpkgs"        — nixpkgs-indirect (flake update handles it)
+      - "manual"         — neither auto path applies
+      - "no-fix"         — the CVE has no upstream fix yet
+    Only the first two + "nixpkgs" count as "auto-fixable next run".
+    """
+    if not fixed_version:
+        return "no-fix"
+    entry = state["img_to_entry"].get(image_name)
+    if entry:
+        latest = state["nv_latest"].get(entry, "")
+        installed = state["img_tracker_installed"].get(entry, "")
+        if latest and _ver_gte(latest, installed) and latest != installed:
+            return "bump-pending" if _ver_gte(latest, fixed_version) else "bump-below-fix"
+        return "at-latest"
+    if image_name in state["nixpkgs_indirect"]:
+        return "nixpkgs"
+    return "manual"
+
+
+def scan_for_image(image_name: str, scan_dir: str | None,
+                   auto_state: dict | None = None) -> dict | None:
     """Return a dict of severity counts + per-CVE detail (or None)."""
     if not scan_dir:
         return None
@@ -164,21 +259,31 @@ def scan_for_image(image_name: str, scan_dir: str | None) -> dict | None:
         return None
 
     counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "unknown": 0}
+    # autoFixable = "bump-pending" or "nixpkgs" (both resolve on next
+    # auto-updater cycle). Broken out per-severity to power the dashboard.
+    auto_fix = {"critical": 0, "high": 0}
+    auto_state = auto_state or {}
     cves: list[dict] = []
     for result in doc.get("Results", []) or []:
         for vuln in result.get("Vulnerabilities", []) or []:
-            sev = (vuln.get("Severity") or "UNKNOWN").lower()
+            sev_upper = (vuln.get("Severity") or "UNKNOWN").upper()
+            sev = sev_upper.lower()
             if sev in counts:
                 counts[sev] += 1
             else:
                 counts["unknown"] += 1
+            fixed_ver = vuln.get("FixedVersion", "") or ""
+            fix_status = _auto_fix_status(image_name, fixed_ver, auto_state) if auto_state else "unknown"
+            if fix_status in ("bump-pending", "nixpkgs") and sev in ("critical", "high"):
+                auto_fix[sev] += 1
             cves.append({
                 "id": vuln.get("VulnerabilityID", "") or "",
-                "severity": (vuln.get("Severity") or "UNKNOWN").upper(),
+                "severity": sev_upper,
                 "package": vuln.get("PkgName", "") or "",
                 "installed": vuln.get("InstalledVersion", "") or "",
-                "fixed": vuln.get("FixedVersion", "") or "",
+                "fixed": fixed_ver,
                 "title": vuln.get("Title", "") or vuln.get("Description", "") or "",
+                "autoFix": fix_status,
             })
     # Sort by severity (critical first) then CVE ID descending.
     cves.sort(key=lambda v: (_SEVERITY_ORDER.get(v["severity"].lower(), 99), v["id"]),
@@ -186,6 +291,8 @@ def scan_for_image(image_name: str, scan_dir: str | None) -> dict | None:
     counts["total"] = sum(counts[s] for s in ("critical", "high", "medium", "low", "unknown"))
     counts["scannedAt"] = doc.get("CreatedAt", "")
     counts["sourceFile"] = os.path.basename(target)
+    counts["autoFixCritical"] = auto_fix["critical"]
+    counts["autoFixHigh"] = auto_fix["high"]
     counts["cves"] = cves
     return counts
 
@@ -794,6 +901,11 @@ def main():
                   file=sys.stderr)
             popularity = {}
 
+    # Auto-updater state — enables per-CVE annotation of whether the next
+    # nvchecker/nixpkgs auto-update cycle would clear it. Loaded once,
+    # threaded through scan_for_image.
+    auto_state = _load_auto_update_state(str(Path(__file__).resolve().parent.parent))
+
     # Clean-upstream status: which images have an official upstream image that
     # scans clean (0 crit/high/med). Drives the golden "★ 0 CVE upstream" badge.
     # Keyed by image name → {ref, total, critical, high, medium, tier}.
@@ -967,7 +1079,7 @@ def main():
         else:
             used_by_html = '<p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>'
         mapping["USED_BY_HTML"] = used_by_html
-        scan = scan_for_image(name, args.scan_data)
+        scan = scan_for_image(name, args.scan_data, auto_state)
         meta_banner = scan_meta_banner_html(scan, next_scan)
         # Zero-CVE pill in the page header — only when scan data exists
         # AND every severity is zero. No scan = no badge (we don't know).
@@ -1140,10 +1252,22 @@ def main():
     )
     unique_package_names = len({p["name"] for p in packages_list})
 
+    # Auto-fixable CVE totals across the fleet — resolved on the next
+    # auto-updater cycle. Sums the per-image scan.autoFix{Critical,High}
+    # that scan_for_image() attached above.
+    auto_fix_critical_total = sum(
+        (i.get("scan") or {}).get("autoFixCritical", 0) or 0 for i in slim_images)
+    auto_fix_high_total = sum(
+        (i.get("scan") or {}).get("autoFixHigh", 0) or 0 for i in slim_images)
+
     slim_data = {
         "totalCount": len(slim_images),
         "images": slim_images,
         "lastUpdated": build_time,
+        # Auto-fixable-by-next-cycle counts. Frontend uses these to render
+        # the "will resolve on next auto-update" numbers on the CVE cards.
+        "autoFixCritical": auto_fix_critical_total,
+        "autoFixHigh": auto_fix_high_total,
         # Size aggregates for the homepage stat cards. Bytes. null-safe
         # on the front-end: tags-data may be absent on local builds, in
         # which case both totals are 0 and the card renders a placeholder.
