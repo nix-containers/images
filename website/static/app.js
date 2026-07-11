@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (bbEl) bbEl.addEventListener('change', filter);
   const ecEl = document.getElementById('example-cluster-filter');
   if (ecEl) ecEl.addEventListener('change', filter);
+  const zcEl = document.getElementById('zerocve-filter');
+  if (zcEl) zcEl.addEventListener('change', filter);
   const critCard = document.getElementById('critical-card');
   if (critCard) {
     const toggleCrit = () => {
@@ -251,6 +253,8 @@ function filter() {
   const bigbangOnly = bbEl && bbEl.checked;
   const ecEl = document.getElementById('example-cluster-filter');
   const exampleClusterOnly = ecEl && ecEl.checked;
+  const zcEl = document.getElementById('zerocve-filter');
+  const zeroCveOnly = zcEl && zcEl.checked;
   filteredImages = allImages.filter(i => {
     const matchesQ = !q ||
       i.name.toLowerCase().includes(q) ||
@@ -262,7 +266,10 @@ function filter() {
     const matchesExampleCluster = !exampleClusterOnly || exampleClusterSet.has(i.name);
     // The Critical/High stat card filters to images with either severity.
     const matchesCrit = !criticalsOnly || imgCritical(i) > 0 || imgHigh(i) > 0;
-    return matchesQ && matchesCat && matchesChart && matchesBigbang && matchesExampleCluster && matchesCrit;
+    // "Zero CVEs": scan exists AND every severity is zero. Missing scan ≠ clean,
+    // so unscanned images are excluded (mirrors the 0 CVE badge semantics).
+    const matchesZeroCve = !zeroCveOnly || (i.scan && i.scan.total === 0);
+    return matchesQ && matchesCat && matchesChart && matchesBigbang && matchesExampleCluster && matchesCrit && matchesZeroCve;
   });
   // Surface the worst offenders first: by critical count, then high count.
   if (criticalsOnly) {
