@@ -166,19 +166,31 @@ def _ver_gte(a: str, b: str) -> bool:
         return False
 
 
-def _load_auto_update_state(repo_root: str) -> dict:
+def _load_auto_update_state(repo_root: str,
+                            new_versions_path: str | None = None,
+                            old_versions_path: str | None = None,
+                            nvchecker_images_path: str | None = None,
+                            images_dir_path: str | None = None) -> dict:
     """Load the nvchecker/nixpkgs auto-update state so we can annotate each
-    CVE with whether the auto-updater's next run would clear it."""
+    CVE with whether the auto-updater's next run would clear it.
+
+    Each JSON path can be overridden — the Nix build sandbox doesn't have
+    the repo root, so generate-site.nix passes them explicitly.
+    """
     state = {"nv_latest": {}, "img_to_entry": {}, "img_tracker_installed": {},
              "nixpkgs_indirect": set()}
+    nv_new = new_versions_path or os.path.join(repo_root, "new_versions.json")
+    nv_old = old_versions_path or os.path.join(repo_root, "old_versions.json")
+    nv_map = nvchecker_images_path or os.path.join(repo_root, "nvchecker-images.json")
+    images_dir = images_dir_path or os.path.join(repo_root, "images")
     try:
-        with open(os.path.join(repo_root, "new_versions.json")) as f:
+        with open(nv_new) as f:
             state["nv_latest"] = {k: v.get("version", "")
                                   for k, v in (json.load(f).get("data") or {}).items()}
     except Exception:
         pass
     try:
-        with open(os.path.join(repo_root, "nvchecker-images.json")) as f:
+        with open(nv_map) as f:
             idx = json.load(f)
         for entry, imgs in idx.items():
             for i in imgs:
@@ -186,7 +198,7 @@ def _load_auto_update_state(repo_root: str) -> dict:
     except Exception:
         pass
     try:
-        with open(os.path.join(repo_root, "old_versions.json")) as f:
+        with open(nv_old) as f:
             state["img_tracker_installed"] = json.load(f)
     except Exception:
         pass
@@ -194,7 +206,6 @@ def _load_auto_update_state(repo_root: str) -> dict:
     # or via a let-alias). They auto-update when nixpkgs bumps, not nvchecker.
     RE_DRV_PKGS = re.compile(r"drv\s*=\s*pkgs\.[a-zA-Z0-9_.-]+")
     RE_DRV_BINDING = re.compile(r"drv\s*=\s*([a-zA-Z][a-zA-Z0-9_-]*)(?:\.[a-zA-Z0-9_-]+)?\s*;")
-    images_dir = os.path.join(repo_root, "images")
     if os.path.isdir(images_dir):
         for d in os.listdir(images_dir):
             f = os.path.join(images_dir, d, "default.nix")
@@ -888,6 +899,17 @@ def main():
                     help="Optional path to data/clean-upstream-status.json (drives the "
                          "golden '★ 0 CVE upstream' badge). Defaults to <repo>/data/"
                          "clean-upstream-status.json when present.")
+    # Auto-update state paths — needed inside the Nix build sandbox where the
+    # repo root isn't accessible. Local calls can fall back to the repo-root
+    # heuristic.
+    ap.add_argument("--new-versions", default=None,
+                    help="Path to new_versions.json (nvchecker upstream cache).")
+    ap.add_argument("--old-versions", default=None,
+                    help="Path to old_versions.json (auto-update baseline).")
+    ap.add_argument("--nvchecker-images", default=None,
+                    help="Path to nvchecker-images.json (entry → images map).")
+    ap.add_argument("--images-dir", default=None,
+                    help="Path to images/ directory (for nixpkgs-indirect classification).")
     args = ap.parse_args()
     base = args.base_path if args.base_path.endswith("/") else args.base_path + "/"
 
@@ -903,8 +925,15 @@ def main():
 
     # Auto-updater state — enables per-CVE annotation of whether the next
     # nvchecker/nixpkgs auto-update cycle would clear it. Loaded once,
-    # threaded through scan_for_image.
-    auto_state = _load_auto_update_state(str(Path(__file__).resolve().parent.parent))
+    # threaded through scan_for_image. Explicit paths win over the repo-
+    # root heuristic (only the heuristic works outside a Nix build).
+    auto_state = _load_auto_update_state(
+        str(Path(__file__).resolve().parent.parent),
+        new_versions_path=args.new_versions,
+        old_versions_path=args.old_versions,
+        nvchecker_images_path=args.nvchecker_images,
+        images_dir_path=args.images_dir,
+    )
 
     # Clean-upstream status: which images have an official upstream image that
     # scans clean (0 crit/high/med). Drives the golden "★ 0 CVE upstream" badge.
