@@ -97,6 +97,31 @@ function render() {
     const moreText = moreCount > 0
       ? `<span class="text-xs text-fg-muted">+${moreCount} more</span>`
       : '';
+    // CVE summary badge — critical/high are the actionable ones, shown first.
+    const cveTotal = p.cveTotal || 0;
+    let cveBadge = '';
+    if (cveTotal > 0) {
+      const parts = [];
+      if (p.cveCritical > 0) parts.push(`${p.cveCritical} crit`);
+      if (p.cveHigh > 0) parts.push(`${p.cveHigh} high`);
+      const label = parts.length ? parts.join(' · ') : `${cveTotal} CVE${cveTotal === 1 ? '' : 's'}`;
+      const cls = p.cveCritical > 0 ? 'bg-accent-bad/20 text-accent-bad'
+                : p.cveHigh > 0 ? 'bg-accent-warn/20 text-accent-warn'
+                : 'bg-neutral-700 text-neutral-300';
+      cveBadge = `<span class="badge font-mono ${cls}"
+        title="${cveTotal} known CVE${cveTotal === 1 ? '' : 's'} in this package version">${label}</span>`;
+    }
+    // Per-CVE chips (link to NVD), severity-colored, fixed-version in tooltip.
+    const cveList = (p.cves && p.cves.length)
+      ? `<div class="flex flex-wrap gap-1 mt-2">` +
+        p.cves.slice(0, 12).map(v =>
+          `<a href="https://nvd.nist.gov/vuln/detail/${escapeAttr(v.id)}" target="_blank" rel="noopener"
+             class="text-xs font-mono px-1.5 py-0.5 rounded ${sevClass(v.severity)}"
+             title="${escapeAttr(v.severity)}${v.fixed ? ' — fixed in ' + escapeAttr(v.fixed) : ''}">${escapeHtml(v.id)}</a>`
+        ).join('') +
+        (cveTotal > 12 ? `<span class="text-xs text-fg-muted self-center">+${cveTotal - 12} more</span>` : '') +
+        `</div>`
+      : '';
     return `
     <div class="card">
       <div class="flex flex-wrap items-baseline justify-between mb-2 gap-2">
@@ -105,14 +130,27 @@ function render() {
           <span class="ml-1 text-sm font-normal text-fg-muted">${escapeHtml(p.version || '')}</span>
         </div>
         <div class="flex items-center gap-2 text-xs text-fg-muted">
+          ${cveBadge}
           <span class="font-mono uppercase">${escapeHtml(p.type || 'unknown')}</span>
           <span>·</span>
           <span>${p.imageCount} image${p.imageCount === 1 ? '' : 's'}</span>
         </div>
       </div>
       <div class="flex flex-wrap">${imagesPeek}${moreText}</div>
+      ${cveList}
     </div>`;
   }).join('');
+}
+
+// Tailwind classes for a CVE severity chip.
+function sevClass(sev) {
+  switch ((sev || '').toUpperCase()) {
+    case 'CRITICAL': return 'bg-accent-bad/20 text-accent-bad';
+    case 'HIGH': return 'bg-accent-warn/20 text-accent-warn';
+    case 'MEDIUM': return 'bg-yellow-900/30 text-yellow-300';
+    case 'LOW': return 'bg-sky-900/30 text-sky-300';
+    default: return 'bg-neutral-700 text-neutral-300';
+  }
 }
 
 function escapeHtml(s) {
