@@ -60,17 +60,24 @@ reclaim_if_tight() {
 
 # Rank images by CRITICAL+HIGH count; that's the ROI signal. Skip images
 # without a scan (nothing to rebuild-for) and images below --min-cves.
+# Also skip images that already have a state file — either they succeeded
+# (ok — we'll re-add them to the queue by removing state manually) or they
+# failed (fail-*) and we shouldn't spin on them every iteration.
 rank_images() {
   local minc="$1"
   python3 - "$minc" <<'PY'
 import json, os, glob, re, sys
 minc = int(sys.argv[1])
+state_dir = "audit-results/local-bsp"
 scored = []
 for p in glob.glob('website/scan-data/*-trivy.json'):
     m = re.match(r'.*ghcr\.io_nix-containers_images_(.+)_latest-trivy\.json$', p)
     if not m: continue
     img = m.group(1)
     if not os.path.isdir(f'images/{img}'): continue
+    # Skip anything with an existing state file — either it succeeded (already
+    # rebuilt fresh this session) or failed (retrying wastes compute).
+    if os.path.exists(f'{state_dir}/{img}.state'): continue
     try:
         d = json.load(open(p))
     except Exception:
@@ -95,10 +102,25 @@ PY
 # handle their own errors).
 STATE_DIR="audit-results/local-bsp"
 
+refresh_ghcr_login() {
+  # `gh auth token` returns short-lived ghs_* sessions. Re-login every
+  # few batches so long weekend runs don't stall in fail-push after
+  # the docker credential silently expires.
+  if command -v gh >/dev/null 2>&1 && command -v docker >/dev/null 2>&1; then
+    gh auth token 2>/dev/null | docker login ghcr.io -u itpick --password-stdin >/dev/null 2>&1 || true
+  fi
+}
+
 stamp "==== weekend rebuild loop starting: batch=$BATCH sleep=${SLEEP}s min-cves=$MIN_CVES ===="
+refresh_ghcr_login
 batch_num=0
 while true; do
   batch_num=$((batch_num + 1))
+  # Refresh docker/GHCR credentials every 20 batches (~20-40 min).
+  if [ $((batch_num % 20)) -eq 1 ] && [ "$batch_num" -gt 1 ]; then
+    refresh_ghcr_login
+    stamp "refreshed GHCR docker login"
+  fi
   reclaim_if_tight
 
   # Pick the next N high-CVE images that we haven't rebuilt this session.
@@ -119,14 +141,37 @@ while true; do
   stamp "==== batch $batch_num: rebuilding $(wc -l < /tmp/rebuild-batch.txt) images ===="
   cat /tmp/rebuild-batch.txt | sed 's/^/    /' >> "$LOG"
 
-  # Reset state for these images so build-scan-push actually re-runs them.
+  # Reset state ONLY for images whose last outcome was ok — we want to force
+  # a fresh rebuild+scan on those. Keep fail-build / fail-push / fail-scan /
+  # fail-attach in place so bsp skips known-broken images (the state gate).
+  # A fail-build image will otherwise soak up compute on every iteration.
   while IFS= read -r img; do
-    rm -f "$STATE_DIR/${img}.state"
+    st_file="$STATE_DIR/${img}.state"
+    if [ -f "$st_file" ] && [ "$(cat "$st_file")" = "ok" ]; then
+      rm -f "$st_file"
+    fi
   done < /tmp/rebuild-batch.txt
 
+  # Filter out images that will be skipped by bsp (still have a state file =
+  # fail-*). If the whole batch is skippable, don't even invoke bsp — just
+  # bump the min-cves floor for this iteration to move on to fresh candidates.
+  # We can't raise min-cves at runtime here easily, so instead we bail and
+  # bump the batch counter — next loop we'll pick a different (larger) set.
+  actionable=$(while IFS= read -r img; do
+    [ ! -f "$STATE_DIR/${img}.state" ] && echo "$img"
+  done < /tmp/rebuild-batch.txt)
+  if [ -z "$actionable" ]; then
+    stamp "  bsp: all $BATCH images already have fail-* state; skipping this batch"
+    stamp "sleeping ${SLEEP}s before next batch"
+    sleep "$SLEEP"
+    continue
+  fi
+  printf '%s\n' "$actionable" > /tmp/rebuild-batch.txt
+
   if scripts/local-build-scan-push.sh /tmp/rebuild-batch.txt >/tmp/rebuild-bsp.log 2>&1; then
-    ok=$(grep -c '^ok$' "$STATE_DIR"/*.state 2>/dev/null || echo 0)
-    stamp "  bsp: run finished; final state files show $ok ok"
+    # `cat` avoids grep-c's per-file "file:count" format; wc -l counts total ok's.
+    ok=$(cat "$STATE_DIR"/*.state 2>/dev/null | grep -c '^ok$' || echo 0)
+    stamp "  bsp: run finished; ok=$ok total across all state files"
   else
     stamp "  bsp: exited non-zero (see /tmp/rebuild-bsp.log)"
   fi
