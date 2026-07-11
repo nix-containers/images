@@ -4,7 +4,7 @@
 # AWS component
 
 let
-  version = "3.4.6";
+  version = "3.4.7";
   component = buildGoModule {
     pname = "aws-for-fluent-bit";
     inherit version;
@@ -12,7 +12,7 @@ let
       owner = "aws";
       repo = "aws-for-fluent-bit";
       rev = "v${version}";
-      hash = "sha256-uL+jt9csm3OoCf0c9tSgqR7ILcPb0ZGVW9GtwGGmqBE=";
+      hash = "sha256-w/GaGWv6RgKkxdRuXvXxDKWWX6J7LEFGK4DnzbIEmMA=";
     };
     proxyVendor = true;
     vendorHash = "sha256-ZA9GHiEhHFfRechrZUvx2QnsvPjRtRGK0wRUyhtWfTc=";

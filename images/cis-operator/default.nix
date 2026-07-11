@@ -2,7 +2,7 @@
 
 # cis-operator — built from the upstream release artifact (#618).
 let
-  version = "1.4.8";
+  version = "1.4.9-rc.1";
   src = pkgs.fetchurl { url = "https://github.com/rancher/cis-operator/releases/download/v1.4.8/cis-operator-amd64"; hash = "sha256-V/0MdGchBTKZzeAdmD4w6f83xEBew3qUGPutbXNEHf4="; };
   drv = pkgs.runCommand "cis-operator-1.4.8" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
     mkdir -p $out/bin extract
