@@ -2,7 +2,7 @@
 
 # flannel-cni-plugin — built from the upstream release artifact (#618).
 let
-  version = "1.5.1-flannel1";
+  version = "1.9.1-flannel2";
   src = pkgs.fetchurl { url = "https://github.com/flannel-io/cni-plugin/releases/download/v1.5.1-flannel1/flannel-amd64"; hash = "sha256-CLFvAXJuv5lLu61Ur918hhrsmaDl+2SkKv0T+z2UX88="; };
   drv = pkgs.runCommand "flannel-cni-plugin-1.5.1-flannel1" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
     mkdir -p $out/bin extract

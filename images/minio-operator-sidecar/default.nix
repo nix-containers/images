@@ -8,7 +8,7 @@
 # MinIO Operator Sidecar runs alongside MinIO pods for cluster management
 
 let
-  version = "7.1.0";
+  version = "7.1.1";
   minio-operator-sidecar = buildGoModule {
     pname = "minio-operator-sidecar";
     inherit version;
@@ -17,10 +17,10 @@ let
       owner = "minio";
       repo = "operator";
       rev = "v${version}";
-      hash = "sha256-K+q1cL1q5InBTA35R35aPvab17pNrlL0t6iDarWPbdI=";  # TODO: Fix hash after first build
+      hash = "sha256-kodVsPWGIUl94Q+UtuTJ/RvdPO9ygjpshlNttKRge8o=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-/i1NmGT/3trJrmPHSZz8R8tqGqVPdJmf7Kxe5izBm+M=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-50zsDz+mw505OpQkP6yrvEBOTXa++Gv/HcJXt+mXsOg=";  # TODO: Fix hash after first build
 
     sourceRoot = "source/sidecar";
 

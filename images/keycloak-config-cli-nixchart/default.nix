@@ -8,13 +8,13 @@
 # to bootstrap a realm.
 
 let
-  version = "6.4.0";
+  version = "6.5.1";
   # Uber-jar filename is keyed to target Keycloak minor.
   keycloakTarget = "26.1.0";
 
   cliJar = pkgs.fetchurl {
     url = "https://github.com/adorsys/keycloak-config-cli/releases/download/v${version}/keycloak-config-cli-${keycloakTarget}.jar";
-    hash = "sha256-Dp+s0mDg7sxuASnqhCkUk+F5/rFCwCbyiDRZfXqmtdE=";
+    hash = "sha256-yTfOAl/5Ujyi7KvU7LEwmbma3azYqp4/8qwufiHWoyk=";
   };
 
   install = pkgs.runCommand "keycloak-config-cli-install" {} ''

@@ -6,13 +6,13 @@
 # (CUDA 12/13, Vulkan) stripped — ~1 GB smaller than the GPU-capable image.
 
 let
-  version = "0.31.1";
+  version = "0.31.2";
   ollama = pkgs.stdenv.mkDerivation {
     pname = "ollama-cpu";
     inherit version;
     src = pkgs.fetchurl {
       url = "https://github.com/ollama/ollama/releases/download/v${version}/ollama-linux-amd64.tar.zst";
-      hash = "sha256-0pc4HvwTZFH2+rud1kSmf3D+UcFoFaDEqV/w4yejr7Q=";
+      hash = "sha256-LIjw8xqVm6xaPK1MxSluxWhVHUqnn1SPVUrbK1dbMTM=";
     };
     nativeBuildInputs = [ pkgs.zstd pkgs.autoPatchelfHook ];
     buildInputs = [ pkgs.stdenv.cc.cc.lib ];

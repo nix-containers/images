@@ -7,7 +7,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "4.16.2";
+  version = "4.16.5";
 
   drv = pkgs.buildGoModule {
     pname = "metacontroller";
@@ -17,7 +17,7 @@ let
       owner = "metacontroller";
       repo = "metacontroller";
       rev = "v${version}";
-      hash = "sha256-QXVmGNAvPKS0guHMAZgiEfbRZ116uTeP59NcRKbL04M=";
+      hash = "sha256-ttcnl8c1AiHKBKnc/9VxLNAfrG3M0zjleJsC9DceT3s=";
     };
 
     proxyVendor = true;

@@ -2,16 +2,20 @@ let allImages = [];
 let filteredImages = [];
 let criticalsOnly = false;
 let bigbangSet = new Set();
+let exampleClusterSet = new Set();
 const BASE = window.SITE_BASE || '/';
 
 document.addEventListener('DOMContentLoaded', () => {
   loadImages();
   loadBigbang();
+  loadExampleCluster();
   document.getElementById('search').addEventListener('input', filter);
   document.getElementById('category-filter').addEventListener('change', filter);
   document.getElementById('chart-filter').addEventListener('change', filter);
   const bbEl = document.getElementById('bigbang-filter');
   if (bbEl) bbEl.addEventListener('change', filter);
+  const ecEl = document.getElementById('example-cluster-filter');
+  if (ecEl) ecEl.addEventListener('change', filter);
   const critCard = document.getElementById('critical-card');
   if (critCard) {
     const toggleCrit = () => {
@@ -106,6 +110,17 @@ async function loadBigbang() {
   try {
     const r = await fetch(BASE + 'static/bigbang-images.json');
     bigbangSet = new Set(await r.json());
+  } catch (e) { /* no-op */ }
+}
+
+// Load the Example Cluster image set — images we actually run on our
+// platform clusters. Same shape as bigbang-images.json; drives the
+// "Example Cluster" filter. Edit static/example-cluster-images.json to
+// add/remove images from the set.
+async function loadExampleCluster() {
+  try {
+    const r = await fetch(BASE + 'static/example-cluster-images.json');
+    exampleClusterSet = new Set(await r.json());
   } catch (e) { /* no-op */ }
 }
 
@@ -234,6 +249,8 @@ function filter() {
   const chartsOnly = document.getElementById('chart-filter').checked;
   const bbEl = document.getElementById('bigbang-filter');
   const bigbangOnly = bbEl && bbEl.checked;
+  const ecEl = document.getElementById('example-cluster-filter');
+  const exampleClusterOnly = ecEl && ecEl.checked;
   filteredImages = allImages.filter(i => {
     const matchesQ = !q ||
       i.name.toLowerCase().includes(q) ||
@@ -242,9 +259,10 @@ function filter() {
     const matchesChart = !chartsOnly ||
       (Array.isArray(i.usedByCharts) && i.usedByCharts.length > 0);
     const matchesBigbang = !bigbangOnly || bigbangSet.has(i.name);
+    const matchesExampleCluster = !exampleClusterOnly || exampleClusterSet.has(i.name);
     // The Critical/High stat card filters to images with either severity.
     const matchesCrit = !criticalsOnly || imgCritical(i) > 0 || imgHigh(i) > 0;
-    return matchesQ && matchesCat && matchesChart && matchesBigbang && matchesCrit;
+    return matchesQ && matchesCat && matchesChart && matchesBigbang && matchesExampleCluster && matchesCrit;
   });
   // Surface the worst offenders first: by critical count, then high count.
   if (criticalsOnly) {

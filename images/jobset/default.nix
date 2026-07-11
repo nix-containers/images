@@ -9,7 +9,7 @@
 # Used for HPC and AI/ML training workloads
 
 let
-  version = "0.10.1";
+  version = "0.12.0";
   jobset-controller = buildGoModule {
     pname = "jobset-controller";
     inherit version;
@@ -18,10 +18,10 @@ let
       owner = "kubernetes-sigs";
       repo = "jobset";
       rev = "v${version}";
-      hash = "sha256-6jCiFhaUpGX11UtgA8Ng7mVk1lfvRUQek9TJgUuBbr0=";  # TODO: Fix hash after first build
+      hash = "sha256-SPRFfkEUCai5YIIBeCXyUVHIJPmRXvl8Jv6LOzqkrU8=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-ZcteOEsFclK3+mJQ6OkT5XHWOCqcJS+kJ0Zoypb8bGg=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-rX6/7HoDVRlkiYRq17SxCShuDwH/UDl01e2K27Ypc0g=";  # TODO: Fix hash after first build
 
     subPackages = [ "." ];
 
