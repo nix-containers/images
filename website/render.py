@@ -304,6 +304,17 @@ def scan_for_image(image_name: str, scan_dir: str | None,
     counts["sourceFile"] = os.path.basename(target)
     counts["autoFixCritical"] = auto_fix["critical"]
     counts["autoFixHigh"] = auto_fix["high"]
+    # "Awaiting upstream fix": crit/high CVEs the auto-updater can't reach —
+    # we're at the tracked-latest, no upstream fix exists, or upstream's newest
+    # is still below the fix. Fixing these would mean rebuilding the upstream
+    # app from source to patch a dependency bundled inside it — the maintainer's
+    # job, not ours — so we surface them separately rather than count them
+    # against us. (critical == autoFixCritical + awaitingCritical.)
+    _AWAIT = ("at-latest", "no-fix", "bump-below-fix", "manual", "unknown")
+    counts["awaitingCritical"] = sum(
+        1 for v in cves if v["severity"] == "CRITICAL" and v["autoFix"] in _AWAIT)
+    counts["awaitingHigh"] = sum(
+        1 for v in cves if v["severity"] == "HIGH" and v["autoFix"] in _AWAIT)
     counts["cves"] = cves
     return counts
 
