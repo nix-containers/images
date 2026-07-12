@@ -128,7 +128,10 @@ while true; do
           log_stamp "  commit: $SUMMARY files"
           # Ensure branch exists locally; then push (creates upstream branch on first push).
           git branch -f "$COMMIT_BRANCH" HEAD >/dev/null 2>&1 || true
-          if git push -u origin "$COMMIT_BRANCH":"$COMMIT_BRANCH" >>/tmp/orch-commit.log 2>&1; then
+          # --force-with-lease so a re-based auto-update-nightly (e.g. after
+          # main was updated separately) doesn't fatally reject the push. The
+          # branch is auto-generated per-cycle; overwriting is safe.
+          if git push --force-with-lease -u origin "$COMMIT_BRANCH":"$COMMIT_BRANCH" >>/tmp/orch-commit.log 2>&1; then
             log_stamp "  push: $COMMIT_BRANCH → origin"
           else
             log_stamp "  push: FAILED (see /tmp/orch-commit.log)"
