@@ -161,6 +161,10 @@ function updateStats(data) {
   const highEl = document.getElementById('high-count');
   if (highEl) highEl.textContent = totalHigh.toLocaleString();
 
+  // Fresh disclosures: distinct CVEs first published in the last 3 days.
+  const newCveEl = document.getElementById('new-cves-3d');
+  if (newCveEl) newCveEl.textContent = (data.newCves3d ?? 0).toLocaleString();
+
   // Auto-updater impact: how many of these CRIT+HIGH CVEs will clear on the
   // next auto-update cycle (nvchecker sees a fix, or the image is
   // nixpkgs-tracked and moves with the flake).

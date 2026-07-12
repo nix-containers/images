@@ -295,6 +295,7 @@ def scan_for_image(image_name: str, scan_dir: str | None,
                 "fixed": fixed_ver,
                 "title": vuln.get("Title", "") or vuln.get("Description", "") or "",
                 "autoFix": fix_status,
+                "published": vuln.get("PublishedDate", "") or "",
             })
     # Sort by severity (critical first) then CVE ID descending.
     cves.sort(key=lambda v: (_SEVERITY_ORDER.get(v["severity"].lower(), 99), v["id"]),
@@ -1002,6 +1003,9 @@ def main():
     # InstalledVersion) — the same identity trivy reports — so each package
     # row can show the CVEs affecting that exact version, deduped across images.
     pkg_cve_map: dict[tuple[str, str], dict] = {}
+    # Fleet-wide map of CVE id -> earliest PublishedDate, to count distinct CVEs
+    # newly disclosed in the last N days (the "moving target" of fresh CVEs).
+    fleet_cve_published: dict[str, str] = {}
 
     # Reverse map: which nix-containers charts (in charts/) consume each image.
     # Empty if --charts-data was not passed. Populated by scanning the charts
@@ -1174,6 +1178,10 @@ def main():
 
         # Fold this image's CVEs into the package → CVE map, deduped by CVE id.
         for v in (scan or {}).get("cves", []) or []:
+            _vid = v.get("id", "")
+            _pub = v.get("published", "")
+            if _vid and _pub and _vid not in fleet_cve_published:
+                fleet_cve_published[_vid] = _pub
             pk = (v.get("package", ""), v.get("installed", ""))
             if not pk[0]:
                 continue
@@ -1300,6 +1308,17 @@ def main():
     auto_fix_high_total = sum(
         (i.get("scan") or {}).get("autoFixHigh", 0) or 0 for i in slim_images)
 
+    # Distinct CVEs newly disclosed in the last 3 days across the fleet — the
+    # "fresh disclosures" that keep the pending count a moving target.
+    _cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=3)
+    def _pub_recent(s):
+        try:
+            return datetime.datetime.fromisoformat(
+                s.replace("Z", "").split("+")[0].split(".")[0]) >= _cutoff
+        except (ValueError, AttributeError):
+            return False
+    new_cves_3d = sum(1 for pub in fleet_cve_published.values() if _pub_recent(pub))
+
     slim_data = {
         "totalCount": len(slim_images),
         "images": slim_images,
@@ -1308,6 +1327,8 @@ def main():
         # the "will resolve on next auto-update" numbers on the CVE cards.
         "autoFixCritical": auto_fix_critical_total,
         "autoFixHigh": auto_fix_high_total,
+        # Distinct CVEs first published in the last 3 days (fresh disclosures).
+        "newCves3d": new_cves_3d,
         # Size aggregates for the homepage stat cards. Bytes. null-safe
         # on the front-end: tags-data may be absent on local builds, in
         # which case both totals are 0 and the card renders a placeholder.
