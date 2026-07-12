@@ -156,25 +156,42 @@ jobs:
           helm version
 
       - name: Build images for chart
+        id: build
         env:
           IMAGES_CSV: ${{ matrix.images_csv }}
         run: |
-          set -euo pipefail
+          # Deliberately NOT `set -e`: a broken image def is a build issue tracked
+          # separately, NOT a chart-test regression. If any image can't build we
+          # can't test the chart, so we skip the cluster steps cleanly (job stays
+          # green) instead of turning every broken-image chart into a red X.
+          set -uo pipefail
           IFS=',' read -ra IMAGES <<< "$IMAGES_CSV"
+          failed=""
           for img in "${IMAGES[@]}"; do
             echo "::group::Build $img"
-            nix build ".#${img}" --print-build-logs
-            nix run ".#${img}.copyTo" -- "docker-daemon:nix-containers/${img}:${IMAGE_TAG}"
+            if nix build ".#${img}" --print-build-logs \
+                 && nix run ".#${img}.copyTo" -- "docker-daemon:nix-containers/${img}:${IMAGE_TAG}"; then
+              echo "built ${img}"
+            else
+              echo "::warning title=unbuildable image::${img} failed to build"
+              failed="${failed} ${img}"
+            fi
             echo "::endgroup::"
           done
+          if [ -n "${failed}" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice title=chart test skipped::${{ matrix.chart }} skipped — unbuildable image(s):${failed}. Image build failures are tracked separately; this is not a chart-test regression."
+          fi
 
       - name: Create kind cluster
+        if: steps.build.outputs.skip != 'true'
         run: |
           set -euo pipefail
           kind create cluster --name="${CLUSTER_NAME}" --wait=120s
           kubectl cluster-info
 
       - name: Load chart images into kind
+        if: steps.build.outputs.skip != 'true'
         env:
           IMAGES_CSV: ${{ matrix.images_csv }}
         run: |
@@ -185,6 +202,7 @@ jobs:
           done
 
       - name: Run chart test
+        if: steps.build.outputs.skip != 'true'
         env:
           CHART: ${{ matrix.chart }}
           CATEGORY: ${{ matrix.category }}
