@@ -219,8 +219,19 @@ def _load_auto_update_state(repo_root: str,
             if RE_DRV_PKGS.search(s):
                 state["nixpkgs_indirect"].add(d); continue
             m = RE_DRV_BINDING.search(s)
-            if m and re.search(rf"^\s*{re.escape(m.group(1))}\s*=\s*pkgs\.", s, re.MULTILINE):
-                state["nixpkgs_indirect"].add(d); continue
+            if m:
+                name = m.group(1)
+                # One-hop: <name> = pkgs.<attr>
+                if re.search(rf"^\s*{re.escape(name)}\s*=\s*pkgs\.", s, re.MULTILINE):
+                    state["nixpkgs_indirect"].add(d); continue
+                # Two-hop: <name> = <alias>.<attr>  where  <alias> = pkgs.<attr>
+                m_alias = re.search(
+                    rf"^\s*{re.escape(name)}\s*=\s*([a-zA-Z][a-zA-Z0-9_-]*)\.",
+                    s, re.MULTILINE)
+                if m_alias and re.search(
+                        rf"^\s*{re.escape(m_alias.group(1))}\s*=\s*pkgs\.",
+                        s, re.MULTILINE):
+                    state["nixpkgs_indirect"].add(d); continue
             stem = re.sub(r"-fips$", "", d)
             if stem and re.search(rf"pkgs\.{re.escape(stem)}\b", s):
                 state["nixpkgs_indirect"].add(d)
