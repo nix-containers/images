@@ -62,6 +62,14 @@ RE_FROM_GH = re.compile(
 RE_FETCH_GH_URL = re.compile(
     r'fetch(?:url|zip|Tarball|Git|tree)\s*\{[^}]*?url\s*=\s*"[^"]*?github\.com/([^/"\s]+)/([^/"\s]+?)(?:/|"|\.git)',
     re.DOTALL)
+# GitLab equivalents. owner may be a group path (group/subgroup); repo is the
+# final path segment. nvchecker's gitlab source polls tags for the newest.
+RE_FROM_GL = re.compile(
+    r'fetchFromGitLab\s*\{[^}]*?owner\s*=\s*"([^"]+)"[^}]*?repo\s*=\s*"([^"]+)"',
+    re.DOTALL)
+RE_FETCH_GL_URL = re.compile(
+    r'fetch(?:url|zip|Tarball|Git|tree)\s*\{[^}]*?url\s*=\s*"[^"]*?gitlab\.com/([^"\s]+?)/([^/"\s]+?)(?:/|"|\.git)',
+    re.DOTALL)
 RE_VERSION = re.compile(r'^\s*version\s*=\s*"([^"]+)"', re.MULTILINE)
 RE_DRV_PKGS = re.compile(r'drv\s*=\s*pkgs\.[a-zA-Z0-9_.-]+')
 # Upstream-reference stubs: docker.io/OWNER/REPO or docker.io/REPO (library images).
@@ -83,6 +91,12 @@ def image_source(default_nix_path):
     m = RE_FETCH_GH_URL.search(s)
     if m and m.group(1) not in BAD_OWNERS:
         return {"kind": "github", "owner": m.group(1), "repo": m.group(2).rstrip('.'), "src": s}
+    m = RE_FROM_GL.search(s)
+    if m and m.group(1) not in BAD_OWNERS:
+        return {"kind": "gitlab", "owner": m.group(1), "repo": m.group(2), "src": s}
+    m = RE_FETCH_GL_URL.search(s)
+    if m and m.group(1) not in BAD_OWNERS:
+        return {"kind": "gitlab", "owner": m.group(1), "repo": m.group(2).rstrip('.'), "src": s}
     if RE_DRV_PKGS.search(s):
         return {"kind": "nixpkgs", "src": s}
     m = RE_UPSTREAM_LABEL.search(s)
@@ -105,7 +119,7 @@ def image_source(default_nix_path):
 added_toml = []
 added_mapping = {}
 skipped = {"pkgs.attr": [], "unknown": [], "already-mapped-differently": []}
-counts = {"github": 0, "container": 0}
+counts = {"github": 0, "container": 0, "gitlab": 0}
 
 for img in sorted(os.listdir('images')):
     d = f'images/{img}'
@@ -139,6 +153,19 @@ for img in sorted(os.listdir('images')):
             f'prefix = "v"\n'
         )
         counts["github"] += 1
+    elif info["kind"] == "gitlab":
+        owner, repo = info["owner"], info["repo"].removesuffix(".git")
+        m = RE_VERSION.search(info["src"])
+        ver = m.group(1) if m else ""
+        added_toml.append(
+            f'[{key}]\n'
+            f'source = "gitlab"\n'
+            f'gitlab = "{owner}/{repo}"\n'
+            f'use_max_tag = true\n'
+            f'include_regex = "v?[0-9]+\\\\.[0-9]+(\\\\.[0-9]+)?"\n'
+            f'prefix = "v"\n'
+        )
+        counts["gitlab"] += 1
     elif info["kind"] == "container":
         # Track the upstream tag. `include_regex` gates against date-based /
         # channel tags ("latest", "nightly", "20250107") — accept only tags
@@ -158,7 +185,7 @@ for img in sorted(os.listdir('images')):
     if ver and key not in old_ver:
         old_ver[key] = ver
 
-print(f'== to add: {len(added_toml)} entries (github={counts["github"]}, container={counts["container"]})')
+print(f'== to add: {len(added_toml)} entries (github={counts["github"]}, gitlab={counts["gitlab"]}, container={counts["container"]})')
 print(f'== skipped: pkgs.attr={len(skipped["pkgs.attr"])}  unknown={len(skipped["unknown"])}  already-mapped-differently={len(skipped["already-mapped-differently"])}')
 
 if dry:
