@@ -64,7 +64,10 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
 STATE_DIR="audit-results/local-bsp"
-SCAN_DIR="scan-data"
+# Write directly to website/scan-data/ so the site build's SCAN_DATA_PATH
+# picks up fresh scans without a manual rsync step. Same directory that
+# scripts/local-website-fetch-scan.sh populates from CI artifacts.
+SCAN_DIR="website/scan-data"
 mkdir -p "$STATE_DIR" "$SCAN_DIR"
 
 BRANCH=$(git branch --show-current)
