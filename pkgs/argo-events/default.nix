@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "argo-events";
-  version = "1.9.10";
+  version = "1.9.11";
 
   src = fetchFromGitHub {
     owner = "argoproj";
     repo = "argo-events";
     rev = "v${version}";
-    hash = "sha256-C0FDilzSjY7OMtqQV/mudT+Ojg4+w2FL6IKVgs0dNQ4=";
+    hash = "sha256-nj/5h5oQEKXbWJLeCzVD0CGQT9vpr/YNgN0nboarFqU=";
   };
 
   vendorHash = "sha256-XeA2SwqS8qZVWisXhGAGE+kFH/tyRdb29L+3sPfLIZU=";
