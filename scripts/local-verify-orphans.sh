@@ -149,7 +149,7 @@ while IFS= read -r image; do
   fi
 
   echo "==> [$image] build"
-  if ! nix build --no-link ".#$image" 2>/dev/null; then
+  if ! nix build --no-link ".#\"$image\"" 2>/dev/null; then
     echo "fail-build" > "$state_file"
     total_fail_build=$((total_fail_build + 1))
     continue

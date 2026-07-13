@@ -22,7 +22,7 @@ fix_hash() {
     echo "[$img] Attempting build to get correct hash..."
 
     # Try to build and capture error
-    output=$(nix build ".#$img" --no-link 2>&1 || true)
+    output=$(nix build ".#\"$img\"" --no-link 2>&1 || true)
 
     # Extract the correct hash from "got:" line
     got_hash=$(echo "$output" | grep -oP 'got:\s+\K(sha256-[A-Za-z0-9+/]+=*)' | head -1)
@@ -42,7 +42,7 @@ fix_hash() {
     # Check if there are more placeholder hashes (vendorHash)
     if grep -q "sha256-AAAA" "$file"; then
         echo "[$img] File has more placeholder hashes, attempting second build..."
-        output=$(nix build ".#$img" --no-link 2>&1 || true)
+        output=$(nix build ".#\"$img\"" --no-link 2>&1 || true)
         got_hash=$(echo "$output" | grep -oP 'got:\s+\K(sha256-[A-Za-z0-9+/]+=*)' | head -1)
 
         if [ -n "$got_hash" ]; then

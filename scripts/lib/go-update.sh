@@ -72,7 +72,7 @@ get_vendor_hash() {
     log_info "Computing vendorHash for ${package_attr}..."
 
     local build_output
-    local build_cmd="nix build .#${package_attr} --print-build-logs -L 2>&1"
+    local build_cmd="nix build .#\"${package_attr}\" --print-build-logs -L 2>&1"
 
     if [[ "$use_lima" == "true" ]]; then
         build_output=$(limactl shell default -- bash -c ". /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && $build_cmd" 2>&1 || true)

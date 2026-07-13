@@ -74,12 +74,12 @@ build_image() {
     
     # Build with Nix
     log "Running nix build for $image_name..."
-    if nix build ".#$image_name" --print-build-logs; then
+    if nix build ".#\"$image_name\"" --print-build-logs; then
         log "✅ Successfully built $image_name"
         
         # Load into Docker
         log "Loading image into Docker daemon..."
-        if nix run ".#$image_name.copyTo" -- docker-daemon:"$image_name:test"; then
+        if nix run ".#\"$image_name\".copyTo" -- docker-daemon:"$image_name:test"; then
             log "✅ Successfully loaded $image_name into Docker"
             
             # Show image info

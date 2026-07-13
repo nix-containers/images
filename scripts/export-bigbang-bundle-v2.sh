@@ -86,7 +86,7 @@ while IFS= read -r IMAGE_NAME || [[ -n "$IMAGE_NAME" ]]; do
 
     # Build the image to get the JSON path
     log_info "  Building image..."
-    IMAGE_JSON=$(nix build ".#${IMAGE_NAME}" --no-link --print-out-paths 2>/dev/null)
+    IMAGE_JSON=$(nix build ".#\"${IMAGE_NAME}\"" --no-link --print-out-paths 2>/dev/null)
     if [[ -z "$IMAGE_JSON" ]] || [[ ! -f "$IMAGE_JSON" ]]; then
         log_error "  Failed to build image: $IMAGE_NAME"
         FAILED=$((FAILED + 1))

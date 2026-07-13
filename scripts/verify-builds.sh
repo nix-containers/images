@@ -88,7 +88,7 @@ test_nix2container_builds() {
         total_count=$((total_count + 1))
         info "Building $image with nix2container..."
         
-        if nix build ".#$image" --print-build-logs; then
+        if nix build ".#\"$image\"" --print-build-logs; then
             log "✅ Successfully built $image with nix2container"
             success_count=$((success_count + 1))
             
@@ -139,8 +139,8 @@ test_docker_functionality() {
         fi
         
         # Build and load to Docker
-        if nix build ".#$image" && \
-           nix run ".#$image.copyTo" -- docker-daemon:"$image:verify-test"; then
+        if nix build ".#\"$image\"" && \
+           nix run ".#\"$image\".copyTo" -- docker-daemon:"$image:verify-test"; then
             
             log "✅ Successfully loaded $image to Docker"
             

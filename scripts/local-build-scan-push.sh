@@ -120,7 +120,7 @@ while IFS= read -r image; do
 
   # --- 1. Build ---
   echo "==> [$image] build"
-  if ! nix build --no-link ".#$image" 2>/dev/null; then
+  if ! nix build --no-link ".#\"$image\"" 2>/dev/null; then
     echo "fail-build" > "$state_file"
     total_fail_build=$((total_fail_build + 1))
     continue
@@ -132,7 +132,7 @@ while IFS= read -r image; do
   # "latest" so we still publish something for images whose default.nix
   # doesn't expose a clean version.
   echo "==> [$image] resolve version tag"
-  TAG=$(nix eval --raw ".#${image}.imageTag" 2>/dev/null || echo "")
+  TAG=$(nix eval --raw ".#\"${image}\".imageTag" 2>/dev/null || echo "")
   if [ -z "$TAG" ] || [ "$TAG" = "latest" ]; then
     TAG="latest"
     # No second push needed; the `latest` push below already covers it.
@@ -145,14 +145,14 @@ while IFS= read -r image; do
   # `copyTo docker://...` writes directly to the registry via skopeo —
   # no local docker daemon needed, no `docker pull/load/rmi` disk thrash.
   echo "==> [$image] push :latest"
-  if ! nix run ".#${image}.copyTo" -- "docker://${REGISTRY}/${image}:latest" >/dev/null 2>&1; then
+  if ! nix run ".#\"${image}\".copyTo" -- "docker://${REGISTRY}/${image}:latest" >/dev/null 2>&1; then
     echo "fail-push" > "$state_file"
     total_fail_push=$((total_fail_push + 1))
     continue
   fi
   if [ "$PUSH_VERSION_TOO" = "true" ]; then
     echo "==> [$image] push :$TAG"
-    if ! nix run ".#${image}.copyTo" -- "docker://${REGISTRY}/${image}:${TAG}" >/dev/null 2>&1; then
+    if ! nix run ".#\"${image}\".copyTo" -- "docker://${REGISTRY}/${image}:${TAG}" >/dev/null 2>&1; then
       echo "fail-push" > "$state_file"
       total_fail_push=$((total_fail_push + 1))
       continue

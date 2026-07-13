@@ -63,7 +63,7 @@ build_image() {
     local image="$1"
     log_info "Building image: $image"
 
-    $SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix build .#$image --no-link --print-out-paths 2>&1"
+    $SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix build .#\"$image\" --no-link --print-out-paths 2>&1"
 }
 
 build_all_images() {
@@ -86,7 +86,7 @@ build_all_images() {
         echo ""
         log_info "[$count/$total] Building: $image"
 
-        if $SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix build .#$image --no-link 2>&1"; then
+        if $SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix build .#\"$image\" --no-link 2>&1"; then
             succeeded+=("$image")
             log_info "✓ $image built successfully"
         else
@@ -142,7 +142,7 @@ build_timed_images() {
         local error_msg=""
 
         set +e
-        output=$($SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix build .#$image --no-link 2>&1")
+        output=$($SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix build .#\"$image\" --no-link 2>&1")
         local exit_code=$?
         set -e
 
@@ -220,14 +220,14 @@ test_image() {
 
     # First build
     local result
-    result=$($SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix build .#$image --no-link --print-out-paths 2>&1")
+    result=$($SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix build .#\"$image\" --no-link --print-out-paths 2>&1")
 
     if [ $? -eq 0 ]; then
         log_info "Build succeeded: $result"
 
         # Copy to docker and run
         log_info "Loading image into docker..."
-        $SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix run .#$image.copyToDockerDaemon 2>/dev/null" || true
+        $SSH_CMD "$REMOTE_HOST" "cd $REMOTE_DIR/images && nix run .#\"$image\".copyToDockerDaemon 2>/dev/null" || true
 
         log_info "Image ready for testing"
     else
