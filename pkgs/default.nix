@@ -26,6 +26,7 @@
   configmap-reload = pkgs.callPackage ./configmap-reload { };
   contour = pkgs.callPackage ./contour { };
   coredns = pkgs.callPackage ./coredns { };
+  cert-manager-fips = pkgs.callPackage ./cert-manager-fips { };
   crossplane-server = pkgs.callPackage ./crossplane { };
   csi-attacher = pkgs.callPackage ./csi-attacher { };
   csi-driver-nfs = pkgs.callPackage ./csi-driver-nfs { };
