@@ -158,10 +158,16 @@ def image_source(default_nix_path):
     m = RE_UPSTREAM_LABEL.search(s)
     if m:
         # Value is "REGISTRY/OWNER/REPO:TAG" or "REGISTRY/REPO:TAG" (library image).
-        # nvchecker 2.20's container source supports Bearer-token auth only —
-        # that covers docker.io, quay.io, ghcr.io. Other registries fall back
-        # to a github-repo mapping (K8SIO_MAP) or stay unknown.
-        POLLABLE = {"docker.io", "quay.io", "ghcr.io"}
+        # nvchecker's container source supports Bearer-token auth only. Verified
+        # (2026-07) that these registries answer the Bearer token dance and return
+        # tags: docker.io, quay.io, ghcr.io, gcr.io, public.ecr.aws,
+        # registry.gitlab.com, nvcr.io, docker.elastic.co, cr.l5d.io,
+        # us-docker.pkg.dev, icr.io. registry.k8s.io and mcr.microsoft.com use a
+        # non-Bearer scheme nvchecker can't poll — those fall back to K8SIO_MAP
+        # (github) or stay unknown.
+        POLLABLE = {"docker.io", "quay.io", "ghcr.io", "gcr.io", "public.ecr.aws",
+                    "registry.gitlab.com", "nvcr.io", "docker.elastic.co",
+                    "cr.l5d.io", "us-docker.pkg.dev", "icr.io"}
         upstream = m.group(1)
         registry, _, rest = upstream.partition("/")
         if not rest:
