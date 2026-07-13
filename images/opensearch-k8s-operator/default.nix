@@ -4,7 +4,7 @@
 # OpenSearch search and analytics
 
 let
-  version = "2.19.0";
+  version = "3.0.0-alpha";
   
   opensearchPkgs = with pkgs; [
     opensearch

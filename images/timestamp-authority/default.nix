@@ -11,7 +11,7 @@
 # with the in-memory signer bound on 0.0.0.0.
 
 let
-  version = "2.1.2";
+  version = "2.1.3";
 
   # Upstream ships a fully static (CGO-free) Go binary, so no autoPatchelf or
   # runtime libraries are needed — just install it onto PATH.
@@ -21,7 +21,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/sigstore/timestamp-authority/releases/download/v${version}/timestamp-server-linux-amd64";
-      hash = "sha256-SOzgMNX8nzR5rzoea1QPBS0kMCk48+DrIEN3yEUqLUU=";
+      hash = "sha256-GraLrLjlEgWnIuOkmiyJ1iB34bw/VYwibtfkWO9UBKc=";
     };
 
     dontUnpack = true;
