@@ -182,6 +182,16 @@ def image_source(default_nix_path):
                 owner, repo = gh.split("/", 1)
                 return {"kind": "github", "owner": owner, "repo": repo, "src": s}
         return {"kind": "unknown", "src": s}
+    # nixpkgs-indirect: image assembled from nixpkgs packages (buildEnv /
+    # copyToRoot / contents / paths = [ pkgs.X ]) or pinned to a
+    # `pkgs.<attr>.version`. These track whatever nixpkgs ships and update via
+    # `nix flake update` — no nvchecker entry needed. Guarded against
+    # pullImage / fetch-based images whose version comes from an external
+    # source rather than nixpkgs.
+    if not re.search(r'pullImage|fetchurl|fetchzip|fetchTarball|fetchgit', s):
+        if (re.search(r'(?:copyToRoot|contents|paths)\s*=\s*\[?[^;]*?pkgs\.[a-zA-Z]', s, re.DOTALL)
+                or re.search(r'pkgs\.[a-zA-Z][\w.-]*\.version', s)):
+            return {"kind": "nixpkgs", "src": s}
     return {"kind": "unknown", "src": s}
 
 added_toml = []
