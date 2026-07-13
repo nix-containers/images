@@ -104,6 +104,18 @@ total_fail_scan=0
 total_fail_attach=0
 total_skipped=0
 
+reclaim_if_tight() {
+  # Same 15G threshold the orchestrator uses. A single Java/Go image build can
+  # eat 5-10G of /nix/store on cold cache, so processing 30-100 fresh images
+  # without a reclaim will hit ENOSPC.
+  local free
+  free=$(df -BG /nix | awk 'NR==2 {gsub("G","",$4); print $4}')
+  if [ "$free" -lt 15 ]; then
+    echo "==> /nix has ${free}G free — running nix-collect-garbage --delete-older-than 2d"
+    nix-collect-garbage --delete-older-than 2d >/tmp/local-bsp-gc.log 2>&1 || true
+  fi
+}
+
 while IFS= read -r image; do
   [ -z "$image" ] && continue
   state_file="$STATE_DIR/${image}.state"
@@ -117,6 +129,8 @@ while IFS= read -r image; do
     echo "missing" > "$state_file"
     continue
   fi
+
+  reclaim_if_tight
 
   # --- 1. Build ---
   echo "==> [$image] build"
