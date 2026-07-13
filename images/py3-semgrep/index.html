@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>py3-semgrep — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">py3-semgrep</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      
+      <span class="text-fg-muted">v1.164.0</span>
+      <a href="https://semgrep.dev/" target="_blank" rel="noopener" class="text-accent-ok hover:underline">Upstream ↗</a>
+    </div>
+    
+    <p class="text-fg-muted mb-8">py3-semgrep container image</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the py3-semgrep-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/py3-semgrep:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">v1.164.0</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#py3-semgrep</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-py3-semgrep-to-docker &amp;&amp; ./result/bin/load-py3-semgrep-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/py3-semgrep-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#py3-semgrep-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-py3-semgrep-dev-to-docker &amp;&amp; ./result/bin/load-py3-semgrep-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-fg-primary text-base mb-3">Lightweight static analysis for many languages - cli</p><p class="text-fg-muted text-sm mb-3">Semgrep is a fast, open-source, static analysis tool for finding bugs and enforcing code standards at editor, commit, and CI time. Semgrep analyzes code locally on your computer or in your build environment: code is never uploaded. Its rules look like the code you already write; no abstract syntax trees, regex wrestling, or painful DSLs.</p><p class="text-sm"><span class="text-fg-muted">Upstream project: </span><a href="https://semgrep.dev/" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">semgrep.dev ↗</a></p></div>
+        <div class="prose prose-invert max-w-none"><h1>py3-semgrep</h1>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#py3-semgrep
+
+# Load into Docker
+nix build .#load-py3-semgrep-to-docker &amp;&amp; ./result/bin/load-py3-semgrep-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/py3-semgrep:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:68344e75d801c80a4912c570a43c794ce0d633dba8622a0504390273cf21ae6f">68344e75d801</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 10:55 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">v1.164.0</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:68344e75d801c80a4912c570a43c794ce0d633dba8622a0504390273cf21ae6f">68344e75d801</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 10:55 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 11:56 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between"><span class="text-accent-bad font-mono">Critical</span><span>0</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="high"><span class="text-accent-warn font-mono">High</span><span>6</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="medium"><span class="text-fg-muted font-mono">Medium</span><span>3</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="low"><span class="text-fg-muted font-mono">Low</span><span>4</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_py3-semgrep_latest-trivy.json</a></div></div><div class="mt-4" id="cve-list" data-cve-list><div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-fg-primary">Vulnerability todo (13 CVEs)</span><button type="button" data-cve-filter="all" class="text-xs text-fg-muted hover:underline">show all</button></div><table class="prose mt-1"><thead><tr><th>✓</th><th>CVE</th><th>Severity</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Title</th></tr></thead><tbody><tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-24049" aria-label="mark CVE-2026-24049 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-24049" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-24049</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>wheel</td><td class="font-mono text-xs">0.45.1</td><td class="font-mono text-xs">0.46.2</td><td>wheel: wheel: Privilege Escalation or Arbitrary Code Execution via malicious wheel file unpacking</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-32874" aria-label="mark CVE-2026-32874 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32874" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-32874</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>ujson</td><td class="font-mono text-xs">5.11.0</td><td class="font-mono text-xs">5.12.0</td><td>UltraJSON: UltraJSON: Denial of Service due to memory leak when parsing large integers</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-32875" aria-label="mark CVE-2026-32875 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32875" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-32875</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>ujson</td><td class="font-mono text-xs">5.11.0</td><td class="font-mono text-xs">5.12.0</td><td>ultrajson: UltraJSON: Denial of Service via large indent parameter in JSON serialization</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-44660" aria-label="mark CVE-2026-44660 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-44660" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-44660</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>ujson</td><td class="font-mono text-xs">5.11.0</td><td class="font-mono text-xs">5.12.1</td><td>python-ujson: UltraJSON: Memory leak leading to Denial of Service</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-53539" aria-label="mark CVE-2026-53539 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-53539" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-53539</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>python-multipart</td><td class="font-mono text-xs">0.0.29</td><td class="font-mono text-xs">0.0.30</td><td>Python-Multipart is a streaming multipart parser for Python. Prior to  ...</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54283" aria-label="mark CVE-2026-54283 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54283" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54283</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>starlette</td><td class="font-mono text-xs">1.1.0</td><td class="font-mono text-xs">1.3.1</td><td>starlette: Starlette: request.form() limits silently ignored for application/x-www-form-urlencoded enable DoS</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-45409" aria-label="mark CVE-2026-45409 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-45409" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-45409</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>idna</td><td class="font-mono text-xs">3.13</td><td class="font-mono text-xs">3.15</td><td>Internationalized Domain Names in Applications (IDNA) for Python provi ...</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54911" aria-label="mark CVE-2026-54911 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54911" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54911</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>ujson</td><td class="font-mono text-xs">5.11.0</td><td class="font-mono text-xs">5.13.0</td><td>UltraJSON is a fast JSON encoder and decoder written in pure C with bi ...</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="GHSA-4xgf-cpjx-pc3j" aria-label="mark GHSA-4xgf-cpjx-pc3j done"></td><td><a href="https://github.com/advisories/GHSA-4xgf-cpjx-pc3j" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">GHSA-4xgf-cpjx-pc3j</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>pydantic-settings</td><td class="font-mono text-xs">2.12.0</td><td class="font-mono text-xs">2.14.2</td><td>pydantic-settings: NestedSecretsSettingsSource follows symlinks outside secrets_dir, enabling local file read and bypassing secrets_dir_max_size</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-53537" aria-label="mark CVE-2026-53537 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-53537" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-53537</a></td><td class="font-mono uppercase text-xs">LOW</td><td>python-multipart</td><td class="font-mono text-xs">0.0.29</td><td class="font-mono text-xs">0.0.30</td><td>multipart: Python-Multipart: Information disclosure via header parsing discrepancy</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-53538" aria-label="mark CVE-2026-53538 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-53538" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-53538</a></td><td class="font-mono uppercase text-xs">LOW</td><td>python-multipart</td><td class="font-mono text-xs">0.0.29</td><td class="font-mono text-xs">0.0.30</td><td>Python-Multipart is a streaming multipart parser for Python. Prior to  ...</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-53540" aria-label="mark CVE-2026-53540 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-53540" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-53540</a></td><td class="font-mono uppercase text-xs">LOW</td><td>python-multipart</td><td class="font-mono text-xs">0.0.29</td><td class="font-mono text-xs">0.0.31</td><td>python-multipart: Python-Multipart: Negative Content-Length in parse_form buffers the entire body in memory</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54282" aria-label="mark CVE-2026-54282 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54282" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54282</a></td><td class="font-mono uppercase text-xs">LOW</td><td>starlette</td><td class="font-mono text-xs">1.1.0</td><td class="font-mono text-xs">1.3.0</td><td>starlette: Starlette: Information disclosure due to improper HTTP request path validation</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">py3-semgrep</span> at version
+          <span class="font-mono text-fg-primary">v1.164.0</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 11:56 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=abseil-cpp" class="text-accent-ok hover:underline font-mono" title="See other images that include abseil-cpp">abseil-cpp</a></td><td class="font-mono">20260107.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=abseil-cpp" class="text-accent-ok hover:underline font-mono" title="See other images that include abseil-cpp">abseil-cpp</a></td><td class="font-mono">20260107.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=acl" class="text-accent-ok hover:underline font-mono" title="See other images that include acl">acl</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=annotated-types" class="text-accent-ok hover:underline font-mono" title="See other images that include annotated-types">annotated-types</a></td><td class="font-mono">0.7.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=anyio" class="text-accent-ok hover:underline font-mono" title="See other images that include anyio">anyio</a></td><td class="font-mono">4.13.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=apsw" class="text-accent-ok hover:underline font-mono" title="See other images that include apsw">apsw</a></td><td class="font-mono">3.51.0.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">any-OSI</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attr" class="text-accent-ok hover:underline font-mono" title="See other images that include attr">attr</a></td><td class="font-mono">2.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attrs" class="text-accent-ok hover:underline font-mono" title="See other images that include attrs">attrs</a></td><td class="font-mono">26.1.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=autocommand" class="text-accent-ok hover:underline font-mono" title="See other images that include autocommand">autocommand</a></td><td class="font-mono">2.2.2</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">LGPLv3</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=backports-tarfile" class="text-accent-ok hover:underline font-mono" title="See other images that include backports-tarfile">backports-tarfile</a></td><td class="font-mono">1.2.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3.9</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=boltons" class="text-accent-ok hover:underline font-mono" title="See other images that include boltons">boltons</a></td><td class="font-mono">25.0.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bracex" class="text-accent-ok hover:underline font-mono" title="See other images that include bracex">bracex</a></td><td class="font-mono">2.6</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bzip2" class="text-accent-ok hover:underline font-mono" title="See other images that include bzip2">bzip2</a></td><td class="font-mono">1.0.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=c-ares" class="text-accent-ok hover:underline font-mono" title="See other images that include c-ares">c-ares</a></td><td class="font-mono">1.34.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=c-ares" class="text-accent-ok hover:underline font-mono" title="See other images that include c-ares">c-ares</a></td><td class="font-mono">1.34.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=certifi" class="text-accent-ok hover:underline font-mono" title="See other images that include certifi">certifi</a></td><td class="font-mono">2026.1.4</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MPL-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=charset-normalizer" class="text-accent-ok hover:underline font-mono" title="See other images that include charset-normalizer">charset-normalizer</a></td><td class="font-mono">3.4.7</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cli" class="text-accent-ok hover:underline font-mono" title="See other images that include cli">cli</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cli-32" class="text-accent-ok hover:underline font-mono" title="See other images that include cli-32">cli-32</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cli-64" class="text-accent-ok hover:underline font-mono" title="See other images that include cli-64">cli-64</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cli-arm64" class="text-accent-ok hover:underline font-mono" title="See other images that include cli-arm64">cli-arm64</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=click" class="text-accent-ok hover:underline font-mono" title="See other images that include click">click</a></td><td class="font-mono">8.3.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=click-option-group" class="text-accent-ok hover:underline font-mono" title="See other images that include click-option-group">click-option-group</a></td><td class="font-mono">0.5.9</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=colorama" class="text-accent-ok hover:underline font-mono" title="See other images that include colorama">colorama</a></td><td class="font-mono">0.4.6</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils">coreutils</a></td><td class="font-mono">9.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=defusedxml" class="text-accent-ok hover:underline font-mono" title="See other images that include defusedxml">defusedxml</a></td><td class="font-mono">0.8.0rc2</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">PSFL</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=deprecated" class="text-accent-ok hover:underline font-mono" title="See other images that include deprecated">deprecated</a></td><td class="font-mono">1.3.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=expat" class="text-accent-ok hover:underline font-mono" title="See other images that include expat">expat</a></td><td class="font-mono">2.8.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=face" class="text-accent-ok hover:underline font-mono" title="See other images that include face">face</a></td><td class="font-mono">24.0.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gdbm" class="text-accent-ok hover:underline font-mono" title="See other images that include gdbm">gdbm</a></td><td class="font-mono">1.26</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glom" class="text-accent-ok hover:underline font-mono" title="See other images that include glom">glom</a></td><td class="font-mono">25.12.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=googleapis-common-protos" class="text-accent-ok hover:underline font-mono" title="See other images that include googleapis-common-protos">googleapis-common-protos</a></td><td class="font-mono">1.73.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=grpc" class="text-accent-ok hover:underline font-mono" title="See other images that include grpc">grpc</a></td><td class="font-mono">1.80.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gtest" class="text-accent-ok hover:underline font-mono" title="See other images that include gtest">gtest</a></td><td class="font-mono">1.17.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gui" class="text-accent-ok hover:underline font-mono" title="See other images that include gui">gui</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gui-32" class="text-accent-ok hover:underline font-mono" title="See other images that include gui-32">gui-32</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gui-64" class="text-accent-ok hover:underline font-mono" title="See other images that include gui-64">gui-64</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gui-arm64" class="text-accent-ok hover:underline font-mono" title="See other images that include gui-arm64">gui-arm64</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=h11" class="text-accent-ok hover:underline font-mono" title="See other images that include h11">h11</a></td><td class="font-mono">0.16.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=httpcore" class="text-accent-ok hover:underline font-mono" title="See other images that include httpcore">httpcore</a></td><td class="font-mono">1.0.9</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=httpx" class="text-accent-ok hover:underline font-mono" title="See other images that include httpx">httpx</a></td><td class="font-mono">0.28.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=httpx-sse" class="text-accent-ok hover:underline font-mono" title="See other images that include httpx-sse">httpx-sse</a></td><td class="font-mono">0.4.3</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu4c" class="text-accent-ok hover:underline font-mono" title="See other images that include icu4c">icu4c</a></td><td class="font-mono">76.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu4c" class="text-accent-ok hover:underline font-mono" title="See other images that include icu4c">icu4c</a></td><td class="font-mono">76.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=idna" class="text-accent-ok hover:underline font-mono" title="See other images that include idna">idna</a></td><td class="font-mono">3.13</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=importlib-metadata" class="text-accent-ok hover:underline font-mono" title="See other images that include importlib-metadata">importlib-metadata</a></td><td class="font-mono">8.7.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=importlib-metadata" class="text-accent-ok hover:underline font-mono" title="See other images that include importlib-metadata">importlib-metadata</a></td><td class="font-mono">9.0.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jaraco-context" class="text-accent-ok hover:underline font-mono" title="See other images that include jaraco-context">jaraco-context</a></td><td class="font-mono">6.1.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jaraco-functools" class="text-accent-ok hover:underline font-mono" title="See other images that include jaraco-functools">jaraco-functools</a></td><td class="font-mono">4.4.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jaraco-text" class="text-accent-ok hover:underline font-mono" title="See other images that include jaraco-text">jaraco-text</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jsonpath-ng" class="text-accent-ok hover:underline font-mono" title="See other images that include jsonpath-ng">jsonpath-ng</a></td><td class="font-mono">1.7.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jsonschema" class="text-accent-ok hover:underline font-mono" title="See other images that include jsonschema">jsonschema</a></td><td class="font-mono">4.26.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jsonschema-specifications" class="text-accent-ok hover:underline font-mono" title="See other images that include jsonschema-specifications">jsonschema-specifications</a></td><td class="font-mono">2025.9.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libffi" class="text-accent-ok hover:underline font-mono" title="See other images that include libffi">libffi</a></td><td class="font-mono">3.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mailcap" class="text-accent-ok hover:underline font-mono" title="See other images that include mailcap">mailcap</a></td><td class="font-mono">2.1.54</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=markdown-it-py" class="text-accent-ok hover:underline font-mono" title="See other images that include markdown-it-py">markdown-it-py</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mcp" class="text-accent-ok hover:underline font-mono" title="See other images that include mcp">mcp</a></td><td class="font-mono">1.27.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mdurl" class="text-accent-ok hover:underline font-mono" title="See other images that include mdurl">mdurl</a></td><td class="font-mono">0.1.2</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=more-itertools" class="text-accent-ok hover:underline font-mono" title="See other images that include more-itertools">more-itertools</a></td><td class="font-mono">10.8.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mpdecimal" class="text-accent-ok hover:underline font-mono" title="See other images that include mpdecimal">mpdecimal</a></td><td class="font-mono">4.0.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=my-test-package" class="text-accent-ok hover:underline font-mono" title="See other images that include my-test-package">my-test-package</a></td><td class="font-mono">1.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">UNKNOWN</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses">ncurses</a></td><td class="font-mono">6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">3.6.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-api" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-api">opentelemetry-api</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-exporter-otlp-proto-common" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-exporter-otlp-proto-common">opentelemetry-exporter-otlp-proto-common</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-exporter-otlp-proto-http" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-exporter-otlp-proto-http">opentelemetry-exporter-otlp-proto-http</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-instrumentation" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-instrumentation">opentelemetry-instrumentation</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-instrumentation-requests" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-instrumentation-requests">opentelemetry-instrumentation-requests</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-instrumentation-threading" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-instrumentation-threading">opentelemetry-instrumentation-threading</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-proto" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-proto">opentelemetry-proto</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-sdk" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-sdk">opentelemetry-sdk</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-semantic-conventions" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-semantic-conventions">opentelemetry-semantic-conventions</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=opentelemetry-util-http" class="text-accent-ok hover:underline font-mono" title="See other images that include opentelemetry-util-http">opentelemetry-util-http</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=packaging" class="text-accent-ok hover:underline font-mono" title="See other images that include packaging">packaging</a></td><td class="font-mono">25.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=packaging" class="text-accent-ok hover:underline font-mono" title="See other images that include packaging">packaging</a></td><td class="font-mono">26.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0 OR BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=peewee" class="text-accent-ok hover:underline font-mono" title="See other images that include peewee">peewee</a></td><td class="font-mono">3.19.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=platformdirs" class="text-accent-ok hover:underline font-mono" title="See other images that include platformdirs">platformdirs</a></td><td class="font-mono">4.4.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ply" class="text-accent-ok hover:underline font-mono" title="See other images that include ply">ply</a></td><td class="font-mono">3.11</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=protobuf" class="text-accent-ok hover:underline font-mono" title="See other images that include protobuf">protobuf</a></td><td class="font-mono">34.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=protobuf" class="text-accent-ok hover:underline font-mono" title="See other images that include protobuf">protobuf</a></td><td class="font-mono">7.34.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pydantic" class="text-accent-ok hover:underline font-mono" title="See other images that include pydantic">pydantic</a></td><td class="font-mono">2.12.5</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pydantic-core" class="text-accent-ok hover:underline font-mono" title="See other images that include pydantic-core">pydantic-core</a></td><td class="font-mono">2.41.5</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pydantic-settings" class="text-accent-ok hover:underline font-mono" title="See other images that include pydantic-settings">pydantic-settings</a></td><td class="font-mono">2.12.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pygments" class="text-accent-ok hover:underline font-mono" title="See other images that include pygments">pygments</a></td><td class="font-mono">2.20.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pyjwt" class="text-accent-ok hover:underline font-mono" title="See other images that include pyjwt">pyjwt</a></td><td class="font-mono">2.13.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python" class="text-accent-ok hover:underline font-mono" title="See other images that include python">python</a></td><td class="font-mono">3.13.13</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python-dotenv" class="text-accent-ok hover:underline font-mono" title="See other images that include python-dotenv">python-dotenv</a></td><td class="font-mono">1.2.2</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python-lsp-jsonrpc" class="text-accent-ok hover:underline font-mono" title="See other images that include python-lsp-jsonrpc">python-lsp-jsonrpc</a></td><td class="font-mono">1.1.2</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python-multipart" class="text-accent-ok hover:underline font-mono" title="See other images that include python-multipart">python-multipart</a></td><td class="font-mono">0.0.29</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3" class="text-accent-ok hover:underline font-mono" title="See other images that include python3">python3</a></td><td class="font-mono">3.13.13</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-annotated-types" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-annotated-types">python3.13-annotated-types</a></td><td class="font-mono">0.7.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-anyio" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-anyio">python3.13-anyio</a></td><td class="font-mono">4.13.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-apsw" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-apsw">python3.13-apsw</a></td><td class="font-mono">3.51.0.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-attrs" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-attrs">python3.13-attrs</a></td><td class="font-mono">26.1.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-boltons" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-boltons">python3.13-boltons</a></td><td class="font-mono">25.0.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-bracex" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-bracex">python3.13-bracex</a></td><td class="font-mono">2.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-certifi" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-certifi">python3.13-certifi</a></td><td class="font-mono">2026.01.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-charset-normalizer" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-charset-normalizer">python3.13-charset-normalizer</a></td><td class="font-mono">3.4.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-click" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-click">python3.13-click</a></td><td class="font-mono">8.3.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-click-option-group" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-click-option-group">python3.13-click-option-group</a></td><td class="font-mono">0.5.9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-colorama" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-colorama">python3.13-colorama</a></td><td class="font-mono">0.4.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-defusedxml" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-defusedxml">python3.13-defusedxml</a></td><td class="font-mono">0.8.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-deprecated" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-deprecated">python3.13-deprecated</a></td><td class="font-mono">1.3.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-face" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-face">python3.13-face</a></td><td class="font-mono">24.0.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-glom" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-glom">python3.13-glom</a></td><td class="font-mono">25.12.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-googleapis-common-protos" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-googleapis-common-protos">python3.13-googleapis-common-protos</a></td><td class="font-mono">1.73.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-h11" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-h11">python3.13-h11</a></td><td class="font-mono">0.16.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-httpcore" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-httpcore">python3.13-httpcore</a></td><td class="font-mono">1.0.9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-httpx" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-httpx">python3.13-httpx</a></td><td class="font-mono">0.28.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-httpx-sse" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-httpx-sse">python3.13-httpx-sse</a></td><td class="font-mono">0.4.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-idna" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-idna">python3.13-idna</a></td><td class="font-mono">3.13</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-importlib-metadata" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-importlib-metadata">python3.13-importlib-metadata</a></td><td class="font-mono">9.0.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-jsonpath-ng" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-jsonpath-ng">python3.13-jsonpath-ng</a></td><td class="font-mono">1.7.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-jsonschema" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-jsonschema">python3.13-jsonschema</a></td><td class="font-mono">4.26.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-jsonschema-specifications" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-jsonschema-specifications">python3.13-jsonschema-specifications</a></td><td class="font-mono">2025.9.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-markdown-it-py" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-markdown-it-py">python3.13-markdown-it-py</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-mcp" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-mcp">python3.13-mcp</a></td><td class="font-mono">1.27.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-mdurl" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-mdurl">python3.13-mdurl</a></td><td class="font-mono">0.1.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-api" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-api">python3.13-opentelemetry-api</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-exporter-otlp-proto-common" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-exporter-otlp-proto-common">python3.13-opentelemetry-exporter-otlp-proto-common</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-exporter-otlp-proto-http" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-exporter-otlp-proto-http">python3.13-opentelemetry-exporter-otlp-proto-http</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-instrumentation" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-instrumentation">python3.13-opentelemetry-instrumentation</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-instrumentation-requests" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-instrumentation-requests">python3.13-opentelemetry-instrumentation-requests</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-instrumentation-threading" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-instrumentation-threading">python3.13-opentelemetry-instrumentation-threading</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-proto" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-proto">python3.13-opentelemetry-proto</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-sdk" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-sdk">python3.13-opentelemetry-sdk</a></td><td class="font-mono">1.34.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-semantic-conventions" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-semantic-conventions">python3.13-opentelemetry-semantic-conventions</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-opentelemetry-util-http" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-opentelemetry-util-http">python3.13-opentelemetry-util-http</a></td><td class="font-mono">0.55b0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-packaging" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-packaging">python3.13-packaging</a></td><td class="font-mono">26.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-peewee" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-peewee">python3.13-peewee</a></td><td class="font-mono">3.19.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-ply" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-ply">python3.13-ply</a></td><td class="font-mono">3.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-protobuf" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-protobuf">python3.13-protobuf</a></td><td class="font-mono">7.34.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-pydantic" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-pydantic">python3.13-pydantic</a></td><td class="font-mono">2.12.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-pydantic-core" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-pydantic-core">python3.13-pydantic-core</a></td><td class="font-mono">2.41.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-pydantic-settings" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-pydantic-settings">python3.13-pydantic-settings</a></td><td class="font-mono">2.12.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-pygments" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-pygments">python3.13-pygments</a></td><td class="font-mono">2.20.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-pyjwt" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-pyjwt">python3.13-pyjwt</a></td><td class="font-mono">2.13.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-python-dotenv" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-python-dotenv">python3.13-python-dotenv</a></td><td class="font-mono">1.2.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-python-lsp-jsonrpc" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-python-lsp-jsonrpc">python3.13-python-lsp-jsonrpc</a></td><td class="font-mono">1.1.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-python-multipart" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-python-multipart">python3.13-python-multipart</a></td><td class="font-mono">0.0.29</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-referencing" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-referencing">python3.13-referencing</a></td><td class="font-mono">0.37.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-requests" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-requests">python3.13-requests</a></td><td class="font-mono">2.33.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-rich" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-rich">python3.13-rich</a></td><td class="font-mono">14.3.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-rpds-py" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-rpds-py">python3.13-rpds-py</a></td><td class="font-mono">0.30.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-ruamel-base" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-ruamel-base">python3.13-ruamel-base</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-ruamel-yaml" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-ruamel-yaml">python3.13-ruamel-yaml</a></td><td class="font-mono">0.19.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-ruamel-yaml-clib" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-ruamel-yaml-clib">python3.13-ruamel-yaml-clib</a></td><td class="font-mono">0.2.15</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-semantic-version" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-semantic-version">python3.13-semantic-version</a></td><td class="font-mono">2.10.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-semgrep" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-semgrep">python3.13-semgrep</a></td><td class="font-mono">1.164.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-setuptools" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-setuptools">python3.13-setuptools</a></td><td class="font-mono">80.10.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-sse-starlette" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-sse-starlette">python3.13-sse-starlette</a></td><td class="font-mono">3.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-starlette" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-starlette">python3.13-starlette</a></td><td class="font-mono">1.1.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-toml" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-toml">python3.13-toml</a></td><td class="font-mono">0.10.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-tomli" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-tomli">python3.13-tomli</a></td><td class="font-mono">2.4.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-tqdm" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-tqdm">python3.13-tqdm</a></td><td class="font-mono">4.67.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-typing-extensions" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-typing-extensions">python3.13-typing-extensions</a></td><td class="font-mono">4.15.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-typing-inspection" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-typing-inspection">python3.13-typing-inspection</a></td><td class="font-mono">0.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-ujson" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-ujson">python3.13-ujson</a></td><td class="font-mono">5.11.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-urllib3" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-urllib3">python3.13-urllib3</a></td><td class="font-mono">2.6.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-uvicorn" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-uvicorn">python3.13-uvicorn</a></td><td class="font-mono">0.40.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-wcmatch" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-wcmatch">python3.13-wcmatch</a></td><td class="font-mono">10.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-wrapt" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-wrapt">python3.13-wrapt</a></td><td class="font-mono">1.17.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3.13-zipp" class="text-accent-ok hover:underline font-mono" title="See other images that include python3.13-zipp">python3.13-zipp</a></td><td class="font-mono">3.23.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=re2" class="text-accent-ok hover:underline font-mono" title="See other images that include re2">re2</a></td><td class="font-mono">2025-11-05</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=re2" class="text-accent-ok hover:underline font-mono" title="See other images that include re2">re2</a></td><td class="font-mono">2025-11-05</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.3p3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=referencing" class="text-accent-ok hover:underline font-mono" title="See other images that include referencing">referencing</a></td><td class="font-mono">0.37.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=requests" class="text-accent-ok hover:underline font-mono" title="See other images that include requests">requests</a></td><td class="font-mono">2.33.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rich" class="text-accent-ok hover:underline font-mono" title="See other images that include rich">rich</a></td><td class="font-mono">14.3.3</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rpds-py" class="text-accent-ok hover:underline font-mono" title="See other images that include rpds-py">rpds-py</a></td><td class="font-mono">0.30.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruamel-base" class="text-accent-ok hover:underline font-mono" title="See other images that include ruamel-base">ruamel-base</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT license</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruamel-yaml" class="text-accent-ok hover:underline font-mono" title="See other images that include ruamel-yaml">ruamel-yaml</a></td><td class="font-mono">0.19.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruamel-yaml-clib" class="text-accent-ok hover:underline font-mono" title="See other images that include ruamel-yaml-clib">ruamel-yaml-clib</a></td><td class="font-mono">0.2.15</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=semantic-version" class="text-accent-ok hover:underline font-mono" title="See other images that include semantic-version">semantic-version</a></td><td class="font-mono">2.10.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=semgrep" class="text-accent-ok hover:underline font-mono" title="See other images that include semgrep">semgrep</a></td><td class="font-mono">1.164.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">LGPL-2.1-or-later</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=semgrep" class="text-accent-ok hover:underline font-mono" title="See other images that include semgrep">semgrep</a></td><td class="font-mono">1.164.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">LGPL-2.1-or-later</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=semgrep-core" class="text-accent-ok hover:underline font-mono" title="See other images that include semgrep-core">semgrep-core</a></td><td class="font-mono">1.164.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=setuptools" class="text-accent-ok hover:underline font-mono" title="See other images that include setuptools">setuptools</a></td><td class="font-mono">80.10.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sqlite" class="text-accent-ok hover:underline font-mono" title="See other images that include sqlite">sqlite</a></td><td class="font-mono">3.51.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sse-starlette" class="text-accent-ok hover:underline font-mono" title="See other images that include sse-starlette">sse-starlette</a></td><td class="font-mono">3.2.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=starlette" class="text-accent-ok hover:underline font-mono" title="See other images that include starlette">starlette</a></td><td class="font-mono">1.1.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=toml" class="text-accent-ok hover:underline font-mono" title="See other images that include toml">toml</a></td><td class="font-mono">0.10.2</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tomli" class="text-accent-ok hover:underline font-mono" title="See other images that include tomli">tomli</a></td><td class="font-mono">2.4.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tomli" class="text-accent-ok hover:underline font-mono" title="See other images that include tomli">tomli</a></td><td class="font-mono">2.4.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tqdm" class="text-accent-ok hover:underline font-mono" title="See other images that include tqdm">tqdm</a></td><td class="font-mono">4.67.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MPL-2.0 AND MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=typing-extensions" class="text-accent-ok hover:underline font-mono" title="See other images that include typing-extensions">typing-extensions</a></td><td class="font-mono">4.15.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">PSF-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=typing-inspection" class="text-accent-ok hover:underline font-mono" title="See other images that include typing-inspection">typing-inspection</a></td><td class="font-mono">0.4.2</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ujson" class="text-accent-ok hover:underline font-mono" title="See other images that include ujson">ujson</a></td><td class="font-mono">5.11.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=urllib3" class="text-accent-ok hover:underline font-mono" title="See other images that include urllib3">urllib3</a></td><td class="font-mono">2.6.3</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=uvicorn" class="text-accent-ok hover:underline font-mono" title="See other images that include uvicorn">uvicorn</a></td><td class="font-mono">0.40.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=wcmatch" class="text-accent-ok hover:underline font-mono" title="See other images that include wcmatch">wcmatch</a></td><td class="font-mono">10.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=wheel" class="text-accent-ok hover:underline font-mono" title="See other images that include wheel">wheel</a></td><td class="font-mono">0.45.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=wrapt" class="text-accent-ok hover:underline font-mono" title="See other images that include wrapt">wrapt</a></td><td class="font-mono">1.17.2</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xz" class="text-accent-ok hover:underline font-mono" title="See other images that include xz">xz</a></td><td class="font-mono">5.8.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zipp" class="text-accent-ok hover:underline font-mono" title="See other images that include zipp">zipp</a></td><td class="font-mono">3.23.0</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zipp" class="text-accent-ok hover:underline font-mono" title="See other images that include zipp">zipp</a></td><td class="font-mono">3.23.1</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/py3-semgrep/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> mkImage<span class="p">,</span> pkgs<span class="p">,</span> nonRoot<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+
+mkImage <span class="p">{</span>
+  <span class="ss">drv</span> <span class="o">=</span> pkgs<span class="o">.</span>semgrep<span class="p">;</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;py3-semgrep&quot;</span><span class="p">;</span>
+  <span class="ss">tag</span> <span class="o">=</span> <span class="s2">&quot;v</span><span class="si">${</span>pkgs<span class="o">.</span>semgrep<span class="o">.</span>version<span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+  
+  <span class="ss">entrypoint</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;semgrep&quot;</span> <span class="p">];</span>
+  <span class="ss">cmd</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;--help&quot;</span> <span class="p">];</span>
+  
+  <span class="ss">labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;py3-semgrep&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;py3-semgrep container image&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> pkgs<span class="o">.</span>semgrep<span class="o">.</span>version<span class="p">;</span>
+  <span class="p">};</span>
+  
+  <span class="ss">user</span> <span class="o">=</span> nonRoot<span class="o">.</span>userString<span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gitlab-kubectl-fips — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">gitlab-kubectl-fips</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      
+      <span class="text-fg-muted">19.1.2</span>
+      <a href="https://gitlab.com/gitlab-org/build/CNG" target="_blank" rel="noopener" class="text-accent-ok hover:underline">Upstream ↗</a>
+    </div>
+    
+    <p class="text-fg-muted mb-8">Container image for gitlab-kubectl-fips</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the gitlab-kubectl-fips-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/gitlab-kubectl-fips:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">19.1.2</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#gitlab-kubectl-fips</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-gitlab-kubectl-fips-to-docker &amp;&amp; ./result/bin/load-gitlab-kubectl-fips-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/gitlab-kubectl-fips-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#gitlab-kubectl-fips-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-gitlab-kubectl-fips-dev-to-docker &amp;&amp; ./result/bin/load-gitlab-kubectl-fips-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-sm"><span class="text-fg-muted">Upstream project: </span><a href="https://gitlab.com/gitlab-org/build/CNG" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">gitlab.com/gitlab-org/build/CNG ↗</a></p></div>
+        <div class="prose prose-invert max-w-none"><h1>gitlab-kubectl-fips</h1>
+<p>Chainguard Containers are regularly-updated, secure-by-default container images</p>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#gitlab-kubectl-fips
+
+# Load into Docker
+nix build .#load-gitlab-kubectl-fips-to-docker &amp;&amp; ./result/bin/load-gitlab-kubectl-fips-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">No published tags yet — image hasn't been built or hasn't finished its first publish.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">never</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><p class="text-fg-muted italic text-sm">No scan data yet for this image. It will be picked up on the next scheduled run.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">gitlab-kubectl-fips</span> at version
+          <span class="font-mono text-fg-primary">19.1.2</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">never</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=alternatives" class="text-accent-ok hover:underline font-mono" title="See other images that include alternatives">alternatives</a></td><td class="font-mono">1.24-2.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPL-2.0-only</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=audit-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include audit-libs">audit-libs</a></td><td class="font-mono">3.1.5-8.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=basesystem" class="text-accent-ok hover:underline font-mono" title="See other images that include basesystem">basesystem</a></td><td class="font-mono">11-13.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">Public Domain</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.1.8-9.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bzip2-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include bzip2-libs">bzip2-libs</a></td><td class="font-mono">1.0.8-11.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ca-certificates" class="text-accent-ok hover:underline font-mono" title="See other images that include ca-certificates">ca-certificates</a></td><td class="font-mono">2025.2.80_v9.0.305-91.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">MIT AND GPL-2.0-or-later</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils-single" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils-single">coreutils-single</a></td><td class="font-mono">8.32-40.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cracklib" class="text-accent-ok hover:underline font-mono" title="See other images that include cracklib">cracklib</a></td><td class="font-mono">2.9.6-28.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cracklib-dicts" class="text-accent-ok hover:underline font-mono" title="See other images that include cracklib-dicts">cracklib-dicts</a></td><td class="font-mono">2.9.6-28.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=crypto-policies" class="text-accent-ok hover:underline font-mono" title="See other images that include crypto-policies">crypto-policies</a></td><td class="font-mono">20260224-1.gitea0f072.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPL-2.1-or-later</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=filesystem" class="text-accent-ok hover:underline font-mono" title="See other images that include filesystem">filesystem</a></td><td class="font-mono">3.16-5.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">Public Domain</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=findutils" class="text-accent-ok hover:underline font-mono" title="See other images that include findutils">findutils</a></td><td class="font-mono">1:4.8.0-7.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gawk" class="text-accent-ok hover:underline font-mono" title="See other images that include gawk">gawk</a></td><td class="font-mono">5.1.0-6.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+ and GPLv2+ and LGPLv2+ and BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/a8m/envsubst" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/a8m/envsubst">github.com/a8m/envsubst</a></td><td class="font-mono">v1.4.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/agext/levenshtein" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/agext/levenshtein">github.com/agext/levenshtein</a></td><td class="font-mono">v1.2.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/alecthomas/participle/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/alecthomas/participle/v2">github.com/alecthomas/participle/v2</a></td><td class="font-mono">v2.1.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/apparentlymart/go-textseg/v15" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/apparentlymart/go-textseg/v15">github.com/apparentlymart/go-textseg/v15</a></td><td class="font-mono">v15.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/beorn7/perks" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/beorn7/perks">github.com/beorn7/perks</a></td><td class="font-mono">v1.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/blang/semver/v4" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/blang/semver/v4">github.com/blang/semver/v4</a></td><td class="font-mono">v4.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cespare/xxhash/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cespare/xxhash/v2">github.com/cespare/xxhash/v2</a></td><td class="font-mono">v2.3.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/chai2010/gettext-go" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/chai2010/gettext-go">github.com/chai2010/gettext-go</a></td><td class="font-mono">v1.0.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/davecgh/go-spew" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/davecgh/go-spew">github.com/davecgh/go-spew</a></td><td class="font-mono">v1.1.2-0.20180830191138-d8f796af33cc</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dimchansky/utfbom" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dimchansky/utfbom">github.com/dimchansky/utfbom</a></td><td class="font-mono">v1.1.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/distribution/reference" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/distribution/reference">github.com/distribution/reference</a></td><td class="font-mono">v0.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/elliotchance/orderedmap" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/elliotchance/orderedmap">github.com/elliotchance/orderedmap</a></td><td class="font-mono">v1.8.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/emicklei/go-restful/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/emicklei/go-restful/v3">github.com/emicklei/go-restful/v3</a></td><td class="font-mono">v3.13.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/exponent-io/jsonpath" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/exponent-io/jsonpath">github.com/exponent-io/jsonpath</a></td><td class="font-mono">v0.0.0-20210407135951-1de76d718b3f</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fatih/camelcase" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fatih/camelcase">github.com/fatih/camelcase</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fatih/color" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fatih/color">github.com/fatih/color</a></td><td class="font-mono">v1.19.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fxamacker/cbor/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fxamacker/cbor/v2">github.com/fxamacker/cbor/v2</a></td><td class="font-mono">v2.9.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-errors/errors" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-errors/errors">github.com/go-errors/errors</a></td><td class="font-mono">v1.4.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-ini/ini" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-ini/ini">github.com/go-ini/ini</a></td><td class="font-mono">v1.67.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-logr/logr" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-logr/logr">github.com/go-logr/logr</a></td><td class="font-mono">v1.4.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-openapi/jsonpointer" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-openapi/jsonpointer">github.com/go-openapi/jsonpointer</a></td><td class="font-mono">v0.21.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-openapi/jsonreference" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-openapi/jsonreference">github.com/go-openapi/jsonreference</a></td><td class="font-mono">v0.20.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-openapi/swag" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-openapi/swag">github.com/go-openapi/swag</a></td><td class="font-mono">v0.23.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/goccy/go-json" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/goccy/go-json">github.com/goccy/go-json</a></td><td class="font-mono">v0.10.6</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/goccy/go-yaml" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/goccy/go-yaml">github.com/goccy/go-yaml</a></td><td class="font-mono">v1.19.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/btree" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/btree">github.com/google/btree</a></td><td class="font-mono">v1.1.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/gnostic-models" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/gnostic-models">github.com/google/gnostic-models</a></td><td class="font-mono">v0.7.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/go-cmp" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/go-cmp">github.com/google/go-cmp</a></td><td class="font-mono">v0.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/uuid" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/uuid">github.com/google/uuid</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/gorilla/websocket" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/gorilla/websocket">github.com/gorilla/websocket</a></td><td class="font-mono">v1.5.4-0.20250319132907-e064f32e3674</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/hashicorp/hcl/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/hashicorp/hcl/v2">github.com/hashicorp/hcl/v2</a></td><td class="font-mono">v2.24.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jinzhu/copier" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jinzhu/copier">github.com/jinzhu/copier</a></td><td class="font-mono">v0.4.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jonboulle/clockwork" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jonboulle/clockwork">github.com/jonboulle/clockwork</a></td><td class="font-mono">v0.5.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/josharian/intern" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/josharian/intern">github.com/josharian/intern</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/json-iterator/go" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/json-iterator/go">github.com/json-iterator/go</a></td><td class="font-mono">v1.1.12</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/liggitt/tabwriter" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/liggitt/tabwriter">github.com/liggitt/tabwriter</a></td><td class="font-mono">v0.0.0-20181228230101-89fcab3d43de</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/lithammer/dedent" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/lithammer/dedent">github.com/lithammer/dedent</a></td><td class="font-mono">v1.1.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/magiconair/properties" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/magiconair/properties">github.com/magiconair/properties</a></td><td class="font-mono">v1.8.10</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mailru/easyjson" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mailru/easyjson">github.com/mailru/easyjson</a></td><td class="font-mono">v0.7.7</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/MakeNowJust/heredoc" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/MakeNowJust/heredoc">github.com/MakeNowJust/heredoc</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mattn/go-colorable" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mattn/go-colorable">github.com/mattn/go-colorable</a></td><td class="font-mono">v0.1.14</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mattn/go-isatty" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mattn/go-isatty">github.com/mattn/go-isatty</a></td><td class="font-mono">v0.0.20</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mikefarah/yq/v4" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mikefarah/yq/v4">github.com/mikefarah/yq/v4</a></td><td class="font-mono">v4.53.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mitchellh/go-wordwrap" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mitchellh/go-wordwrap">github.com/mitchellh/go-wordwrap</a></td><td class="font-mono">v1.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mitchellh/go-wordwrap" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mitchellh/go-wordwrap">github.com/mitchellh/go-wordwrap</a></td><td class="font-mono">v1.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/moby/spdystream" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/moby/spdystream">github.com/moby/spdystream</a></td><td class="font-mono">v0.5.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/moby/term" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/moby/term">github.com/moby/term</a></td><td class="font-mono">v0.5.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/modern-go/concurrent" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/modern-go/concurrent">github.com/modern-go/concurrent</a></td><td class="font-mono">v0.0.0-20180306012644-bacd9c7ef1dd</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/modern-go/reflect2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/modern-go/reflect2">github.com/modern-go/reflect2</a></td><td class="font-mono">v1.0.3-0.20250322232337-35a7c28c31ee</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/monochromegane/go-gitignore" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/monochromegane/go-gitignore">github.com/monochromegane/go-gitignore</a></td><td class="font-mono">v0.0.0-20200626010858-205db1a8cc00</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/munnerz/goautoneg" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/munnerz/goautoneg">github.com/munnerz/goautoneg</a></td><td class="font-mono">v0.0.0-20191010083416-a7dc8b61c822</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mxk/go-flowrate" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mxk/go-flowrate">github.com/mxk/go-flowrate</a></td><td class="font-mono">v0.0.0-20140419014527-cca7078d478f</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/opencontainers/go-digest" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/opencontainers/go-digest">github.com/opencontainers/go-digest</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pelletier/go-toml/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pelletier/go-toml/v2">github.com/pelletier/go-toml/v2</a></td><td class="font-mono">v2.3.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/peterbourgon/diskv" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/peterbourgon/diskv">github.com/peterbourgon/diskv</a></td><td class="font-mono">v2.0.1+incompatible</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pmezard/go-difflib" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pmezard/go-difflib">github.com/pmezard/go-difflib</a></td><td class="font-mono">v1.0.1-0.20181226105442-5d4384ee4fb2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/client_golang" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/client_golang">github.com/prometheus/client_golang</a></td><td class="font-mono">v1.23.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/client_model" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/client_model">github.com/prometheus/client_model</a></td><td class="font-mono">v0.6.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/common" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/common">github.com/prometheus/common</a></td><td class="font-mono">v0.67.5</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/procfs" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/procfs">github.com/prometheus/procfs</a></td><td class="font-mono">v0.19.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/russross/blackfriday/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/russross/blackfriday/v2">github.com/russross/blackfriday/v2</a></td><td class="font-mono">v2.1.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/cobra" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/cobra">github.com/spf13/cobra</a></td><td class="font-mono">v1.10.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/cobra" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/cobra">github.com/spf13/cobra</a></td><td class="font-mono">v1.10.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/pflag" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/pflag">github.com/spf13/pflag</a></td><td class="font-mono">v1.0.10</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/pflag" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/pflag">github.com/spf13/pflag</a></td><td class="font-mono">v1.0.9</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/x448/float16" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/x448/float16">github.com/x448/float16</a></td><td class="font-mono">v0.8.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/xlab/treeprint" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/xlab/treeprint">github.com/xlab/treeprint</a></td><td class="font-mono">v1.2.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/yuin/gopher-lua" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/yuin/gopher-lua">github.com/yuin/gopher-lua</a></td><td class="font-mono">v1.1.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/zclconf/go-cty" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/zclconf/go-cty">github.com/zclconf/go-cty</a></td><td class="font-mono">v1.18.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.34-270.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPL-2.1-or-later AND SunPro AND LGPL-2.1-or-later WITH GCC-exception-2.0 AND BSD-3-Clause AND GPL-2.0-or-later AND LGPL-2.1-or-later WITH GNU-compiler-exception AND GPL-2.0-only AND ISC AND LicenseRef-Fedora-Public-Domain AND HPND AND CMU-Mach AND LGPL-2.0-or-later AND Unicode-3.0 AND GFDL-1.1-or-later AND GPL-1.0-or-later AND FSFUL AND MIT AND Inner-Net-2.0 AND X11 AND GPL-2.0-or-later WITH GCC-exception-2.0 AND GFDL-1.3-only AND GFDL-1.1-only AND GPL-3.0-or-later AND GPL-3.0-or-later WITH Autoconf-exception-generic-3.0 AND GPL-3.0-or-later WITH Texinfo-exception</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc-common" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc-common">glibc-common</a></td><td class="font-mono">2.34-270.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPL-2.1-or-later AND SunPro AND LGPL-2.1-or-later WITH GCC-exception-2.0 AND BSD-3-Clause AND GPL-2.0-or-later AND LGPL-2.1-or-later WITH GNU-compiler-exception AND GPL-2.0-only AND ISC AND LicenseRef-Fedora-Public-Domain AND HPND AND CMU-Mach AND LGPL-2.0-or-later AND Unicode-3.0 AND GFDL-1.1-or-later AND GPL-1.0-or-later AND FSFUL AND MIT AND Inner-Net-2.0 AND X11 AND GPL-2.0-or-later WITH GCC-exception-2.0 AND GFDL-1.3-only AND GFDL-1.1-only AND GPL-3.0-or-later AND GPL-3.0-or-later WITH Autoconf-exception-generic-3.0 AND GPL-3.0-or-later WITH Texinfo-exception</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc-minimal-langpack" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc-minimal-langpack">glibc-minimal-langpack</a></td><td class="font-mono">2.34-270.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPL-2.1-or-later AND SunPro AND LGPL-2.1-or-later WITH GCC-exception-2.0 AND BSD-3-Clause AND GPL-2.0-or-later AND LGPL-2.1-or-later WITH GNU-compiler-exception AND GPL-2.0-only AND ISC AND LicenseRef-Fedora-Public-Domain AND HPND AND CMU-Mach AND LGPL-2.0-or-later AND Unicode-3.0 AND GFDL-1.1-or-later AND GPL-1.0-or-later AND FSFUL AND MIT AND Inner-Net-2.0 AND X11 AND GPL-2.0-or-later WITH GCC-exception-2.0 AND GFDL-1.3-only AND GFDL-1.1-only AND GPL-3.0-or-later AND GPL-3.0-or-later WITH Autoconf-exception-generic-3.0 AND GPL-3.0-or-later WITH Texinfo-exception</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp">gmp</a></td><td class="font-mono">1:6.2.0-13.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv3+ or GPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel">go.opentelemetry.io/otel</a></td><td class="font-mono">v1.41.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/trace" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/trace">go.opentelemetry.io/otel/trace</a></td><td class="font-mono">v1.41.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.yaml.in/yaml/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include go.yaml.in/yaml/v2">go.yaml.in/yaml/v2</a></td><td class="font-mono">v2.4.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.yaml.in/yaml/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include go.yaml.in/yaml/v3">go.yaml.in/yaml/v3</a></td><td class="font-mono">v3.0.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.yaml.in/yaml/v4" class="text-accent-ok hover:underline font-mono" title="See other images that include go.yaml.in/yaml/v4">go.yaml.in/yaml/v4</a></td><td class="font-mono">v4.0.0-rc.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/net" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/net">golang.org/x/net</a></td><td class="font-mono">v0.49.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/net" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/net">golang.org/x/net</a></td><td class="font-mono">v0.55.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/oauth2" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/oauth2">golang.org/x/oauth2</a></td><td class="font-mono">v0.34.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/sync" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/sync">golang.org/x/sync</a></td><td class="font-mono">v0.19.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/sys" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/sys">golang.org/x/sys</a></td><td class="font-mono">v0.40.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/sys" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/sys">golang.org/x/sys</a></td><td class="font-mono">v0.45.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/term" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/term">golang.org/x/term</a></td><td class="font-mono">v0.39.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/text" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/text">golang.org/x/text</a></td><td class="font-mono">v0.33.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/text" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/text">golang.org/x/text</a></td><td class="font-mono">v0.37.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/time" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/time">golang.org/x/time</a></td><td class="font-mono">v0.14.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/protobuf" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/protobuf">google.golang.org/protobuf</a></td><td class="font-mono">v1.36.12-0.20260120151049-f2248ac996af</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/evanphx/json-patch.v4" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/evanphx/json-patch.v4">gopkg.in/evanphx/json-patch.v4</a></td><td class="font-mono">v4.13.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/inf.v0" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/inf.v0">gopkg.in/inf.v0</a></td><td class="font-mono">v0.9.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/yaml.v3" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/yaml.v3">gopkg.in/yaml.v3</a></td><td class="font-mono">v3.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gpg-pubkey" class="text-accent-ok hover:underline font-mono" title="See other images that include gpg-pubkey">gpg-pubkey</a></td><td class="font-mono">5a6340b3-6229229e</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">pubkey</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gpg-pubkey" class="text-accent-ok hover:underline font-mono" title="See other images that include gpg-pubkey">gpg-pubkey</a></td><td class="font-mono">fd431d51-4ae0493b</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">pubkey</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=grep" class="text-accent-ok hover:underline font-mono" title="See other images that include grep">grep</a></td><td class="font-mono">3.6-5.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gzip" class="text-accent-ok hover:underline font-mono" title="See other images that include gzip">gzip</a></td><td class="font-mono">1.12-1.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+ and GFDL</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/api" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/api">k8s.io/api</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/apimachinery" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/apimachinery">k8s.io/apimachinery</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/cli-runtime" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/cli-runtime">k8s.io/cli-runtime</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/client-go" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/client-go">k8s.io/client-go</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/component-base" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/component-base">k8s.io/component-base</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/component-helpers" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/component-helpers">k8s.io/component-helpers</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/klog/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/klog/v2">k8s.io/klog/v2</a></td><td class="font-mono">v2.140.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/kube-openapi" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/kube-openapi">k8s.io/kube-openapi</a></td><td class="font-mono">v0.0.0-20260317180543-43fb72c5454a</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/kubectl" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/kubectl">k8s.io/kubectl</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/kubernetes" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/kubernetes">k8s.io/kubernetes</a></td><td class="font-mono">v1.36.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/metrics" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/metrics">k8s.io/metrics</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/streaming" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/streaming">k8s.io/streaming</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/utils" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/utils">k8s.io/utils</a></td><td class="font-mono">v0.0.0-20260210185600-b8788abfbbc2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libacl" class="text-accent-ok hover:underline font-mono" title="See other images that include libacl">libacl</a></td><td class="font-mono">2.3.1-4.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libattr" class="text-accent-ok hover:underline font-mono" title="See other images that include libattr">libattr</a></td><td class="font-mono">2.5.1-3.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libblkid" class="text-accent-ok hover:underline font-mono" title="See other images that include libblkid">libblkid</a></td><td class="font-mono">2.37.4-25.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libcap" class="text-accent-ok hover:underline font-mono" title="See other images that include libcap">libcap</a></td><td class="font-mono">2.48-10.el9_8.1</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD or GPLv2</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libcap-ng" class="text-accent-ok hover:underline font-mono" title="See other images that include libcap-ng">libcap-ng</a></td><td class="font-mono">0.8.2-7.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libdb" class="text-accent-ok hover:underline font-mono" title="See other images that include libdb">libdb</a></td><td class="font-mono">5.3.28-57.el9_6</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD and LGPLv2 and Sleepycat and MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libeconf" class="text-accent-ok hover:underline font-mono" title="See other images that include libeconf">libeconf</a></td><td class="font-mono">0.4.1-7.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libfdisk" class="text-accent-ok hover:underline font-mono" title="See other images that include libfdisk">libfdisk</a></td><td class="font-mono">2.37.4-25.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libffi" class="text-accent-ok hover:underline font-mono" title="See other images that include libffi">libffi</a></td><td class="font-mono">3.4.2-8.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include libgcc">libgcc</a></td><td class="font-mono">11.5.0-14.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions and LGPLv2+ and BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libgcrypt" class="text-accent-ok hover:underline font-mono" title="See other images that include libgcrypt">libgcrypt</a></td><td class="font-mono">1.10.0-11.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libgpg-error" class="text-accent-ok hover:underline font-mono" title="See other images that include libgpg-error">libgpg-error</a></td><td class="font-mono">1.42-5.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libmount" class="text-accent-ok hover:underline font-mono" title="See other images that include libmount">libmount</a></td><td class="font-mono">2.37.4-25.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libpwquality" class="text-accent-ok hover:underline font-mono" title="See other images that include libpwquality">libpwquality</a></td><td class="font-mono">1.4.4-8.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD or GPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libselinux" class="text-accent-ok hover:underline font-mono" title="See other images that include libselinux">libselinux</a></td><td class="font-mono">3.6-3.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">Public Domain</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libsemanage" class="text-accent-ok hover:underline font-mono" title="See other images that include libsemanage">libsemanage</a></td><td class="font-mono">3.6-5.el9_6</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libsepol" class="text-accent-ok hover:underline font-mono" title="See other images that include libsepol">libsepol</a></td><td class="font-mono">3.6-3.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libsigsegv" class="text-accent-ok hover:underline font-mono" title="See other images that include libsigsegv">libsigsegv</a></td><td class="font-mono">2.13-4.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libsmartcols" class="text-accent-ok hover:underline font-mono" title="See other images that include libsmartcols">libsmartcols</a></td><td class="font-mono">2.37.4-25.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libtasn1" class="text-accent-ok hover:underline font-mono" title="See other images that include libtasn1">libtasn1</a></td><td class="font-mono">4.16.0-9.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+ and LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libutempter" class="text-accent-ok hover:underline font-mono" title="See other images that include libutempter">libutempter</a></td><td class="font-mono">1.2.1-6.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libuuid" class="text-accent-ok hover:underline font-mono" title="See other images that include libuuid">libuuid</a></td><td class="font-mono">2.37.4-25.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxcrypt" class="text-accent-ok hover:underline font-mono" title="See other images that include libxcrypt">libxcrypt</a></td><td class="font-mono">4.4.18-3.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+ and BSD and Public Domain</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libzstd" class="text-accent-ok hover:underline font-mono" title="See other images that include libzstd">libzstd</a></td><td class="font-mono">1.5.5-1.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD and GPLv2</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=lz4-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include lz4-libs">lz4-libs</a></td><td class="font-mono">1.9.3-5.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv2+ and BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mpfr" class="text-accent-ok hover:underline font-mono" title="See other images that include mpfr">mpfr</a></td><td class="font-mono">4.1.0-10.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv3+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses-base" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses-base">ncurses-base</a></td><td class="font-mono">6.2-12.20210508.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses-libs">ncurses-libs</a></td><td class="font-mono">6.2-12.20210508.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssh" class="text-accent-ok hover:underline font-mono" title="See other images that include openssh">openssh</a></td><td class="font-mono">9.9p1-7.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">1:3.5.5-4.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl-fips-provider" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl-fips-provider">openssl-fips-provider</a></td><td class="font-mono">3.0.7-11.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">ASL 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl-fips-provider-so" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl-fips-provider-so">openssl-fips-provider-so</a></td><td class="font-mono">3.0.7-11.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">ASL 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl-libs">openssl-libs</a></td><td class="font-mono">1:3.5.5-4.el9_8</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=p11-kit" class="text-accent-ok hover:underline font-mono" title="See other images that include p11-kit">p11-kit</a></td><td class="font-mono">0.26.2-1.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=p11-kit-trust" class="text-accent-ok hover:underline font-mono" title="See other images that include p11-kit-trust">p11-kit-trust</a></td><td class="font-mono">0.26.2-1.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pam" class="text-accent-ok hover:underline font-mono" title="See other images that include pam">pam</a></td><td class="font-mono">1.5.1-28.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD and GPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pcre" class="text-accent-ok hover:underline font-mono" title="See other images that include pcre">pcre</a></td><td class="font-mono">8.44-4.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pcre2" class="text-accent-ok hover:underline font-mono" title="See other images that include pcre2">pcre2</a></td><td class="font-mono">10.40-6.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pcre2-syntax" class="text-accent-ok hover:underline font-mono" title="See other images that include pcre2-syntax">pcre2-syntax</a></td><td class="font-mono">10.40-6.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.1-4.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=redhat-release" class="text-accent-ok hover:underline font-mono" title="See other images that include redhat-release">redhat-release</a></td><td class="font-mono">9.8-1.0.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv2</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sed" class="text-accent-ok hover:underline font-mono" title="See other images that include sed">sed</a></td><td class="font-mono">4.8-10.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv3+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=setup" class="text-accent-ok hover:underline font-mono" title="See other images that include setup">setup</a></td><td class="font-mono">2.13.7-10.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">Public Domain</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=shadow-utils" class="text-accent-ok hover:underline font-mono" title="See other images that include shadow-utils">shadow-utils</a></td><td class="font-mono">2:4.9-16.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">BSD and GPLv2+</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/json" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/json">sigs.k8s.io/json</a></td><td class="font-mono">v0.0.0-20250730193827-2d320260d730</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/kustomize/api" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/kustomize/api">sigs.k8s.io/kustomize/api</a></td><td class="font-mono">v0.21.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/kustomize/kustomize/v5" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/kustomize/kustomize/v5">sigs.k8s.io/kustomize/kustomize/v5</a></td><td class="font-mono">v5.8.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/kustomize/kyaml" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/kustomize/kyaml">sigs.k8s.io/kustomize/kyaml</a></td><td class="font-mono">v0.21.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/randfill" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/randfill">sigs.k8s.io/randfill</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/structured-merge-diff/v6" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/structured-merge-diff/v6">sigs.k8s.io/structured-merge-diff/v6</a></td><td class="font-mono">v6.3.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/yaml" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/yaml">sigs.k8s.io/yaml</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=stdlib" class="text-accent-ok hover:underline font-mono" title="See other images that include stdlib">stdlib</a></td><td class="font-mono">go1.26.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=stdlib" class="text-accent-ok hover:underline font-mono" title="See other images that include stdlib">stdlib</a></td><td class="font-mono">go1.26.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=systemd-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include systemd-libs">systemd-libs</a></td><td class="font-mono">252-67.el9_8.2</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">LGPLv2+ and MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b-1.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">Public Domain</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux">util-linux</a></td><td class="font-mono">2.37.4-25.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv2 and GPLv2+ and LGPLv2+ and BSD with advertising and Public Domain</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-core" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-core">util-linux-core</a></td><td class="font-mono">2.37.4-25.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">GPLv2 and GPLv2+ and LGPLv2+ and BSD with advertising and Public Domain</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xz-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include xz-libs">xz-libs</a></td><td class="font-mono">5.2.5-8.el9_0</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">Public Domain</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.2.11-40.el9</td><td class="text-fg-muted">rpm</td><td class="text-fg-muted text-xs">zlib and Boost</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/gitlab-kubectl-fips/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="c1"># gitlab-kubectl-fips (FIPS) — re-wrapped from official CNG FIPS image at 19.1.1.</span>
+<span class="c1"># Update: bump version + imageDigest (cng/kubectl:v&lt;ver&gt;-fips) + refresh sha256.</span>
+<span class="p">{</span> nix2container<span class="p">,</span> pkgs<span class="p">,</span> lib<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+<span class="k">let</span>
+  <span class="ss">version</span> <span class="o">=</span> <span class="s2">&quot;19.1.2&quot;</span><span class="p">;</span>
+  <span class="ss">upstreamImage</span> <span class="o">=</span> nix2container<span class="o">.</span>pullImage <span class="p">{</span>
+    <span class="ss">imageName</span>   <span class="o">=</span> <span class="s2">&quot;registry.gitlab.com/gitlab-org/build/cng/kubectl&quot;</span><span class="p">;</span>
+    <span class="ss">imageDigest</span> <span class="o">=</span> <span class="s2">&quot;sha256:40df8937adf0a1f1affabde08012a28fe22013c6966bf69ae7def95215807a92&quot;</span><span class="p">;</span>
+    <span class="ss">sha256</span>      <span class="o">=</span> <span class="s2">&quot;sha256-poSR9dhCa1OR1GObyDPwyLcpGrxYB2kRmyqbY+EeRvU=&quot;</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="k">in</span> nix2container<span class="o">.</span>buildImage <span class="p">{</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;gitlab-kubectl-fips&quot;</span><span class="p">;</span> <span class="ss">tag</span> <span class="o">=</span> <span class="s2">&quot;v</span><span class="si">${</span>version<span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="ss">fromImage</span> <span class="o">=</span> upstreamImage<span class="p">;</span>
+  config<span class="o">.</span><span class="ss">Labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;gitlab-kubectl-fips&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> version<span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.source&quot;</span> <span class="o">=</span> <span class="s2">&quot;https://gitlab.com/gitlab-org/build/CNG&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;io.nix-containers.build-strategy&quot;</span> <span class="o">=</span> <span class="s2">&quot;nix2container-pullImage&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;io.nix-containers.upstream-image&quot;</span> <span class="o">=</span> <span class="s2">&quot;registry.gitlab.com/gitlab-org/build/cng/kubectl:v19.1.1-fips&quot;</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

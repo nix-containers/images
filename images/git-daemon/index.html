@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>git-daemon — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">git-daemon</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      <span class="badge-zero-cve" title="No known CVEs in the latest scan">0 CVE</span>
+      <span class="text-fg-muted">2.54.0</span>
+      <a href="https://git-scm.com/docs/git-daemon" target="_blank" rel="noopener" class="text-accent-ok hover:underline">Upstream ↗</a>
+    </div>
+    
+    <p class="text-fg-muted mb-8">Git protocol server (git daemon) for anonymous repository access</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the git-daemon-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/git-daemon:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">2.54.0</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#git-daemon</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-git-daemon-to-docker &amp;&amp; ./result/bin/load-git-daemon-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/git-daemon-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#git-daemon-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-git-daemon-dev-to-docker &amp;&amp; ./result/bin/load-git-daemon-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-fg-primary text-base mb-3">Git protocol server (git daemon) for anonymous repository access</p><p class="text-sm"><span class="text-fg-muted">Upstream project: </span><a href="https://git-scm.com/docs/git-daemon" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">git-scm.com/docs/git-daemon ↗</a></p></div>
+        <div class="prose prose-invert max-w-none"><h1>git-daemon</h1>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#git-daemon
+
+# Load into Docker
+nix build .#load-git-daemon-to-docker &amp;&amp; ./result/bin/load-git-daemon-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/git-daemon:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:ad4c26bc429f9d62c677dbe4b2ad34ab7189fa15beded18da0f2ce4ea0ddc6b5">ad4c26bc429f</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">148.6 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 17:21 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">2.54.0</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:ad4c26bc429f9d62c677dbe4b2ad34ab7189fa15beded18da0f2ce4ea0ddc6b5">ad4c26bc429f</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">148.6 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 17:21 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:11 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between"><span class="text-accent-bad font-mono">Critical</span><span>0</span></div><div class="flex justify-between"><span class="text-accent-warn font-mono">High</span><span>0</span></div><div class="flex justify-between"><span class="text-fg-muted font-mono">Medium</span><span>0</span></div><div class="flex justify-between"><span class="text-fg-muted font-mono">Low</span><span>0</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_git-daemon_latest-trivy.json</a></div></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">git-daemon</span> at version
+          <span class="font-mono text-fg-primary">2.54.0</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:11 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=acl" class="text-accent-ok hover:underline font-mono" title="See other images that include acl">acl</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attr" class="text-accent-ok hover:underline font-mono" title="See other images that include attr">attr</a></td><td class="font-mono">2.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3.9</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=brotli" class="text-accent-ok hover:underline font-mono" title="See other images that include brotli">brotli</a></td><td class="font-mono">1.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bzip2" class="text-accent-ok hover:underline font-mono" title="See other images that include bzip2">bzip2</a></td><td class="font-mono">1.0.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils">coreutils</a></td><td class="font-mono">9.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=curl" class="text-accent-ok hover:underline font-mono" title="See other images that include curl">curl</a></td><td class="font-mono">8.20.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=expat" class="text-accent-ok hover:underline font-mono" title="See other images that include expat">expat</a></td><td class="font-mono">2.8.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gdbm" class="text-accent-ok hover:underline font-mono" title="See other images that include gdbm">gdbm</a></td><td class="font-mono">1.26</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gettext" class="text-accent-ok hover:underline font-mono" title="See other images that include gettext">gettext</a></td><td class="font-mono">1.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=git" class="text-accent-ok hover:underline font-mono" title="See other images that include git">git</a></td><td class="font-mono">2.54.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=git" class="text-accent-ok hover:underline font-mono" title="See other images that include git">git</a></td><td class="font-mono">2.54.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gnugrep" class="text-accent-ok hover:underline font-mono" title="See other images that include gnugrep">gnugrep</a></td><td class="font-mono">3.12</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gnused" class="text-accent-ok hover:underline font-mono" title="See other images that include gnused">gnused</a></td><td class="font-mono">4.9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gzip" class="text-accent-ok hover:underline font-mono" title="See other images that include gzip">gzip</a></td><td class="font-mono">1.14</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=keyutils" class="text-accent-ok hover:underline font-mono" title="See other images that include keyutils">keyutils</a></td><td class="font-mono">1.6.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=krb5" class="text-accent-ok hover:underline font-mono" title="See other images that include krb5">krb5</a></td><td class="font-mono">1.22.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libffi" class="text-accent-ok hover:underline font-mono" title="See other images that include libffi">libffi</a></td><td class="font-mono">3.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libpsl" class="text-accent-ok hover:underline font-mono" title="See other images that include libpsl">libpsl</a></td><td class="font-mono">0.21.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libssh2" class="text-accent-ok hover:underline font-mono" title="See other images that include libssh2">libssh2</a></td><td class="font-mono">1.11.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxcrypt" class="text-accent-ok hover:underline font-mono" title="See other images that include libxcrypt">libxcrypt</a></td><td class="font-mono">4.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mailcap" class="text-accent-ok hover:underline font-mono" title="See other images that include mailcap">mailcap</a></td><td class="font-mono">2.1.54</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mpdecimal" class="text-accent-ok hover:underline font-mono" title="See other images that include mpdecimal">mpdecimal</a></td><td class="font-mono">4.0.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses">ncurses</a></td><td class="font-mono">6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nghttp2" class="text-accent-ok hover:underline font-mono" title="See other images that include nghttp2">nghttp2</a></td><td class="font-mono">1.69.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nghttp3" class="text-accent-ok hover:underline font-mono" title="See other images that include nghttp3">nghttp3</a></td><td class="font-mono">1.15.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ngtcp2" class="text-accent-ok hover:underline font-mono" title="See other images that include ngtcp2">ngtcp2</a></td><td class="font-mono">1.22.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">3.6.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pcre2" class="text-accent-ok hover:underline font-mono" title="See other images that include pcre2">pcre2</a></td><td class="font-mono">10.46</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl" class="text-accent-ok hover:underline font-mono" title="See other images that include perl">perl</a></td><td class="font-mono">5.42.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Authen-SASL" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Authen-SASL">perl5.42.0-Authen-SASL</a></td><td class="font-mono">2.1900</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-CGI" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-CGI">perl5.42.0-CGI</a></td><td class="font-mono">4.59</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-CGI-Fast" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-CGI-Fast">perl5.42.0-CGI-Fast</a></td><td class="font-mono">2.16</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Clone" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Clone">perl5.42.0-Clone</a></td><td class="font-mono">0.46</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Crypt-URandom" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Crypt-URandom">perl5.42.0-Crypt-URandom</a></td><td class="font-mono">0.55</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Digest-HMAC" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Digest-HMAC">perl5.42.0-Digest-HMAC</a></td><td class="font-mono">1.05</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Encode-Locale" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Encode-Locale">perl5.42.0-Encode-Locale</a></td><td class="font-mono">1.05</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-FCGI" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-FCGI">perl5.42.0-FCGI</a></td><td class="font-mono">0.82</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-FCGI-ProcManager" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-FCGI-ProcManager">perl5.42.0-FCGI-ProcManager</a></td><td class="font-mono">0.28</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-File-Listing" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-File-Listing">perl5.42.0-File-Listing</a></td><td class="font-mono">6.16</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTML-Parser" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTML-Parser">perl5.42.0-HTML-Parser</a></td><td class="font-mono">3.81</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTML-TagCloud" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTML-TagCloud">perl5.42.0-HTML-TagCloud</a></td><td class="font-mono">0.38</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTML-Tagset" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTML-Tagset">perl5.42.0-HTML-Tagset</a></td><td class="font-mono">3.20</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-CookieJar" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-CookieJar">perl5.42.0-HTTP-CookieJar</a></td><td class="font-mono">0.014</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Cookies" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Cookies">perl5.42.0-HTTP-Cookies</a></td><td class="font-mono">6.10</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Daemon" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Daemon">perl5.42.0-HTTP-Daemon</a></td><td class="font-mono">6.17</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Date" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Date">perl5.42.0-HTTP-Date</a></td><td class="font-mono">6.06</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Message" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Message">perl5.42.0-HTTP-Message</a></td><td class="font-mono">6.45</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Negotiate" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Negotiate">perl5.42.0-HTTP-Negotiate</a></td><td class="font-mono">6.01</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-IO-HTML" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-IO-HTML">perl5.42.0-IO-HTML</a></td><td class="font-mono">1.004</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-IO-Socket-SSL" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-IO-Socket-SSL">perl5.42.0-IO-Socket-SSL</a></td><td class="font-mono">2.083</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-libnet" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-libnet">perl5.42.0-libnet</a></td><td class="font-mono">3.15</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-libwww-perl" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-libwww-perl">perl5.42.0-libwww-perl</a></td><td class="font-mono">6.72</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-LWP-MediaTypes" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-LWP-MediaTypes">perl5.42.0-LWP-MediaTypes</a></td><td class="font-mono">6.04</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Mozilla-CA" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Mozilla-CA">perl5.42.0-Mozilla-CA</a></td><td class="font-mono">20230821</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Net-HTTP" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Net-HTTP">perl5.42.0-Net-HTTP</a></td><td class="font-mono">6.23</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Net-SMTP-SSL" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Net-SMTP-SSL">perl5.42.0-Net-SMTP-SSL</a></td><td class="font-mono">1.04</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Net-SSLeay" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Net-SSLeay">perl5.42.0-Net-SSLeay</a></td><td class="font-mono">1.92</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-TermReadKey" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-TermReadKey">perl5.42.0-TermReadKey</a></td><td class="font-mono">2.38</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Test-Fatal" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Test-Fatal">perl5.42.0-Test-Fatal</a></td><td class="font-mono">0.017</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Test-Needs" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Test-Needs">perl5.42.0-Test-Needs</a></td><td class="font-mono">0.002010</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Test-RequiresInternet" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Test-RequiresInternet">perl5.42.0-Test-RequiresInternet</a></td><td class="font-mono">0.05</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-TimeDate" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-TimeDate">perl5.42.0-TimeDate</a></td><td class="font-mono">2.33</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Try-Tiny" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Try-Tiny">perl5.42.0-Try-Tiny</a></td><td class="font-mono">0.31</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-URI" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-URI">perl5.42.0-URI</a></td><td class="font-mono">5.21</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-WWW-RobotRules" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-WWW-RobotRules">perl5.42.0-WWW-RobotRules</a></td><td class="font-mono">6.02</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=publicsuffix-list-0" class="text-accent-ok hover:underline font-mono" title="See other images that include publicsuffix-list-0">publicsuffix-list-0</a></td><td class="font-mono">unstable-2026-05-13</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python" class="text-accent-ok hover:underline font-mono" title="See other images that include python">python</a></td><td class="font-mono">3.13.13</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=python3" class="text-accent-ok hover:underline font-mono" title="See other images that include python3">python3</a></td><td class="font-mono">3.13.13</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.3p3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sqlite" class="text-accent-ok hover:underline font-mono" title="See other images that include sqlite">sqlite</a></td><td class="font-mono">3.51.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xz" class="text-accent-ok hover:underline font-mono" title="See other images that include xz">xz</a></td><td class="font-mono">5.8.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib-ng" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib-ng">zlib-ng</a></td><td class="font-mono">2.3.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zstd" class="text-accent-ok hover:underline font-mono" title="See other images that include zstd">zstd</a></td><td class="font-mono">1.5.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/git-daemon/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> nix2container<span class="p">,</span> lib<span class="p">,</span> buildEnv<span class="p">,</span> pkgs<span class="p">,</span> base<span class="p">,</span> nonRoot<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+<span class="c1"># git-daemon</span>
+<span class="c1"># https://git-scm.com/docs/git-daemon</span>
+
+<span class="k">let</span>
+  <span class="ss">gitPackages</span> <span class="o">=</span> <span class="k">with</span> pkgs<span class="p">;</span> <span class="p">[</span>
+    git
+    bash
+    coreutils
+    cacert
+    tzdata
+  <span class="p">];</span>
+
+  <span class="ss">userEnv</span> <span class="o">=</span> nonRoot<span class="o">.</span>mkDefaultUserEnv pkgs <span class="p">[];</span>
+
+  <span class="c1"># git daemon needs its --base-path to exist (it serves the bare repos found</span>
+  <span class="c1"># underneath). Bake an empty, read-only /srv/git: git daemon only reads the</span>
+  <span class="c1"># base path, so no writable layer is needed. Operators mount their</span>
+  <span class="c1"># repositories here.</span>
+  <span class="ss">gitBase</span> <span class="o">=</span> pkgs<span class="o">.</span>runCommand <span class="s2">&quot;git-daemon-base&quot;</span> <span class="p">{</span> <span class="p">}</span> <span class="s s-Multiline">&#39;&#39;</span>
+<span class="s s-Multiline">    mkdir -p $out/srv/git</span>
+<span class="s s-Multiline">  &#39;&#39;</span><span class="p">;</span>
+
+<span class="k">in</span> nix2container<span class="o">.</span>buildImage <span class="p">{</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;git-daemon&quot;</span><span class="p">;</span>
+  <span class="c1"># Version-tag the image (matches the org.opencontainers.image.version label).</span>
+  <span class="ss">tag</span> <span class="o">=</span> pkgs<span class="o">.</span>git<span class="o">.</span>version<span class="p">;</span>
+  <span class="ss">copyToRoot</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span>buildEnv <span class="p">{</span>
+      <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;git-daemon-root&quot;</span><span class="p">;</span>
+      <span class="ss">paths</span> <span class="o">=</span> base<span class="o">.</span>basePackages <span class="o">++</span> gitPackages <span class="o">++</span> <span class="p">[</span> userEnv gitBase <span class="p">];</span>
+    <span class="p">})</span>
+  <span class="p">];</span>
+  <span class="ss">config</span> <span class="o">=</span> nonRoot<span class="o">.</span>defaultConfig <span class="o">//</span> <span class="p">{</span>
+    <span class="c1"># Was a bare stub (no Cmd), so the kind-test pod fails with &quot;no command</span>
+    <span class="c1"># specified&quot;. Run the git protocol daemon in the foreground, listening on</span>
+    <span class="c1"># 0.0.0.0:9418 and exporting bare repos under /srv/git. --export-all serves</span>
+    <span class="c1"># every repo without a per-repo git-daemon-export-ok marker; the daemon</span>
+    <span class="c1"># starts and listens even with zero repos present. Operators mount their</span>
+    <span class="c1"># repositories under /srv/git.</span>
+    <span class="ss">Entrypoint</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;</span><span class="si">${</span>pkgs<span class="o">.</span>git<span class="si">}</span><span class="s2">/bin/git&quot;</span> <span class="p">];</span>
+    <span class="ss">Cmd</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="s2">&quot;daemon&quot;</span>
+      <span class="s2">&quot;--reuseaddr&quot;</span>
+      <span class="s2">&quot;--listen=0.0.0.0&quot;</span>
+      <span class="s2">&quot;--port=9418&quot;</span>
+      <span class="s2">&quot;--base-path=/srv/git&quot;</span>
+      <span class="s2">&quot;--export-all&quot;</span>
+    <span class="p">];</span>
+    <span class="ss">ExposedPorts</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s2">&quot;9418/tcp&quot;</span> <span class="o">=</span> <span class="p">{</span> <span class="p">};</span>
+    <span class="p">};</span>
+    <span class="ss">Env</span> <span class="o">=</span> base<span class="o">.</span>defaultEnv <span class="o">++</span> nonRoot<span class="o">.</span>userEnv <span class="o">++</span> <span class="p">[</span>
+      <span class="s2">&quot;PATH=</span><span class="si">${</span>lib<span class="o">.</span>makeBinPath gitPackages<span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">];</span>
+    <span class="ss">Labels</span> <span class="o">=</span> base<span class="o">.</span>defaultLabels <span class="o">//</span> <span class="p">{</span>
+      <span class="s2">&quot;io.nix-containers.build-type&quot;</span> <span class="o">=</span> <span class="s2">&quot;source&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;io.nix-containers.build-method&quot;</span> <span class="o">=</span> <span class="s2">&quot;Built from source using Nix&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;git daemon&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;Git protocol server (git daemon) for anonymous repository access&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> pkgs<span class="o">.</span>git<span class="o">.</span>version<span class="p">;</span>
+    <span class="p">};</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

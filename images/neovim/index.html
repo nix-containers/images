@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>neovim — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">neovim</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      
+      <span class="text-fg-muted">0.12.4</span>
+      <a href="https://neovim.io/" target="_blank" rel="noopener" class="text-accent-ok hover:underline">Upstream ↗</a>
+    </div>
+    
+    <p class="text-fg-muted mb-8">Vim fork focused on extensibility and agility</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the neovim-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/neovim:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">0.12.4</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#neovim</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-neovim-to-docker &amp;&amp; ./result/bin/load-neovim-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/neovim-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#neovim-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-neovim-dev-to-docker &amp;&amp; ./result/bin/load-neovim-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-fg-primary text-base mb-3">Vim text editor fork focused on extensibility and agility</p><p class="text-fg-muted text-sm mb-3">Neovim is a project that seeks to aggressively refactor Vim in order to: - Simplify maintenance and encourage contributions - Split the work between multiple developers - Enable the implementation of new/modern user interfaces without any modifications to the core source - Improve extensibility with a new plugin architecture</p><p class="text-sm"><span class="text-fg-muted">Upstream project: </span><a href="https://neovim.io/" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">neovim.io ↗</a></p></div>
+        <div class="prose prose-invert max-w-none"><h1>neovim</h1>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#neovim
+
+# Load into Docker
+nix build .#load-neovim-to-docker &amp;&amp; ./result/bin/load-neovim-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/neovim:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:f51b6c34ee0252f730d83a3442b83c1b1c9ae42d101cf5b47cd7488574701003">f51b6c34ee02</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 07:21 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">0.12.3</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:f51b6c34ee0252f730d83a3442b83c1b1c9ae42d101cf5b47cd7488574701003">f51b6c34ee02</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 07:21 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:33 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between"><span class="text-accent-bad font-mono">Critical</span><span>0</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="high"><span class="text-accent-warn font-mono">High</span><span>1</span></div><div class="flex justify-between"><span class="text-fg-muted font-mono">Medium</span><span>0</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="low"><span class="text-fg-muted font-mono">Low</span><span>1</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_neovim_latest-trivy.json</a></div></div><div class="mt-4" id="cve-list" data-cve-list><div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-fg-primary">Vulnerability todo (2 CVEs)</span><button type="button" data-cve-filter="all" class="text-xs text-fg-muted hover:underline">show all</button></div><table class="prose mt-1"><thead><tr><th>✓</th><th>CVE</th><th>Severity</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Title</th></tr></thead><tbody><tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-44983" aria-label="mark CVE-2026-44983 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-44983" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-44983</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>smallbitvec</td><td class="font-mono text-xs">2.6.0</td><td class="font-mono text-xs">—</td><td>smallbitvec is a growable bit-vector for Rust, optimized for size. Fro ...</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="GHSA-cq8v-f236-94qc" aria-label="mark GHSA-cq8v-f236-94qc done"></td><td><a href="https://github.com/advisories/GHSA-cq8v-f236-94qc" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">GHSA-cq8v-f236-94qc</a></td><td class="font-mono uppercase text-xs">LOW</td><td>rand</td><td class="font-mono text-xs">0.8.5</td><td class="font-mono text-xs">0.9.3, 0.10.1, 0.8.6</td><td>Rand is unsound with a custom logger using rand::rng()</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">neovim</span> at version
+          <span class="font-mono text-fg-primary">0.12.4</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:33 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=acl" class="text-accent-ok hover:underline font-mono" title="See other images that include acl">acl</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aho-corasick" class="text-accent-ok hover:underline font-mono" title="See other images that include aho-corasick">aho-corasick</a></td><td class="font-mono">1.1.4</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=allocator-api2" class="text-accent-ok hover:underline font-mono" title="See other images that include allocator-api2">allocator-api2</a></td><td class="font-mono">0.2.21</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ansi_colours" class="text-accent-ok hover:underline font-mono" title="See other images that include ansi_colours">ansi_colours</a></td><td class="font-mono">1.2.3</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=anstream" class="text-accent-ok hover:underline font-mono" title="See other images that include anstream">anstream</a></td><td class="font-mono">0.6.21</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=anstyle" class="text-accent-ok hover:underline font-mono" title="See other images that include anstyle">anstyle</a></td><td class="font-mono">1.0.13</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=anstyle-parse" class="text-accent-ok hover:underline font-mono" title="See other images that include anstyle-parse">anstyle-parse</a></td><td class="font-mono">0.2.7</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=anstyle-query" class="text-accent-ok hover:underline font-mono" title="See other images that include anstyle-query">anstyle-query</a></td><td class="font-mono">1.1.5</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=anyhow" class="text-accent-ok hover:underline font-mono" title="See other images that include anyhow">anyhow</a></td><td class="font-mono">1.0.102</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ascii" class="text-accent-ok hover:underline font-mono" title="See other images that include ascii">ascii</a></td><td class="font-mono">1.1.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attr" class="text-accent-ok hover:underline font-mono" title="See other images that include attr">attr</a></td><td class="font-mono">2.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=audit" class="text-accent-ok hover:underline font-mono" title="See other images that include audit">audit</a></td><td class="font-mono">4.1.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3.9</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bitflags" class="text-accent-ok hover:underline font-mono" title="See other images that include bitflags">bitflags</a></td><td class="font-mono">2.11.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bstr" class="text-accent-ok hover:underline font-mono" title="See other images that include bstr">bstr</a></td><td class="font-mono">1.12.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bytemuck" class="text-accent-ok hover:underline font-mono" title="See other images that include bytemuck">bytemuck</a></td><td class="font-mono">1.25.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cc" class="text-accent-ok hover:underline font-mono" title="See other images that include cc">cc</a></td><td class="font-mono">1.2.56</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cfg-if" class="text-accent-ok hover:underline font-mono" title="See other images that include cfg-if">cfg-if</a></td><td class="font-mono">1.0.4</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=chunked_transfer" class="text-accent-ok hover:underline font-mono" title="See other images that include chunked_transfer">chunked_transfer</a></td><td class="font-mono">1.5.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=clap" class="text-accent-ok hover:underline font-mono" title="See other images that include clap">clap</a></td><td class="font-mono">4.5.60</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=clap_builder" class="text-accent-ok hover:underline font-mono" title="See other images that include clap_builder">clap_builder</a></td><td class="font-mono">4.5.60</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=clap_complete" class="text-accent-ok hover:underline font-mono" title="See other images that include clap_complete">clap_complete</a></td><td class="font-mono">4.5.66</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=clap_complete_nushell" class="text-accent-ok hover:underline font-mono" title="See other images that include clap_complete_nushell">clap_complete_nushell</a></td><td class="font-mono">4.5.10</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=clap_lex" class="text-accent-ok hover:underline font-mono" title="See other images that include clap_lex">clap_lex</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=colorchoice" class="text-accent-ok hover:underline font-mono" title="See other images that include colorchoice">colorchoice</a></td><td class="font-mono">1.0.4</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=console" class="text-accent-ok hover:underline font-mono" title="See other images that include console">console</a></td><td class="font-mono">0.15.11</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils">coreutils</a></td><td class="font-mono">9.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=crc32fast" class="text-accent-ok hover:underline font-mono" title="See other images that include crc32fast">crc32fast</a></td><td class="font-mono">1.5.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ctor" class="text-accent-ok hover:underline font-mono" title="See other images that include ctor">ctor</a></td><td class="font-mono">0.2.9</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ctrlc" class="text-accent-ok hover:underline font-mono" title="See other images that include ctrlc">ctrlc</a></td><td class="font-mono">3.5.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=dbus" class="text-accent-ok hover:underline font-mono" title="See other images that include dbus">dbus</a></td><td class="font-mono">1.16.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=dbus" class="text-accent-ok hover:underline font-mono" title="See other images that include dbus">dbus</a></td><td class="font-mono">1.16.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=dialoguer" class="text-accent-ok hover:underline font-mono" title="See other images that include dialoguer">dialoguer</a></td><td class="font-mono">0.11.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=displaydoc" class="text-accent-ok hover:underline font-mono" title="See other images that include displaydoc">displaydoc</a></td><td class="font-mono">0.2.5</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=dunce" class="text-accent-ok hover:underline font-mono" title="See other images that include dunce">dunce</a></td><td class="font-mono">1.0.5</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=dyn-clone" class="text-accent-ok hover:underline font-mono" title="See other images that include dyn-clone">dyn-clone</a></td><td class="font-mono">1.0.20</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=equivalent" class="text-accent-ok hover:underline font-mono" title="See other images that include equivalent">equivalent</a></td><td class="font-mono">1.0.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=errno" class="text-accent-ok hover:underline font-mono" title="See other images that include errno">errno</a></td><td class="font-mono">0.3.14</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=etcetera" class="text-accent-ok hover:underline font-mono" title="See other images that include etcetera">etcetera</a></td><td class="font-mono">0.11.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=expat" class="text-accent-ok hover:underline font-mono" title="See other images that include expat">expat</a></td><td class="font-mono">2.8.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fastrand" class="text-accent-ok hover:underline font-mono" title="See other images that include fastrand">fastrand</a></td><td class="font-mono">2.3.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=file" class="text-accent-ok hover:underline font-mono" title="See other images that include file">file</a></td><td class="font-mono">5.47</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=find-msvc-tools" class="text-accent-ok hover:underline font-mono" title="See other images that include find-msvc-tools">find-msvc-tools</a></td><td class="font-mono">0.1.9</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=foldhash" class="text-accent-ok hover:underline font-mono" title="See other images that include foldhash">foldhash</a></td><td class="font-mono">0.1.5</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=foldhash" class="text-accent-ok hover:underline font-mono" title="See other images that include foldhash">foldhash</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=form_urlencoded" class="text-accent-ok hover:underline font-mono" title="See other images that include form_urlencoded">form_urlencoded</a></td><td class="font-mono">1.2.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fs4" class="text-accent-ok hover:underline font-mono" title="See other images that include fs4">fs4</a></td><td class="font-mono">0.12.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fuzzy-matcher" class="text-accent-ok hover:underline font-mono" title="See other images that include fuzzy-matcher">fuzzy-matcher</a></td><td class="font-mono">0.3.7</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gawk" class="text-accent-ok hover:underline font-mono" title="See other images that include gawk">gawk</a></td><td class="font-mono">5.4.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=getrandom" class="text-accent-ok hover:underline font-mono" title="See other images that include getrandom">getrandom</a></td><td class="font-mono">0.2.17</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=getrandom" class="text-accent-ok hover:underline font-mono" title="See other images that include getrandom">getrandom</a></td><td class="font-mono">0.4.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glib" class="text-accent-ok hover:underline font-mono" title="See other images that include glib">glib</a></td><td class="font-mono">2.88.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glib" class="text-accent-ok hover:underline font-mono" title="See other images that include glib">glib</a></td><td class="font-mono">2.88.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glob" class="text-accent-ok hover:underline font-mono" title="See other images that include glob">glob</a></td><td class="font-mono">0.3.3</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gnugrep" class="text-accent-ok hover:underline font-mono" title="See other images that include gnugrep">gnugrep</a></td><td class="font-mono">3.12</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gnused" class="text-accent-ok hover:underline font-mono" title="See other images that include gnused">gnused</a></td><td class="font-mono">4.9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=hashbrown" class="text-accent-ok hover:underline font-mono" title="See other images that include hashbrown">hashbrown</a></td><td class="font-mono">0.15.5</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=hashbrown" class="text-accent-ok hover:underline font-mono" title="See other images that include hashbrown">hashbrown</a></td><td class="font-mono">0.16.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=heck" class="text-accent-ok hover:underline font-mono" title="See other images that include heck">heck</a></td><td class="font-mono">0.5.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=hostname-debian" class="text-accent-ok hover:underline font-mono" title="See other images that include hostname-debian">hostname-debian</a></td><td class="font-mono">3.25</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=hostname-debian" class="text-accent-ok hover:underline font-mono" title="See other images that include hostname-debian">hostname-debian</a></td><td class="font-mono">3.25</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=hostname-hostname-debian" class="text-accent-ok hover:underline font-mono" title="See other images that include hostname-hostname-debian">hostname-hostname-debian</a></td><td class="font-mono">3.25</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=html-escape" class="text-accent-ok hover:underline font-mono" title="See other images that include html-escape">html-escape</a></td><td class="font-mono">0.2.13</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=httpdate" class="text-accent-ok hover:underline font-mono" title="See other images that include httpdate">httpdate</a></td><td class="font-mono">1.0.3</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu_collections" class="text-accent-ok hover:underline font-mono" title="See other images that include icu_collections">icu_collections</a></td><td class="font-mono">2.1.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu_locale_core" class="text-accent-ok hover:underline font-mono" title="See other images that include icu_locale_core">icu_locale_core</a></td><td class="font-mono">2.1.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu_normalizer" class="text-accent-ok hover:underline font-mono" title="See other images that include icu_normalizer">icu_normalizer</a></td><td class="font-mono">2.1.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu_normalizer_data" class="text-accent-ok hover:underline font-mono" title="See other images that include icu_normalizer_data">icu_normalizer_data</a></td><td class="font-mono">2.1.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu_properties" class="text-accent-ok hover:underline font-mono" title="See other images that include icu_properties">icu_properties</a></td><td class="font-mono">2.1.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu_properties_data" class="text-accent-ok hover:underline font-mono" title="See other images that include icu_properties_data">icu_properties_data</a></td><td class="font-mono">2.1.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu_provider" class="text-accent-ok hover:underline font-mono" title="See other images that include icu_provider">icu_provider</a></td><td class="font-mono">2.1.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=idna" class="text-accent-ok hover:underline font-mono" title="See other images that include idna">idna</a></td><td class="font-mono">1.1.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=idna_adapter" class="text-accent-ok hover:underline font-mono" title="See other images that include idna_adapter">idna_adapter</a></td><td class="font-mono">1.2.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=indexmap" class="text-accent-ok hover:underline font-mono" title="See other images that include indexmap">indexmap</a></td><td class="font-mono">2.13.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=indoc" class="text-accent-ok hover:underline font-mono" title="See other images that include indoc">indoc</a></td><td class="font-mono">2.0.7</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=is_terminal_polyfill" class="text-accent-ok hover:underline font-mono" title="See other images that include is_terminal_polyfill">is_terminal_polyfill</a></td><td class="font-mono">1.70.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=itoa" class="text-accent-ok hover:underline font-mono" title="See other images that include itoa">itoa</a></td><td class="font-mono">1.0.17</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jq" class="text-accent-ok hover:underline font-mono" title="See other images that include jq">jq</a></td><td class="font-mono">1.8.1</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jq" class="text-accent-ok hover:underline font-mono" title="See other images that include jq">jq</a></td><td class="font-mono">1.8.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jq" class="text-accent-ok hover:underline font-mono" title="See other images that include jq">jq</a></td><td class="font-mono">1.8.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=kmod" class="text-accent-ok hover:underline font-mono" title="See other images that include kmod">kmod</a></td><td class="font-mono">31</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=kmod" class="text-accent-ok hover:underline font-mono" title="See other images that include kmod">kmod</a></td><td class="font-mono">31</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libapparmor" class="text-accent-ok hover:underline font-mono" title="See other images that include libapparmor">libapparmor</a></td><td class="font-mono">4.1.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libapparmor" class="text-accent-ok hover:underline font-mono" title="See other images that include libapparmor">libapparmor</a></td><td class="font-mono">4.1.7</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libc" class="text-accent-ok hover:underline font-mono" title="See other images that include libc">libc</a></td><td class="font-mono">0.2.180</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libcap-ng" class="text-accent-ok hover:underline font-mono" title="See other images that include libcap-ng">libcap-ng</a></td><td class="font-mono">0.9.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libffi" class="text-accent-ok hover:underline font-mono" title="See other images that include libffi">libffi</a></td><td class="font-mono">3.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libloading" class="text-accent-ok hover:underline font-mono" title="See other images that include libloading">libloading</a></td><td class="font-mono">0.9.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libluv" class="text-accent-ok hover:underline font-mono" title="See other images that include libluv">libluv</a></td><td class="font-mono">1.52.1-0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libselinux" class="text-accent-ok hover:underline font-mono" title="See other images that include libselinux">libselinux</a></td><td class="font-mono">3.10</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libuv" class="text-accent-ok hover:underline font-mono" title="See other images that include libuv">libuv</a></td><td class="font-mono">1.52.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libx11" class="text-accent-ok hover:underline font-mono" title="See other images that include libx11">libx11</a></td><td class="font-mono">1.8.13</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxau" class="text-accent-ok hover:underline font-mono" title="See other images that include libxau">libxau</a></td><td class="font-mono">1.0.12</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxcb" class="text-accent-ok hover:underline font-mono" title="See other images that include libxcb">libxcb</a></td><td class="font-mono">1.17.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxcrypt" class="text-accent-ok hover:underline font-mono" title="See other images that include libxcrypt">libxcrypt</a></td><td class="font-mono">4.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxdmcp" class="text-accent-ok hover:underline font-mono" title="See other images that include libxdmcp">libxdmcp</a></td><td class="font-mono">1.1.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxml2" class="text-accent-ok hover:underline font-mono" title="See other images that include libxml2">libxml2</a></td><td class="font-mono">2.15.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=linux-raw-sys" class="text-accent-ok hover:underline font-mono" title="See other images that include linux-raw-sys">linux-raw-sys</a></td><td class="font-mono">0.11.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=linux-raw-sys" class="text-accent-ok hover:underline font-mono" title="See other images that include linux-raw-sys">linux-raw-sys</a></td><td class="font-mono">0.4.15</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=litemap" class="text-accent-ok hover:underline font-mono" title="See other images that include litemap">litemap</a></td><td class="font-mono">0.8.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=log" class="text-accent-ok hover:underline font-mono" title="See other images that include log">log</a></td><td class="font-mono">0.4.29</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=LPeg" class="text-accent-ok hover:underline font-mono" title="See other images that include LPeg">LPeg</a></td><td class="font-mono">1.1.0-2</td><td class="text-fg-muted">lua-rocks</td><td class="text-fg-muted text-xs">MIT/X11</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=LuaBitOp" class="text-accent-ok hover:underline font-mono" title="See other images that include LuaBitOp">LuaBitOp</a></td><td class="font-mono">1.0.2-3</td><td class="text-fg-muted">lua-rocks</td><td class="text-fg-muted text-xs">MIT/X-license</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=luajit" class="text-accent-ok hover:underline font-mono" title="See other images that include luajit">luajit</a></td><td class="font-mono">2.1.1774638290</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=luajit" class="text-accent-ok hover:underline font-mono" title="See other images that include luajit">luajit</a></td><td class="font-mono">2.1.1774638290</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=luajit2.1-lpeg" class="text-accent-ok hover:underline font-mono" title="See other images that include luajit2.1-lpeg">luajit2.1-lpeg</a></td><td class="font-mono">1.1.0-2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=luajit2.1-luabitop" class="text-accent-ok hover:underline font-mono" title="See other images that include luajit2.1-luabitop">luajit2.1-luabitop</a></td><td class="font-mono">1.0.2-3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=luajit2.1-mpack" class="text-accent-ok hover:underline font-mono" title="See other images that include luajit2.1-mpack">luajit2.1-mpack</a></td><td class="font-mono">1.0.13-0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=memchr" class="text-accent-ok hover:underline font-mono" title="See other images that include memchr">memchr</a></td><td class="font-mono">2.8.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses">ncurses</a></td><td class="font-mono">6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=neovim" class="text-accent-ok hover:underline font-mono" title="See other images that include neovim">neovim</a></td><td class="font-mono">0.12.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=neovim-unwrapped" class="text-accent-ok hover:underline font-mono" title="See other images that include neovim-unwrapped">neovim-unwrapped</a></td><td class="font-mono">0.12.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nix" class="text-accent-ok hover:underline font-mono" title="See other images that include nix">nix</a></td><td class="font-mono">0.31.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=once_cell" class="text-accent-ok hover:underline font-mono" title="See other images that include once_cell">once_cell</a></td><td class="font-mono">1.21.3</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=oniguruma" class="text-accent-ok hover:underline font-mono" title="See other images that include oniguruma">oniguruma</a></td><td class="font-mono">6.9.10</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pathdiff" class="text-accent-ok hover:underline font-mono" title="See other images that include pathdiff">pathdiff</a></td><td class="font-mono">0.2.3</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pcre2" class="text-accent-ok hover:underline font-mono" title="See other images that include pcre2">pcre2</a></td><td class="font-mono">10.46</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=percent-encoding" class="text-accent-ok hover:underline font-mono" title="See other images that include percent-encoding">percent-encoding</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl" class="text-accent-ok hover:underline font-mono" title="See other images that include perl">perl</a></td><td class="font-mono">5.42.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Clone" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Clone">perl5.42.0-Clone</a></td><td class="font-mono">0.46</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Encode-Locale" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Encode-Locale">perl5.42.0-Encode-Locale</a></td><td class="font-mono">1.05</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-File-BaseDir" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-File-BaseDir">perl5.42.0-File-BaseDir</a></td><td class="font-mono">0.09</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-File-DesktopEntry" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-File-DesktopEntry">perl5.42.0-File-DesktopEntry</a></td><td class="font-mono">0.22</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-File-Listing" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-File-Listing">perl5.42.0-File-Listing</a></td><td class="font-mono">6.16</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-File-MimeInfo" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-File-MimeInfo">perl5.42.0-File-MimeInfo</a></td><td class="font-mono">0.33</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTML-Parser" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTML-Parser">perl5.42.0-HTML-Parser</a></td><td class="font-mono">3.81</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTML-Tagset" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTML-Tagset">perl5.42.0-HTML-Tagset</a></td><td class="font-mono">3.20</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-CookieJar" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-CookieJar">perl5.42.0-HTTP-CookieJar</a></td><td class="font-mono">0.014</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Cookies" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Cookies">perl5.42.0-HTTP-Cookies</a></td><td class="font-mono">6.10</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Daemon" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Daemon">perl5.42.0-HTTP-Daemon</a></td><td class="font-mono">6.17</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Date" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Date">perl5.42.0-HTTP-Date</a></td><td class="font-mono">6.06</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Message" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Message">perl5.42.0-HTTP-Message</a></td><td class="font-mono">6.45</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-HTTP-Negotiate" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-HTTP-Negotiate">perl5.42.0-HTTP-Negotiate</a></td><td class="font-mono">6.01</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-IO-HTML" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-IO-HTML">perl5.42.0-IO-HTML</a></td><td class="font-mono">1.004</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-IPC-System-Simple" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-IPC-System-Simple">perl5.42.0-IPC-System-Simple</a></td><td class="font-mono">1.30</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-libwww-perl" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-libwww-perl">perl5.42.0-libwww-perl</a></td><td class="font-mono">6.72</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-LWP-MediaTypes" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-LWP-MediaTypes">perl5.42.0-LWP-MediaTypes</a></td><td class="font-mono">6.04</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Net-DBus" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Net-DBus">perl5.42.0-Net-DBus</a></td><td class="font-mono">1.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Net-HTTP" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Net-HTTP">perl5.42.0-Net-HTTP</a></td><td class="font-mono">6.23</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Test-Fatal" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Test-Fatal">perl5.42.0-Test-Fatal</a></td><td class="font-mono">0.017</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Test-Needs" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Test-Needs">perl5.42.0-Test-Needs</a></td><td class="font-mono">0.002010</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Test-RequiresInternet" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Test-RequiresInternet">perl5.42.0-Test-RequiresInternet</a></td><td class="font-mono">0.05</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-TimeDate" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-TimeDate">perl5.42.0-TimeDate</a></td><td class="font-mono">2.33</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Try-Tiny" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Try-Tiny">perl5.42.0-Try-Tiny</a></td><td class="font-mono">0.31</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-URI" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-URI">perl5.42.0-URI</a></td><td class="font-mono">5.21</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-WWW-RobotRules" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-WWW-RobotRules">perl5.42.0-WWW-RobotRules</a></td><td class="font-mono">6.02</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-X11-Protocol" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-X11-Protocol">perl5.42.0-X11-Protocol</a></td><td class="font-mono">0.56</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-XML-Parser" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-XML-Parser">perl5.42.0-XML-Parser</a></td><td class="font-mono">2.46</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-XML-Twig" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-XML-Twig">perl5.42.0-XML-Twig</a></td><td class="font-mono">3.52</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=phf" class="text-accent-ok hover:underline font-mono" title="See other images that include phf">phf</a></td><td class="font-mono">0.13.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=phf_shared" class="text-accent-ok hover:underline font-mono" title="See other images that include phf_shared">phf_shared</a></td><td class="font-mono">0.13.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=potential_utf" class="text-accent-ok hover:underline font-mono" title="See other images that include potential_utf">potential_utf</a></td><td class="font-mono">0.1.4</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ppv-lite86" class="text-accent-ok hover:underline font-mono" title="See other images that include ppv-lite86">ppv-lite86</a></td><td class="font-mono">0.2.21</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=proc-macro2" class="text-accent-ok hover:underline font-mono" title="See other images that include proc-macro2">proc-macro2</a></td><td class="font-mono">1.0.106</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=procps" class="text-accent-ok hover:underline font-mono" title="See other images that include procps">procps</a></td><td class="font-mono">4.0.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=quote" class="text-accent-ok hover:underline font-mono" title="See other images that include quote">quote</a></td><td class="font-mono">1.0.44</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rand" class="text-accent-ok hover:underline font-mono" title="See other images that include rand">rand</a></td><td class="font-mono">0.8.5</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rand_chacha" class="text-accent-ok hover:underline font-mono" title="See other images that include rand_chacha">rand_chacha</a></td><td class="font-mono">0.3.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rand_core" class="text-accent-ok hover:underline font-mono" title="See other images that include rand_core">rand_core</a></td><td class="font-mono">0.6.4</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.3p3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ref-cast" class="text-accent-ok hover:underline font-mono" title="See other images that include ref-cast">ref-cast</a></td><td class="font-mono">1.0.25</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=regex" class="text-accent-ok hover:underline font-mono" title="See other images that include regex">regex</a></td><td class="font-mono">1.12.3</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=regex-automata" class="text-accent-ok hover:underline font-mono" title="See other images that include regex-automata">regex-automata</a></td><td class="font-mono">0.4.14</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=regex-syntax" class="text-accent-ok hover:underline font-mono" title="See other images that include regex-syntax">regex-syntax</a></td><td class="font-mono">0.8.10</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=relative-path" class="text-accent-ok hover:underline font-mono" title="See other images that include relative-path">relative-path</a></td><td class="font-mono">2.0.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rgb" class="text-accent-ok hover:underline font-mono" title="See other images that include rgb">rgb</a></td><td class="font-mono">0.8.52</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rquickjs" class="text-accent-ok hover:underline font-mono" title="See other images that include rquickjs">rquickjs</a></td><td class="font-mono">0.10.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rquickjs-core" class="text-accent-ok hover:underline font-mono" title="See other images that include rquickjs-core">rquickjs-core</a></td><td class="font-mono">0.10.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rquickjs-sys" class="text-accent-ok hover:underline font-mono" title="See other images that include rquickjs-sys">rquickjs-sys</a></td><td class="font-mono">0.10.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rustc-hash" class="text-accent-ok hover:underline font-mono" title="See other images that include rustc-hash">rustc-hash</a></td><td class="font-mono">2.1.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rustix" class="text-accent-ok hover:underline font-mono" title="See other images that include rustix">rustix</a></td><td class="font-mono">0.38.44</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rustix" class="text-accent-ok hover:underline font-mono" title="See other images that include rustix">rustix</a></td><td class="font-mono">1.1.3</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=same-file" class="text-accent-ok hover:underline font-mono" title="See other images that include same-file">same-file</a></td><td class="font-mono">1.0.6</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=schemars" class="text-accent-ok hover:underline font-mono" title="See other images that include schemars">schemars</a></td><td class="font-mono">1.2.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=semver" class="text-accent-ok hover:underline font-mono" title="See other images that include semver">semver</a></td><td class="font-mono">1.0.27</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=serde" class="text-accent-ok hover:underline font-mono" title="See other images that include serde">serde</a></td><td class="font-mono">1.0.228</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=serde_core" class="text-accent-ok hover:underline font-mono" title="See other images that include serde_core">serde_core</a></td><td class="font-mono">1.0.228</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=serde_json" class="text-accent-ok hover:underline font-mono" title="See other images that include serde_json">serde_json</a></td><td class="font-mono">1.0.149</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=shared-mime-info" class="text-accent-ok hover:underline font-mono" title="See other images that include shared-mime-info">shared-mime-info</a></td><td class="font-mono">2.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=shell-words" class="text-accent-ok hover:underline font-mono" title="See other images that include shell-words">shell-words</a></td><td class="font-mono">1.1.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=shlex" class="text-accent-ok hover:underline font-mono" title="See other images that include shlex">shlex</a></td><td class="font-mono">1.3.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=similar" class="text-accent-ok hover:underline font-mono" title="See other images that include similar">similar</a></td><td class="font-mono">2.7.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=siphasher" class="text-accent-ok hover:underline font-mono" title="See other images that include siphasher">siphasher</a></td><td class="font-mono">1.0.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=smallbitvec" class="text-accent-ok hover:underline font-mono" title="See other images that include smallbitvec">smallbitvec</a></td><td class="font-mono">2.6.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=smallvec" class="text-accent-ok hover:underline font-mono" title="See other images that include smallvec">smallvec</a></td><td class="font-mono">1.15.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=stable_deref_trait" class="text-accent-ok hover:underline font-mono" title="See other images that include stable_deref_trait">stable_deref_trait</a></td><td class="font-mono">1.2.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=streaming-iterator" class="text-accent-ok hover:underline font-mono" title="See other images that include streaming-iterator">streaming-iterator</a></td><td class="font-mono">0.1.9</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=strsim" class="text-accent-ok hover:underline font-mono" title="See other images that include strsim">strsim</a></td><td class="font-mono">0.11.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=syn" class="text-accent-ok hover:underline font-mono" title="See other images that include syn">syn</a></td><td class="font-mono">2.0.117</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=synstructure" class="text-accent-ok hover:underline font-mono" title="See other images that include synstructure">synstructure</a></td><td class="font-mono">0.13.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=systemd-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include systemd-minimal">systemd-minimal</a></td><td class="font-mono">260.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=systemd-minimal-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include systemd-minimal-libs">systemd-minimal-libs</a></td><td class="font-mono">260.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tempfile" class="text-accent-ok hover:underline font-mono" title="See other images that include tempfile">tempfile</a></td><td class="font-mono">3.25.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=thiserror" class="text-accent-ok hover:underline font-mono" title="See other images that include thiserror">thiserror</a></td><td class="font-mono">1.0.69</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=thiserror" class="text-accent-ok hover:underline font-mono" title="See other images that include thiserror">thiserror</a></td><td class="font-mono">2.0.18</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=thread_local" class="text-accent-ok hover:underline font-mono" title="See other images that include thread_local">thread_local</a></td><td class="font-mono">1.1.9</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tiny_http" class="text-accent-ok hover:underline font-mono" title="See other images that include tiny_http">tiny_http</a></td><td class="font-mono">0.12.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tinystr" class="text-accent-ok hover:underline font-mono" title="See other images that include tinystr">tinystr</a></td><td class="font-mono">0.8.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=topological-sort" class="text-accent-ok hover:underline font-mono" title="See other images that include topological-sort">topological-sort</a></td><td class="font-mono">0.2.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter">tree-sitter</a></td><td class="font-mono">0.26.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter">tree-sitter</a></td><td class="font-mono">0.26.8</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-c-neovim" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-c-neovim">tree-sitter-c-neovim</a></td><td class="font-mono">0.12.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-cli" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-cli">tree-sitter-cli</a></td><td class="font-mono">0.26.8</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-config" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-config">tree-sitter-config</a></td><td class="font-mono">0.26.8</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-generate" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-generate">tree-sitter-generate</a></td><td class="font-mono">0.26.8</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-highlight" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-highlight">tree-sitter-highlight</a></td><td class="font-mono">0.26.8</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-language" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-language">tree-sitter-language</a></td><td class="font-mono">0.1.7</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-loader" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-loader">tree-sitter-loader</a></td><td class="font-mono">0.26.8</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-lua-neovim" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-lua-neovim">tree-sitter-lua-neovim</a></td><td class="font-mono">0.12.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-markdown-neovim" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-markdown-neovim">tree-sitter-markdown-neovim</a></td><td class="font-mono">0.12.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-markdown_inline-neovim" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-markdown_inline-neovim">tree-sitter-markdown_inline-neovim</a></td><td class="font-mono">0.12.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-query-neovim" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-query-neovim">tree-sitter-query-neovim</a></td><td class="font-mono">0.12.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-tags" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-tags">tree-sitter-tags</a></td><td class="font-mono">0.26.8</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-vim-neovim" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-vim-neovim">tree-sitter-vim-neovim</a></td><td class="font-mono">0.12.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tree-sitter-vimdoc-neovim" class="text-accent-ok hover:underline font-mono" title="See other images that include tree-sitter-vimdoc-neovim">tree-sitter-vimdoc-neovim</a></td><td class="font-mono">0.12.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=unibilium" class="text-accent-ok hover:underline font-mono" title="See other images that include unibilium">unibilium</a></td><td class="font-mono">2.1.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=unicode-ident" class="text-accent-ok hover:underline font-mono" title="See other images that include unicode-ident">unicode-ident</a></td><td class="font-mono">1.0.24</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=unicode-width" class="text-accent-ok hover:underline font-mono" title="See other images that include unicode-width">unicode-width</a></td><td class="font-mono">0.2.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=url" class="text-accent-ok hover:underline font-mono" title="See other images that include url">url</a></td><td class="font-mono">2.5.8</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=utf8-width" class="text-accent-ok hover:underline font-mono" title="See other images that include utf8-width">utf8-width</a></td><td class="font-mono">0.1.8</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=utf8_iter" class="text-accent-ok hover:underline font-mono" title="See other images that include utf8_iter">utf8_iter</a></td><td class="font-mono">1.0.4</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=utf8parse" class="text-accent-ok hover:underline font-mono" title="See other images that include utf8parse">utf8parse</a></td><td class="font-mono">0.2.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=utf8proc" class="text-accent-ok hover:underline font-mono" title="See other images that include utf8proc">utf8proc</a></td><td class="font-mono">2.11.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=walkdir" class="text-accent-ok hover:underline font-mono" title="See other images that include walkdir">walkdir</a></td><td class="font-mono">2.5.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=wasmparser" class="text-accent-ok hover:underline font-mono" title="See other images that include wasmparser">wasmparser</a></td><td class="font-mono">0.243.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=wayland" class="text-accent-ok hover:underline font-mono" title="See other images that include wayland">wayland</a></td><td class="font-mono">1.25.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=webbrowser" class="text-accent-ok hover:underline font-mono" title="See other images that include webbrowser">webbrowser</a></td><td class="font-mono">1.1.0</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=which" class="text-accent-ok hover:underline font-mono" title="See other images that include which">which</a></td><td class="font-mono">2.23</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=wl-clipboard" class="text-accent-ok hover:underline font-mono" title="See other images that include wl-clipboard">wl-clipboard</a></td><td class="font-mono">2.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=writeable" class="text-accent-ok hover:underline font-mono" title="See other images that include writeable">writeable</a></td><td class="font-mono">0.6.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xdg-user-dirs" class="text-accent-ok hover:underline font-mono" title="See other images that include xdg-user-dirs">xdg-user-dirs</a></td><td class="font-mono">0.20</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xdg-user-dirs" class="text-accent-ok hover:underline font-mono" title="See other images that include xdg-user-dirs">xdg-user-dirs</a></td><td class="font-mono">0.20</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xdg-utils" class="text-accent-ok hover:underline font-mono" title="See other images that include xdg-utils">xdg-utils</a></td><td class="font-mono">1.2.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xz" class="text-accent-ok hover:underline font-mono" title="See other images that include xz">xz</a></td><td class="font-mono">5.8.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=yoke" class="text-accent-ok hover:underline font-mono" title="See other images that include yoke">yoke</a></td><td class="font-mono">0.8.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=yoke-derive" class="text-accent-ok hover:underline font-mono" title="See other images that include yoke-derive">yoke-derive</a></td><td class="font-mono">0.8.1</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zerocopy" class="text-accent-ok hover:underline font-mono" title="See other images that include zerocopy">zerocopy</a></td><td class="font-mono">0.8.39</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zerofrom" class="text-accent-ok hover:underline font-mono" title="See other images that include zerofrom">zerofrom</a></td><td class="font-mono">0.1.6</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zerofrom-derive" class="text-accent-ok hover:underline font-mono" title="See other images that include zerofrom-derive">zerofrom-derive</a></td><td class="font-mono">0.1.6</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zeroize" class="text-accent-ok hover:underline font-mono" title="See other images that include zeroize">zeroize</a></td><td class="font-mono">1.8.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zerotrie" class="text-accent-ok hover:underline font-mono" title="See other images that include zerotrie">zerotrie</a></td><td class="font-mono">0.2.3</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zerovec" class="text-accent-ok hover:underline font-mono" title="See other images that include zerovec">zerovec</a></td><td class="font-mono">0.11.5</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zerovec-derive" class="text-accent-ok hover:underline font-mono" title="See other images that include zerovec-derive">zerovec-derive</a></td><td class="font-mono">0.11.2</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zmij" class="text-accent-ok hover:underline font-mono" title="See other images that include zmij">zmij</a></td><td class="font-mono">1.0.21</td><td class="text-fg-muted">rust-crate</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zstd" class="text-accent-ok hover:underline font-mono" title="See other images that include zstd">zstd</a></td><td class="font-mono">1.5.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/neovim/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> mkImage<span class="p">,</span> pkgs<span class="p">,</span> lib<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+<span class="c1"># Neovim - Vim fork focused on extensibility</span>
+<span class="c1"># https://neovim.io/</span>
+
+mkImage <span class="p">{</span>
+  <span class="ss">drv</span> <span class="o">=</span> pkgs<span class="o">.</span>neovim<span class="p">;</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;neovim&quot;</span><span class="p">;</span>
+  <span class="ss">tag</span> <span class="o">=</span> <span class="s2">&quot;v</span><span class="si">${</span>pkgs<span class="o">.</span>neovim<span class="o">.</span>version<span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+  <span class="ss">entrypoint</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;</span><span class="si">${</span>pkgs<span class="o">.</span>neovim<span class="si">}</span><span class="s2">/bin/nvim&quot;</span> <span class="p">];</span>
+  <span class="ss">cmd</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;--help&quot;</span> <span class="p">];</span>
+
+  <span class="ss">labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;Neovim&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;Vim fork focused on extensibility and agility&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> pkgs<span class="o">.</span>neovim<span class="o">.</span>version<span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

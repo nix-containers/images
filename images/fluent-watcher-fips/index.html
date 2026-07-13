@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fluent-watcher-fips — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">fluent-watcher-fips</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      
+      <span class="text-fg-muted">3.2.0</span>
+      
+    </div>
+    
+    <p class="text-fg-muted mb-8">Fluent logging fluent-watcher-fips</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the fluent-watcher-fips-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/fluent-watcher-fips:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">3.2.0</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#fluent-watcher-fips</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-fluent-watcher-fips-to-docker &amp;&amp; ./result/bin/load-fluent-watcher-fips-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/fluent-watcher-fips-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#fluent-watcher-fips-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-fluent-watcher-fips-dev-to-docker &amp;&amp; ./result/bin/load-fluent-watcher-fips-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-fg-primary text-base mb-3">Fluent logging fluent-watcher-fips</p></div>
+        <div class="prose prose-invert max-w-none"><h1>fluent-watcher-fips</h1>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#fluent-watcher-fips
+
+# Load into Docker
+nix build .#load-fluent-watcher-fips-to-docker &amp;&amp; ./result/bin/load-fluent-watcher-fips-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/fluent-watcher-fips:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:d736726f107143dd211d61e6a2dc5fa8b89f8ece68614f17d6f0cd616507d10e">d736726f1071</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">48.4 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 16:58 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">3.2.0</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:d736726f107143dd211d61e6a2dc5fa8b89f8ece68614f17d6f0cd616507d10e">d736726f1071</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">48.4 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 16:58 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:34 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="critical"><span class="text-accent-bad font-mono">Critical</span><span>3</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="high"><span class="text-accent-warn font-mono">High</span><span>11</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="medium"><span class="text-fg-muted font-mono">Medium</span><span>9</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="low"><span class="text-fg-muted font-mono">Low</span><span>4</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_fluent-watcher-fips_latest-trivy.json</a></div></div><div class="mt-4" id="cve-list" data-cve-list><div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-fg-primary">Vulnerability todo (28 CVEs)</span><button type="button" data-cve-filter="all" class="text-xs text-fg-muted hover:underline">show all</button></div><table class="prose mt-1"><thead><tr><th>✓</th><th>CVE</th><th>Severity</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Title</th></tr></thead><tbody><tr data-severity="critical"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-42257" aria-label="mark CVE-2026-42257 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42257" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-42257</a></td><td class="font-mono uppercase text-xs">CRITICAL</td><td>net-imap</td><td class="font-mono text-xs">0.5.8</td><td class="font-mono text-xs">~&gt; 0.4.24, ~&gt; 0.5.14, &gt;= 0.6.4</td><td>net-imap: Net::IMAP: Arbitrary IMAP command injection via CRLF sequences in unvalidated input</td></tr>
+<tr data-severity="critical"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-44024" aria-label="mark CVE-2026-44024 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-44024" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-44024</a></td><td class="font-mono uppercase text-xs">CRITICAL</td><td>fluentd</td><td class="font-mono text-xs">1.18.0</td><td class="font-mono text-xs">&gt;= 1.19.3</td><td>Fluentd is Vulnerable to Remote Code Execution (RCE) via Arbitrary File Write in `${tag}` Placeholder</td></tr>
+<tr data-severity="critical"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54906" aria-label="mark CVE-2026-54906 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54906" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54906</a></td><td class="font-mono uppercase text-xs">CRITICAL</td><td>concurrent-ruby</td><td class="font-mono text-xs">1.3.5</td><td class="font-mono text-xs">&gt;= 1.3.7</td><td>concurrent-ruby: rubygem-concurrent-ruby: concurrent-ruby: Synchronization flaw in ReadWriteLock allows unauthorized lock release and denial of service</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-27788" aria-label="mark CVE-2025-27788 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-27788" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-27788</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>json</td><td class="font-mono text-xs">2.10.1</td><td class="font-mono text-xs">&gt;= 2.10.2</td><td>json: Ruby JSON Parser has Out-of-bounds Read</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-61594" aria-label="mark CVE-2025-61594 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61594" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-61594</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>uri</td><td class="font-mono text-xs">1.0.3</td><td class="font-mono text-xs">~&gt; 0.12.5, ~&gt; 0.13.3, &gt;= 1.0.4</td><td>uri: URI module: Credential exposure via URI + operator</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-35611" aria-label="mark CVE-2026-35611 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-35611" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-35611</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>addressable</td><td class="font-mono text-xs">2.8.7</td><td class="font-mono text-xs">&gt;= 2.9.0</td><td>addressable: Addressable: Denial of Service via crafted URI templates</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-41316" aria-label="mark CVE-2026-41316 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-41316" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-41316</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>erb</td><td class="font-mono text-xs">4.0.4</td><td class="font-mono text-xs">~&gt; 4.0.3.1, ~&gt; 4.0.4.1, ~&gt; 6.0.1.1, &gt;= 6.0.4</td><td>erb: ERB: Arbitrary code execution via deserialization bypass</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-42245" aria-label="mark CVE-2026-42245 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42245" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-42245</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>net-imap</td><td class="font-mono text-xs">0.5.8</td><td class="font-mono text-xs">~&gt; 0.4.24, ~&gt; 0.5.14, &gt;= 0.6.4</td><td>ruby: net-imap: Net::IMAP: Denial of Service via crafted IMAP responses</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-42246" aria-label="mark CVE-2026-42246 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42246" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-42246</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>net-imap</td><td class="font-mono text-xs">0.5.8</td><td class="font-mono text-xs">~&gt; 0.3.10, ~&gt; 0.4.24, ~&gt; 0.5.14, &gt;= 0.6.4</td><td>net-imap: ruby: Net::IMAP: Information disclosure via man-in-the-middle attack bypassing TLS</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-44025" aria-label="mark CVE-2026-44025 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-44025" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-44025</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>fluentd</td><td class="font-mono text-xs">1.18.0</td><td class="font-mono text-xs">&gt;= 1.19.3</td><td>Fluentd is Vulnerable to Exposure of Sensitive Information via Monitor Agent API</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-44160" aria-label="mark CVE-2026-44160 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-44160" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-44160</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>fluentd</td><td class="font-mono text-xs">1.18.0</td><td class="font-mono text-xs">&gt;= 1.19.3</td><td>Fluentd is Vulnerable to Denial of Service (DoS) via Gzip Decompression Bomb in `in_http` and `in_forward`</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-44161" aria-label="mark CVE-2026-44161 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-44161" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-44161</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>fluentd</td><td class="font-mono text-xs">1.18.0</td><td class="font-mono text-xs">&gt;= 1.19.3</td><td>Fluentd is Vulnerable to Server-Side Request Forgery (SSRF) via Placeholder Expansion in `out_http`</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54297" aria-label="mark CVE-2026-54297 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54297" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54297</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>faraday</td><td class="font-mono text-xs">2.12.2</td><td class="font-mono text-xs">~&gt; 1.10.6, &gt;= 2.14.3</td><td>faraday: Faraday: Denial of Service via crafted nested query strings</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54904" aria-label="mark CVE-2026-54904 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54904" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54904</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>concurrent-ruby</td><td class="font-mono text-xs">1.3.5</td><td class="font-mono text-xs">&gt;= 1.3.7</td><td>concurrent-ruby: rubygem-concurrent-ruby: concurrent-ruby: Denial of Service due to infinite loop in AtomicReference#update</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-14762" aria-label="mark CVE-2025-14762 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-14762" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-14762</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>aws-sdk-s3</td><td class="font-mono text-xs">1.182.0</td><td class="font-mono text-xs">&gt;= 1.208.0</td><td>aws-sdk-ruby: AWS SDK for Ruby: Data integrity compromise via missing cryptographic key commitment</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-25765" aria-label="mark CVE-2026-25765 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-25765" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-25765</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>faraday</td><td class="font-mono text-xs">2.12.2</td><td class="font-mono text-xs">~&gt; 1.10.5, &gt;= 2.14.1</td><td>Faraday: Faraday: Server-Side Request Forgery via protocol-relative URLs</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-33637" aria-label="mark CVE-2026-33637 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-33637" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-33637</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>faraday</td><td class="font-mono text-xs">2.12.2</td><td class="font-mono text-xs">&gt;= 2.14.2</td><td>faraday: rubygem-faraday: Faraday: Off-host request forgery due to protocol-relative host override</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-42256" aria-label="mark CVE-2026-42256 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42256" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-42256</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>net-imap</td><td class="font-mono text-xs">0.5.8</td><td class="font-mono text-xs">~&gt; 0.4.24, ~&gt; 0.5.14, &gt;= 0.6.4</td><td>ruby/net-imap: ruby: Net::IMAP: Denial of Service via large iteration count in SCRAM authentication</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-42258" aria-label="mark CVE-2026-42258 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42258" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-42258</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>net-imap</td><td class="font-mono text-xs">0.5.8</td><td class="font-mono text-xs">~&gt; 0.4.24, ~&gt; 0.5.14, &gt;= 0.6.4</td><td>ruby/net-imap: ruby: Net::IMAP: IMAP Command Injection via Symbol Arguments</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-47240" aria-label="mark CVE-2026-47240 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-47240" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-47240</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>net-imap</td><td class="font-mono text-xs">0.5.8</td><td class="font-mono text-xs">~&gt; 0.5.15, &gt;= 0.6.4.1</td><td>Net::IMAP implements Internet Message Access Protocol (IMAP) client fu ...</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-47242" aria-label="mark CVE-2026-47242 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-47242" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-47242</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>net-imap</td><td class="font-mono text-xs">0.5.8</td><td class="font-mono text-xs">~&gt; 0.5.15, &gt;= 0.6.4.1</td><td>Net::IMAP implements Internet Message Access Protocol (IMAP) client fu ...</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54171" aria-label="mark CVE-2026-54171 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54171" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54171</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>excon</td><td class="font-mono text-xs">1.2.5</td><td class="font-mono text-xs">&gt;= 1.5.0</td><td>redact additional sensitive/risky headers when following redirects</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54905" aria-label="mark CVE-2026-54905 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54905" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54905</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>concurrent-ruby</td><td class="font-mono text-xs">1.3.5</td><td class="font-mono text-xs">&gt;= 1.3.7</td><td>concurrent-ruby: Concurrent-ruby: Incorrect write lock granting leading to broken mutual exclusion</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-44162" aria-label="mark CVE-2026-44162 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-44162" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-44162</a></td><td class="font-mono uppercase text-xs">LOW</td><td>fluent-plugin-s3</td><td class="font-mono text-xs">1.8.3</td><td class="font-mono text-xs">&gt;= 1.8.5</td><td>fluent-plugin-s3 Vulnerable to Denial of Service (DoS) via Decompression Bomb in `in_s3`</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-47241" aria-label="mark CVE-2026-47241 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-47241" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-47241</a></td><td class="font-mono uppercase text-xs">LOW</td><td>net-imap</td><td class="font-mono text-xs">0.5.8</td><td class="font-mono text-xs">~&gt; 0.5.15, &gt;= 0.6.4.1</td><td>net-imap: rubygem-net-imap: Net::IMAP: Denial of Service via malformed command input</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54696" aria-label="mark CVE-2026-54696 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54696" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54696</a></td><td class="font-mono uppercase text-xs">LOW</td><td>json</td><td class="font-mono text-xs">2.10.1</td><td class="font-mono text-xs">&gt;= 2.19.9</td><td>Ruby JSON is a JSON implementation for Ruby. Versions 2.9.0 through 2. ...</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54696" aria-label="mark CVE-2026-54696 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54696" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54696</a></td><td class="font-mono uppercase text-xs">LOW</td><td>json</td><td class="font-mono text-xs">2.9.1</td><td class="font-mono text-xs">&gt;= 2.19.9</td><td>Ruby JSON is a JSON implementation for Ruby. Versions 2.9.0 through 2. ...</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54522" aria-label="mark CVE-2026-54522 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54522" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54522</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>msgpack</td><td class="font-mono text-xs">1.8.0</td><td class="font-mono text-xs">&gt;= 1.8.2</td><td>DFVULN-839 - Use-After-Free in MessagePack::Buffer#clear Enables Cross-Buffer Disclosure</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">fluent-watcher-fips</span> at version
+          <span class="font-mono text-fg-primary">3.2.0</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:34 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=abbrev" class="text-accent-ok hover:underline font-mono" title="See other images that include abbrev">abbrev</a></td><td class="font-mono">0.1.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=acl" class="text-accent-ok hover:underline font-mono" title="See other images that include acl">acl</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=addressable" class="text-accent-ok hover:underline font-mono" title="See other images that include addressable">addressable</a></td><td class="font-mono">2.8.7</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attr" class="text-accent-ok hover:underline font-mono" title="See other images that include attr">attr</a></td><td class="font-mono">2.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-eventstream" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-eventstream">aws-eventstream</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-partitions" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-partitions">aws-partitions</a></td><td class="font-mono">1.1064.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-sdk-cloudwatchlogs" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-sdk-cloudwatchlogs">aws-sdk-cloudwatchlogs</a></td><td class="font-mono">1.109.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-sdk-core" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-sdk-core">aws-sdk-core</a></td><td class="font-mono">3.220.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-sdk-firehose" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-sdk-firehose">aws-sdk-firehose</a></td><td class="font-mono">1.89.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-sdk-kinesis" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-sdk-kinesis">aws-sdk-kinesis</a></td><td class="font-mono">1.74.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-sdk-kms" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-sdk-kms">aws-sdk-kms</a></td><td class="font-mono">1.99.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-sdk-s3" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-sdk-s3">aws-sdk-s3</a></td><td class="font-mono">1.182.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-sdk-sqs" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-sdk-sqs">aws-sdk-sqs</a></td><td class="font-mono">1.93.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aws-sigv4" class="text-accent-ok hover:underline font-mono" title="See other images that include aws-sigv4">aws-sigv4</a></td><td class="font-mono">1.11.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=base64" class="text-accent-ok hover:underline font-mono" title="See other images that include base64">base64</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=base64" class="text-accent-ok hover:underline font-mono" title="See other images that include base64">base64</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3.9</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=benchmark" class="text-accent-ok hover:underline font-mono" title="See other images that include benchmark">benchmark</a></td><td class="font-mono">0.4.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bigdecimal" class="text-accent-ok hover:underline font-mono" title="See other images that include bigdecimal">bigdecimal</a></td><td class="font-mono">3.1.8</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bson" class="text-accent-ok hover:underline font-mono" title="See other images that include bson">bson</a></td><td class="font-mono">4.15.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bundler" class="text-accent-ok hover:underline font-mono" title="See other images that include bundler">bundler</a></td><td class="font-mono">2.6.9</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bundler" class="text-accent-ok hover:underline font-mono" title="See other images that include bundler">bundler</a></td><td class="font-mono">2.7.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bundler" class="text-accent-ok hover:underline font-mono" title="See other images that include bundler">bundler</a></td><td class="font-mono">2.7.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cgi" class="text-accent-ok hover:underline font-mono" title="See other images that include cgi">cgi</a></td><td class="font-mono">0.4.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=concurrent-ruby" class="text-accent-ok hover:underline font-mono" title="See other images that include concurrent-ruby">concurrent-ruby</a></td><td class="font-mono">1.3.5</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=concurrent_ruby" class="text-accent-ok hover:underline font-mono" title="See other images that include concurrent_ruby">concurrent_ruby</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cool.io" class="text-accent-ok hover:underline font-mono" title="See other images that include cool.io">cool.io</a></td><td class="font-mono">1.9.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils">coreutils</a></td><td class="font-mono">9.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=csv" class="text-accent-ok hover:underline font-mono" title="See other images that include csv">csv</a></td><td class="font-mono">3.3.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=csv" class="text-accent-ok hover:underline font-mono" title="See other images that include csv">csv</a></td><td class="font-mono">3.3.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=date" class="text-accent-ok hover:underline font-mono" title="See other images that include date">date</a></td><td class="font-mono">3.4.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=debug" class="text-accent-ok hover:underline font-mono" title="See other images that include debug">debug</a></td><td class="font-mono">1.11.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=delegate" class="text-accent-ok hover:underline font-mono" title="See other images that include delegate">delegate</a></td><td class="font-mono">0.4.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=did_you_mean" class="text-accent-ok hover:underline font-mono" title="See other images that include did_you_mean">did_you_mean</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=digest" class="text-accent-ok hover:underline font-mono" title="See other images that include digest">digest</a></td><td class="font-mono">3.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=digest-crc" class="text-accent-ok hover:underline font-mono" title="See other images that include digest-crc">digest-crc</a></td><td class="font-mono">0.7.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=drb" class="text-accent-ok hover:underline font-mono" title="See other images that include drb">drb</a></td><td class="font-mono">2.2.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=drb" class="text-accent-ok hover:underline font-mono" title="See other images that include drb">drb</a></td><td class="font-mono">2.2.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=elastic-transport" class="text-accent-ok hover:underline font-mono" title="See other images that include elastic-transport">elastic-transport</a></td><td class="font-mono">8.4.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=elasticsearch" class="text-accent-ok hover:underline font-mono" title="See other images that include elasticsearch">elasticsearch</a></td><td class="font-mono">8.17.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=elasticsearch-api" class="text-accent-ok hover:underline font-mono" title="See other images that include elasticsearch-api">elasticsearch-api</a></td><td class="font-mono">8.17.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=english" class="text-accent-ok hover:underline font-mono" title="See other images that include english">english</a></td><td class="font-mono">0.8.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=erb" class="text-accent-ok hover:underline font-mono" title="See other images that include erb">erb</a></td><td class="font-mono">4.0.4</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=error_highlight" class="text-accent-ok hover:underline font-mono" title="See other images that include error_highlight">error_highlight</a></td><td class="font-mono">0.7.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=etc" class="text-accent-ok hover:underline font-mono" title="See other images that include etc">etc</a></td><td class="font-mono">1.4.6</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=excon" class="text-accent-ok hover:underline font-mono" title="See other images that include excon">excon</a></td><td class="font-mono">1.2.5</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=faraday" class="text-accent-ok hover:underline font-mono" title="See other images that include faraday">faraday</a></td><td class="font-mono">2.12.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=faraday-excon" class="text-accent-ok hover:underline font-mono" title="See other images that include faraday-excon">faraday-excon</a></td><td class="font-mono">2.3.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=faraday-net_http" class="text-accent-ok hover:underline font-mono" title="See other images that include faraday-net_http">faraday-net_http</a></td><td class="font-mono">3.4.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fcntl" class="text-accent-ok hover:underline font-mono" title="See other images that include fcntl">fcntl</a></td><td class="font-mono">1.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fiddle" class="text-accent-ok hover:underline font-mono" title="See other images that include fiddle">fiddle</a></td><td class="font-mono">1.1.6</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fileutils" class="text-accent-ok hover:underline font-mono" title="See other images that include fileutils">fileutils</a></td><td class="font-mono">1.7.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=find" class="text-accent-ok hover:underline font-mono" title="See other images that include find">find</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-config-regexp-type" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-config-regexp-type">fluent-config-regexp-type</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-cloudwatch-logs" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-cloudwatch-logs">fluent-plugin-cloudwatch-logs</a></td><td class="font-mono">0.14.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-concat" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-concat">fluent-plugin-concat</a></td><td class="font-mono">2.5.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-elasticsearch" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-elasticsearch">fluent-plugin-elasticsearch</a></td><td class="font-mono">5.4.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-kafka" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-kafka">fluent-plugin-kafka</a></td><td class="font-mono">0.19.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-kinesis" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-kinesis">fluent-plugin-kinesis</a></td><td class="font-mono">3.5.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-mongo" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-mongo">fluent-plugin-mongo</a></td><td class="font-mono">1.6.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-record-reformer" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-record-reformer">fluent-plugin-record-reformer</a></td><td class="font-mono">0.9.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-rewrite-tag-filter" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-rewrite-tag-filter">fluent-plugin-rewrite-tag-filter</a></td><td class="font-mono">2.4.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-s3" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-s3">fluent-plugin-s3</a></td><td class="font-mono">1.8.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluent-plugin-webhdfs" class="text-accent-ok hover:underline font-mono" title="See other images that include fluent-plugin-webhdfs">fluent-plugin-webhdfs</a></td><td class="font-mono">1.6.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluentd" class="text-accent-ok hover:underline font-mono" title="See other images that include fluentd">fluentd</a></td><td class="font-mono">1.18.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fluentd" class="text-accent-ok hover:underline font-mono" title="See other images that include fluentd">fluentd</a></td><td class="font-mono">1.18.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=forwardable" class="text-accent-ok hover:underline font-mono" title="See other images that include forwardable">forwardable</a></td><td class="font-mono">1.3.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=getoptlong" class="text-accent-ok hover:underline font-mono" title="See other images that include getoptlong">getoptlong</a></td><td class="font-mono">0.2.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google-protobuf" class="text-accent-ok hover:underline font-mono" title="See other images that include google-protobuf">google-protobuf</a></td><td class="font-mono">3.25.6</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=http_parser.rb" class="text-accent-ok hover:underline font-mono" title="See other images that include http_parser.rb">http_parser.rb</a></td><td class="font-mono">0.8.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=io-console" class="text-accent-ok hover:underline font-mono" title="See other images that include io-console">io-console</a></td><td class="font-mono">0.8.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=io-nonblock" class="text-accent-ok hover:underline font-mono" title="See other images that include io-nonblock">io-nonblock</a></td><td class="font-mono">0.3.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=io-wait" class="text-accent-ok hover:underline font-mono" title="See other images that include io-wait">io-wait</a></td><td class="font-mono">0.3.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ipaddr" class="text-accent-ok hover:underline font-mono" title="See other images that include ipaddr">ipaddr</a></td><td class="font-mono">1.2.7</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=irb" class="text-accent-ok hover:underline font-mono" title="See other images that include irb">irb</a></td><td class="font-mono">1.14.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jmespath" class="text-accent-ok hover:underline font-mono" title="See other images that include jmespath">jmespath</a></td><td class="font-mono">1.6.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=json" class="text-accent-ok hover:underline font-mono" title="See other images that include json">json</a></td><td class="font-mono">2.10.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=json" class="text-accent-ok hover:underline font-mono" title="See other images that include json">json</a></td><td class="font-mono">2.9.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libffi" class="text-accent-ok hover:underline font-mono" title="See other images that include libffi">libffi</a></td><td class="font-mono">3.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libyaml" class="text-accent-ok hover:underline font-mono" title="See other images that include libyaml">libyaml</a></td><td class="font-mono">0.2.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=logger" class="text-accent-ok hover:underline font-mono" title="See other images that include logger">logger</a></td><td class="font-mono">1.6.4</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=logger" class="text-accent-ok hover:underline font-mono" title="See other images that include logger">logger</a></td><td class="font-mono">1.6.6</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ltsv" class="text-accent-ok hover:underline font-mono" title="See other images that include ltsv">ltsv</a></td><td class="font-mono">0.1.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=matrix" class="text-accent-ok hover:underline font-mono" title="See other images that include matrix">matrix</a></td><td class="font-mono">0.4.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minitest" class="text-accent-ok hover:underline font-mono" title="See other images that include minitest">minitest</a></td><td class="font-mono">5.25.4</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mongo" class="text-accent-ok hover:underline font-mono" title="See other images that include mongo">mongo</a></td><td class="font-mono">2.18.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=msgpack" class="text-accent-ok hover:underline font-mono" title="See other images that include msgpack">msgpack</a></td><td class="font-mono">1.8.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=multi_json" class="text-accent-ok hover:underline font-mono" title="See other images that include multi_json">multi_json</a></td><td class="font-mono">1.15.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mutex_m" class="text-accent-ok hover:underline font-mono" title="See other images that include mutex_m">mutex_m</a></td><td class="font-mono">0.3.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses">ncurses</a></td><td class="font-mono">6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=net-ftp" class="text-accent-ok hover:underline font-mono" title="See other images that include net-ftp">net-ftp</a></td><td class="font-mono">0.3.8</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=net-http" class="text-accent-ok hover:underline font-mono" title="See other images that include net-http">net-http</a></td><td class="font-mono">0.6.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=net-http" class="text-accent-ok hover:underline font-mono" title="See other images that include net-http">net-http</a></td><td class="font-mono">0.6.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=net-imap" class="text-accent-ok hover:underline font-mono" title="See other images that include net-imap">net-imap</a></td><td class="font-mono">0.5.8</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=net-pop" class="text-accent-ok hover:underline font-mono" title="See other images that include net-pop">net-pop</a></td><td class="font-mono">0.1.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=net-protocol" class="text-accent-ok hover:underline font-mono" title="See other images that include net-protocol">net-protocol</a></td><td class="font-mono">0.2.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=net-smtp" class="text-accent-ok hover:underline font-mono" title="See other images that include net-smtp">net-smtp</a></td><td class="font-mono">0.5.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nkf" class="text-accent-ok hover:underline font-mono" title="See other images that include nkf">nkf</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=observer" class="text-accent-ok hover:underline font-mono" title="See other images that include observer">observer</a></td><td class="font-mono">0.1.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=open-uri" class="text-accent-ok hover:underline font-mono" title="See other images that include open-uri">open-uri</a></td><td class="font-mono">0.5.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=open3" class="text-accent-ok hover:underline font-mono" title="See other images that include open3">open3</a></td><td class="font-mono">0.2.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">3.3.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">3.6.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=optparse" class="text-accent-ok hover:underline font-mono" title="See other images that include optparse">optparse</a></td><td class="font-mono">0.6.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ostruct" class="text-accent-ok hover:underline font-mono" title="See other images that include ostruct">ostruct</a></td><td class="font-mono">0.6.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pathname" class="text-accent-ok hover:underline font-mono" title="See other images that include pathname">pathname</a></td><td class="font-mono">0.4.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=power_assert" class="text-accent-ok hover:underline font-mono" title="See other images that include power_assert">power_assert</a></td><td class="font-mono">2.0.5</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pp" class="text-accent-ok hover:underline font-mono" title="See other images that include pp">pp</a></td><td class="font-mono">0.6.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=prettyprint" class="text-accent-ok hover:underline font-mono" title="See other images that include prettyprint">prettyprint</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=prime" class="text-accent-ok hover:underline font-mono" title="See other images that include prime">prime</a></td><td class="font-mono">0.1.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=primitives" class="text-accent-ok hover:underline font-mono" title="See other images that include primitives">primitives</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=prism" class="text-accent-ok hover:underline font-mono" title="See other images that include prism">prism</a></td><td class="font-mono">1.5.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pstore" class="text-accent-ok hover:underline font-mono" title="See other images that include pstore">pstore</a></td><td class="font-mono">0.1.4</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=psych" class="text-accent-ok hover:underline font-mono" title="See other images that include psych">psych</a></td><td class="font-mono">5.2.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=public_suffix" class="text-accent-ok hover:underline font-mono" title="See other images that include public_suffix">public_suffix</a></td><td class="font-mono">6.0.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=racc" class="text-accent-ok hover:underline font-mono" title="See other images that include racc">racc</a></td><td class="font-mono">1.8.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rake" class="text-accent-ok hover:underline font-mono" title="See other images that include rake">rake</a></td><td class="font-mono">13.2.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rake" class="text-accent-ok hover:underline font-mono" title="See other images that include rake">rake</a></td><td class="font-mono">13.2.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rbs" class="text-accent-ok hover:underline font-mono" title="See other images that include rbs">rbs</a></td><td class="font-mono">3.8.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rdoc" class="text-accent-ok hover:underline font-mono" title="See other images that include rdoc">rdoc</a></td><td class="font-mono">6.14.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">0.0.4</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.3p3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=reline" class="text-accent-ok hover:underline font-mono" title="See other images that include reline">reline</a></td><td class="font-mono">0.6.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=repl_type_completor" class="text-accent-ok hover:underline font-mono" title="See other images that include repl_type_completor">repl_type_completor</a></td><td class="font-mono">0.1.9</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=resolv" class="text-accent-ok hover:underline font-mono" title="See other images that include resolv">resolv</a></td><td class="font-mono">0.6.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=resolv-replace" class="text-accent-ok hover:underline font-mono" title="See other images that include resolv-replace">resolv-replace</a></td><td class="font-mono">0.1.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rexml" class="text-accent-ok hover:underline font-mono" title="See other images that include rexml">rexml</a></td><td class="font-mono">3.4.4</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rinda" class="text-accent-ok hover:underline font-mono" title="See other images that include rinda">rinda</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rss" class="text-accent-ok hover:underline font-mono" title="See other images that include rss">rss</a></td><td class="font-mono">0.3.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby">ruby</a></td><td class="font-mono">3.4.9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby-kafka" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby-kafka">ruby-kafka</a></td><td class="font-mono">1.5.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby2_keywords" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby2_keywords">ruby2_keywords</a></td><td class="font-mono">0.0.5</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-addressable" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-addressable">ruby3.4-addressable</a></td><td class="font-mono">2.8.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-eventstream" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-eventstream">ruby3.4-aws-eventstream</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-partitions" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-partitions">ruby3.4-aws-partitions</a></td><td class="font-mono">1.1064.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-sdk-cloudwatchlogs" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-sdk-cloudwatchlogs">ruby3.4-aws-sdk-cloudwatchlogs</a></td><td class="font-mono">1.109.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-sdk-core" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-sdk-core">ruby3.4-aws-sdk-core</a></td><td class="font-mono">3.220.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-sdk-firehose" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-sdk-firehose">ruby3.4-aws-sdk-firehose</a></td><td class="font-mono">1.89.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-sdk-kinesis" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-sdk-kinesis">ruby3.4-aws-sdk-kinesis</a></td><td class="font-mono">1.74.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-sdk-kms" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-sdk-kms">ruby3.4-aws-sdk-kms</a></td><td class="font-mono">1.99.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-sdk-s3" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-sdk-s3">ruby3.4-aws-sdk-s3</a></td><td class="font-mono">1.182.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-sdk-sqs" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-sdk-sqs">ruby3.4-aws-sdk-sqs</a></td><td class="font-mono">1.93.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-aws-sigv4" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-aws-sigv4">ruby3.4-aws-sigv4</a></td><td class="font-mono">1.11.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-base64" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-base64">ruby3.4-base64</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-bson" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-bson">ruby3.4-bson</a></td><td class="font-mono">4.15.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-concurrent-ruby" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-concurrent-ruby">ruby3.4-concurrent-ruby</a></td><td class="font-mono">1.3.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-cool.io" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-cool.io">ruby3.4-cool.io</a></td><td class="font-mono">1.9.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-csv" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-csv">ruby3.4-csv</a></td><td class="font-mono">3.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-digest-crc" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-digest-crc">ruby3.4-digest-crc</a></td><td class="font-mono">0.7.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-drb" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-drb">ruby3.4-drb</a></td><td class="font-mono">2.2.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-elastic-transport" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-elastic-transport">ruby3.4-elastic-transport</a></td><td class="font-mono">8.4.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-elasticsearch" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-elasticsearch">ruby3.4-elasticsearch</a></td><td class="font-mono">8.17.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-elasticsearch-api" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-elasticsearch-api">ruby3.4-elasticsearch-api</a></td><td class="font-mono">8.17.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-excon" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-excon">ruby3.4-excon</a></td><td class="font-mono">1.2.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-faraday" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-faraday">ruby3.4-faraday</a></td><td class="font-mono">2.12.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-faraday-excon" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-faraday-excon">ruby3.4-faraday-excon</a></td><td class="font-mono">2.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-faraday-net_http" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-faraday-net_http">ruby3.4-faraday-net_http</a></td><td class="font-mono">3.4.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-config-regexp-type" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-config-regexp-type">ruby3.4-fluent-config-regexp-type</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-cloudwatch-logs" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-cloudwatch-logs">ruby3.4-fluent-plugin-cloudwatch-logs</a></td><td class="font-mono">0.14.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-concat" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-concat">ruby3.4-fluent-plugin-concat</a></td><td class="font-mono">2.5.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-elasticsearch" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-elasticsearch">ruby3.4-fluent-plugin-elasticsearch</a></td><td class="font-mono">5.4.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-kafka" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-kafka">ruby3.4-fluent-plugin-kafka</a></td><td class="font-mono">0.19.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-kinesis" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-kinesis">ruby3.4-fluent-plugin-kinesis</a></td><td class="font-mono">3.5.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-mongo" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-mongo">ruby3.4-fluent-plugin-mongo</a></td><td class="font-mono">1.6.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-record-reformer" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-record-reformer">ruby3.4-fluent-plugin-record-reformer</a></td><td class="font-mono">0.9.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-rewrite-tag-filter" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-rewrite-tag-filter">ruby3.4-fluent-plugin-rewrite-tag-filter</a></td><td class="font-mono">2.4.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-s3" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-s3">ruby3.4-fluent-plugin-s3</a></td><td class="font-mono">1.8.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluent-plugin-webhdfs" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluent-plugin-webhdfs">ruby3.4-fluent-plugin-webhdfs</a></td><td class="font-mono">1.6.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-fluentd" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-fluentd">ruby3.4-fluentd</a></td><td class="font-mono">1.18.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-google-protobuf" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-google-protobuf">ruby3.4-google-protobuf</a></td><td class="font-mono">3.25.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-http_parser.rb" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-http_parser.rb">ruby3.4-http_parser.rb</a></td><td class="font-mono">0.8.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-jmespath" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-jmespath">ruby3.4-jmespath</a></td><td class="font-mono">1.6.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-json" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-json">ruby3.4-json</a></td><td class="font-mono">2.10.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-logger" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-logger">ruby3.4-logger</a></td><td class="font-mono">1.6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-ltsv" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-ltsv">ruby3.4-ltsv</a></td><td class="font-mono">0.1.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-mongo" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-mongo">ruby3.4-mongo</a></td><td class="font-mono">2.18.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-msgpack" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-msgpack">ruby3.4-msgpack</a></td><td class="font-mono">1.8.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-multi_json" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-multi_json">ruby3.4-multi_json</a></td><td class="font-mono">1.15.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-net-http" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-net-http">ruby3.4-net-http</a></td><td class="font-mono">0.6.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-public_suffix" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-public_suffix">ruby3.4-public_suffix</a></td><td class="font-mono">6.0.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-rake" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-rake">ruby3.4-rake</a></td><td class="font-mono">13.2.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-ruby-kafka" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-ruby-kafka">ruby3.4-ruby-kafka</a></td><td class="font-mono">1.5.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-serverengine" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-serverengine">ruby3.4-serverengine</a></td><td class="font-mono">2.4.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-sigdump" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-sigdump">ruby3.4-sigdump</a></td><td class="font-mono">0.2.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-strptime" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-strptime">ruby3.4-strptime</a></td><td class="font-mono">0.2.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-tzinfo" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-tzinfo">ruby3.4-tzinfo</a></td><td class="font-mono">2.0.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-tzinfo-data" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-tzinfo-data">ruby3.4-tzinfo-data</a></td><td class="font-mono">1.2025.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-uri" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-uri">ruby3.4-uri</a></td><td class="font-mono">1.0.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-webhdfs" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-webhdfs">ruby3.4-webhdfs</a></td><td class="font-mono">0.11.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-webrick" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-webrick">ruby3.4-webrick</a></td><td class="font-mono">1.9.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ruby3.4-yajl-ruby" class="text-accent-ok hover:underline font-mono" title="See other images that include ruby3.4-yajl-ruby">ruby3.4-yajl-ruby</a></td><td class="font-mono">1.4.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=securerandom" class="text-accent-ok hover:underline font-mono" title="See other images that include securerandom">securerandom</a></td><td class="font-mono">0.4.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=serverengine" class="text-accent-ok hover:underline font-mono" title="See other images that include serverengine">serverengine</a></td><td class="font-mono">2.4.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=set" class="text-accent-ok hover:underline font-mono" title="See other images that include set">set</a></td><td class="font-mono">1.1.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=shellwords" class="text-accent-ok hover:underline font-mono" title="See other images that include shellwords">shellwords</a></td><td class="font-mono">0.2.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigdump" class="text-accent-ok hover:underline font-mono" title="See other images that include sigdump">sigdump</a></td><td class="font-mono">0.2.5</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=singleton" class="text-accent-ok hover:underline font-mono" title="See other images that include singleton">singleton</a></td><td class="font-mono">0.3.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=stringio" class="text-accent-ok hover:underline font-mono" title="See other images that include stringio">stringio</a></td><td class="font-mono">3.1.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=strptime" class="text-accent-ok hover:underline font-mono" title="See other images that include strptime">strptime</a></td><td class="font-mono">0.2.5</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=strscan" class="text-accent-ok hover:underline font-mono" title="See other images that include strscan">strscan</a></td><td class="font-mono">3.1.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=syntax_suggest" class="text-accent-ok hover:underline font-mono" title="See other images that include syntax_suggest">syntax_suggest</a></td><td class="font-mono">2.0.2</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=syslog" class="text-accent-ok hover:underline font-mono" title="See other images that include syslog">syslog</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tempfile" class="text-accent-ok hover:underline font-mono" title="See other images that include tempfile">tempfile</a></td><td class="font-mono">0.3.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=test-unit" class="text-accent-ok hover:underline font-mono" title="See other images that include test-unit">test-unit</a></td><td class="font-mono">3.6.7</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSDL, PSFL, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=time" class="text-accent-ok hover:underline font-mono" title="See other images that include time">time</a></td><td class="font-mono">0.4.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=timeout" class="text-accent-ok hover:underline font-mono" title="See other images that include timeout">timeout</a></td><td class="font-mono">0.4.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tmpdir" class="text-accent-ok hover:underline font-mono" title="See other images that include tmpdir">tmpdir</a></td><td class="font-mono">0.3.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tsort" class="text-accent-ok hover:underline font-mono" title="See other images that include tsort">tsort</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=typeprof" class="text-accent-ok hover:underline font-mono" title="See other images that include typeprof">typeprof</a></td><td class="font-mono">0.30.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzinfo" class="text-accent-ok hover:underline font-mono" title="See other images that include tzinfo">tzinfo</a></td><td class="font-mono">2.0.6</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzinfo-data" class="text-accent-ok hover:underline font-mono" title="See other images that include tzinfo-data">tzinfo-data</a></td><td class="font-mono">1.2025.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=un" class="text-accent-ok hover:underline font-mono" title="See other images that include un">un</a></td><td class="font-mono">0.3.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=uri" class="text-accent-ok hover:underline font-mono" title="See other images that include uri">uri</a></td><td class="font-mono">1.0.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=uri" class="text-accent-ok hover:underline font-mono" title="See other images that include uri">uri</a></td><td class="font-mono">1.0.4</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=weakref" class="text-accent-ok hover:underline font-mono" title="See other images that include weakref">weakref</a></td><td class="font-mono">0.1.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=webhdfs" class="text-accent-ok hover:underline font-mono" title="See other images that include webhdfs">webhdfs</a></td><td class="font-mono">0.11.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=webrick" class="text-accent-ok hover:underline font-mono" title="See other images that include webrick">webrick</a></td><td class="font-mono">1.9.1</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=yajl-ruby" class="text-accent-ok hover:underline font-mono" title="See other images that include yajl-ruby">yajl-ruby</a></td><td class="font-mono">1.4.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=yaml" class="text-accent-ok hover:underline font-mono" title="See other images that include yaml">yaml</a></td><td class="font-mono">0.4.0</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">3.2.3</td><td class="text-fg-muted">gem</td><td class="text-fg-muted text-xs">BSD-2-Clause, Ruby</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/fluent-watcher-fips/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> nix2container<span class="p">,</span> lib<span class="p">,</span> buildEnv<span class="p">,</span> pkgs<span class="p">,</span> base<span class="p">,</span> nonRoot<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+<span class="c1"># fluent-watcher-fips</span>
+<span class="c1"># Fluent logging component</span>
+
+<span class="k">let</span>
+  <span class="ss">version</span> <span class="o">=</span> <span class="s2">&quot;3.2.0&quot;</span><span class="p">;</span>
+  
+  <span class="ss">fluentPkgs</span> <span class="o">=</span> <span class="k">with</span> pkgs<span class="p">;</span> <span class="p">[</span>
+    fluentd
+    bash
+    coreutils
+    cacert
+  <span class="p">];</span>
+
+  <span class="ss">userEnv</span> <span class="o">=</span> nonRoot<span class="o">.</span>mkDefaultUserEnv pkgs <span class="p">[];</span>
+
+<span class="k">in</span>
+nix2container<span class="o">.</span>buildImage <span class="p">{</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;fluent-watcher-fips&quot;</span><span class="p">;</span>
+  <span class="ss">tag</span> <span class="o">=</span> version<span class="p">;</span>
+
+  <span class="ss">copyToRoot</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span>buildEnv <span class="p">{</span>
+      <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;fluent-watcher-fips-root&quot;</span><span class="p">;</span>
+      <span class="ss">paths</span> <span class="o">=</span> base<span class="o">.</span>basePackages <span class="o">++</span> fluentPkgs <span class="o">++</span> <span class="p">[</span> userEnv <span class="p">];</span>
+    <span class="p">})</span>
+  <span class="p">];</span>
+
+  <span class="ss">config</span> <span class="o">=</span> nonRoot<span class="o">.</span>defaultConfig <span class="o">//</span> <span class="p">{</span>
+    <span class="ss">Env</span> <span class="o">=</span> base<span class="o">.</span>defaultEnv <span class="o">++</span> nonRoot<span class="o">.</span>userEnv<span class="p">;</span>
+    <span class="ss">Labels</span> <span class="o">=</span> base<span class="o">.</span>defaultLabels <span class="o">//</span> <span class="p">{</span>
+      <span class="s2">&quot;io.nix-containers.build-type&quot;</span> <span class="o">=</span> <span class="s2">&quot;source&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;io.nix-containers.build-method&quot;</span> <span class="o">=</span> <span class="s2">&quot;Built from source using Nix&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;fluent watcher fips&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;Fluent logging fluent-watcher-fips&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> version<span class="p">;</span>
+      <span class="s2">&quot;io.nix-containers.chart&quot;</span> <span class="o">=</span> <span class="s2">&quot;fluent&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;io.nix-containers.compliance&quot;</span> <span class="o">=</span> <span class="s2">&quot;FIPS-140-2&quot;</span><span class="p">;</span>
+    <span class="p">};</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

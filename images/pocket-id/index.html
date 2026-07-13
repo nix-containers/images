@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pocket-id — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">pocket-id</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-web-service" title="Web servers and application services">web-service</span>
+      
+      
+      <span class="text-fg-muted">2.9.0</span>
+      <a href="https://github.com/nix-containers/images" target="_blank" rel="noopener" class="text-accent-ok hover:underline">Upstream ↗</a>
+    </div>
+    
+    <p class="text-fg-muted mb-8">Lightweight self-hosted identity provider with OAuth2 and OpenID Connect</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the pocket-id-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/pocket-id:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">2.9.0</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#pocket-id</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-pocket-id-to-docker &amp;&amp; ./result/bin/load-pocket-id-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/pocket-id-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#pocket-id-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-pocket-id-dev-to-docker &amp;&amp; ./result/bin/load-pocket-id-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-fg-primary text-base mb-3">Lightweight self-hosted identity provider with OAuth2 and OpenID Connect</p><p class="text-sm"><span class="text-fg-muted">Upstream project: </span><a href="https://github.com/nix-containers/images" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">github.com/nix-containers/images ↗</a></p></div>
+        <div class="prose prose-invert max-w-none"><h1>pocket-id</h1>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#pocket-id
+
+# Load into Docker
+nix build .#load-pocket-id-to-docker &amp;&amp; ./result/bin/load-pocket-id-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/pocket-id:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:cd14c553e82ccec0f12777eb6a2dc96ff0895a0ed2b6bb66e6e4c4f85724b3fb">cd14c553e82c</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 10:27 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">2.9.0</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:cd14c553e82ccec0f12777eb6a2dc96ff0895a0ed2b6bb66e6e4c4f85724b3fb">cd14c553e82c</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 10:27 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">2.7.0</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:0b490bc943388170180ac8244d409b25677f38b104ab184b26ad88268efad6ad">0b490bc94338</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-06-30 06:04 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">83-merge</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:9a2542fea71f6eeea0eac6dbc982ea51e82552c138eeadeac7cc2171da99661a">9a2542fea71f</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-06-28 14:02 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 13:02 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between"><span class="text-accent-bad font-mono">Critical</span><span>0</span></div><div class="flex justify-between"><span class="text-accent-warn font-mono">High</span><span>0</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="medium"><span class="text-fg-muted font-mono">Medium</span><span>2</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="low"><span class="text-fg-muted font-mono">Low</span><span>2</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_pocket-id_latest-trivy.json</a></div></div><div class="mt-4" id="cve-list" data-cve-list><div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-fg-primary">Vulnerability todo (8 CVEs)</span><button type="button" data-cve-filter="all" class="text-xs text-fg-muted hover:underline">show all</button></div><table class="prose mt-1"><thead><tr><th>✓</th><th>CVE</th><th>Severity</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Title</th></tr></thead><tbody><tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-32952" aria-label="mark CVE-2026-32952 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32952" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-32952</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>github.com/Azure/go-ntlmssp</td><td class="font-mono text-xs">v0.1.0</td><td class="font-mono text-xs">0.1.1</td><td>go-ntlmssp: go-ntlmssp: Denial of Service via malicious NTLM challenge</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-46601" aria-label="mark CVE-2026-46601 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-46601" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-46601</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>golang.org/x/image</td><td class="font-mono text-xs">v0.42.0</td><td class="font-mono text-xs">0.43.0</td><td>golang.org/x/image/webp: golang.org/x/image/webp: Denial of Service via malformed VP8 chunk in WebP images</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-36308" aria-label="mark CVE-2023-36308 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-36308" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-36308</a></td><td class="font-mono uppercase text-xs">LOW</td><td>github.com/disintegration/imaging</td><td class="font-mono text-xs">v1.6.2</td><td class="font-mono text-xs">—</td><td>disintegration Imaging 1.6.2 allows attackers to cause a panic (becaus ...</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-41889" aria-label="mark CVE-2026-41889 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-41889" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-41889</a></td><td class="font-mono uppercase text-xs">LOW</td><td>github.com/jackc/pgx/v5</td><td class="font-mono text-xs">v5.9.1</td><td class="font-mono text-xs">5.9.2</td><td>github.com/jackc/pgx: golang: pgx: SQL injection via specific SQL query conditions</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-39822" aria-label="mark CVE-2026-39822 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39822" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-39822</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>stdlib</td><td class="font-mono text-xs">v1.26.4</td><td class="font-mono text-xs">1.25.12, 1.26.5, 1.27.0-rc.2</td><td>On Unix systems, opening a file in an os.Root improperly follows symli ...</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-46602" aria-label="mark CVE-2026-46602 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-46602" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-46602</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>golang.org/x/image</td><td class="font-mono text-xs">v0.42.0</td><td class="font-mono text-xs">0.43.0</td><td>The TIFF decoder does not set a limit on the size of tiles in tiled im ...</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-46604" aria-label="mark CVE-2026-46604 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-46604" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-46604</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>golang.org/x/image</td><td class="font-mono text-xs">v0.42.0</td><td class="font-mono text-xs">0.43.0</td><td>The TIFF decoder can panic when decoding an invalid image with an out- ...</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="GO-2026-5932" aria-label="mark GO-2026-5932 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/GO-2026-5932" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">GO-2026-5932</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>golang.org/x/crypto</td><td class="font-mono text-xs">v0.52.0</td><td class="font-mono text-xs">—</td><td>The golang.org/x/crypto/openpgp package is unmaintained, unsafe by design, and has known security issues</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">pocket-id</span> at version
+          <span class="font-mono text-fg-primary">2.9.0</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 13:02 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=acl" class="text-accent-ok hover:underline font-mono" title="See other images that include acl">acl</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attr" class="text-accent-ok hover:underline font-mono" title="See other images that include attr">attr</a></td><td class="font-mono">2.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3.9</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils">coreutils</a></td><td class="font-mono">9.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2">github.com/aws/aws-sdk-go-v2</a></td><td class="font-mono">v1.42.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream">github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream</a></td><td class="font-mono">v1.7.13</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/config" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/config">github.com/aws/aws-sdk-go-v2/config</a></td><td class="font-mono">v1.32.24</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/credentials" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/credentials">github.com/aws/aws-sdk-go-v2/credentials</a></td><td class="font-mono">v1.19.23</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/feature/ec2/imds" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/feature/ec2/imds">github.com/aws/aws-sdk-go-v2/feature/ec2/imds</a></td><td class="font-mono">v1.18.29</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/internal/configsources" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/internal/configsources">github.com/aws/aws-sdk-go-v2/internal/configsources</a></td><td class="font-mono">v1.4.29</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/internal/endpoints/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/internal/endpoints/v2">github.com/aws/aws-sdk-go-v2/internal/endpoints/v2</a></td><td class="font-mono">v2.7.29</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/internal/v4a" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/internal/v4a">github.com/aws/aws-sdk-go-v2/internal/v4a</a></td><td class="font-mono">v1.4.30</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding">github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding</a></td><td class="font-mono">v1.13.12</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/service/internal/checksum" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/service/internal/checksum">github.com/aws/aws-sdk-go-v2/service/internal/checksum</a></td><td class="font-mono">v1.9.22</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/service/internal/presigned-url" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/service/internal/presigned-url">github.com/aws/aws-sdk-go-v2/service/internal/presigned-url</a></td><td class="font-mono">v1.13.29</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/service/internal/s3shared" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/service/internal/s3shared">github.com/aws/aws-sdk-go-v2/service/internal/s3shared</a></td><td class="font-mono">v1.19.29</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/service/s3" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/service/s3">github.com/aws/aws-sdk-go-v2/service/s3</a></td><td class="font-mono">v1.103.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/service/signin" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/service/signin">github.com/aws/aws-sdk-go-v2/service/signin</a></td><td class="font-mono">v1.1.5</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/service/sso" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/service/sso">github.com/aws/aws-sdk-go-v2/service/sso</a></td><td class="font-mono">v1.31.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/service/ssooidc" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/service/ssooidc">github.com/aws/aws-sdk-go-v2/service/ssooidc</a></td><td class="font-mono">v1.36.6</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/aws-sdk-go-v2/service/sts" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/aws-sdk-go-v2/service/sts">github.com/aws/aws-sdk-go-v2/service/sts</a></td><td class="font-mono">v1.43.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/aws/smithy-go" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/aws/smithy-go">github.com/aws/smithy-go</a></td><td class="font-mono">v1.27.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/Azure/go-ntlmssp" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/Azure/go-ntlmssp">github.com/Azure/go-ntlmssp</a></td><td class="font-mono">v0.1.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/beorn7/perks" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/beorn7/perks">github.com/beorn7/perks</a></td><td class="font-mono">v1.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/bits-and-blooms/bitset" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/bits-and-blooms/bitset">github.com/bits-and-blooms/bitset</a></td><td class="font-mono">v1.24.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/caarlos0/env/v11" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/caarlos0/env/v11">github.com/caarlos0/env/v11</a></td><td class="font-mono">v11.4.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cenkalti/backoff/v5" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cenkalti/backoff/v5">github.com/cenkalti/backoff/v5</a></td><td class="font-mono">v5.0.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cespare/xxhash/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cespare/xxhash/v2">github.com/cespare/xxhash/v2</a></td><td class="font-mono">v2.3.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/coreos/go-systemd" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/coreos/go-systemd">github.com/coreos/go-systemd</a></td><td class="font-mono">v0.0.0-20191104093116-d3cd4ed1dbcf</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/disintegration/gift" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/disintegration/gift">github.com/disintegration/gift</a></td><td class="font-mono">v1.2.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/disintegration/imageorient" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/disintegration/imageorient">github.com/disintegration/imageorient</a></td><td class="font-mono">v0.0.0-20180920195336-8147d86e83ec</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/disintegration/imaging" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/disintegration/imaging">github.com/disintegration/imaging</a></td><td class="font-mono">v1.6.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dsoprea/go-exif" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dsoprea/go-exif">github.com/dsoprea/go-exif</a></td><td class="font-mono">v0.0.0-20230826092837-6579e82b732d</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dsoprea/go-exif/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dsoprea/go-exif/v2">github.com/dsoprea/go-exif/v2</a></td><td class="font-mono">v2.0.0-20230826092837-6579e82b732d</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dsoprea/go-iptc" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dsoprea/go-iptc">github.com/dsoprea/go-iptc</a></td><td class="font-mono">v0.0.0-20200610044640-bc9ca208b413</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dsoprea/go-jpeg-image-structure" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dsoprea/go-jpeg-image-structure">github.com/dsoprea/go-jpeg-image-structure</a></td><td class="font-mono">v0.0.0-20221012074422-4f3f7e934102</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dsoprea/go-logging" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dsoprea/go-logging">github.com/dsoprea/go-logging</a></td><td class="font-mono">v0.0.0-20200710184922-b02d349568dd</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dsoprea/go-photoshop-info-format" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dsoprea/go-photoshop-info-format">github.com/dsoprea/go-photoshop-info-format</a></td><td class="font-mono">v0.0.0-20200610045659-121dd752914d</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dsoprea/go-png-image-structure" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dsoprea/go-png-image-structure">github.com/dsoprea/go-png-image-structure</a></td><td class="font-mono">v0.0.0-20210512210324-29b889a6093d</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dsoprea/go-utility" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dsoprea/go-utility">github.com/dsoprea/go-utility</a></td><td class="font-mono">v0.0.0-20221003172846-a3e1774ef349</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dunglas/go-urlpattern" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dunglas/go-urlpattern">github.com/dunglas/go-urlpattern</a></td><td class="font-mono">v0.0.0-20241020164140-716dfa1c80b1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/dustin/go-humanize" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/dustin/go-humanize">github.com/dustin/go-humanize</a></td><td class="font-mono">v1.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/emersion/go-sasl" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/emersion/go-sasl">github.com/emersion/go-sasl</a></td><td class="font-mono">v0.0.0-20241020182733-b788ff22d5a6</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/emersion/go-smtp" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/emersion/go-smtp">github.com/emersion/go-smtp</a></td><td class="font-mono">v0.24.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/felixge/httpsnoop" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/felixge/httpsnoop">github.com/felixge/httpsnoop</a></td><td class="font-mono">v1.0.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fsnotify/fsnotify" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fsnotify/fsnotify">github.com/fsnotify/fsnotify</a></td><td class="font-mono">v1.10.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fxamacker/cbor/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fxamacker/cbor/v2">github.com/fxamacker/cbor/v2</a></td><td class="font-mono">v2.9.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/gabriel-vasile/mimetype" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/gabriel-vasile/mimetype">github.com/gabriel-vasile/mimetype</a></td><td class="font-mono">v1.4.13</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/gin-contrib/slog" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/gin-contrib/slog">github.com/gin-contrib/slog</a></td><td class="font-mono">v1.2.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/gin-contrib/sse" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/gin-contrib/sse">github.com/gin-contrib/sse</a></td><td class="font-mono">v1.1.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/gin-gonic/gin" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/gin-gonic/gin">github.com/gin-gonic/gin</a></td><td class="font-mono">v1.12.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/glebarez/go-sqlite" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/glebarez/go-sqlite">github.com/glebarez/go-sqlite</a></td><td class="font-mono">v1.22.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/glebarez/sqlite" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/glebarez/sqlite">github.com/glebarez/sqlite</a></td><td class="font-mono">v1.11.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-asn1-ber/asn1-ber" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-asn1-ber/asn1-ber">github.com/go-asn1-ber/asn1-ber</a></td><td class="font-mono">v1.5.8-0.20250403174932-29230038a667</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-co-op/gocron/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-co-op/gocron/v2">github.com/go-co-op/gocron/v2</a></td><td class="font-mono">v2.21.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-errors/errors" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-errors/errors">github.com/go-errors/errors</a></td><td class="font-mono">v1.5.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-ldap/ldap/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-ldap/ldap/v3">github.com/go-ldap/ldap/v3</a></td><td class="font-mono">v3.4.13</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-logr/logr" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-logr/logr">github.com/go-logr/logr</a></td><td class="font-mono">v1.4.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-logr/stdr" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-logr/stdr">github.com/go-logr/stdr</a></td><td class="font-mono">v1.2.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-playground/locales" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-playground/locales">github.com/go-playground/locales</a></td><td class="font-mono">v0.14.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-playground/universal-translator" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-playground/universal-translator">github.com/go-playground/universal-translator</a></td><td class="font-mono">v0.18.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-playground/validator/v10" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-playground/validator/v10">github.com/go-playground/validator/v10</a></td><td class="font-mono">v10.30.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-viper/mapstructure/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-viper/mapstructure/v2">github.com/go-viper/mapstructure/v2</a></td><td class="font-mono">v2.5.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-webauthn/webauthn" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-webauthn/webauthn">github.com/go-webauthn/webauthn</a></td><td class="font-mono">v0.17.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-webauthn/x" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-webauthn/x">github.com/go-webauthn/x</a></td><td class="font-mono">v0.2.6</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-xmlfmt/xmlfmt" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-xmlfmt/xmlfmt">github.com/go-xmlfmt/xmlfmt</a></td><td class="font-mono">v1.1.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/goccy/go-yaml" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/goccy/go-yaml">github.com/goccy/go-yaml</a></td><td class="font-mono">v1.19.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/golang-jwt/jwt/v5" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/golang-jwt/jwt/v5">github.com/golang-jwt/jwt/v5</a></td><td class="font-mono">v5.3.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/golang-migrate/migrate/v4" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/golang-migrate/migrate/v4">github.com/golang-migrate/migrate/v4</a></td><td class="font-mono">v4.19.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/golang/geo" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/golang/geo">github.com/golang/geo</a></td><td class="font-mono">v0.0.0-20250319145452-ed1c8b99c3d7</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/go-github/v39" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/go-github/v39">github.com/google/go-github/v39</a></td><td class="font-mono">v39.2.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/go-querystring" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/go-querystring">github.com/google/go-querystring</a></td><td class="font-mono">v1.2.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/go-tpm" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/go-tpm">github.com/google/go-tpm</a></td><td class="font-mono">v0.9.8</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/uuid" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/uuid">github.com/google/uuid</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/grpc-ecosystem/grpc-gateway/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/grpc-ecosystem/grpc-gateway/v2">github.com/grpc-ecosystem/grpc-gateway/v2</a></td><td class="font-mono">v2.29.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/h2non/filetype" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/h2non/filetype">github.com/h2non/filetype</a></td><td class="font-mono">v1.1.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/hashicorp/go-uuid" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/hashicorp/go-uuid">github.com/hashicorp/go-uuid</a></td><td class="font-mono">v1.0.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jackc/pgpassfile" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jackc/pgpassfile">github.com/jackc/pgpassfile</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jackc/pgservicefile" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jackc/pgservicefile">github.com/jackc/pgservicefile</a></td><td class="font-mono">v0.0.0-20240606120523-5a60cdf6a761</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jackc/pgx/v5" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jackc/pgx/v5">github.com/jackc/pgx/v5</a></td><td class="font-mono">v5.9.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jackc/puddle/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jackc/puddle/v2">github.com/jackc/puddle/v2</a></td><td class="font-mono">v2.2.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jinzhu/copier" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jinzhu/copier">github.com/jinzhu/copier</a></td><td class="font-mono">v0.4.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jinzhu/inflection" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jinzhu/inflection">github.com/jinzhu/inflection</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jinzhu/now" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jinzhu/now">github.com/jinzhu/now</a></td><td class="font-mono">v1.1.5</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/joho/godotenv" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/joho/godotenv">github.com/joho/godotenv</a></td><td class="font-mono">v1.5.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/jonboulle/clockwork" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/jonboulle/clockwork">github.com/jonboulle/clockwork</a></td><td class="font-mono">v0.5.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/leodido/go-urn" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/leodido/go-urn">github.com/leodido/go-urn</a></td><td class="font-mono">v1.4.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/lestrrat-go/blackmagic" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/lestrrat-go/blackmagic">github.com/lestrrat-go/blackmagic</a></td><td class="font-mono">v1.0.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/lestrrat-go/dsig" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/lestrrat-go/dsig">github.com/lestrrat-go/dsig</a></td><td class="font-mono">v1.2.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/lestrrat-go/httpcc" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/lestrrat-go/httpcc">github.com/lestrrat-go/httpcc</a></td><td class="font-mono">v1.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/lestrrat-go/httprc/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/lestrrat-go/httprc/v3">github.com/lestrrat-go/httprc/v3</a></td><td class="font-mono">v3.0.6</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/lestrrat-go/jwx/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/lestrrat-go/jwx/v3">github.com/lestrrat-go/jwx/v3</a></td><td class="font-mono">v3.1.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/lestrrat-go/option/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/lestrrat-go/option/v2">github.com/lestrrat-go/option/v2</a></td><td class="font-mono">v2.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/lib/pq" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/lib/pq">github.com/lib/pq</a></td><td class="font-mono">v1.12.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/lmittmann/tint" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/lmittmann/tint">github.com/lmittmann/tint</a></td><td class="font-mono">v1.1.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mattn/go-isatty" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mattn/go-isatty">github.com/mattn/go-isatty</a></td><td class="font-mono">v0.0.22</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mattn/go-sqlite3" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mattn/go-sqlite3">github.com/mattn/go-sqlite3</a></td><td class="font-mono">v1.14.42</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mileusna/useragent" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mileusna/useragent">github.com/mileusna/useragent</a></td><td class="font-mono">v1.3.5</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/munnerz/goautoneg" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/munnerz/goautoneg">github.com/munnerz/goautoneg</a></td><td class="font-mono">v0.0.0-20191010083416-a7dc8b61c822</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/nlnwa/whatwg-url" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/nlnwa/whatwg-url">github.com/nlnwa/whatwg-url</a></td><td class="font-mono">v0.6.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/orandin/slog-gorm" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/orandin/slog-gorm">github.com/orandin/slog-gorm</a></td><td class="font-mono">v1.4.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/oschwald/maxminddb-golang/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/oschwald/maxminddb-golang/v2">github.com/oschwald/maxminddb-golang/v2</a></td><td class="font-mono">v2.4.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pelletier/go-toml/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pelletier/go-toml/v2">github.com/pelletier/go-toml/v2</a></td><td class="font-mono">v2.3.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/philhofer/fwd" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/philhofer/fwd">github.com/philhofer/fwd</a></td><td class="font-mono">v1.2.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pocket-id/pocket-id/backend" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pocket-id/pocket-id/backend">github.com/pocket-id/pocket-id/backend</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/client_golang" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/client_golang">github.com/prometheus/client_golang</a></td><td class="font-mono">v1.23.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/client_model" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/client_model">github.com/prometheus/client_model</a></td><td class="font-mono">v0.6.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/common" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/common">github.com/prometheus/common</a></td><td class="font-mono">v0.67.5</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/otlptranslator" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/otlptranslator">github.com/prometheus/otlptranslator</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/procfs" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/procfs">github.com/prometheus/procfs</a></td><td class="font-mono">v0.20.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/quic-go/qpack" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/quic-go/qpack">github.com/quic-go/qpack</a></td><td class="font-mono">v0.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/quic-go/quic-go" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/quic-go/quic-go">github.com/quic-go/quic-go</a></td><td class="font-mono">v0.59.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/remyoudompheng/bigfft" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/remyoudompheng/bigfft">github.com/remyoudompheng/bigfft</a></td><td class="font-mono">v0.0.0-20230129092748-24d4a6f8daec</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/robfig/cron/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/robfig/cron/v3">github.com/robfig/cron/v3</a></td><td class="font-mono">v3.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/cobra" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/cobra">github.com/spf13/cobra</a></td><td class="font-mono">v1.10.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/pflag" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/pflag">github.com/spf13/pflag</a></td><td class="font-mono">v1.0.10</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/tinylib/msgp" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/tinylib/msgp">github.com/tinylib/msgp</a></td><td class="font-mono">v1.6.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/ugorji/go/codec" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/ugorji/go/codec">github.com/ugorji/go/codec</a></td><td class="font-mono">v1.3.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/valyala/fastjson" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/valyala/fastjson">github.com/valyala/fastjson</a></td><td class="font-mono">v1.6.10</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/x448/float16" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/x448/float16">github.com/x448/float16</a></td><td class="font-mono">v0.8.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/zitadel/exifremove" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/zitadel/exifremove">github.com/zitadel/exifremove</a></td><td class="font-mono">v0.1.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.mongodb.org/mongo-driver/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include go.mongodb.org/mongo-driver/v2">go.mongodb.org/mongo-driver/v2</a></td><td class="font-mono">v2.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/auto/sdk" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/auto/sdk">go.opentelemetry.io/auto/sdk</a></td><td class="font-mono">v1.2.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/contrib/bridges/otelslog" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/contrib/bridges/otelslog">go.opentelemetry.io/contrib/bridges/otelslog</a></td><td class="font-mono">v0.19.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/contrib/bridges/prometheus" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/contrib/bridges/prometheus">go.opentelemetry.io/contrib/bridges/prometheus</a></td><td class="font-mono">v0.69.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/contrib/exporters/autoexport" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/contrib/exporters/autoexport">go.opentelemetry.io/contrib/exporters/autoexport</a></td><td class="font-mono">v0.69.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin">go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin</a></td><td class="font-mono">v0.69.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp">go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp</a></td><td class="font-mono">v0.69.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel">go.opentelemetry.io/otel</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc">go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc</a></td><td class="font-mono">v0.20.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp">go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp</a></td><td class="font-mono">v0.20.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc">go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp">go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/otlp/otlptrace" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/otlp/otlptrace">go.opentelemetry.io/otel/exporters/otlp/otlptrace</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc">go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp">go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/prometheus" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/prometheus">go.opentelemetry.io/otel/exporters/prometheus</a></td><td class="font-mono">v0.66.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/stdout/stdoutlog" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/stdout/stdoutlog">go.opentelemetry.io/otel/exporters/stdout/stdoutlog</a></td><td class="font-mono">v0.20.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/stdout/stdoutmetric" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/stdout/stdoutmetric">go.opentelemetry.io/otel/exporters/stdout/stdoutmetric</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/exporters/stdout/stdouttrace" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/exporters/stdout/stdouttrace">go.opentelemetry.io/otel/exporters/stdout/stdouttrace</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/log" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/log">go.opentelemetry.io/otel/log</a></td><td class="font-mono">v0.20.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/metric" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/metric">go.opentelemetry.io/otel/metric</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/sdk" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/sdk">go.opentelemetry.io/otel/sdk</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/sdk/log" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/sdk/log">go.opentelemetry.io/otel/sdk/log</a></td><td class="font-mono">v0.20.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/sdk/metric" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/sdk/metric">go.opentelemetry.io/otel/sdk/metric</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/trace" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/trace">go.opentelemetry.io/otel/trace</a></td><td class="font-mono">v1.44.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/proto/otlp" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/proto/otlp">go.opentelemetry.io/proto/otlp</a></td><td class="font-mono">v1.10.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.yaml.in/yaml/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include go.yaml.in/yaml/v2">go.yaml.in/yaml/v2</a></td><td class="font-mono">v2.4.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/crypto" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/crypto">golang.org/x/crypto</a></td><td class="font-mono">v0.52.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/exp" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/exp">golang.org/x/exp</a></td><td class="font-mono">v0.0.0-20260410095643-746e56fc9e2f</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/image" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/image">golang.org/x/image</a></td><td class="font-mono">v0.42.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/net" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/net">golang.org/x/net</a></td><td class="font-mono">v0.55.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/oauth2" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/oauth2">golang.org/x/oauth2</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/sync" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/sync">golang.org/x/sync</a></td><td class="font-mono">v0.21.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/sys" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/sys">golang.org/x/sys</a></td><td class="font-mono">v0.45.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/text" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/text">golang.org/x/text</a></td><td class="font-mono">v0.38.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/time" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/time">golang.org/x/time</a></td><td class="font-mono">v0.15.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/genproto/googleapis/api" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/genproto/googleapis/api">google.golang.org/genproto/googleapis/api</a></td><td class="font-mono">v0.0.0-20260526163538-3dc84a4a5aaa</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/genproto/googleapis/rpc" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/genproto/googleapis/rpc">google.golang.org/genproto/googleapis/rpc</a></td><td class="font-mono">v0.0.0-20260526163538-3dc84a4a5aaa</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/grpc" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/grpc">google.golang.org/grpc</a></td><td class="font-mono">v1.81.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/protobuf" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/protobuf">google.golang.org/protobuf</a></td><td class="font-mono">v1.36.11</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/yaml.v2" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/yaml.v2">gopkg.in/yaml.v2</a></td><td class="font-mono">v2.4.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gorm.io/driver/postgres" class="text-accent-ok hover:underline font-mono" title="See other images that include gorm.io/driver/postgres">gorm.io/driver/postgres</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gorm.io/gorm" class="text-accent-ok hover:underline font-mono" title="See other images that include gorm.io/gorm">gorm.io/gorm</a></td><td class="font-mono">v1.31.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=iana-etc" class="text-accent-ok hover:underline font-mono" title="See other images that include iana-etc">iana-etc</a></td><td class="font-mono">20251215</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mailcap" class="text-accent-ok hover:underline font-mono" title="See other images that include mailcap">mailcap</a></td><td class="font-mono">2.1.54</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=modernc.org/libc" class="text-accent-ok hover:underline font-mono" title="See other images that include modernc.org/libc">modernc.org/libc</a></td><td class="font-mono">v1.71.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=modernc.org/mathutil" class="text-accent-ok hover:underline font-mono" title="See other images that include modernc.org/mathutil">modernc.org/mathutil</a></td><td class="font-mono">v1.7.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=modernc.org/memory" class="text-accent-ok hover:underline font-mono" title="See other images that include modernc.org/memory">modernc.org/memory</a></td><td class="font-mono">v1.11.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=modernc.org/sqlite" class="text-accent-ok hover:underline font-mono" title="See other images that include modernc.org/sqlite">modernc.org/sqlite</a></td><td class="font-mono">v1.48.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses">ncurses</a></td><td class="font-mono">6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pocket-id" class="text-accent-ok hover:underline font-mono" title="See other images that include pocket-id">pocket-id</a></td><td class="font-mono">2.9.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.3p3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=stdlib" class="text-accent-ok hover:underline font-mono" title="See other images that include stdlib">stdlib</a></td><td class="font-mono">go1.26.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/pocket-id/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> nix2container<span class="p">,</span> lib<span class="p">,</span> buildEnv<span class="p">,</span> pkgs<span class="p">,</span> base<span class="p">,</span> nonRoot<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+<span class="k">let</span>
+  <span class="c1"># pocket-id packages</span>
+  <span class="ss">pocket_idPackages</span> <span class="o">=</span> <span class="k">with</span> pkgs<span class="p">;</span> <span class="p">[</span>
+    pocket-id
+    bash
+    coreutils
+  <span class="p">];</span>
+
+  <span class="c1"># Use default non-root user environment</span>
+  <span class="ss">userEnv</span> <span class="o">=</span> nonRoot<span class="o">.</span>mkDefaultUserEnv pkgs <span class="p">[];</span>
+
+  <span class="c1"># pocket-id persists a SQLite DB + generated keys under its data dir. With</span>
+  <span class="c1"># WorkingDir=/tmp and DATA_DIR=/tmp/pocket-id (below), everything lands in</span>
+  <span class="c1"># writable /tmp. buildEnv otherwise leaves /tmp a read-only store symlink, so</span>
+  <span class="c1"># materialize it as a real writable dir.</span>
+  <span class="ss">writableDirs</span> <span class="o">=</span> pkgs<span class="o">.</span>runCommand <span class="s2">&quot;pocket-id-writable-dirs&quot;</span> <span class="p">{}</span> <span class="s s-Multiline">&#39;&#39;</span>
+<span class="s s-Multiline">    mkdir -p $out/tmp</span>
+<span class="s s-Multiline">  &#39;&#39;</span><span class="p">;</span>
+
+<span class="k">in</span>
+nix2container<span class="o">.</span>buildImage <span class="p">{</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;pocket-id&quot;</span><span class="p">;</span>
+  <span class="c1"># Version-tag the image (matches the org.opencontainers.image.version label).</span>
+  <span class="ss">tag</span> <span class="o">=</span> pkgs<span class="o">.</span>pocket-id<span class="o">.</span>version<span class="p">;</span>
+
+  <span class="c1"># Separate layers so the writable /tmp scaffold declares its own perms</span>
+  <span class="c1"># without colliding with buildEnv&#39;s read-only /tmp symlink.</span>
+  <span class="ss">layers</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span>nix2container<span class="o">.</span>buildLayer <span class="p">{</span>
+      <span class="ss">copyToRoot</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span>buildEnv <span class="p">{</span>
+          <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;pocket-id-root&quot;</span><span class="p">;</span>
+          <span class="ss">paths</span> <span class="o">=</span> base<span class="o">.</span>basePackages <span class="o">++</span> pocket_idPackages <span class="o">++</span> <span class="p">[</span> userEnv <span class="p">];</span>
+        <span class="p">})</span>
+      <span class="p">];</span>
+    <span class="p">})</span>
+    <span class="p">(</span>nix2container<span class="o">.</span>buildLayer <span class="p">{</span>
+      <span class="ss">copyToRoot</span> <span class="o">=</span> <span class="p">[</span> writableDirs <span class="p">];</span>
+      <span class="ss">perms</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="ss">path</span> <span class="o">=</span> writableDirs<span class="p">;</span>
+          <span class="ss">regex</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">;</span>
+          <span class="ss">mode</span> <span class="o">=</span> <span class="s2">&quot;1777&quot;</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">];</span>
+    <span class="p">})</span>
+  <span class="p">];</span>
+
+  <span class="ss">config</span> <span class="o">=</span> nonRoot<span class="o">.</span>defaultConfig <span class="o">//</span> <span class="p">{</span>
+    <span class="c1"># The stub had no Cmd. Run the server; data + keys go under writable /tmp.</span>
+    <span class="ss">WorkingDir</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">;</span>
+    <span class="ss">Cmd</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;pocket-id&quot;</span> <span class="p">];</span>
+    <span class="ss">Env</span> <span class="o">=</span> base<span class="o">.</span>defaultEnv <span class="o">++</span> nonRoot<span class="o">.</span>userEnv <span class="o">++</span> <span class="p">[</span>
+      <span class="s2">&quot;PATH=</span><span class="si">${</span>lib<span class="o">.</span>makeBinPath pocket_idPackages<span class="si">}</span><span class="s2">&quot;</span>
+      <span class="s2">&quot;DATA_DIR=/tmp/pocket-id&quot;</span>
+      <span class="s2">&quot;APP_URL=http://localhost:1411&quot;</span>
+      <span class="s2">&quot;HOST=0.0.0.0&quot;</span>
+      <span class="s2">&quot;PORT=1411&quot;</span>
+      <span class="s2">&quot;TRUST_PROXY=true&quot;</span>
+      <span class="c1"># pocket-id refuses to start without an ENCRYPTION_KEY (&gt;=16 bytes) that</span>
+      <span class="c1"># encrypts the SQLite-stored secrets. This is a smoke-test-friendly</span>
+      <span class="c1"># placeholder so the image runs out of the box; PRODUCTION DEPLOYMENTS</span>
+      <span class="c1"># MUST override it with their own secret.</span>
+      <span class="s2">&quot;ENCRYPTION_KEY=change-me-pocket-id-default-key!&quot;</span>
+    <span class="p">];</span>
+    <span class="ss">ExposedPorts</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s2">&quot;1411/tcp&quot;</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">};</span>
+    <span class="ss">Labels</span> <span class="o">=</span> base<span class="o">.</span>defaultLabels <span class="o">//</span> <span class="p">{</span>
+      <span class="s2">&quot;io.nix-containers.build-type&quot;</span> <span class="o">=</span> <span class="s2">&quot;source&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;io.nix-containers.build-method&quot;</span> <span class="o">=</span> <span class="s2">&quot;Built from source using Nix&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;Lightweight self-hosted identity provider with OAuth2 and OpenID Connect&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> pkgs<span class="o">.</span>pocket-id<span class="o">.</span>version<span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.url&quot;</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/nix-containers/images&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.source&quot;</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/nix-containers/images&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.vendor&quot;</span> <span class="o">=</span> <span class="s2">&quot;nix-containers&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;io.nix-containers.image.upstream&quot;</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/pocket-id/pocket-id&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;io.nix-containers.image.category&quot;</span> <span class="o">=</span> <span class="s2">&quot;web-service&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;io.nix-containers.image.aliases&quot;</span> <span class="o">=</span> <span class="s2">&quot;pocket-id,oauth2,oidc,identity&quot;</span><span class="p">;</span>
+    <span class="p">};</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

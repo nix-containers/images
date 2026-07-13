@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mysql-nixchart — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">mysql-nixchart</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      <span class="badge-zero-cve" title="No known CVEs in the latest scan">0 CVE</span>
+      <span class="text-fg-muted">v11.4.12</span>
+      
+    </div>
+    <div class="flex items-center gap-3 text-sm text-fg-muted mb-2">
+  <span class="badge bg-accent-ok/20 text-accent-ok font-mono">Rank #13</span>
+  <span class="font-mono">~5B pulls</span>
+</div>
+    <p class="text-fg-muted mb-8">MariaDB (MySQL-compatible) tuned for the nix-containers charts/mysql chart</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the mysql-nixchart-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/mysql-nixchart:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">v11.4.12</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#mysql-nixchart</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-mysql-nixchart-to-docker &amp;&amp; ./result/bin/load-mysql-nixchart-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/mysql-nixchart-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#mysql-nixchart-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-mysql-nixchart-dev-to-docker &amp;&amp; ./result/bin/load-mysql-nixchart-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-fg-primary text-base mb-3">MariaDB (MySQL-compatible) tuned for the nix-containers charts/mysql chart</p></div>
+        <div class="prose prose-invert max-w-none"><h1>mysql-nixchart</h1>
+<p>MySQL is a widely used open-source relational database management system</p>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#mysql-nixchart
+
+# Load into Docker
+nix build .#load-mysql-nixchart-to-docker &amp;&amp; ./result/bin/load-mysql-nixchart-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/mysql-nixchart:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:3ec253dba2aa00b3ed4f94436a0e1284c14f9d377c1dd82600f05e92a6b60c16">3ec253dba2aa</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 09:48 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">v11.4.12</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:3ec253dba2aa00b3ed4f94436a0e1284c14f9d377c1dd82600f05e92a6b60c16">3ec253dba2aa</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 09:48 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:23 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between"><span class="text-accent-bad font-mono">Critical</span><span>0</span></div><div class="flex justify-between"><span class="text-accent-warn font-mono">High</span><span>0</span></div><div class="flex justify-between"><span class="text-fg-muted font-mono">Medium</span><span>0</span></div><div class="flex justify-between"><span class="text-fg-muted font-mono">Low</span><span>0</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_mysql-nixchart_latest-trivy.json</a></div></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">mysql-nixchart</span> at version
+          <span class="font-mono text-fg-primary">v11.4.12</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:23 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=acl" class="text-accent-ok hover:underline font-mono" title="See other images that include acl">acl</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attr" class="text-accent-ok hover:underline font-mono" title="See other images that include attr">attr</a></td><td class="font-mono">2.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=audit" class="text-accent-ok hover:underline font-mono" title="See other images that include audit">audit</a></td><td class="font-mono">4.1.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3.9</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=brotli" class="text-accent-ok hover:underline font-mono" title="See other images that include brotli">brotli</a></td><td class="font-mono">1.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bzip2" class="text-accent-ok hover:underline font-mono" title="See other images that include bzip2">bzip2</a></td><td class="font-mono">1.0.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils">coreutils</a></td><td class="font-mono">9.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cracklib" class="text-accent-ok hover:underline font-mono" title="See other images that include cracklib">cracklib</a></td><td class="font-mono">2.10.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cryptsetup" class="text-accent-ok hover:underline font-mono" title="See other images that include cryptsetup">cryptsetup</a></td><td class="font-mono">2.8.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=curl" class="text-accent-ok hover:underline font-mono" title="See other images that include curl">curl</a></td><td class="font-mono">8.20.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=db" class="text-accent-ok hover:underline font-mono" title="See other images that include db">db</a></td><td class="font-mono">4.8.30</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=dns-root-data" class="text-accent-ok hover:underline font-mono" title="See other images that include dns-root-data">dns-root-data</a></td><td class="font-mono">2025-04-14</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=elfutils" class="text-accent-ok hover:underline font-mono" title="See other images that include elfutils">elfutils</a></td><td class="font-mono">0.194</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gnutls" class="text-accent-ok hover:underline font-mono" title="See other images that include gnutls">gnutls</a></td><td class="font-mono">3.8.13</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=json-c" class="text-accent-ok hover:underline font-mono" title="See other images that include json-c">json-c</a></td><td class="font-mono">0.18</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=judy" class="text-accent-ok hover:underline font-mono" title="See other images that include judy">judy</a></td><td class="font-mono">1.0.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=kbd" class="text-accent-ok hover:underline font-mono" title="See other images that include kbd">kbd</a></td><td class="font-mono">2.9.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=kexec-tools" class="text-accent-ok hover:underline font-mono" title="See other images that include kexec-tools">kexec-tools</a></td><td class="font-mono">2.0.32</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=keyutils" class="text-accent-ok hover:underline font-mono" title="See other images that include keyutils">keyutils</a></td><td class="font-mono">1.6.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=kmod" class="text-accent-ok hover:underline font-mono" title="See other images that include kmod">kmod</a></td><td class="font-mono">31</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=kmod" class="text-accent-ok hover:underline font-mono" title="See other images that include kmod">kmod</a></td><td class="font-mono">31</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=krb5" class="text-accent-ok hover:underline font-mono" title="See other images that include krb5">krb5</a></td><td class="font-mono">1.22.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=less" class="text-accent-ok hover:underline font-mono" title="See other images that include less">less</a></td><td class="font-mono">692</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libapparmor" class="text-accent-ok hover:underline font-mono" title="See other images that include libapparmor">libapparmor</a></td><td class="font-mono">4.1.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libapparmor" class="text-accent-ok hover:underline font-mono" title="See other images that include libapparmor">libapparmor</a></td><td class="font-mono">4.1.7</td><td class="text-fg-muted">python</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libarchive" class="text-accent-ok hover:underline font-mono" title="See other images that include libarchive">libarchive</a></td><td class="font-mono">3.8.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libbpf" class="text-accent-ok hover:underline font-mono" title="See other images that include libbpf">libbpf</a></td><td class="font-mono">1.7.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libcap-ng" class="text-accent-ok hover:underline font-mono" title="See other images that include libcap-ng">libcap-ng</a></td><td class="font-mono">0.9.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libcbor" class="text-accent-ok hover:underline font-mono" title="See other images that include libcbor">libcbor</a></td><td class="font-mono">0.13.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libevent" class="text-accent-ok hover:underline font-mono" title="See other images that include libevent">libevent</a></td><td class="font-mono">2.1.12</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libffi" class="text-accent-ok hover:underline font-mono" title="See other images that include libffi">libffi</a></td><td class="font-mono">3.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libfido2" class="text-accent-ok hover:underline font-mono" title="See other images that include libfido2">libfido2</a></td><td class="font-mono">1.17.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libgcrypt" class="text-accent-ok hover:underline font-mono" title="See other images that include libgcrypt">libgcrypt</a></td><td class="font-mono">1.12.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libgpg-error" class="text-accent-ok hover:underline font-mono" title="See other images that include libgpg-error">libgpg-error</a></td><td class="font-mono">1.59</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libmicrohttpd" class="text-accent-ok hover:underline font-mono" title="See other images that include libmicrohttpd">libmicrohttpd</a></td><td class="font-mono">1.0.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libpsl" class="text-accent-ok hover:underline font-mono" title="See other images that include libpsl">libpsl</a></td><td class="font-mono">0.21.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libpwquality" class="text-accent-ok hover:underline font-mono" title="See other images that include libpwquality">libpwquality</a></td><td class="font-mono">1.4.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libseccomp" class="text-accent-ok hover:underline font-mono" title="See other images that include libseccomp">libseccomp</a></td><td class="font-mono">2.6.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libssh2" class="text-accent-ok hover:underline font-mono" title="See other images that include libssh2">libssh2</a></td><td class="font-mono">1.11.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libtasn1" class="text-accent-ok hover:underline font-mono" title="See other images that include libtasn1">libtasn1</a></td><td class="font-mono">4.21.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libtpms" class="text-accent-ok hover:underline font-mono" title="See other images that include libtpms">libtpms</a></td><td class="font-mono">0.10.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=liburing" class="text-accent-ok hover:underline font-mono" title="See other images that include liburing">liburing</a></td><td class="font-mono">2.14</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxcrypt" class="text-accent-ok hover:underline font-mono" title="See other images that include libxcrypt">libxcrypt</a></td><td class="font-mono">4.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxml2" class="text-accent-ok hover:underline font-mono" title="See other images that include libxml2">libxml2</a></td><td class="font-mono">2.15.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=linux-pam" class="text-accent-ok hover:underline font-mono" title="See other images that include linux-pam">linux-pam</a></td><td class="font-mono">1.7.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=lvm2" class="text-accent-ok hover:underline font-mono" title="See other images that include lvm2">lvm2</a></td><td class="font-mono">2.03.39</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=lz4" class="text-accent-ok hover:underline font-mono" title="See other images that include lz4">lz4</a></td><td class="font-mono">1.10.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=lzo" class="text-accent-ok hover:underline font-mono" title="See other images that include lzo">lzo</a></td><td class="font-mono">2.10</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mariadb" class="text-accent-ok hover:underline font-mono" title="See other images that include mariadb">mariadb</a></td><td class="font-mono">11.4.12</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mariadb-connector-c" class="text-accent-ok hover:underline font-mono" title="See other images that include mariadb-connector-c">mariadb-connector-c</a></td><td class="font-mono">3.3.5</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mariadb-server" class="text-accent-ok hover:underline font-mono" title="See other images that include mariadb-server">mariadb-server</a></td><td class="font-mono">11.4.12</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mariadb-server" class="text-accent-ok hover:underline font-mono" title="See other images that include mariadb-server">mariadb-server</a></td><td class="font-mono">11.4.12</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mysql" class="text-accent-ok hover:underline font-mono" title="See other images that include mysql">mysql</a></td><td class="font-mono">11.4.12</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses">ncurses</a></td><td class="font-mono">6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nettle" class="text-accent-ok hover:underline font-mono" title="See other images that include nettle">nettle</a></td><td class="font-mono">3.10.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nghttp2" class="text-accent-ok hover:underline font-mono" title="See other images that include nghttp2">nghttp2</a></td><td class="font-mono">1.69.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nghttp3" class="text-accent-ok hover:underline font-mono" title="See other images that include nghttp3">nghttp3</a></td><td class="font-mono">1.15.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ngtcp2" class="text-accent-ok hover:underline font-mono" title="See other images that include ngtcp2">ngtcp2</a></td><td class="font-mono">1.22.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">3.6.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=p11-kit" class="text-accent-ok hover:underline font-mono" title="See other images that include p11-kit">p11-kit</a></td><td class="font-mono">0.26.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pcre2" class="text-accent-ok hover:underline font-mono" title="See other images that include pcre2">pcre2</a></td><td class="font-mono">10.46</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pcsclite" class="text-accent-ok hover:underline font-mono" title="See other images that include pcsclite">pcsclite</a></td><td class="font-mono">2.4.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl" class="text-accent-ok hover:underline font-mono" title="See other images that include perl">perl</a></td><td class="font-mono">5.42.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl" class="text-accent-ok hover:underline font-mono" title="See other images that include perl">perl</a></td><td class="font-mono">5.42.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl" class="text-accent-ok hover:underline font-mono" title="See other images that include perl">perl</a></td><td class="font-mono">5.42.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Capture-Tiny" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Capture-Tiny">perl5.42.0-Capture-Tiny</a></td><td class="font-mono">0.48</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-DBD-MariaDB" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-DBD-MariaDB">perl5.42.0-DBD-MariaDB</a></td><td class="font-mono">1.23</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-DBI" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-DBI">perl5.42.0-DBI</a></td><td class="font-mono">1.648</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Devel-CheckLib" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Devel-CheckLib">perl5.42.0-Devel-CheckLib</a></td><td class="font-mono">1.16</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Mock-Config" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Mock-Config">perl5.42.0-Mock-Config</a></td><td class="font-mono">0.03</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Module-Manifest" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Module-Manifest">perl5.42.0-Module-Manifest</a></td><td class="font-mono">1.09</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Params-Util" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Params-Util">perl5.42.0-Params-Util</a></td><td class="font-mono">1.102</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-TermReadKey" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-TermReadKey">perl5.42.0-TermReadKey</a></td><td class="font-mono">2.38</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Test-Deep" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Test-Deep">perl5.42.0-Test-Deep</a></td><td class="font-mono">1.204</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Test-DistManifest" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Test-DistManifest">perl5.42.0-Test-DistManifest</a></td><td class="font-mono">1.014</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=perl5.42.0-Test-Pod" class="text-accent-ok hover:underline font-mono" title="See other images that include perl5.42.0-Test-Pod">perl5.42.0-Test-Pod</a></td><td class="font-mono">1.52</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=publicsuffix-list-0" class="text-accent-ok hover:underline font-mono" title="See other images that include publicsuffix-list-0">publicsuffix-list-0</a></td><td class="font-mono">unstable-2026-05-13</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=qrencode" class="text-accent-ok hover:underline font-mono" title="See other images that include qrencode">qrencode</a></td><td class="font-mono">4.1.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.3p3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=snappy" class="text-accent-ok hover:underline font-mono" title="See other images that include snappy">snappy</a></td><td class="font-mono">1.2.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=systemd" class="text-accent-ok hover:underline font-mono" title="See other images that include systemd">systemd</a></td><td class="font-mono">260.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=systemd-minimal-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include systemd-minimal-libs">systemd-minimal-libs</a></td><td class="font-mono">260.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tpm2-tss" class="text-accent-ok hover:underline font-mono" title="See other images that include tpm2-tss">tpm2-tss</a></td><td class="font-mono">4.1.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=unbound" class="text-accent-ok hover:underline font-mono" title="See other images that include unbound">unbound</a></td><td class="font-mono">1.25.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xz" class="text-accent-ok hover:underline font-mono" title="See other images that include xz">xz</a></td><td class="font-mono">5.8.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zstd" class="text-accent-ok hover:underline font-mono" title="See other images that include zstd">zstd</a></td><td class="font-mono">1.5.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-2 mt-3">Shipped with these nix-containers charts:</p><div class="flex flex-wrap"><a href="/images/charts/mysql/" class="inline-block bg-accent-ok/20 hover:bg-accent-ok/30 text-accent-ok rounded-full px-3 py-1 text-xs font-mono mr-2 mb-2 transition-colors">mysql</a></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/mysql-nixchart/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> mkImage<span class="p">,</span> pkgs<span class="p">,</span> lib<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+<span class="c1"># mysql-nixchart</span>
+<span class="c1"># ==============</span>
+<span class="c1"># MariaDB 11.4.12 (nixpkgs) presented under the mysql-nixchart name for</span>
+<span class="c1"># the charts/mysql chart. MariaDB is a drop-in replacement for MySQL —</span>
+<span class="c1"># same wire protocol, same commands, same env-var conventions.</span>
+<span class="c1">#</span>
+<span class="c1"># Small entrypoint wrapper translates the chart&#39;s MYSQL_* env vars into</span>
+<span class="c1"># a first-run initdb + user setup, then execs mysqld.</span>
+<span class="c1">#</span>
+<span class="c1"># Supported:</span>
+<span class="c1">#   MYSQL_ROOT_USER        (default: root)</span>
+<span class="c1">#   MYSQL_ROOT_PASSWORD    (required unless MYSQL_ALLOW_EMPTY_PASSWORD=yes)</span>
+<span class="c1">#   MYSQL_DATABASE         (initial database)</span>
+<span class="c1">#   MYSQL_USER             (non-root app user)</span>
+<span class="c1">#   MYSQL_PASSWORD         (non-root app user password)</span>
+<span class="c1">#   MYSQL_PORT             (default 3306)</span>
+<span class="c1">#   MYSQL_EXTRA_FLAGS      (extra mysqld args)</span>
+<span class="c1">#</span>
+<span class="c1"># Out of scope: replication mode, TLS auto-provisioning, LDAP.</span>
+
+<span class="k">let</span>
+  <span class="ss">version</span> <span class="o">=</span> pkgs<span class="o">.</span>mariadb<span class="o">.</span>version<span class="p">;</span>
+  <span class="ss">entrypoint</span> <span class="o">=</span> pkgs<span class="o">.</span>writeShellScript <span class="s2">&quot;mysql-entrypoint&quot;</span> <span class="s s-Multiline">&#39;&#39;</span>
+<span class="s s-Multiline">    set -euo pipefail</span>
+<span class="s s-Multiline">    export PATH=&quot;</span><span class="si">${</span>pkgs<span class="o">.</span>mariadb<span class="si">}</span><span class="s s-Multiline">/bin:</span><span class="si">${</span>pkgs<span class="o">.</span>coreutils<span class="si">}</span><span class="s s-Multiline">/bin:$PATH&quot;</span>
+
+<span class="s s-Multiline">    # Default data dir under /tmp so bare `docker run` / kind smoke can</span>
+<span class="s s-Multiline">    # bootstrap without a mounted PV; chart overrides to its PVC path.</span>
+<span class="s s-Multiline">    DATA_DIR=&quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_DATA_DIR:-/tmp/mysql-data}&quot;</span>
+<span class="s s-Multiline">    PORT=&quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_PORT:-3306}&quot;</span>
+<span class="s s-Multiline">    MYSQL_ROOT_USER=&quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_ROOT_USER:-root}&quot;</span>
+
+<span class="s s-Multiline">    # /etc/passwd lookup: mariadb-install-db calls `id -un` which needs</span>
+<span class="s s-Multiline">    # an entry for UID 1001. Chart provides via securityContext.</span>
+<span class="s s-Multiline">    export USER=&quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{USER:-mysql}&quot;</span>
+
+<span class="s s-Multiline">    mkdir -p &quot;$DATA_DIR&quot;</span>
+
+<span class="s s-Multiline">    if [ -z &quot;$(ls -A &quot;$DATA_DIR&quot; 2&gt;/dev/null)&quot; ]; then</span>
+<span class="s s-Multiline">      # Smoke-test friendly default: allow empty root password. Chart pins</span>
+<span class="s s-Multiline">      # MYSQL_ROOT_PASSWORD via secret; MYSQL_ALLOW_EMPTY_PASSWORD=no still</span>
+<span class="s s-Multiline">      # enforces the requirement.</span>
+<span class="s s-Multiline">      if [ -z &quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_ROOT_PASSWORD:-}&quot; ] &amp;&amp; [ &quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_ALLOW_EMPTY_PASSWORD:-}&quot; = &quot;no&quot; ]; then</span>
+<span class="s s-Multiline">        echo &quot;mysql-nixchart: MYSQL_ROOT_PASSWORD is required (MYSQL_ALLOW_EMPTY_PASSWORD=no set)&quot; &gt;&amp;2</span>
+<span class="s s-Multiline">        exit 1</span>
+<span class="s s-Multiline">      fi</span>
+
+<span class="s s-Multiline">      </span><span class="si">${</span>pkgs<span class="o">.</span>mariadb<span class="si">}</span><span class="s s-Multiline">/bin/mariadb-install-db \</span>
+<span class="s s-Multiline">        --user=&quot;$USER&quot; \</span>
+<span class="s s-Multiline">        --datadir=&quot;$DATA_DIR&quot; \</span>
+<span class="s s-Multiline">        --auth-root-authentication-method=normal &gt;/dev/null</span>
+
+<span class="s s-Multiline">      # Start mariadb temporarily to seed users/db. --socket redirects</span>
+<span class="s s-Multiline">      # the unix socket from the baked-in /run/mysqld default (not</span>
+<span class="s s-Multiline">      # writable at UID 1001) to a path under DATA_DIR.</span>
+<span class="s s-Multiline">      SEED_SOCK=&quot;$DATA_DIR/mysql.sock&quot;</span>
+<span class="s s-Multiline">      </span><span class="si">${</span>pkgs<span class="o">.</span>mariadb<span class="si">}</span><span class="s s-Multiline">/bin/mariadbd --datadir=&quot;$DATA_DIR&quot; --socket=&quot;$SEED_SOCK&quot; --skip-networking &amp;</span>
+<span class="s s-Multiline">      pid=$!</span>
+<span class="s s-Multiline">      # Wait for socket</span>
+<span class="s s-Multiline">      for _ in $(seq 1 30); do</span>
+<span class="s s-Multiline">        [ -S &quot;$DATA_DIR/mysql.sock&quot; ] &amp;&amp; break</span>
+<span class="s s-Multiline">        sleep 1</span>
+<span class="s s-Multiline">      done</span>
+
+<span class="s s-Multiline">      if [ -n &quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_ROOT_PASSWORD:-}&quot; ]; then</span>
+<span class="s s-Multiline">        </span><span class="si">${</span>pkgs<span class="o">.</span>mariadb<span class="si">}</span><span class="s s-Multiline">/bin/mariadb --socket=&quot;$DATA_DIR/mysql.sock&quot; -e &quot;</span>
+<span class="s s-Multiline">          ALTER USER &#39;$MYSQL_ROOT_USER&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;$MYSQL_ROOT_PASSWORD&#39;;</span>
+<span class="s s-Multiline">          CREATE USER &#39;$MYSQL_ROOT_USER&#39;@&#39;%&#39; IDENTIFIED BY &#39;$MYSQL_ROOT_PASSWORD&#39;;</span>
+<span class="s s-Multiline">          GRANT ALL PRIVILEGES ON *.* TO &#39;$MYSQL_ROOT_USER&#39;@&#39;%&#39; WITH GRANT OPTION;</span>
+<span class="s s-Multiline">          FLUSH PRIVILEGES;&quot;</span>
+<span class="s s-Multiline">      fi</span>
+
+<span class="s s-Multiline">      if [ -n &quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_DATABASE:-}&quot; ]; then</span>
+<span class="s s-Multiline">        </span><span class="si">${</span>pkgs<span class="o">.</span>mariadb<span class="si">}</span><span class="s s-Multiline">/bin/mariadb --socket=&quot;$DATA_DIR/mysql.sock&quot; -e &quot;</span>
+<span class="s s-Multiline">          CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE\`;&quot;</span>
+<span class="s s-Multiline">        if [ -n &quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_USER:-}&quot; ]; then</span>
+<span class="s s-Multiline">          </span><span class="si">${</span>pkgs<span class="o">.</span>mariadb<span class="si">}</span><span class="s s-Multiline">/bin/mariadb --socket=&quot;$DATA_DIR/mysql.sock&quot; -e &quot;</span>
+<span class="s s-Multiline">            CREATE USER &#39;$MYSQL_USER&#39;@&#39;%&#39; IDENTIFIED BY &quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_PASSWORD:-}&quot;;</span>
+<span class="s s-Multiline">            GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO &#39;$MYSQL_USER&#39;@&#39;%&#39;;</span>
+<span class="s s-Multiline">            FLUSH PRIVILEGES;&quot;</span>
+<span class="s s-Multiline">        fi</span>
+<span class="s s-Multiline">      fi</span>
+
+<span class="s s-Multiline">      kill &quot;$pid&quot;</span>
+<span class="s s-Multiline">      wait &quot;$pid&quot; 2&gt;/dev/null || true</span>
+<span class="s s-Multiline">    fi</span>
+
+<span class="s s-Multiline">    # Default unix socket path lives under /run/mysqld which isn&#39;t</span>
+<span class="s s-Multiline">    # writable in this image; land it in the data dir instead. Chart</span>
+<span class="s s-Multiline">    # overrides via MYSQL_SOCKET if needed.</span>
+<span class="s s-Multiline">    SOCKET=&quot;</span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_SOCKET:-$DATA_DIR/mysql.sock}&quot;</span>
+
+<span class="s s-Multiline">    exec </span><span class="si">${</span>pkgs<span class="o">.</span>mariadb<span class="si">}</span><span class="s s-Multiline">/bin/mariadbd \</span>
+<span class="s s-Multiline">      --datadir=&quot;$DATA_DIR&quot; \</span>
+<span class="s s-Multiline">      --port=&quot;$PORT&quot; \</span>
+<span class="s s-Multiline">      --bind-address=0.0.0.0 \</span>
+<span class="s s-Multiline">      --socket=&quot;$SOCKET&quot; \</span>
+<span class="s s-Multiline">      </span><span class="se">&#39;&#39;$</span><span class="s s-Multiline">{MYSQL_EXTRA_FLAGS:-} \</span>
+<span class="s s-Multiline">      &quot;$@&quot;</span>
+<span class="s s-Multiline">  &#39;&#39;</span><span class="p">;</span>
+  <span class="c1"># /etc/passwd entry for the mysql user (UID 1001). mariadb refuses to</span>
+  <span class="c1"># start as an unknown user; chart uses fsGroup, standalone runs don&#39;t.</span>
+  <span class="ss">passwdEntry</span> <span class="o">=</span> pkgs<span class="o">.</span>runCommand <span class="s2">&quot;mysql-nixchart-passwd&quot;</span> <span class="p">{}</span> <span class="s s-Multiline">&#39;&#39;</span>
+<span class="s s-Multiline">    mkdir -p $out/etc</span>
+<span class="s s-Multiline">    cat &gt; $out/etc/passwd &lt;&lt;&#39;EOF&#39;</span>
+<span class="s s-Multiline">    root:x:0:0:root:/root:/bin/bash</span>
+<span class="s s-Multiline">    mysql:x:1001:0:mysql:/var/lib/mysql:/bin/bash</span>
+<span class="s s-Multiline">    EOF</span>
+<span class="s s-Multiline">    cat &gt; $out/etc/group &lt;&lt;&#39;EOF&#39;</span>
+<span class="s s-Multiline">    root:x:0:</span>
+<span class="s s-Multiline">    EOF</span>
+<span class="s s-Multiline">  &#39;&#39;</span><span class="p">;</span>
+
+<span class="k">in</span>
+mkImage <span class="p">{</span>
+  <span class="ss">drv</span> <span class="o">=</span> pkgs<span class="o">.</span>buildEnv <span class="p">{</span>
+    <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;mysql-nixchart-env&quot;</span><span class="p">;</span>
+    <span class="ss">paths</span> <span class="o">=</span> <span class="k">with</span> pkgs<span class="p">;</span> <span class="p">[</span> mariadb passwdEntry bash coreutils cacert tzdata <span class="p">];</span>
+  <span class="p">};</span>
+
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;mysql-nixchart&quot;</span><span class="p">;</span>
+  <span class="ss">tag</span> <span class="o">=</span> <span class="s2">&quot;v</span><span class="si">${</span>version<span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+  <span class="ss">entrypoint</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;</span><span class="si">${</span>entrypoint<span class="si">}</span><span class="s2">&quot;</span> <span class="p">];</span>
+  <span class="ss">cmd</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="ss">user</span> <span class="o">=</span> <span class="s2">&quot;1001:0&quot;</span><span class="p">;</span>
+
+  <span class="ss">labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;mysql-nixchart&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;MariaDB (MySQL-compatible) tuned for the nix-containers charts/mysql chart&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> version<span class="p">;</span>
+    <span class="s2">&quot;io.nix-containers.chart&quot;</span> <span class="o">=</span> <span class="s2">&quot;mysql&quot;</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

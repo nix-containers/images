@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>keycloak-config-cli — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">keycloak-config-cli</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      
+      <span class="text-fg-muted">6.4.0</span>
+      
+    </div>
+    
+    <p class="text-fg-muted mb-8">keycloak-config-cli container image</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the keycloak-config-cli-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/keycloak-config-cli:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">6.4.0</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#keycloak-config-cli</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-keycloak-config-cli-to-docker &amp;&amp; ./result/bin/load-keycloak-config-cli-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/keycloak-config-cli-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#keycloak-config-cli-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-keycloak-config-cli-dev-to-docker &amp;&amp; ./result/bin/load-keycloak-config-cli-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        
+        <div class="prose prose-invert max-w-none"><h1>keycloak-config-cli</h1>
+<p>Import YAML/JSON-formatted configuration files into Keycloak - Configuration as Code for Keycloak</p>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#keycloak-config-cli
+
+# Load into Docker
+nix build .#load-keycloak-config-cli-to-docker &amp;&amp; ./result/bin/load-keycloak-config-cli-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/keycloak-config-cli:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:56ab11f074f5a61831a0669d09fcd6481e9876fc90ee850235dbb62559d90f4f">56ab11f074f5</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 18:54 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">6.4.0</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:99fb5e42e69bb5912d9e5e467409be04a8a126a53ebaa55642b6540f76fe1a28">99fb5e42e69b</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 15:45 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 13:03 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between"><span class="text-accent-bad font-mono">Critical</span><span>0</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="high"><span class="text-accent-warn font-mono">High</span><span>5</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="medium"><span class="text-fg-muted font-mono">Medium</span><span>8</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="low"><span class="text-fg-muted font-mono">Low</span><span>5</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_keycloak-config-cli_latest-trivy.json</a></div></div><div class="mt-4" id="cve-list" data-cve-list><div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-fg-primary">Vulnerability todo (18 CVEs)</span><button type="button" data-cve-filter="all" class="text-xs text-fg-muted hover:underline">show all</button></div><table class="prose mt-1"><thead><tr><th>✓</th><th>CVE</th><th>Severity</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Title</th></tr></thead><tbody><tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-22228" aria-label="mark CVE-2025-22228 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-22228" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-22228</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>org.springframework.security:spring-security-crypto</td><td class="font-mono text-xs">6.2.6</td><td class="font-mono text-xs">6.3.8, 6.4.4, 6.2.10, 6.1.14, 6.0.16, 5.8.18, 5.7.16</td><td>spring-security-core: Spring Security BCryptPasswordEncoder does not enforce maximum password length</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-22235" aria-label="mark CVE-2025-22235 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-22235" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-22235</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>org.springframework.boot:spring-boot</td><td class="font-mono text-xs">3.2.9</td><td class="font-mono text-xs">3.3.11, 3.4.5</td><td>org.springframework.boot/spring-boot: Spring Boot EndpointRequest.to() creates wrong matcher if actuator endpoint is not exposed</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-41249" aria-label="mark CVE-2025-41249 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-41249" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-41249</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>org.springframework:spring-core</td><td class="font-mono text-xs">6.1.12</td><td class="font-mono text-xs">6.2.11</td><td>org.springframework/spring-core: Spring Framework Annotation Detection Vulnerability</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54512" aria-label="mark CVE-2026-54512 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54512" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54512</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>com.fasterxml.jackson.core:jackson-databind</td><td class="font-mono text-xs">2.17.2</td><td class="font-mono text-xs">2.18.8, 3.1.4, 2.21.4</td><td>jackson-databind: jackson-databind: Arbitrary code execution via PolymorphicTypeValidator bypass</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54513" aria-label="mark CVE-2026-54513 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54513" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54513</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>com.fasterxml.jackson.core:jackson-databind</td><td class="font-mono text-xs">2.17.2</td><td class="font-mono text-xs">2.18.8, 2.21.4, 3.1.4</td><td>jackson-databind: Jackson-databind: Security bypass allows arbitrary code execution</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-12798" aria-label="mark CVE-2024-12798 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-12798" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-12798</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>ch.qos.logback:logback-core</td><td class="font-mono text-xs">1.4.14</td><td class="font-mono text-xs">1.5.13, 1.3.15</td><td>logback-core: arbitrary code execution via JaninoEventEvaluator</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-38820" aria-label="mark CVE-2024-38820 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-38820" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-38820</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>org.springframework:spring-context</td><td class="font-mono text-xs">6.1.12</td><td class="font-mono text-xs">6.1.14</td><td>The fix for CVE-2022-22968 made disallowedFieldspatterns in DataBinder ...</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-11226" aria-label="mark CVE-2025-11226 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-11226" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-11226</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>ch.qos.logback:logback-core</td><td class="font-mono text-xs">1.4.14</td><td class="font-mono text-xs">1.5.19, 1.3.16</td><td>ch.qos.logback/logback-core: Conditional abitrary code execution in logback-core</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-48924" aria-label="mark CVE-2025-48924 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-48924" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-48924</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>org.apache.commons:commons-lang3</td><td class="font-mono text-xs">3.13.0</td><td class="font-mono text-xs">3.18.0</td><td>commons-lang/commons-lang: org.apache.commons/commons-lang3: Uncontrolled Recursion vulnerability in Apache Commons Lang</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-7962" aria-label="mark CVE-2025-7962 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-7962" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-7962</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>org.eclipse.angus:smtp</td><td class="font-mono text-xs">2.0.3</td><td class="font-mono text-xs">2.0.4</td><td>com.sun.mail/jakarta.mail: Jakarta Mail SMTP Injection Vulnerability</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54514" aria-label="mark CVE-2026-54514 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54514" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54514</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>com.fasterxml.jackson.core:jackson-databind</td><td class="font-mono text-xs">2.17.2</td><td class="font-mono text-xs">2.18.8, 2.21.4, 3.1.4</td><td>jackson-databind: jackson-databind: Information Disclosure via Eager DNS Resolution</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-54515" aria-label="mark CVE-2026-54515 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-54515" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-54515</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>com.fasterxml.jackson.core:jackson-databind</td><td class="font-mono text-xs">2.17.2</td><td class="font-mono text-xs">3.1.4, 2.18.9, 2.21.5, 2.22.1</td><td>jackson-databind: jackson-databind: Ignored properties can be unexpectedly modified</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="GHSA-72hv-8253-57qq" aria-label="mark GHSA-72hv-8253-57qq done"></td><td><a href="https://github.com/advisories/GHSA-72hv-8253-57qq" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">GHSA-72hv-8253-57qq</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>com.fasterxml.jackson.core:jackson-core</td><td class="font-mono text-xs">2.17.2</td><td class="font-mono text-xs">2.21.1, 2.18.6</td><td>jackson-core: Number Length Constraint Bypass in Async Parser Leads to Potential DoS Condition</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-12801" aria-label="mark CVE-2024-12801 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-12801" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-12801</a></td><td class="font-mono uppercase text-xs">LOW</td><td>ch.qos.logback:logback-core</td><td class="font-mono text-xs">1.4.14</td><td class="font-mono text-xs">1.5.13, 1.3.15</td><td>logback-core: SaxEventRecorder vulnerable to Server-Side Request Forgery (SSRF) attacks</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-22233" aria-label="mark CVE-2025-22233 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-22233" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-22233</a></td><td class="font-mono uppercase text-xs">LOW</td><td>org.springframework:spring-context</td><td class="font-mono text-xs">6.1.12</td><td class="font-mono text-xs">6.2.7, 6.1.20</td><td>CVE-2024-38820 ensured Locale-independent, lowercase conversion for bo ...</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-10532" aria-label="mark CVE-2026-10532 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-10532" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-10532</a></td><td class="font-mono uppercase text-xs">LOW</td><td>ch.qos.logback:logback-core</td><td class="font-mono text-xs">1.4.14</td><td class="font-mono text-xs">1.5.35</td><td>Deserialization of untrusted data vulnerability in QOS.CH Sarl logback ...</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-1225" aria-label="mark CVE-2026-1225 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-1225" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-1225</a></td><td class="font-mono uppercase text-xs">LOW</td><td>ch.qos.logback:logback-core</td><td class="font-mono text-xs">1.4.14</td><td class="font-mono text-xs">1.5.25</td><td>ch.qos.logback/logback-core: Malicious logback.xml configuration file allows instantiation of arbitrary classes</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-9828" aria-label="mark CVE-2026-9828 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-9828" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-9828</a></td><td class="font-mono uppercase text-xs">LOW</td><td>ch.qos.logback:logback-core</td><td class="font-mono text-xs">1.4.14</td><td class="font-mono text-xs">1.5.33</td><td>Deserialization of untrusted data vulnerability in QOS.CH Sarl logback ...</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">keycloak-config-cli</span> at version
+          <span class="font-mono text-fg-primary">6.4.0</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 13:03 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=acl" class="text-accent-ok hover:underline font-mono" title="See other images that include acl">acl</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=angus-activation" class="text-accent-ok hover:underline font-mono" title="See other images that include angus-activation">angus-activation</a></td><td class="font-mono">2.0.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=angus-core" class="text-accent-ok hover:underline font-mono" title="See other images that include angus-core">angus-core</a></td><td class="font-mono">2.0.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=angus-mail" class="text-accent-ok hover:underline font-mono" title="See other images that include angus-mail">angus-mail</a></td><td class="font-mono">2.0.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://www.eclipse.org/legal/epl-2.0, https://www.gnu.org/software/classpath/license.html, http://www.eclipse.org/org/documents/edl-v10.php</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=apache-mime4j-core" class="text-accent-ok hover:underline font-mono" title="See other images that include apache-mime4j-core">apache-mime4j-core</a></td><td class="font-mono">0.8.11</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=apache-mime4j-dom" class="text-accent-ok hover:underline font-mono" title="See other images that include apache-mime4j-dom">apache-mime4j-dom</a></td><td class="font-mono">0.8.11</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=apache-mime4j-storage" class="text-accent-ok hover:underline font-mono" title="See other images that include apache-mime4j-storage">apache-mime4j-storage</a></td><td class="font-mono">0.8.11</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=asyncutil" class="text-accent-ok hover:underline font-mono" title="See other images that include asyncutil">asyncutil</a></td><td class="font-mono">0.1.0</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">The Apache Software License, Version 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attr" class="text-accent-ok hover:underline font-mono" title="See other images that include attr">attr</a></td><td class="font-mono">2.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3.9</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=btf" class="text-accent-ok hover:underline font-mono" title="See other images that include btf">btf</a></td><td class="font-mono">1.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">sha256:cbe57001c861adfae59886f1b9d5cb5a1d7872e31d8b7e758878ea749b286425</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=classgraph" class="text-accent-ok hover:underline font-mono" title="See other images that include classgraph">classgraph</a></td><td class="font-mono">4.8.154</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=classmate" class="text-accent-ok hover:underline font-mono" title="See other images that include classmate">classmate</a></td><td class="font-mono">1.6.0</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=codemodel" class="text-accent-ok hover:underline font-mono" title="See other images that include codemodel">codemodel</a></td><td class="font-mono">4.0.5</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=commons-codec" class="text-accent-ok hover:underline font-mono" title="See other images that include commons-codec">commons-codec</a></td><td class="font-mono">1.16.1</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=commons-io" class="text-accent-ok hover:underline font-mono" title="See other images that include commons-io">commons-io</a></td><td class="font-mono">2.16.1</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=commons-lang3" class="text-accent-ok hover:underline font-mono" title="See other images that include commons-lang3">commons-lang3</a></td><td class="font-mono">3.13.0</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=commons-logging-jboss-logging" class="text-accent-ok hover:underline font-mono" title="See other images that include commons-logging-jboss-logging">commons-logging-jboss-logging</a></td><td class="font-mono">1.0.0.Final</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache License 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=commons-text" class="text-accent-ok hover:underline font-mono" title="See other images that include commons-text">commons-text</a></td><td class="font-mono">1.12.0</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils">coreutils</a></td><td class="font-mono">9.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=failsafe" class="text-accent-ok hover:underline font-mono" title="See other images that include failsafe">failsafe</a></td><td class="font-mono">3.3.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://apache.org/licenses/LICENSE-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gson" class="text-accent-ok hover:underline font-mono" title="See other images that include gson">gson</a></td><td class="font-mono">2.10.1</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">&quot;Apache-2.0&quot;;link=&quot;https://www.apache.org/licenses/LICENSE-2.0.txt&quot;</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=hibernate-validator" class="text-accent-ok hover:underline font-mono" title="See other images that include hibernate-validator">hibernate-validator</a></td><td class="font-mono">8.0.1.Final</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=httpclient" class="text-accent-ok hover:underline font-mono" title="See other images that include httpclient">httpclient</a></td><td class="font-mono">4.5.14</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=httpcore" class="text-accent-ok hover:underline font-mono" title="See other images that include httpcore">httpcore</a></td><td class="font-mono">4.4.16</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=imap" class="text-accent-ok hover:underline font-mono" title="See other images that include imap">imap</a></td><td class="font-mono">2.0.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=istack-commons-runtime" class="text-accent-ok hover:underline font-mono" title="See other images that include istack-commons-runtime">istack-commons-runtime</a></td><td class="font-mono">3.0.10</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=istack-commons-tools" class="text-accent-ok hover:underline font-mono" title="See other images that include istack-commons-tools">istack-commons-tools</a></td><td class="font-mono">3.0.10</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-annotations" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-annotations">jackson-annotations</a></td><td class="font-mono">2.17.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-core" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-core">jackson-core</a></td><td class="font-mono">2.17.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-coreutils">jackson-coreutils</a></td><td class="font-mono">2.0</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">sha256:cbe57001c861adfae59886f1b9d5cb5a1d7872e31d8b7e758878ea749b286425</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-databind" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-databind">jackson-databind</a></td><td class="font-mono">2.17.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-dataformat-yaml" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-dataformat-yaml">jackson-dataformat-yaml</a></td><td class="font-mono">2.17.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-datatype-jdk8" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-datatype-jdk8">jackson-datatype-jdk8</a></td><td class="font-mono">2.17.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-datatype-jsr310" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-datatype-jsr310">jackson-datatype-jsr310</a></td><td class="font-mono">2.17.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-jakarta-rs-base" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-jakarta-rs-base">jackson-jakarta-rs-base</a></td><td class="font-mono">2.17.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-jakarta-rs-json-provider" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-jakarta-rs-json-provider">jackson-jakarta-rs-json-provider</a></td><td class="font-mono">2.17.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jackson-module-jakarta-xmlbind-annotations" class="text-accent-ok hover:underline font-mono" title="See other images that include jackson-module-jakarta-xmlbind-annotations">jackson-module-jakarta-xmlbind-annotations</a></td><td class="font-mono">2.17.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jakarta.activation-api" class="text-accent-ok hover:underline font-mono" title="See other images that include jakarta.activation-api">jakarta.activation-api</a></td><td class="font-mono">2.1.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jakarta.annotation-api" class="text-accent-ok hover:underline font-mono" title="See other images that include jakarta.annotation-api">jakarta.annotation-api</a></td><td class="font-mono">2.1.1</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://www.eclipse.org/legal/epl-2.0, https://www.gnu.org/software/classpath/license.html</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jakarta.mail-api" class="text-accent-ok hover:underline font-mono" title="See other images that include jakarta.mail-api">jakarta.mail-api</a></td><td class="font-mono">2.1.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://www.eclipse.org/legal/epl-2.0, https://www.gnu.org/software/classpath/license.html, http://www.eclipse.org/org/documents/edl-v10.php</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jakarta.validation-api" class="text-accent-ok hover:underline font-mono" title="See other images that include jakarta.validation-api">jakarta.validation-api</a></td><td class="font-mono">3.0.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jakarta.ws.rs-api" class="text-accent-ok hover:underline font-mono" title="See other images that include jakarta.ws.rs-api">jakarta.ws.rs-api</a></td><td class="font-mono">3.1.0</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://www.eclipse.org/legal/epl-2.0, https://www.gnu.org/software/classpath/license.html</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jakarta.xml.bind-api" class="text-accent-ok hover:underline font-mono" title="See other images that include jakarta.xml.bind-api">jakarta.xml.bind-api</a></td><td class="font-mono">4.0.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jandex" class="text-accent-ok hover:underline font-mono" title="See other images that include jandex">jandex</a></td><td class="font-mono">3.2.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=javers-core" class="text-accent-ok hover:underline font-mono" title="See other images that include javers-core">javers-core</a></td><td class="font-mono">7.6.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jaxb-core" class="text-accent-ok hover:underline font-mono" title="See other images that include jaxb-core">jaxb-core</a></td><td class="font-mono">4.0.5</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jaxb-jxc" class="text-accent-ok hover:underline font-mono" title="See other images that include jaxb-jxc">jaxb-jxc</a></td><td class="font-mono">4.0.5</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jaxb-runtime" class="text-accent-ok hover:underline font-mono" title="See other images that include jaxb-runtime">jaxb-runtime</a></td><td class="font-mono">4.0.5</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jaxb-xjc" class="text-accent-ok hover:underline font-mono" title="See other images that include jaxb-xjc">jaxb-xjc</a></td><td class="font-mono">4.0.5</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jboss-logging" class="text-accent-ok hover:underline font-mono" title="See other images that include jboss-logging">jboss-logging</a></td><td class="font-mono">3.5.3.Final</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">https://repository.jboss.org/licenses/apache-2.0.txt</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jrt-fs" class="text-accent-ok hover:underline font-mono" title="See other images that include jrt-fs">jrt-fs</a></td><td class="font-mono">21.0.12</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=json-patch" class="text-accent-ok hover:underline font-mono" title="See other images that include json-patch">json-patch</a></td><td class="font-mono">1.13</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">sha256:cbe57001c861adfae59886f1b9d5cb5a1d7872e31d8b7e758878ea749b286425</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jul-to-slf4j" class="text-accent-ok hover:underline font-mono" title="See other images that include jul-to-slf4j">jul-to-slf4j</a></td><td class="font-mono">2.0.16</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://www.opensource.org/licenses/mit-license.php</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=keycloak-admin-client" class="text-accent-ok hover:underline font-mono" title="See other images that include keycloak-admin-client">keycloak-admin-client</a></td><td class="font-mono">26.0.4</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=keycloak-client-common-synced" class="text-accent-ok hover:underline font-mono" title="See other images that include keycloak-client-common-synced">keycloak-client-common-synced</a></td><td class="font-mono">26.0.4</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=keycloak-config-cli" class="text-accent-ok hover:underline font-mono" title="See other images that include keycloak-config-cli">keycloak-config-cli</a></td><td class="font-mono">6.4.0</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">The Apache License, Version 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=keycloak-config-cli" class="text-accent-ok hover:underline font-mono" title="See other images that include keycloak-config-cli">keycloak-config-cli</a></td><td class="font-mono">6.4.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=lcms2" class="text-accent-ok hover:underline font-mono" title="See other images that include lcms2">lcms2</a></td><td class="font-mono">2.18</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libjpeg-turbo" class="text-accent-ok hover:underline font-mono" title="See other images that include libjpeg-turbo">libjpeg-turbo</a></td><td class="font-mono">3.1.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=log4j-api" class="text-accent-ok hover:underline font-mono" title="See other images that include log4j-api">log4j-api</a></td><td class="font-mono">2.23.1</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">&quot;Apache-2.0&quot;;link=&quot;https://www.apache.org/licenses/LICENSE-2.0.txt&quot;</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=log4j-to-slf4j" class="text-accent-ok hover:underline font-mono" title="See other images that include log4j-to-slf4j">log4j-to-slf4j</a></td><td class="font-mono">2.21.1</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">&quot;Apache-2.0&quot;;link=&quot;https://www.apache.org/licenses/LICENSE-2.0.txt&quot;</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=logback-classic" class="text-accent-ok hover:underline font-mono" title="See other images that include logback-classic">logback-classic</a></td><td class="font-mono">1.4.14</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://www.eclipse.org/legal/epl-v10.html, http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=logback-core" class="text-accent-ok hover:underline font-mono" title="See other images that include logback-core">logback-core</a></td><td class="font-mono">1.4.14</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://www.eclipse.org/legal/epl-v10.html, http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=logging-mailhandler" class="text-accent-ok hover:underline font-mono" title="See other images that include logging-mailhandler">logging-mailhandler</a></td><td class="font-mono">2.0.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=logstash-logback-encoder" class="text-accent-ok hover:underline font-mono" title="See other images that include logstash-logback-encoder">logstash-logback-encoder</a></td><td class="font-mono">8.0</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://www.apache.org/licenses/LICENSE-2.0, http://www.slf4j.org/license.html</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=micrometer-commons" class="text-accent-ok hover:underline font-mono" title="See other images that include micrometer-commons">micrometer-commons</a></td><td class="font-mono">1.13.5</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=micrometer-observation" class="text-accent-ok hover:underline font-mono" title="See other images that include micrometer-observation">micrometer-observation</a></td><td class="font-mono">1.13.5</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=microprofile-openapi-api" class="text-accent-ok hover:underline font-mono" title="See other images that include microprofile-openapi-api">microprofile-openapi-api</a></td><td class="font-mono">3.1.1</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache License, Version 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=msg-simple" class="text-accent-ok hover:underline font-mono" title="See other images that include msg-simple">msg-simple</a></td><td class="font-mono">1.2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">sha256:cbe57001c861adfae59886f1b9d5cb5a1d7872e31d8b7e758878ea749b286425</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses">ncurses</a></td><td class="font-mono">6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openjdk" class="text-accent-ok hover:underline font-mono" title="See other images that include openjdk">openjdk</a></td><td class="font-mono">21.0.12+2-nixos</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openjdk-headless" class="text-accent-ok hover:underline font-mono" title="See other images that include openjdk-headless">openjdk-headless</a></td><td class="font-mono">21.0.12+2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=paranamer" class="text-accent-ok hover:underline font-mono" title="See other images that include paranamer">paranamer</a></td><td class="font-mono">2.5.1</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=picocontainer" class="text-accent-ok hover:underline font-mono" title="See other images that include picocontainer">picocontainer</a></td><td class="font-mono">2.15</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pop3" class="text-accent-ok hover:underline font-mono" title="See other images that include pop3">pop3</a></td><td class="font-mono">2.0.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=reactive-streams" class="text-accent-ok hover:underline font-mono" title="See other images that include reactive-streams">reactive-streams</a></td><td class="font-mono">1.0.4</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.3p3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=relaxng-datatype" class="text-accent-ok hover:underline font-mono" title="See other images that include relaxng-datatype">relaxng-datatype</a></td><td class="font-mono">4.0.4</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=resteasy-client" class="text-accent-ok hover:underline font-mono" title="See other images that include resteasy-client">resteasy-client</a></td><td class="font-mono">7.0.0.Alpha2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=resteasy-client-api" class="text-accent-ok hover:underline font-mono" title="See other images that include resteasy-client-api">resteasy-client-api</a></td><td class="font-mono">7.0.0.Alpha2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=resteasy-core" class="text-accent-ok hover:underline font-mono" title="See other images that include resteasy-core">resteasy-core</a></td><td class="font-mono">7.0.0.Alpha2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=resteasy-core-spi" class="text-accent-ok hover:underline font-mono" title="See other images that include resteasy-core-spi">resteasy-core-spi</a></td><td class="font-mono">7.0.0.Alpha2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=resteasy-jackson2-provider" class="text-accent-ok hover:underline font-mono" title="See other images that include resteasy-jackson2-provider">resteasy-jackson2-provider</a></td><td class="font-mono">7.0.0.Alpha2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=resteasy-jaxb-provider" class="text-accent-ok hover:underline font-mono" title="See other images that include resteasy-jaxb-provider">resteasy-jaxb-provider</a></td><td class="font-mono">7.0.0.Alpha2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=resteasy-multipart-provider" class="text-accent-ok hover:underline font-mono" title="See other images that include resteasy-multipart-provider">resteasy-multipart-provider</a></td><td class="font-mono">7.0.0.Alpha2</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=rngom" class="text-accent-ok hover:underline font-mono" title="See other images that include rngom">rngom</a></td><td class="font-mono">2.3.3-b02</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt, https://www.gnu.org/software/classpath/license.html</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=slf4j-api" class="text-accent-ok hover:underline font-mono" title="See other images that include slf4j-api">slf4j-api</a></td><td class="font-mono">2.0.16</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">http://www.opensource.org/licenses/mit-license.php</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=smtp" class="text-accent-ok hover:underline font-mono" title="See other images that include smtp">smtp</a></td><td class="font-mono">2.0.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=snakeyaml" class="text-accent-ok hover:underline font-mono" title="See other images that include snakeyaml">snakeyaml</a></td><td class="font-mono">2.3</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-aop" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-aop">spring-aop</a></td><td class="font-mono">6.1.12</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0, BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-beans" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-beans">spring-beans</a></td><td class="font-mono">6.1.12</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0, BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-boot" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-boot">spring-boot</a></td><td class="font-mono">3.2.9</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-boot-autoconfigure" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-boot-autoconfigure">spring-boot-autoconfigure</a></td><td class="font-mono">3.2.9</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-boot-jarmode-layertools" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-boot-jarmode-layertools">spring-boot-jarmode-layertools</a></td><td class="font-mono">3.2.9</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-boot-loader" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-boot-loader">spring-boot-loader</a></td><td class="font-mono">3.2.9</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-context" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-context">spring-context</a></td><td class="font-mono">6.1.12</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0, BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-core" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-core">spring-core</a></td><td class="font-mono">6.1.12</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0, BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-expression" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-expression">spring-expression</a></td><td class="font-mono">6.1.12</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0, BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-jcl" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-jcl">spring-jcl</a></td><td class="font-mono">6.1.12</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">Apache-2.0, BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spring-security-crypto" class="text-accent-ok hover:underline font-mono" title="See other images that include spring-security-crypto">spring-security-crypto</a></td><td class="font-mono">6.2.6</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=txw2" class="text-accent-ok hover:underline font-mono" title="See other images that include txw2">txw2</a></td><td class="font-mono">4.0.5</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tzdata" class="text-accent-ok hover:underline font-mono" title="See other images that include tzdata">tzdata</a></td><td class="font-mono">2026b</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xsom" class="text-accent-ok hover:underline font-mono" title="See other images that include xsom">xsom</a></td><td class="font-mono">2.3.3-b02</td><td class="text-fg-muted">java-archive</td><td class="text-fg-muted text-xs">https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt, https://www.gnu.org/software/classpath/license.html</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/keycloak-config-cli/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> nix2container<span class="p">,</span> lib<span class="p">,</span> buildEnv<span class="p">,</span> pkgs<span class="p">,</span> base<span class="p">,</span> nonRoot<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+<span class="c1"># keycloak-config-cli</span>
+<span class="c1"># Container image</span>
+
+<span class="k">let</span>
+  <span class="ss">version</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span><span class="p">;</span>
+  
+  <span class="ss">imagePkgs</span> <span class="o">=</span> <span class="k">with</span> pkgs<span class="p">;</span> <span class="p">[</span>
+    bash
+    coreutils
+    cacert
+    tzdata
+    keycloak-config-cli
+  <span class="p">];</span>
+
+  <span class="ss">userEnv</span> <span class="o">=</span> nonRoot<span class="o">.</span>mkDefaultUserEnv pkgs <span class="p">[];</span>
+
+<span class="k">in</span> nix2container<span class="o">.</span>buildImage <span class="p">{</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;keycloak-config-cli&quot;</span><span class="p">;</span>
+  <span class="ss">tag</span> <span class="o">=</span> version<span class="p">;</span>
+  <span class="ss">copyToRoot</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span>buildEnv <span class="p">{</span>
+      <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;keycloak-config-cli-root&quot;</span><span class="p">;</span>
+      <span class="ss">paths</span> <span class="o">=</span> base<span class="o">.</span>basePackages <span class="o">++</span> imagePkgs <span class="o">++</span> <span class="p">[</span> userEnv <span class="p">];</span>
+    <span class="p">})</span>
+  <span class="p">];</span>
+  <span class="ss">config</span> <span class="o">=</span> nonRoot<span class="o">.</span>defaultConfig <span class="o">//</span> <span class="p">{</span>
+    <span class="ss">Env</span> <span class="o">=</span> base<span class="o">.</span>defaultEnv <span class="o">++</span> nonRoot<span class="o">.</span>userEnv<span class="p">;</span>
+    <span class="ss">Labels</span> <span class="o">=</span> base<span class="o">.</span>defaultLabels <span class="o">//</span> <span class="p">{</span>
+      <span class="s2">&quot;io.nix-containers.build-type&quot;</span> <span class="o">=</span> <span class="s2">&quot;source&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;io.nix-containers.build-method&quot;</span> <span class="o">=</span> <span class="s2">&quot;Built from source using Nix&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;keycloak config cli&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;keycloak-config-cli container image&quot;</span><span class="p">;</span>
+      <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> version<span class="p">;</span>
+    <span class="p">};</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

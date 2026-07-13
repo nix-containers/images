@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>configurable-http-proxy — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">configurable-http-proxy</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      
+      <span class="text-fg-muted">v4.5.6</span>
+      <a href="https://github.com/jupyterhub/configurable-http-proxy" target="_blank" rel="noopener" class="text-accent-ok hover:underline">Upstream ↗</a>
+    </div>
+    
+    <p class="text-fg-muted mb-8">configurable-http-proxy container image (nixpkgs.configurable-http-proxy)</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the configurable-http-proxy-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/configurable-http-proxy:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">v4.5.6</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#configurable-http-proxy</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-configurable-http-proxy-to-docker &amp;&amp; ./result/bin/load-configurable-http-proxy-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/configurable-http-proxy-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#configurable-http-proxy-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-configurable-http-proxy-dev-to-docker &amp;&amp; ./result/bin/load-configurable-http-proxy-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-fg-primary text-base mb-3">Configurable-on-the-fly HTTP Proxy</p><p class="text-sm"><span class="text-fg-muted">Upstream project: </span><a href="https://github.com/jupyterhub/configurable-http-proxy" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">github.com/jupyterhub/configurable-http-proxy ↗</a></p></div>
+        <div class="prose prose-invert max-w-none"><h1>configurable-http-proxy</h1>
+<p>configurable-http-proxy provides you with a way to update and manage a proxy table using a command line interface or REST API</p>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#configurable-http-proxy
+
+# Load into Docker
+nix build .#load-configurable-http-proxy-to-docker &amp;&amp; ./result/bin/load-configurable-http-proxy-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/configurable-http-proxy:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:089fc062ace49ba3cc7902acf0d4ea12b41d897edcd6b354202081fa930dc071">089fc062ace4</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">104.6 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 06:55 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">v4.5.6</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:089fc062ace49ba3cc7902acf0d4ea12b41d897edcd6b354202081fa930dc071">089fc062ace4</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">104.6 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 06:55 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">236-merge</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:882c8226dc52ec85349fe89c8e1e79048968ef526231a1ba0e82f98164121bb6">882c8226dc52</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">99.7 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-06-30 10:39 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">4.5.6</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:52f187c80cc8e1504e3997e6955c217c470dd0e17fa02b058d090e44c45e2a1f">52f187c80cc8</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">84.2 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-06-28 11:00 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">78-merge</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:9b20038eeaf1937a213c360dd653bf86e4dbcf46764a167045ddcd3c2e487868">9b20038eeaf1</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">84.2 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-06-28 10:35 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 11:53 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between"><span class="text-accent-bad font-mono">Critical</span><span>0</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="high"><span class="text-accent-warn font-mono">High</span><span>2</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="medium"><span class="text-fg-muted font-mono">Medium</span><span>12</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="low"><span class="text-fg-muted font-mono">Low</span><span>2</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_configurable-http-proxy_latest-trivy.json</a></div></div><div class="mt-4" id="cve-list" data-cve-list><div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-fg-primary">Vulnerability todo (16 CVEs)</span><button type="button" data-cve-filter="all" class="text-xs text-fg-muted hover:underline">show all</button></div><table class="prose mt-1"><thead><tr><th>✓</th><th>CVE</th><th>Severity</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Title</th></tr></thead><tbody><tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-12151" aria-label="mark CVE-2026-12151 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-12151" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-12151</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>undici</td><td class="font-mono text-xs">6.25.0</td><td class="font-mono text-xs">6.27.0, 7.28.0, 8.5.0</td><td>undici: undici: Denial of Service due to unbounded memory growth via WebSocket frames</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-48815" aria-label="mark CVE-2026-48815 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-48815" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-48815</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>sigstore</td><td class="font-mono text-xs">4.1.0</td><td class="font-mono text-xs">4.1.1</td><td>sigstore&#39;s `certificateOIDs` verification constraints are silently dropped and never enforced</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-26159" aria-label="mark CVE-2023-26159 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-26159" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-26159</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>follow-redirects</td><td class="font-mono text-xs">1.14.8</td><td class="font-mono text-xs">1.15.4</td><td>follow-redirects: Improper Input Validation due to the improper handling of URLs by the url.parse()</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-26159" aria-label="mark CVE-2023-26159 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-26159" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-26159</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>follow-redirects</td><td class="font-mono text-xs">1.14.8</td><td class="font-mono text-xs">1.15.4</td><td>follow-redirects: Improper Input Validation due to the improper handling of URLs by the url.parse()</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-28849" aria-label="mark CVE-2024-28849 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-28849" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-28849</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>follow-redirects</td><td class="font-mono text-xs">1.14.8</td><td class="font-mono text-xs">1.15.6</td><td>follow-redirects: Possible credential leak</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-28849" aria-label="mark CVE-2024-28849 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-28849" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-28849</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>follow-redirects</td><td class="font-mono text-xs">1.14.8</td><td class="font-mono text-xs">1.15.6</td><td>follow-redirects: Possible credential leak</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-42338" aria-label="mark CVE-2026-42338 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42338" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-42338</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>ip-address</td><td class="font-mono text-xs">10.1.0</td><td class="font-mono text-xs">10.1.1</td><td>ip-address: ip-address: Cross-site scripting via improper HTML escaping of untrusted input</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-45149" aria-label="mark CVE-2026-45149 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-45149" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-45149</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>brace-expansion</td><td class="font-mono text-xs">5.0.5</td><td class="font-mono text-xs">5.0.6</td><td>brace-expansion: brace-expansion: Denial of Service due to excessive memory allocation when expanding large numeric ranges</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-48758" aria-label="mark CVE-2026-48758 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-48758" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-48758</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>@sigstore/core</td><td class="font-mono text-xs">3.2.0</td><td class="font-mono text-xs">3.2.1</td><td>@sigstore/core has DSSE payloadType type-binding failure</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-48816" aria-label="mark CVE-2026-48816 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-48816" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-48816</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>@sigstore/verify</td><td class="font-mono text-xs">3.1.0</td><td class="font-mono text-xs">3.1.1</td><td>sigstore-js has Insufficient Verification of Data Authenticity</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-53655" aria-label="mark CVE-2026-53655 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-53655" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-53655</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>tar</td><td class="font-mono text-xs">7.5.13</td><td class="font-mono text-xs">7.5.16</td><td>node-tar is a full-featured Tar for Node.js. Prior to 7.5.16, tar (nod ...</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-9679" aria-label="mark CVE-2026-9679 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-9679" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-9679</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>undici</td><td class="font-mono text-xs">6.25.0</td><td class="font-mono text-xs">6.27.0, 7.28.0, 8.5.0</td><td>undici: undici vulnerable to HTTP header injection via Set-Cookie percent-decoding</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="GHSA-r4q5-vmmm-2653" aria-label="mark GHSA-r4q5-vmmm-2653 done"></td><td><a href="https://github.com/advisories/GHSA-r4q5-vmmm-2653" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">GHSA-r4q5-vmmm-2653</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>follow-redirects</td><td class="font-mono text-xs">1.14.8</td><td class="font-mono text-xs">1.16.0</td><td>follow-redirects leaks Custom Authentication Headers to Cross-Domain Redirect Targets</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="GHSA-r4q5-vmmm-2653" aria-label="mark GHSA-r4q5-vmmm-2653 done"></td><td><a href="https://github.com/advisories/GHSA-r4q5-vmmm-2653" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">GHSA-r4q5-vmmm-2653</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>follow-redirects</td><td class="font-mono text-xs">1.14.8</td><td class="font-mono text-xs">1.16.0</td><td>follow-redirects leaks Custom Authentication Headers to Cross-Domain Redirect Targets</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-11525" aria-label="mark CVE-2026-11525 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-11525" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-11525</a></td><td class="font-mono uppercase text-xs">LOW</td><td>undici</td><td class="font-mono text-xs">6.25.0</td><td class="font-mono text-xs">6.27.0, 7.28.0, 8.5.0</td><td>undici: undici: Weakening of cookie SameSite policy due to incorrect parsing of Set-Cookie header</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-6733" aria-label="mark CVE-2026-6733 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-6733" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-6733</a></td><td class="font-mono uppercase text-xs">LOW</td><td>undici</td><td class="font-mono text-xs">6.25.0</td><td class="font-mono text-xs">6.27.0, 7.28.0, 8.5.0</td><td>undici: Undici: Response queue poisoning on reused keep-alive sockets can lead to incorrect response delivery.</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">configurable-http-proxy</span> at version
+          <span class="font-mono text-fg-primary">v4.5.6</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 11:53 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=%40colors/colors" class="text-accent-ok hover:underline font-mono" title="See other images that include @colors/colors">@colors/colors</a></td><td class="font-mono">1.5.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40colors/colors" class="text-accent-ok hover:underline font-mono" title="See other images that include @colors/colors">@colors/colors</a></td><td class="font-mono">1.5.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40dabh/diagnostics" class="text-accent-ok hover:underline font-mono" title="See other images that include @dabh/diagnostics">@dabh/diagnostics</a></td><td class="font-mono">2.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40dabh/diagnostics" class="text-accent-ok hover:underline font-mono" title="See other images that include @dabh/diagnostics">@dabh/diagnostics</a></td><td class="font-mono">2.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40gar/promise-retry" class="text-accent-ok hover:underline font-mono" title="See other images that include @gar/promise-retry">@gar/promise-retry</a></td><td class="font-mono">1.0.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40isaacs/fs-minipass" class="text-accent-ok hover:underline font-mono" title="See other images that include @isaacs/fs-minipass">@isaacs/fs-minipass</a></td><td class="font-mono">4.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40isaacs/string-locale-compare" class="text-accent-ok hover:underline font-mono" title="See other images that include @isaacs/string-locale-compare">@isaacs/string-locale-compare</a></td><td class="font-mono">1.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/agent" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/agent">@npmcli/agent</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/arborist" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/arborist">@npmcli/arborist</a></td><td class="font-mono">9.4.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/config" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/config">@npmcli/config</a></td><td class="font-mono">10.8.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/fs" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/fs">@npmcli/fs</a></td><td class="font-mono">5.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/git" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/git">@npmcli/git</a></td><td class="font-mono">7.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/installed-package-contents" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/installed-package-contents">@npmcli/installed-package-contents</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/map-workspaces" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/map-workspaces">@npmcli/map-workspaces</a></td><td class="font-mono">5.0.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/metavuln-calculator" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/metavuln-calculator">@npmcli/metavuln-calculator</a></td><td class="font-mono">9.0.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/name-from-folder" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/name-from-folder">@npmcli/name-from-folder</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/node-gyp" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/node-gyp">@npmcli/node-gyp</a></td><td class="font-mono">5.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/package-json" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/package-json">@npmcli/package-json</a></td><td class="font-mono">7.0.5</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/promise-spawn" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/promise-spawn">@npmcli/promise-spawn</a></td><td class="font-mono">9.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/query" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/query">@npmcli/query</a></td><td class="font-mono">5.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/redact" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/redact">@npmcli/redact</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40npmcli/run-script" class="text-accent-ok hover:underline font-mono" title="See other images that include @npmcli/run-script">@npmcli/run-script</a></td><td class="font-mono">10.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40sigstore/bundle" class="text-accent-ok hover:underline font-mono" title="See other images that include @sigstore/bundle">@sigstore/bundle</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40sigstore/core" class="text-accent-ok hover:underline font-mono" title="See other images that include @sigstore/core">@sigstore/core</a></td><td class="font-mono">3.2.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40sigstore/protobuf-specs" class="text-accent-ok hover:underline font-mono" title="See other images that include @sigstore/protobuf-specs">@sigstore/protobuf-specs</a></td><td class="font-mono">0.5.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40sigstore/sign" class="text-accent-ok hover:underline font-mono" title="See other images that include @sigstore/sign">@sigstore/sign</a></td><td class="font-mono">4.1.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40sigstore/tuf" class="text-accent-ok hover:underline font-mono" title="See other images that include @sigstore/tuf">@sigstore/tuf</a></td><td class="font-mono">4.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40sigstore/verify" class="text-accent-ok hover:underline font-mono" title="See other images that include @sigstore/verify">@sigstore/verify</a></td><td class="font-mono">3.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40tufjs/canonical-json" class="text-accent-ok hover:underline font-mono" title="See other images that include @tufjs/canonical-json">@tufjs/canonical-json</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=%40tufjs/models" class="text-accent-ok hover:underline font-mono" title="See other images that include @tufjs/models">@tufjs/models</a></td><td class="font-mono">4.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=abbrev" class="text-accent-ok hover:underline font-mono" title="See other images that include abbrev">abbrev</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=acl" class="text-accent-ok hover:underline font-mono" title="See other images that include acl">acl</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ada" class="text-accent-ok hover:underline font-mono" title="See other images that include ada">ada</a></td><td class="font-mono">3.4.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=agent-base" class="text-accent-ok hover:underline font-mono" title="See other images that include agent-base">agent-base</a></td><td class="font-mono">7.1.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=aproba" class="text-accent-ok hover:underline font-mono" title="See other images that include aproba">aproba</a></td><td class="font-mono">2.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=archy" class="text-accent-ok hover:underline font-mono" title="See other images that include archy">archy</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=async" class="text-accent-ok hover:underline font-mono" title="See other images that include async">async</a></td><td class="font-mono">3.2.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=async" class="text-accent-ok hover:underline font-mono" title="See other images that include async">async</a></td><td class="font-mono">3.2.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attr" class="text-accent-ok hover:underline font-mono" title="See other images that include attr">attr</a></td><td class="font-mono">2.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=balanced-match" class="text-accent-ok hover:underline font-mono" title="See other images that include balanced-match">balanced-match</a></td><td class="font-mono">4.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3.9</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bin-links" class="text-accent-ok hover:underline font-mono" title="See other images that include bin-links">bin-links</a></td><td class="font-mono">6.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=binary-extensions" class="text-accent-ok hover:underline font-mono" title="See other images that include binary-extensions">binary-extensions</a></td><td class="font-mono">3.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bintrees" class="text-accent-ok hover:underline font-mono" title="See other images that include bintrees">bintrees</a></td><td class="font-mono">1.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bintrees" class="text-accent-ok hover:underline font-mono" title="See other images that include bintrees">bintrees</a></td><td class="font-mono">1.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=brace-expansion" class="text-accent-ok hover:underline font-mono" title="See other images that include brace-expansion">brace-expansion</a></td><td class="font-mono">5.0.5</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=brotli" class="text-accent-ok hover:underline font-mono" title="See other images that include brotli">brotli</a></td><td class="font-mono">1.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=brotli" class="text-accent-ok hover:underline font-mono" title="See other images that include brotli">brotli</a></td><td class="font-mono">1.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=brotli" class="text-accent-ok hover:underline font-mono" title="See other images that include brotli">brotli</a></td><td class="font-mono">1.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=c-ares" class="text-accent-ok hover:underline font-mono" title="See other images that include c-ares">c-ares</a></td><td class="font-mono">1.34.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=c-ares" class="text-accent-ok hover:underline font-mono" title="See other images that include c-ares">c-ares</a></td><td class="font-mono">1.34.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=c-ares" class="text-accent-ok hover:underline font-mono" title="See other images that include c-ares">c-ares</a></td><td class="font-mono">1.34.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cacache" class="text-accent-ok hover:underline font-mono" title="See other images that include cacache">cacache</a></td><td class="font-mono">20.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=chalk" class="text-accent-ok hover:underline font-mono" title="See other images that include chalk">chalk</a></td><td class="font-mono">5.6.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=chownr" class="text-accent-ok hover:underline font-mono" title="See other images that include chownr">chownr</a></td><td class="font-mono">3.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ci-info" class="text-accent-ok hover:underline font-mono" title="See other images that include ci-info">ci-info</a></td><td class="font-mono">4.4.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cidr-regex" class="text-accent-ok hover:underline font-mono" title="See other images that include cidr-regex">cidr-regex</a></td><td class="font-mono">5.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cmd-shim" class="text-accent-ok hover:underline font-mono" title="See other images that include cmd-shim">cmd-shim</a></td><td class="font-mono">8.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=color" class="text-accent-ok hover:underline font-mono" title="See other images that include color">color</a></td><td class="font-mono">3.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=color" class="text-accent-ok hover:underline font-mono" title="See other images that include color">color</a></td><td class="font-mono">3.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=color-convert" class="text-accent-ok hover:underline font-mono" title="See other images that include color-convert">color-convert</a></td><td class="font-mono">1.9.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=color-convert" class="text-accent-ok hover:underline font-mono" title="See other images that include color-convert">color-convert</a></td><td class="font-mono">1.9.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=color-name" class="text-accent-ok hover:underline font-mono" title="See other images that include color-name">color-name</a></td><td class="font-mono">1.1.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=color-name" class="text-accent-ok hover:underline font-mono" title="See other images that include color-name">color-name</a></td><td class="font-mono">1.1.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=color-string" class="text-accent-ok hover:underline font-mono" title="See other images that include color-string">color-string</a></td><td class="font-mono">1.5.5</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=color-string" class="text-accent-ok hover:underline font-mono" title="See other images that include color-string">color-string</a></td><td class="font-mono">1.5.5</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=colorspace" class="text-accent-ok hover:underline font-mono" title="See other images that include colorspace">colorspace</a></td><td class="font-mono">1.1.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=colorspace" class="text-accent-ok hover:underline font-mono" title="See other images that include colorspace">colorspace</a></td><td class="font-mono">1.1.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=commander" class="text-accent-ok hover:underline font-mono" title="See other images that include commander">commander</a></td><td class="font-mono">7.2.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=commander" class="text-accent-ok hover:underline font-mono" title="See other images that include commander">commander</a></td><td class="font-mono">7.2.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=common-ancestor-path" class="text-accent-ok hover:underline font-mono" title="See other images that include common-ancestor-path">common-ancestor-path</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=configurable-http-proxy" class="text-accent-ok hover:underline font-mono" title="See other images that include configurable-http-proxy">configurable-http-proxy</a></td><td class="font-mono">4.5.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=configurable-http-proxy" class="text-accent-ok hover:underline font-mono" title="See other images that include configurable-http-proxy">configurable-http-proxy</a></td><td class="font-mono">4.5.6</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=configurable-http-proxy" class="text-accent-ok hover:underline font-mono" title="See other images that include configurable-http-proxy">configurable-http-proxy</a></td><td class="font-mono">4.5.6</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=corepack" class="text-accent-ok hover:underline font-mono" title="See other images that include corepack">corepack</a></td><td class="font-mono">0.35.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils">coreutils</a></td><td class="font-mono">9.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cssesc" class="text-accent-ok hover:underline font-mono" title="See other images that include cssesc">cssesc</a></td><td class="font-mono">3.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=debug" class="text-accent-ok hover:underline font-mono" title="See other images that include debug">debug</a></td><td class="font-mono">4.4.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=diff" class="text-accent-ok hover:underline font-mono" title="See other images that include diff">diff</a></td><td class="font-mono">8.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=enabled" class="text-accent-ok hover:underline font-mono" title="See other images that include enabled">enabled</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=enabled" class="text-accent-ok hover:underline font-mono" title="See other images that include enabled">enabled</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=env-paths" class="text-accent-ok hover:underline font-mono" title="See other images that include env-paths">env-paths</a></td><td class="font-mono">2.2.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=eventemitter3" class="text-accent-ok hover:underline font-mono" title="See other images that include eventemitter3">eventemitter3</a></td><td class="font-mono">4.0.7</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=eventemitter3" class="text-accent-ok hover:underline font-mono" title="See other images that include eventemitter3">eventemitter3</a></td><td class="font-mono">4.0.7</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=exponential-backoff" class="text-accent-ok hover:underline font-mono" title="See other images that include exponential-backoff">exponential-backoff</a></td><td class="font-mono">3.1.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fastest-levenshtein" class="text-accent-ok hover:underline font-mono" title="See other images that include fastest-levenshtein">fastest-levenshtein</a></td><td class="font-mono">1.0.16</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fdir" class="text-accent-ok hover:underline font-mono" title="See other images that include fdir">fdir</a></td><td class="font-mono">6.5.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fecha" class="text-accent-ok hover:underline font-mono" title="See other images that include fecha">fecha</a></td><td class="font-mono">4.2.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fecha" class="text-accent-ok hover:underline font-mono" title="See other images that include fecha">fecha</a></td><td class="font-mono">4.2.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fn.name" class="text-accent-ok hover:underline font-mono" title="See other images that include fn.name">fn.name</a></td><td class="font-mono">1.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fn.name" class="text-accent-ok hover:underline font-mono" title="See other images that include fn.name">fn.name</a></td><td class="font-mono">1.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=follow-redirects" class="text-accent-ok hover:underline font-mono" title="See other images that include follow-redirects">follow-redirects</a></td><td class="font-mono">1.14.8</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=follow-redirects" class="text-accent-ok hover:underline font-mono" title="See other images that include follow-redirects">follow-redirects</a></td><td class="font-mono">1.14.8</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=fs-minipass" class="text-accent-ok hover:underline font-mono" title="See other images that include fs-minipass">fs-minipass</a></td><td class="font-mono">3.0.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glob" class="text-accent-ok hover:underline font-mono" title="See other images that include glob">glob</a></td><td class="font-mono">13.0.6</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gnugrep" class="text-accent-ok hover:underline font-mono" title="See other images that include gnugrep">gnugrep</a></td><td class="font-mono">3.12</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=graceful-fs" class="text-accent-ok hover:underline font-mono" title="See other images that include graceful-fs">graceful-fs</a></td><td class="font-mono">4.2.11</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=hosted-git-info" class="text-accent-ok hover:underline font-mono" title="See other images that include hosted-git-info">hosted-git-info</a></td><td class="font-mono">9.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=http-cache-semantics" class="text-accent-ok hover:underline font-mono" title="See other images that include http-cache-semantics">http-cache-semantics</a></td><td class="font-mono">4.2.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=http-proxy" class="text-accent-ok hover:underline font-mono" title="See other images that include http-proxy">http-proxy</a></td><td class="font-mono">1.18.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=http-proxy" class="text-accent-ok hover:underline font-mono" title="See other images that include http-proxy">http-proxy</a></td><td class="font-mono">1.18.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=http-proxy-agent" class="text-accent-ok hover:underline font-mono" title="See other images that include http-proxy-agent">http-proxy-agent</a></td><td class="font-mono">7.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=https-proxy-agent" class="text-accent-ok hover:underline font-mono" title="See other images that include https-proxy-agent">https-proxy-agent</a></td><td class="font-mono">7.0.6</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=iconv-lite" class="text-accent-ok hover:underline font-mono" title="See other images that include iconv-lite">iconv-lite</a></td><td class="font-mono">0.7.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu4c" class="text-accent-ok hover:underline font-mono" title="See other images that include icu4c">icu4c</a></td><td class="font-mono">78.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=icu4c" class="text-accent-ok hover:underline font-mono" title="See other images that include icu4c">icu4c</a></td><td class="font-mono">78.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ignore-walk" class="text-accent-ok hover:underline font-mono" title="See other images that include ignore-walk">ignore-walk</a></td><td class="font-mono">8.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=inherits" class="text-accent-ok hover:underline font-mono" title="See other images that include inherits">inherits</a></td><td class="font-mono">2.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=inherits" class="text-accent-ok hover:underline font-mono" title="See other images that include inherits">inherits</a></td><td class="font-mono">2.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ini" class="text-accent-ok hover:underline font-mono" title="See other images that include ini">ini</a></td><td class="font-mono">6.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=init-package-json" class="text-accent-ok hover:underline font-mono" title="See other images that include init-package-json">init-package-json</a></td><td class="font-mono">8.2.5</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ip-address" class="text-accent-ok hover:underline font-mono" title="See other images that include ip-address">ip-address</a></td><td class="font-mono">10.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=is-arrayish" class="text-accent-ok hover:underline font-mono" title="See other images that include is-arrayish">is-arrayish</a></td><td class="font-mono">0.3.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=is-arrayish" class="text-accent-ok hover:underline font-mono" title="See other images that include is-arrayish">is-arrayish</a></td><td class="font-mono">0.3.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=is-cidr" class="text-accent-ok hover:underline font-mono" title="See other images that include is-cidr">is-cidr</a></td><td class="font-mono">6.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=is-stream" class="text-accent-ok hover:underline font-mono" title="See other images that include is-stream">is-stream</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=is-stream" class="text-accent-ok hover:underline font-mono" title="See other images that include is-stream">is-stream</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=isexe" class="text-accent-ok hover:underline font-mono" title="See other images that include isexe">isexe</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=json-parse-even-better-errors" class="text-accent-ok hover:underline font-mono" title="See other images that include json-parse-even-better-errors">json-parse-even-better-errors</a></td><td class="font-mono">5.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=json-stringify-nice" class="text-accent-ok hover:underline font-mono" title="See other images that include json-stringify-nice">json-stringify-nice</a></td><td class="font-mono">1.1.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=jsonparse" class="text-accent-ok hover:underline font-mono" title="See other images that include jsonparse">jsonparse</a></td><td class="font-mono">1.3.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=just-diff" class="text-accent-ok hover:underline font-mono" title="See other images that include just-diff">just-diff</a></td><td class="font-mono">6.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=just-diff-apply" class="text-accent-ok hover:underline font-mono" title="See other images that include just-diff-apply">just-diff-apply</a></td><td class="font-mono">5.5.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=kuler" class="text-accent-ok hover:underline font-mono" title="See other images that include kuler">kuler</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=kuler" class="text-accent-ok hover:underline font-mono" title="See other images that include kuler">kuler</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libev" class="text-accent-ok hover:underline font-mono" title="See other images that include libev">libev</a></td><td class="font-mono">4.33</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmaccess" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmaccess">libnpmaccess</a></td><td class="font-mono">10.0.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmdiff" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmdiff">libnpmdiff</a></td><td class="font-mono">8.1.6</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmexec" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmexec">libnpmexec</a></td><td class="font-mono">10.2.6</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmfund" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmfund">libnpmfund</a></td><td class="font-mono">7.0.20</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmorg" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmorg">libnpmorg</a></td><td class="font-mono">8.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmpack" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmpack">libnpmpack</a></td><td class="font-mono">9.1.6</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmpublish" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmpublish">libnpmpublish</a></td><td class="font-mono">11.1.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmsearch" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmsearch">libnpmsearch</a></td><td class="font-mono">9.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmteam" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmteam">libnpmteam</a></td><td class="font-mono">8.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libnpmversion" class="text-accent-ok hover:underline font-mono" title="See other images that include libnpmversion">libnpmversion</a></td><td class="font-mono">8.0.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libuv" class="text-accent-ok hover:underline font-mono" title="See other images that include libuv">libuv</a></td><td class="font-mono">1.52.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libuv" class="text-accent-ok hover:underline font-mono" title="See other images that include libuv">libuv</a></td><td class="font-mono">1.52.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=llhttp" class="text-accent-ok hover:underline font-mono" title="See other images that include llhttp">llhttp</a></td><td class="font-mono">9.4.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=llhttp" class="text-accent-ok hover:underline font-mono" title="See other images that include llhttp">llhttp</a></td><td class="font-mono">9.4.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=logform" class="text-accent-ok hover:underline font-mono" title="See other images that include logform">logform</a></td><td class="font-mono">2.4.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=logform" class="text-accent-ok hover:underline font-mono" title="See other images that include logform">logform</a></td><td class="font-mono">2.4.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=lru-cache" class="text-accent-ok hover:underline font-mono" title="See other images that include lru-cache">lru-cache</a></td><td class="font-mono">11.3.5</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=make-fetch-happen" class="text-accent-ok hover:underline font-mono" title="See other images that include make-fetch-happen">make-fetch-happen</a></td><td class="font-mono">15.0.5</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minimatch" class="text-accent-ok hover:underline font-mono" title="See other images that include minimatch">minimatch</a></td><td class="font-mono">10.2.5</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minipass" class="text-accent-ok hover:underline font-mono" title="See other images that include minipass">minipass</a></td><td class="font-mono">3.3.6</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minipass" class="text-accent-ok hover:underline font-mono" title="See other images that include minipass">minipass</a></td><td class="font-mono">7.1.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minipass-collect" class="text-accent-ok hover:underline font-mono" title="See other images that include minipass-collect">minipass-collect</a></td><td class="font-mono">2.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minipass-fetch" class="text-accent-ok hover:underline font-mono" title="See other images that include minipass-fetch">minipass-fetch</a></td><td class="font-mono">5.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minipass-flush" class="text-accent-ok hover:underline font-mono" title="See other images that include minipass-flush">minipass-flush</a></td><td class="font-mono">1.0.6</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minipass-pipeline" class="text-accent-ok hover:underline font-mono" title="See other images that include minipass-pipeline">minipass-pipeline</a></td><td class="font-mono">1.2.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minipass-sized" class="text-accent-ok hover:underline font-mono" title="See other images that include minipass-sized">minipass-sized</a></td><td class="font-mono">2.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=minizlib" class="text-accent-ok hover:underline font-mono" title="See other images that include minizlib">minizlib</a></td><td class="font-mono">3.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ms" class="text-accent-ok hover:underline font-mono" title="See other images that include ms">ms</a></td><td class="font-mono">2.1.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ms" class="text-accent-ok hover:underline font-mono" title="See other images that include ms">ms</a></td><td class="font-mono">2.1.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ms" class="text-accent-ok hover:underline font-mono" title="See other images that include ms">ms</a></td><td class="font-mono">2.1.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=mute-stream" class="text-accent-ok hover:underline font-mono" title="See other images that include mute-stream">mute-stream</a></td><td class="font-mono">3.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses">ncurses</a></td><td class="font-mono">6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=negotiator" class="text-accent-ok hover:underline font-mono" title="See other images that include negotiator">negotiator</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nghttp2" class="text-accent-ok hover:underline font-mono" title="See other images that include nghttp2">nghttp2</a></td><td class="font-mono">1.69.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nghttp2" class="text-accent-ok hover:underline font-mono" title="See other images that include nghttp2">nghttp2</a></td><td class="font-mono">1.69.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nghttp2" class="text-accent-ok hover:underline font-mono" title="See other images that include nghttp2">nghttp2</a></td><td class="font-mono">1.69.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nghttp3" class="text-accent-ok hover:underline font-mono" title="See other images that include nghttp3">nghttp3</a></td><td class="font-mono">1.15.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nghttp3" class="text-accent-ok hover:underline font-mono" title="See other images that include nghttp3">nghttp3</a></td><td class="font-mono">1.15.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ngtcp2" class="text-accent-ok hover:underline font-mono" title="See other images that include ngtcp2">ngtcp2</a></td><td class="font-mono">1.22.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ngtcp2" class="text-accent-ok hover:underline font-mono" title="See other images that include ngtcp2">ngtcp2</a></td><td class="font-mono">1.22.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=node" class="text-accent-ok hover:underline font-mono" title="See other images that include node">node</a></td><td class="font-mono">24.16.0</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=node-gyp" class="text-accent-ok hover:underline font-mono" title="See other images that include node-gyp">node-gyp</a></td><td class="font-mono">12.3.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nodejs" class="text-accent-ok hover:underline font-mono" title="See other images that include nodejs">nodejs</a></td><td class="font-mono">24.16.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nodejs-slim" class="text-accent-ok hover:underline font-mono" title="See other images that include nodejs-slim">nodejs-slim</a></td><td class="font-mono">24.16.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nodejs-slim" class="text-accent-ok hover:underline font-mono" title="See other images that include nodejs-slim">nodejs-slim</a></td><td class="font-mono">24.16.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nodejs-slim" class="text-accent-ok hover:underline font-mono" title="See other images that include nodejs-slim">nodejs-slim</a></td><td class="font-mono">24.16.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nopt" class="text-accent-ok hover:underline font-mono" title="See other images that include nopt">nopt</a></td><td class="font-mono">9.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm" class="text-accent-ok hover:underline font-mono" title="See other images that include npm">npm</a></td><td class="font-mono">11.13.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Artistic-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-audit-report" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-audit-report">npm-audit-report</a></td><td class="font-mono">7.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-bundled" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-bundled">npm-bundled</a></td><td class="font-mono">5.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-install-checks" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-install-checks">npm-install-checks</a></td><td class="font-mono">8.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-normalize-package-bin" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-normalize-package-bin">npm-normalize-package-bin</a></td><td class="font-mono">5.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-package-arg" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-package-arg">npm-package-arg</a></td><td class="font-mono">13.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-packlist" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-packlist">npm-packlist</a></td><td class="font-mono">10.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-pick-manifest" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-pick-manifest">npm-pick-manifest</a></td><td class="font-mono">11.0.3</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-profile" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-profile">npm-profile</a></td><td class="font-mono">12.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-registry-fetch" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-registry-fetch">npm-registry-fetch</a></td><td class="font-mono">19.1.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=npm-user-validate" class="text-accent-ok hover:underline font-mono" title="See other images that include npm-user-validate">npm-user-validate</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BSD-2-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=one-time" class="text-accent-ok hover:underline font-mono" title="See other images that include one-time">one-time</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=one-time" class="text-accent-ok hover:underline font-mono" title="See other images that include one-time">one-time</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">3.6.2</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">3.6.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">3.6.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=openssl" class="text-accent-ok hover:underline font-mono" title="See other images that include openssl">openssl</a></td><td class="font-mono">3.6.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=p-map" class="text-accent-ok hover:underline font-mono" title="See other images that include p-map">p-map</a></td><td class="font-mono">7.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pacote" class="text-accent-ok hover:underline font-mono" title="See other images that include pacote">pacote</a></td><td class="font-mono">21.5.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=parse-conflict-json" class="text-accent-ok hover:underline font-mono" title="See other images that include parse-conflict-json">parse-conflict-json</a></td><td class="font-mono">5.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=path-scurry" class="text-accent-ok hover:underline font-mono" title="See other images that include path-scurry">path-scurry</a></td><td class="font-mono">2.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pcre2" class="text-accent-ok hover:underline font-mono" title="See other images that include pcre2">pcre2</a></td><td class="font-mono">10.46</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=picomatch" class="text-accent-ok hover:underline font-mono" title="See other images that include picomatch">picomatch</a></td><td class="font-mono">4.0.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=postcss-selector-parser" class="text-accent-ok hover:underline font-mono" title="See other images that include postcss-selector-parser">postcss-selector-parser</a></td><td class="font-mono">7.1.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=proc-log" class="text-accent-ok hover:underline font-mono" title="See other images that include proc-log">proc-log</a></td><td class="font-mono">6.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=proggy" class="text-accent-ok hover:underline font-mono" title="See other images that include proggy">proggy</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=prom-client" class="text-accent-ok hover:underline font-mono" title="See other images that include prom-client">prom-client</a></td><td class="font-mono">14.2.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=prom-client" class="text-accent-ok hover:underline font-mono" title="See other images that include prom-client">prom-client</a></td><td class="font-mono">14.2.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=promise-all-reject-late" class="text-accent-ok hover:underline font-mono" title="See other images that include promise-all-reject-late">promise-all-reject-late</a></td><td class="font-mono">1.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=promise-call-limit" class="text-accent-ok hover:underline font-mono" title="See other images that include promise-call-limit">promise-call-limit</a></td><td class="font-mono">3.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=promzard" class="text-accent-ok hover:underline font-mono" title="See other images that include promzard">promzard</a></td><td class="font-mono">3.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=qrcode-terminal" class="text-accent-ok hover:underline font-mono" title="See other images that include qrcode-terminal">qrcode-terminal</a></td><td class="font-mono">0.12.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache 2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=read" class="text-accent-ok hover:underline font-mono" title="See other images that include read">read</a></td><td class="font-mono">5.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=read-cmd-shim" class="text-accent-ok hover:underline font-mono" title="See other images that include read-cmd-shim">read-cmd-shim</a></td><td class="font-mono">6.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readable-stream" class="text-accent-ok hover:underline font-mono" title="See other images that include readable-stream">readable-stream</a></td><td class="font-mono">3.6.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readable-stream" class="text-accent-ok hover:underline font-mono" title="See other images that include readable-stream">readable-stream</a></td><td class="font-mono">3.6.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.3p3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=requires-port" class="text-accent-ok hover:underline font-mono" title="See other images that include requires-port">requires-port</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=requires-port" class="text-accent-ok hover:underline font-mono" title="See other images that include requires-port">requires-port</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=safe-buffer" class="text-accent-ok hover:underline font-mono" title="See other images that include safe-buffer">safe-buffer</a></td><td class="font-mono">5.2.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=safe-buffer" class="text-accent-ok hover:underline font-mono" title="See other images that include safe-buffer">safe-buffer</a></td><td class="font-mono">5.2.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=safe-stable-stringify" class="text-accent-ok hover:underline font-mono" title="See other images that include safe-stable-stringify">safe-stable-stringify</a></td><td class="font-mono">2.3.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=safe-stable-stringify" class="text-accent-ok hover:underline font-mono" title="See other images that include safe-stable-stringify">safe-stable-stringify</a></td><td class="font-mono">2.3.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=safer-buffer" class="text-accent-ok hover:underline font-mono" title="See other images that include safer-buffer">safer-buffer</a></td><td class="font-mono">2.1.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=semver" class="text-accent-ok hover:underline font-mono" title="See other images that include semver">semver</a></td><td class="font-mono">7.7.4</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=signal-exit" class="text-accent-ok hover:underline font-mono" title="See other images that include signal-exit">signal-exit</a></td><td class="font-mono">4.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigstore" class="text-accent-ok hover:underline font-mono" title="See other images that include sigstore">sigstore</a></td><td class="font-mono">4.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">Apache-2.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=simdjson" class="text-accent-ok hover:underline font-mono" title="See other images that include simdjson">simdjson</a></td><td class="font-mono">4.6.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=simdutf" class="text-accent-ok hover:underline font-mono" title="See other images that include simdutf">simdutf</a></td><td class="font-mono">6.5.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=simdutf" class="text-accent-ok hover:underline font-mono" title="See other images that include simdutf">simdutf</a></td><td class="font-mono">9.0.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=simple-swizzle" class="text-accent-ok hover:underline font-mono" title="See other images that include simple-swizzle">simple-swizzle</a></td><td class="font-mono">0.2.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=simple-swizzle" class="text-accent-ok hover:underline font-mono" title="See other images that include simple-swizzle">simple-swizzle</a></td><td class="font-mono">0.2.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=smart-buffer" class="text-accent-ok hover:underline font-mono" title="See other images that include smart-buffer">smart-buffer</a></td><td class="font-mono">4.2.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=socks" class="text-accent-ok hover:underline font-mono" title="See other images that include socks">socks</a></td><td class="font-mono">2.8.7</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=socks-proxy-agent" class="text-accent-ok hover:underline font-mono" title="See other images that include socks-proxy-agent">socks-proxy-agent</a></td><td class="font-mono">8.0.5</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spdx-exceptions" class="text-accent-ok hover:underline font-mono" title="See other images that include spdx-exceptions">spdx-exceptions</a></td><td class="font-mono">2.5.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">CC-BY-3.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spdx-expression-parse" class="text-accent-ok hover:underline font-mono" title="See other images that include spdx-expression-parse">spdx-expression-parse</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=spdx-license-ids" class="text-accent-ok hover:underline font-mono" title="See other images that include spdx-license-ids">spdx-license-ids</a></td><td class="font-mono">3.0.23</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">CC0-1.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sqlite" class="text-accent-ok hover:underline font-mono" title="See other images that include sqlite">sqlite</a></td><td class="font-mono">3.51.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sqlite" class="text-accent-ok hover:underline font-mono" title="See other images that include sqlite">sqlite</a></td><td class="font-mono">3.51.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sqlite" class="text-accent-ok hover:underline font-mono" title="See other images that include sqlite">sqlite</a></td><td class="font-mono">3.51.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ssri" class="text-accent-ok hover:underline font-mono" title="See other images that include ssri">ssri</a></td><td class="font-mono">13.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=stack-trace" class="text-accent-ok hover:underline font-mono" title="See other images that include stack-trace">stack-trace</a></td><td class="font-mono">0.0.10</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=stack-trace" class="text-accent-ok hover:underline font-mono" title="See other images that include stack-trace">stack-trace</a></td><td class="font-mono">0.0.10</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=strftime" class="text-accent-ok hover:underline font-mono" title="See other images that include strftime">strftime</a></td><td class="font-mono">0.10.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=strftime" class="text-accent-ok hover:underline font-mono" title="See other images that include strftime">strftime</a></td><td class="font-mono">0.10.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=string_decoder" class="text-accent-ok hover:underline font-mono" title="See other images that include string_decoder">string_decoder</a></td><td class="font-mono">1.3.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=string_decoder" class="text-accent-ok hover:underline font-mono" title="See other images that include string_decoder">string_decoder</a></td><td class="font-mono">1.3.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=supports-color" class="text-accent-ok hover:underline font-mono" title="See other images that include supports-color">supports-color</a></td><td class="font-mono">10.2.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tar" class="text-accent-ok hover:underline font-mono" title="See other images that include tar">tar</a></td><td class="font-mono">7.5.13</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tdigest" class="text-accent-ok hover:underline font-mono" title="See other images that include tdigest">tdigest</a></td><td class="font-mono">0.1.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tdigest" class="text-accent-ok hover:underline font-mono" title="See other images that include tdigest">tdigest</a></td><td class="font-mono">0.1.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=text-hex" class="text-accent-ok hover:underline font-mono" title="See other images that include text-hex">text-hex</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=text-hex" class="text-accent-ok hover:underline font-mono" title="See other images that include text-hex">text-hex</a></td><td class="font-mono">1.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=text-table" class="text-accent-ok hover:underline font-mono" title="See other images that include text-table">text-table</a></td><td class="font-mono">0.2.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tiny-relative-date" class="text-accent-ok hover:underline font-mono" title="See other images that include tiny-relative-date">tiny-relative-date</a></td><td class="font-mono">2.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tinyglobby" class="text-accent-ok hover:underline font-mono" title="See other images that include tinyglobby">tinyglobby</a></td><td class="font-mono">0.2.16</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=treeverse" class="text-accent-ok hover:underline font-mono" title="See other images that include treeverse">treeverse</a></td><td class="font-mono">3.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=triple-beam" class="text-accent-ok hover:underline font-mono" title="See other images that include triple-beam">triple-beam</a></td><td class="font-mono">1.3.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=triple-beam" class="text-accent-ok hover:underline font-mono" title="See other images that include triple-beam">triple-beam</a></td><td class="font-mono">1.3.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tuf-js" class="text-accent-ok hover:underline font-mono" title="See other images that include tuf-js">tuf-js</a></td><td class="font-mono">4.1.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=undici" class="text-accent-ok hover:underline font-mono" title="See other images that include undici">undici</a></td><td class="font-mono">6.25.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-deprecate" class="text-accent-ok hover:underline font-mono" title="See other images that include util-deprecate">util-deprecate</a></td><td class="font-mono">1.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-deprecate" class="text-accent-ok hover:underline font-mono" title="See other images that include util-deprecate">util-deprecate</a></td><td class="font-mono">1.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-deprecate" class="text-accent-ok hover:underline font-mono" title="See other images that include util-deprecate">util-deprecate</a></td><td class="font-mono">1.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=uvwasi" class="text-accent-ok hover:underline font-mono" title="See other images that include uvwasi">uvwasi</a></td><td class="font-mono">0.0.23</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=validate-npm-package-name" class="text-accent-ok hover:underline font-mono" title="See other images that include validate-npm-package-name">validate-npm-package-name</a></td><td class="font-mono">7.0.2</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=walk-up-path" class="text-accent-ok hover:underline font-mono" title="See other images that include walk-up-path">walk-up-path</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=which" class="text-accent-ok hover:underline font-mono" title="See other images that include which">which</a></td><td class="font-mono">6.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=winston" class="text-accent-ok hover:underline font-mono" title="See other images that include winston">winston</a></td><td class="font-mono">3.10.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=winston" class="text-accent-ok hover:underline font-mono" title="See other images that include winston">winston</a></td><td class="font-mono">3.10.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=winston-transport" class="text-accent-ok hover:underline font-mono" title="See other images that include winston-transport">winston-transport</a></td><td class="font-mono">4.5.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=winston-transport" class="text-accent-ok hover:underline font-mono" title="See other images that include winston-transport">winston-transport</a></td><td class="font-mono">4.5.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">MIT</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=write-file-atomic" class="text-accent-ok hover:underline font-mono" title="See other images that include write-file-atomic">write-file-atomic</a></td><td class="font-mono">7.0.1</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=yallist" class="text-accent-ok hover:underline font-mono" title="See other images that include yallist">yallist</a></td><td class="font-mono">4.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">ISC</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=yallist" class="text-accent-ok hover:underline font-mono" title="See other images that include yallist">yallist</a></td><td class="font-mono">5.0.0</td><td class="text-fg-muted">npm</td><td class="text-fg-muted text-xs">BlueOak-1.0.0</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zlib" class="text-accent-ok hover:underline font-mono" title="See other images that include zlib">zlib</a></td><td class="font-mono">1.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zstd" class="text-accent-ok hover:underline font-mono" title="See other images that include zstd">zstd</a></td><td class="font-mono">1.5.7</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zstd" class="text-accent-ok hover:underline font-mono" title="See other images that include zstd">zstd</a></td><td class="font-mono">1.5.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zstd" class="text-accent-ok hover:underline font-mono" title="See other images that include zstd">zstd</a></td><td class="font-mono">1.5.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=zstd" class="text-accent-ok hover:underline font-mono" title="See other images that include zstd">zstd</a></td><td class="font-mono">1.5.7</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/configurable-http-proxy/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> mkImage<span class="p">,</span> pkgs<span class="p">,</span> lib<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+<span class="c1"># configurable-http-proxy</span>
+<span class="c1"># Container image packaging nixpkgs.configurable-http-proxy</span>
+mkImage <span class="p">{</span>
+  <span class="ss">drv</span> <span class="o">=</span> pkgs<span class="o">.</span>configurable-http-proxy<span class="p">;</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;configurable-http-proxy&quot;</span><span class="p">;</span>
+  <span class="ss">tag</span> <span class="o">=</span> <span class="s2">&quot;v</span><span class="si">${</span>pkgs<span class="o">.</span>configurable-http-proxy<span class="o">.</span>version<span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+  <span class="ss">entrypoint</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span>lib<span class="o">.</span>getExe pkgs<span class="o">.</span>configurable-http-proxy<span class="p">)</span> <span class="p">];</span>
+  <span class="c1"># Was `--help` (a one-shot). Run the proxy: it serves the public proxy on</span>
+  <span class="c1"># :8000 and the management REST API on :8001. Bind both to all interfaces</span>
+  <span class="c1"># (the defaults are localhost) so the kind-test probe can reach them. CHP</span>
+  <span class="c1"># starts with no routes and is driven entirely via its API, so no config or</span>
+  <span class="c1"># writable dir is needed; operators add routes (e.g. via JupyterHub).</span>
+  <span class="ss">cmd</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;--ip&quot;</span> <span class="s2">&quot;0.0.0.0&quot;</span>
+    <span class="s2">&quot;--port&quot;</span> <span class="s2">&quot;8000&quot;</span>
+    <span class="s2">&quot;--api-ip&quot;</span> <span class="s2">&quot;0.0.0.0&quot;</span>
+    <span class="s2">&quot;--api-port&quot;</span> <span class="s2">&quot;8001&quot;</span>
+  <span class="p">];</span>
+
+  <span class="ss">labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;configurable-http-proxy&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;configurable-http-proxy container image (nixpkgs.configurable-http-proxy)&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> pkgs<span class="o">.</span>configurable-http-proxy<span class="o">.</span>version<span class="p">;</span>
+    <span class="s2">&quot;io.nix-containers.source&quot;</span> <span class="o">=</span> <span class="s2">&quot;nixpkgs&quot;</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tetra-fips — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">tetra-fips</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      
+      <span class="text-fg-muted">1.7.0</span>
+      <a href="https://github.com/cilium/tetragon" target="_blank" rel="noopener" class="text-accent-ok hover:underline">Upstream ↗</a>
+    </div>
+    
+    <p class="text-fg-muted mb-8">CLI for Tetragon</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the tetra-fips-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/tetra-fips:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">1.7.0</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#tetra-fips</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-tetra-fips-to-docker &amp;&amp; ./result/bin/load-tetra-fips-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/tetra-fips-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#tetra-fips-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-tetra-fips-dev-to-docker &amp;&amp; ./result/bin/load-tetra-fips-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-fg-primary text-base mb-3">CLI for Tetragon</p><p class="text-sm"><span class="text-fg-muted">Upstream project: </span><a href="https://github.com/cilium/tetragon" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">github.com/cilium/tetragon ↗</a></p></div>
+        <div class="prose prose-invert max-w-none"><h1>tetra-fips</h1>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#tetra-fips
+
+# Load into Docker
+nix build .#load-tetra-fips-to-docker &amp;&amp; ./result/bin/load-tetra-fips-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/tetra-fips:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:33247908230e039207978a7f82040910199aaebfa9064c9006853a2de8f422c8">33247908230e</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 12:27 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">v1.7.0</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:33247908230e039207978a7f82040910199aaebfa9064c9006853a2de8f422c8">33247908230e</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size"><span class="opacity-60">—</span></td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-08 12:27 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:14 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between"><span class="text-accent-bad font-mono">Critical</span><span>0</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="high"><span class="text-accent-warn font-mono">High</span><span>6</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="medium"><span class="text-fg-muted font-mono">Medium</span><span>8</span></div><div class="flex justify-between"><span class="text-fg-muted font-mono">Low</span><span>0</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_tetra-fips_latest-trivy.json</a></div></div><div class="mt-4" id="cve-list" data-cve-list><div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-fg-primary">Vulnerability todo (18 CVEs)</span><button type="button" data-cve-filter="all" class="text-xs text-fg-muted hover:underline">show all</button></div><table class="prose mt-1"><thead><tr><th>✓</th><th>CVE</th><th>Severity</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Title</th></tr></thead><tbody><tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-25681" aria-label="mark CVE-2026-25681 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-25681" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-25681</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>golang.org/x/net</td><td class="font-mono text-xs">v0.52.0</td><td class="font-mono text-xs">0.55.0</td><td>golang.org/x/net/html: golang.org/x/net/html: Arbitrary code execution via Cross-Site Scripting</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-25681" aria-label="mark CVE-2026-25681 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-25681" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-25681</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>golang.org/x/net</td><td class="font-mono text-xs">v0.52.0</td><td class="font-mono text-xs">0.55.0</td><td>golang.org/x/net/html: golang.org/x/net/html: Arbitrary code execution via Cross-Site Scripting</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-27136" aria-label="mark CVE-2026-27136 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-27136" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-27136</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>golang.org/x/net</td><td class="font-mono text-xs">v0.52.0</td><td class="font-mono text-xs">0.55.0</td><td>golang.org/x/net/html: golang: golang.org/x/net/html: Cross-Site Scripting via HTML parsing bypass</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-27136" aria-label="mark CVE-2026-27136 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-27136" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-27136</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>golang.org/x/net</td><td class="font-mono text-xs">v0.52.0</td><td class="font-mono text-xs">0.55.0</td><td>golang.org/x/net/html: golang: golang.org/x/net/html: Cross-Site Scripting via HTML parsing bypass</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-27145" aria-label="mark CVE-2026-27145 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-27145" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-27145</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.26.2</td><td class="font-mono text-xs">1.25.11, 1.26.4</td><td>crypto/x509: golang: golang crypto/x509: Denial of Service via excessive processing of DNS SAN entries</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-27145" aria-label="mark CVE-2026-27145 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-27145" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-27145</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.26.2</td><td class="font-mono text-xs">1.25.11, 1.26.4</td><td>crypto/x509: golang: golang crypto/x509: Denial of Service via excessive processing of DNS SAN entries</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-2303" aria-label="mark CVE-2026-2303 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-2303" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-2303</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>go.mongodb.org/mongo-driver</td><td class="font-mono text-xs">v1.17.4</td><td class="font-mono text-xs">1.17.7</td><td>CVE-2026-2303 affecting package telegraf for versions less than 1.29.4-21</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-2303" aria-label="mark CVE-2026-2303 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-2303" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-2303</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>go.mongodb.org/mongo-driver</td><td class="font-mono text-xs">v1.17.4</td><td class="font-mono text-xs">1.17.7</td><td>CVE-2026-2303 affecting package telegraf for versions less than 1.29.4-21</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-25680" aria-label="mark CVE-2026-25680 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-25680" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-25680</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>golang.org/x/net</td><td class="font-mono text-xs">v0.52.0</td><td class="font-mono text-xs">0.55.0</td><td>golang.org/x/net/html: golang.org/x/net/html: Denial of Service due to excessive HTML parsing</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-25680" aria-label="mark CVE-2026-25680 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-25680" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-25680</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>golang.org/x/net</td><td class="font-mono text-xs">v0.52.0</td><td class="font-mono text-xs">0.55.0</td><td>golang.org/x/net/html: golang.org/x/net/html: Denial of Service due to excessive HTML parsing</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-39826" aria-label="mark CVE-2026-39826 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39826" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-39826</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.26.2</td><td class="font-mono text-xs">1.25.10, 1.26.3</td><td>html/template: golang: html/template: Cross-site scripting due to incorrect script tag escaping</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-39826" aria-label="mark CVE-2026-39826 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39826" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-39826</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.26.2</td><td class="font-mono text-xs">1.25.10, 1.26.3</td><td>html/template: golang: html/template: Cross-site scripting due to incorrect script tag escaping</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-42502" aria-label="mark CVE-2026-42502 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42502" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-42502</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>golang.org/x/net</td><td class="font-mono text-xs">v0.52.0</td><td class="font-mono text-xs">0.55.0</td><td>golang.org/x/net/html: golang: golang.org/x/net/html: Cross-Site Scripting via unexpected HTML tree rendering</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-42502" aria-label="mark CVE-2026-42502 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-42502" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-42502</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>golang.org/x/net</td><td class="font-mono text-xs">v0.52.0</td><td class="font-mono text-xs">0.55.0</td><td>golang.org/x/net/html: golang: golang.org/x/net/html: Cross-Site Scripting via unexpected HTML tree rendering</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-39822" aria-label="mark CVE-2026-39822 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39822" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-39822</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>stdlib</td><td class="font-mono text-xs">v1.26.2</td><td class="font-mono text-xs">1.25.12, 1.26.5, 1.27.0-rc.2</td><td>On Unix systems, opening a file in an os.Root improperly follows symli ...</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-39822" aria-label="mark CVE-2026-39822 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39822" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-39822</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>stdlib</td><td class="font-mono text-xs">v1.26.2</td><td class="font-mono text-xs">1.25.12, 1.26.5, 1.27.0-rc.2</td><td>On Unix systems, opening a file in an os.Root improperly follows symli ...</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-39824" aria-label="mark CVE-2026-39824 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39824" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-39824</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>golang.org/x/sys</td><td class="font-mono text-xs">v0.43.0</td><td class="font-mono text-xs">0.44.0</td><td>Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-39824" aria-label="mark CVE-2026-39824 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39824" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-39824</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>golang.org/x/sys</td><td class="font-mono text-xs">v0.43.0</td><td class="font-mono text-xs">0.44.0</td><td>Invoking integer overflow in NewNTUnicodeString in golang.org/x/sys/windows</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">tetra-fips</span> at version
+          <span class="font-mono text-fg-primary">1.7.0</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 12:14 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cel.dev/expr" class="text-accent-ok hover:underline font-mono" title="See other images that include cel.dev/expr">cel.dev/expr</a></td><td class="font-mono">v0.25.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cel.dev/expr" class="text-accent-ok hover:underline font-mono" title="See other images that include cel.dev/expr">cel.dev/expr</a></td><td class="font-mono">v0.25.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/antlr4-go/antlr/v4" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/antlr4-go/antlr/v4">github.com/antlr4-go/antlr/v4</a></td><td class="font-mono">v4.13.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/antlr4-go/antlr/v4" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/antlr4-go/antlr/v4">github.com/antlr4-go/antlr/v4</a></td><td class="font-mono">v4.13.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/beorn7/perks" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/beorn7/perks">github.com/beorn7/perks</a></td><td class="font-mono">v1.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/beorn7/perks" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/beorn7/perks">github.com/beorn7/perks</a></td><td class="font-mono">v1.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/blang/semver/v4" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/blang/semver/v4">github.com/blang/semver/v4</a></td><td class="font-mono">v4.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/blang/semver/v4" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/blang/semver/v4">github.com/blang/semver/v4</a></td><td class="font-mono">v4.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cespare/xxhash/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cespare/xxhash/v2">github.com/cespare/xxhash/v2</a></td><td class="font-mono">v2.3.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cespare/xxhash/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cespare/xxhash/v2">github.com/cespare/xxhash/v2</a></td><td class="font-mono">v2.3.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/ebpf" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/ebpf">github.com/cilium/ebpf</a></td><td class="font-mono">v0.21.1-0.20260427123516-6bf8ddfd0f0f</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/ebpf" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/ebpf">github.com/cilium/ebpf</a></td><td class="font-mono">v0.21.1-0.20260427123516-6bf8ddfd0f0f</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/lumberjack/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/lumberjack/v2">github.com/cilium/lumberjack/v2</a></td><td class="font-mono">v2.4.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/lumberjack/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/lumberjack/v2">github.com/cilium/lumberjack/v2</a></td><td class="font-mono">v2.4.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/tetragon" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/tetragon">github.com/cilium/tetragon</a></td><td class="font-mono">v1.7.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/tetragon" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/tetragon">github.com/cilium/tetragon</a></td><td class="font-mono">v1.7.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/tetragon/api" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/tetragon/api">github.com/cilium/tetragon/api</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/tetragon/api" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/tetragon/api">github.com/cilium/tetragon/api</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/tetragon/pkg/k8s" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/tetragon/pkg/k8s">github.com/cilium/tetragon/pkg/k8s</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/cilium/tetragon/pkg/k8s" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/cilium/tetragon/pkg/k8s">github.com/cilium/tetragon/pkg/k8s</a></td><td class="font-mono">UNKNOWN</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/davecgh/go-spew" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/davecgh/go-spew">github.com/davecgh/go-spew</a></td><td class="font-mono">v1.1.2-0.20180830191138-d8f796af33cc</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/davecgh/go-spew" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/davecgh/go-spew">github.com/davecgh/go-spew</a></td><td class="font-mono">v1.1.2-0.20180830191138-d8f796af33cc</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/deckarep/golang-set/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/deckarep/golang-set/v2">github.com/deckarep/golang-set/v2</a></td><td class="font-mono">v2.9.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/deckarep/golang-set/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/deckarep/golang-set/v2">github.com/deckarep/golang-set/v2</a></td><td class="font-mono">v2.9.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/emicklei/go-restful/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/emicklei/go-restful/v3">github.com/emicklei/go-restful/v3</a></td><td class="font-mono">v3.13.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/emicklei/go-restful/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/emicklei/go-restful/v3">github.com/emicklei/go-restful/v3</a></td><td class="font-mono">v3.13.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fatih/color" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fatih/color">github.com/fatih/color</a></td><td class="font-mono">v1.19.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fatih/color" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fatih/color">github.com/fatih/color</a></td><td class="font-mono">v1.19.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fsnotify/fsnotify" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fsnotify/fsnotify">github.com/fsnotify/fsnotify</a></td><td class="font-mono">v1.9.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fsnotify/fsnotify" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fsnotify/fsnotify">github.com/fsnotify/fsnotify</a></td><td class="font-mono">v1.9.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fxamacker/cbor/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fxamacker/cbor/v2">github.com/fxamacker/cbor/v2</a></td><td class="font-mono">v2.9.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/fxamacker/cbor/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/fxamacker/cbor/v2">github.com/fxamacker/cbor/v2</a></td><td class="font-mono">v2.9.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-logr/logr" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-logr/logr">github.com/go-logr/logr</a></td><td class="font-mono">v1.4.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-logr/logr" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-logr/logr">github.com/go-logr/logr</a></td><td class="font-mono">v1.4.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-openapi/jsonpointer" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-openapi/jsonpointer">github.com/go-openapi/jsonpointer</a></td><td class="font-mono">v0.21.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-openapi/jsonpointer" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-openapi/jsonpointer">github.com/go-openapi/jsonpointer</a></td><td class="font-mono">v0.21.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-openapi/jsonreference" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-openapi/jsonreference">github.com/go-openapi/jsonreference</a></td><td class="font-mono">v0.21.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-openapi/jsonreference" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-openapi/jsonreference">github.com/go-openapi/jsonreference</a></td><td class="font-mono">v0.21.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-openapi/swag" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-openapi/swag">github.com/go-openapi/swag</a></td><td class="font-mono">v0.23.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-openapi/swag" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-openapi/swag">github.com/go-openapi/swag</a></td><td class="font-mono">v0.23.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-viper/mapstructure/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-viper/mapstructure/v2">github.com/go-viper/mapstructure/v2</a></td><td class="font-mono">v2.5.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/go-viper/mapstructure/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/go-viper/mapstructure/v2">github.com/go-viper/mapstructure/v2</a></td><td class="font-mono">v2.5.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/cel-go" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/cel-go">github.com/google/cel-go</a></td><td class="font-mono">v0.28.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/cel-go" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/cel-go">github.com/google/cel-go</a></td><td class="font-mono">v0.28.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/gnostic-models" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/gnostic-models">github.com/google/gnostic-models</a></td><td class="font-mono">v0.7.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/gnostic-models" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/gnostic-models">github.com/google/gnostic-models</a></td><td class="font-mono">v0.7.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/gops" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/gops">github.com/google/gops</a></td><td class="font-mono">v0.3.29</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/gops" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/gops">github.com/google/gops</a></td><td class="font-mono">v0.3.29</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/uuid" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/uuid">github.com/google/uuid</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/google/uuid" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/google/uuid">github.com/google/uuid</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus">github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus</a></td><td class="font-mono">v1.1.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus">github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus</a></td><td class="font-mono">v1.1.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/grpc-ecosystem/go-grpc-middleware/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/grpc-ecosystem/go-grpc-middleware/v2">github.com/grpc-ecosystem/go-grpc-middleware/v2</a></td><td class="font-mono">v2.3.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/grpc-ecosystem/go-grpc-middleware/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/grpc-ecosystem/go-grpc-middleware/v2">github.com/grpc-ecosystem/go-grpc-middleware/v2</a></td><td class="font-mono">v2.3.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/hashicorp/golang-lru/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/hashicorp/golang-lru/v2">github.com/hashicorp/golang-lru/v2</a></td><td class="font-mono">v2.0.7</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/hashicorp/golang-lru/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/hashicorp/golang-lru/v2">github.com/hashicorp/golang-lru/v2</a></td><td class="font-mono">v2.0.7</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/josharian/intern" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/josharian/intern">github.com/josharian/intern</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/josharian/intern" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/josharian/intern">github.com/josharian/intern</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/json-iterator/go" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/json-iterator/go">github.com/json-iterator/go</a></td><td class="font-mono">v1.1.12</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/json-iterator/go" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/json-iterator/go">github.com/json-iterator/go</a></td><td class="font-mono">v1.1.12</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/kballard/go-shellquote" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/kballard/go-shellquote">github.com/kballard/go-shellquote</a></td><td class="font-mono">v0.0.0-20180428030007-95032a82bc51</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/kballard/go-shellquote" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/kballard/go-shellquote">github.com/kballard/go-shellquote</a></td><td class="font-mono">v0.0.0-20180428030007-95032a82bc51</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mailru/easyjson" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mailru/easyjson">github.com/mailru/easyjson</a></td><td class="font-mono">v0.7.7</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mailru/easyjson" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mailru/easyjson">github.com/mailru/easyjson</a></td><td class="font-mono">v0.7.7</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mattn/go-colorable" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mattn/go-colorable">github.com/mattn/go-colorable</a></td><td class="font-mono">v0.1.14</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mattn/go-colorable" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mattn/go-colorable">github.com/mattn/go-colorable</a></td><td class="font-mono">v0.1.14</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mattn/go-isatty" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mattn/go-isatty">github.com/mattn/go-isatty</a></td><td class="font-mono">v0.0.20</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mattn/go-isatty" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mattn/go-isatty">github.com/mattn/go-isatty</a></td><td class="font-mono">v0.0.20</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mennanov/fieldmask-utils" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mennanov/fieldmask-utils">github.com/mennanov/fieldmask-utils</a></td><td class="font-mono">v1.1.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/mennanov/fieldmask-utils" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/mennanov/fieldmask-utils">github.com/mennanov/fieldmask-utils</a></td><td class="font-mono">v1.1.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/modern-go/concurrent" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/modern-go/concurrent">github.com/modern-go/concurrent</a></td><td class="font-mono">v0.0.0-20180306012644-bacd9c7ef1dd</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/modern-go/concurrent" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/modern-go/concurrent">github.com/modern-go/concurrent</a></td><td class="font-mono">v0.0.0-20180306012644-bacd9c7ef1dd</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/modern-go/reflect2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/modern-go/reflect2">github.com/modern-go/reflect2</a></td><td class="font-mono">v1.0.3-0.20250322232337-35a7c28c31ee</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/modern-go/reflect2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/modern-go/reflect2">github.com/modern-go/reflect2</a></td><td class="font-mono">v1.0.3-0.20250322232337-35a7c28c31ee</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/munnerz/goautoneg" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/munnerz/goautoneg">github.com/munnerz/goautoneg</a></td><td class="font-mono">v0.0.0-20191010083416-a7dc8b61c822</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/munnerz/goautoneg" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/munnerz/goautoneg">github.com/munnerz/goautoneg</a></td><td class="font-mono">v0.0.0-20191010083416-a7dc8b61c822</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pelletier/go-toml/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pelletier/go-toml/v2">github.com/pelletier/go-toml/v2</a></td><td class="font-mono">v2.2.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pelletier/go-toml/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pelletier/go-toml/v2">github.com/pelletier/go-toml/v2</a></td><td class="font-mono">v2.2.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pkg/errors" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pkg/errors">github.com/pkg/errors</a></td><td class="font-mono">v0.9.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pkg/errors" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pkg/errors">github.com/pkg/errors</a></td><td class="font-mono">v0.9.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pmezard/go-difflib" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pmezard/go-difflib">github.com/pmezard/go-difflib</a></td><td class="font-mono">v1.0.1-0.20181226105442-5d4384ee4fb2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/pmezard/go-difflib" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/pmezard/go-difflib">github.com/pmezard/go-difflib</a></td><td class="font-mono">v1.0.1-0.20181226105442-5d4384ee4fb2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/client_golang" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/client_golang">github.com/prometheus/client_golang</a></td><td class="font-mono">v1.23.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/client_golang" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/client_golang">github.com/prometheus/client_golang</a></td><td class="font-mono">v1.23.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/client_model" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/client_model">github.com/prometheus/client_model</a></td><td class="font-mono">v0.6.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/client_model" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/client_model">github.com/prometheus/client_model</a></td><td class="font-mono">v0.6.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/common" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/common">github.com/prometheus/common</a></td><td class="font-mono">v0.67.5</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/common" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/common">github.com/prometheus/common</a></td><td class="font-mono">v0.67.5</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/procfs" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/procfs">github.com/prometheus/procfs</a></td><td class="font-mono">v0.20.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/prometheus/procfs" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/prometheus/procfs">github.com/prometheus/procfs</a></td><td class="font-mono">v0.20.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/sagikazarmark/locafero" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/sagikazarmark/locafero">github.com/sagikazarmark/locafero</a></td><td class="font-mono">v0.11.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/sagikazarmark/locafero" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/sagikazarmark/locafero">github.com/sagikazarmark/locafero</a></td><td class="font-mono">v0.11.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/sourcegraph/conc" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/sourcegraph/conc">github.com/sourcegraph/conc</a></td><td class="font-mono">v0.3.1-0.20240121214520-5f936abd7ae8</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/sourcegraph/conc" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/sourcegraph/conc">github.com/sourcegraph/conc</a></td><td class="font-mono">v0.3.1-0.20240121214520-5f936abd7ae8</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/afero" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/afero">github.com/spf13/afero</a></td><td class="font-mono">v1.15.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/afero" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/afero">github.com/spf13/afero</a></td><td class="font-mono">v1.15.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/cast" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/cast">github.com/spf13/cast</a></td><td class="font-mono">v1.10.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/cast" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/cast">github.com/spf13/cast</a></td><td class="font-mono">v1.10.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/cobra" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/cobra">github.com/spf13/cobra</a></td><td class="font-mono">v1.10.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/cobra" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/cobra">github.com/spf13/cobra</a></td><td class="font-mono">v1.10.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/pflag" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/pflag">github.com/spf13/pflag</a></td><td class="font-mono">v1.0.10</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/pflag" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/pflag">github.com/spf13/pflag</a></td><td class="font-mono">v1.0.10</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/viper" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/viper">github.com/spf13/viper</a></td><td class="font-mono">v1.21.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/spf13/viper" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/spf13/viper">github.com/spf13/viper</a></td><td class="font-mono">v1.21.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/stretchr/testify" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/stretchr/testify">github.com/stretchr/testify</a></td><td class="font-mono">v1.11.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/stretchr/testify" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/stretchr/testify">github.com/stretchr/testify</a></td><td class="font-mono">v1.11.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/subosito/gotenv" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/subosito/gotenv">github.com/subosito/gotenv</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/subosito/gotenv" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/subosito/gotenv">github.com/subosito/gotenv</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/tidwall/gjson" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/tidwall/gjson">github.com/tidwall/gjson</a></td><td class="font-mono">v1.18.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/tidwall/gjson" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/tidwall/gjson">github.com/tidwall/gjson</a></td><td class="font-mono">v1.18.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/tidwall/match" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/tidwall/match">github.com/tidwall/match</a></td><td class="font-mono">v1.1.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/tidwall/match" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/tidwall/match">github.com/tidwall/match</a></td><td class="font-mono">v1.1.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/tidwall/pretty" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/tidwall/pretty">github.com/tidwall/pretty</a></td><td class="font-mono">v1.2.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/tidwall/pretty" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/tidwall/pretty">github.com/tidwall/pretty</a></td><td class="font-mono">v1.2.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/vishvananda/netlink" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/vishvananda/netlink">github.com/vishvananda/netlink</a></td><td class="font-mono">v1.3.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/vishvananda/netlink" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/vishvananda/netlink">github.com/vishvananda/netlink</a></td><td class="font-mono">v1.3.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/vishvananda/netns" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/vishvananda/netns">github.com/vishvananda/netns</a></td><td class="font-mono">v0.0.5</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/vishvananda/netns" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/vishvananda/netns">github.com/vishvananda/netns</a></td><td class="font-mono">v0.0.5</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/x448/float16" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/x448/float16">github.com/x448/float16</a></td><td class="font-mono">v0.8.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=github.com/x448/float16" class="text-accent-ok hover:underline font-mono" title="See other images that include github.com/x448/float16">github.com/x448/float16</a></td><td class="font-mono">v0.8.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.mongodb.org/mongo-driver" class="text-accent-ok hover:underline font-mono" title="See other images that include go.mongodb.org/mongo-driver">go.mongodb.org/mongo-driver</a></td><td class="font-mono">v1.17.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.mongodb.org/mongo-driver" class="text-accent-ok hover:underline font-mono" title="See other images that include go.mongodb.org/mongo-driver">go.mongodb.org/mongo-driver</a></td><td class="font-mono">v1.17.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel">go.opentelemetry.io/otel</a></td><td class="font-mono">v1.43.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel">go.opentelemetry.io/otel</a></td><td class="font-mono">v1.43.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/trace" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/trace">go.opentelemetry.io/otel/trace</a></td><td class="font-mono">v1.43.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.opentelemetry.io/otel/trace" class="text-accent-ok hover:underline font-mono" title="See other images that include go.opentelemetry.io/otel/trace">go.opentelemetry.io/otel/trace</a></td><td class="font-mono">v1.43.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.uber.org/multierr" class="text-accent-ok hover:underline font-mono" title="See other images that include go.uber.org/multierr">go.uber.org/multierr</a></td><td class="font-mono">v1.11.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.uber.org/multierr" class="text-accent-ok hover:underline font-mono" title="See other images that include go.uber.org/multierr">go.uber.org/multierr</a></td><td class="font-mono">v1.11.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.yaml.in/yaml/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include go.yaml.in/yaml/v2">go.yaml.in/yaml/v2</a></td><td class="font-mono">v2.4.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.yaml.in/yaml/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include go.yaml.in/yaml/v2">go.yaml.in/yaml/v2</a></td><td class="font-mono">v2.4.3</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.yaml.in/yaml/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include go.yaml.in/yaml/v3">go.yaml.in/yaml/v3</a></td><td class="font-mono">v3.0.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=go.yaml.in/yaml/v3" class="text-accent-ok hover:underline font-mono" title="See other images that include go.yaml.in/yaml/v3">go.yaml.in/yaml/v3</a></td><td class="font-mono">v3.0.4</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/exp" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/exp">golang.org/x/exp</a></td><td class="font-mono">v0.0.0-20251219203646-944ab1f22d93</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/exp" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/exp">golang.org/x/exp</a></td><td class="font-mono">v0.0.0-20251219203646-944ab1f22d93</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/net" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/net">golang.org/x/net</a></td><td class="font-mono">v0.52.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/net" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/net">golang.org/x/net</a></td><td class="font-mono">v0.52.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/oauth2" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/oauth2">golang.org/x/oauth2</a></td><td class="font-mono">v0.35.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/oauth2" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/oauth2">golang.org/x/oauth2</a></td><td class="font-mono">v0.35.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/sync" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/sync">golang.org/x/sync</a></td><td class="font-mono">v0.20.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/sync" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/sync">golang.org/x/sync</a></td><td class="font-mono">v0.20.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/sys" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/sys">golang.org/x/sys</a></td><td class="font-mono">v0.43.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/sys" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/sys">golang.org/x/sys</a></td><td class="font-mono">v0.43.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/term" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/term">golang.org/x/term</a></td><td class="font-mono">v0.42.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/term" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/term">golang.org/x/term</a></td><td class="font-mono">v0.42.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/text" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/text">golang.org/x/text</a></td><td class="font-mono">v0.35.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/text" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/text">golang.org/x/text</a></td><td class="font-mono">v0.35.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/time" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/time">golang.org/x/time</a></td><td class="font-mono">v0.15.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=golang.org/x/time" class="text-accent-ok hover:underline font-mono" title="See other images that include golang.org/x/time">golang.org/x/time</a></td><td class="font-mono">v0.15.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/genproto" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/genproto">google.golang.org/genproto</a></td><td class="font-mono">v0.0.0-20241118233622-e639e219e697</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/genproto" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/genproto">google.golang.org/genproto</a></td><td class="font-mono">v0.0.0-20241118233622-e639e219e697</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/genproto/googleapis/api" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/genproto/googleapis/api">google.golang.org/genproto/googleapis/api</a></td><td class="font-mono">v0.0.0-20260209200024-4cfbd4190f57</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/genproto/googleapis/api" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/genproto/googleapis/api">google.golang.org/genproto/googleapis/api</a></td><td class="font-mono">v0.0.0-20260209200024-4cfbd4190f57</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/genproto/googleapis/rpc" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/genproto/googleapis/rpc">google.golang.org/genproto/googleapis/rpc</a></td><td class="font-mono">v0.0.0-20260209200024-4cfbd4190f57</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/genproto/googleapis/rpc" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/genproto/googleapis/rpc">google.golang.org/genproto/googleapis/rpc</a></td><td class="font-mono">v0.0.0-20260209200024-4cfbd4190f57</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/grpc" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/grpc">google.golang.org/grpc</a></td><td class="font-mono">v1.80.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/grpc" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/grpc">google.golang.org/grpc</a></td><td class="font-mono">v1.80.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/protobuf" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/protobuf">google.golang.org/protobuf</a></td><td class="font-mono">v1.36.12-0.20260120151049-f2248ac996af</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=google.golang.org/protobuf" class="text-accent-ok hover:underline font-mono" title="See other images that include google.golang.org/protobuf">google.golang.org/protobuf</a></td><td class="font-mono">v1.36.12-0.20260120151049-f2248ac996af</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/evanphx/json-patch.v4" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/evanphx/json-patch.v4">gopkg.in/evanphx/json-patch.v4</a></td><td class="font-mono">v4.13.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/evanphx/json-patch.v4" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/evanphx/json-patch.v4">gopkg.in/evanphx/json-patch.v4</a></td><td class="font-mono">v4.13.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/inf.v0" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/inf.v0">gopkg.in/inf.v0</a></td><td class="font-mono">v0.9.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/inf.v0" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/inf.v0">gopkg.in/inf.v0</a></td><td class="font-mono">v0.9.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/yaml.v3" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/yaml.v3">gopkg.in/yaml.v3</a></td><td class="font-mono">v3.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gopkg.in/yaml.v3" class="text-accent-ok hover:underline font-mono" title="See other images that include gopkg.in/yaml.v3">gopkg.in/yaml.v3</a></td><td class="font-mono">v3.0.1</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/api" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/api">k8s.io/api</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/api" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/api">k8s.io/api</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/apiextensions-apiserver" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/apiextensions-apiserver">k8s.io/apiextensions-apiserver</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/apiextensions-apiserver" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/apiextensions-apiserver">k8s.io/apiextensions-apiserver</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/apimachinery" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/apimachinery">k8s.io/apimachinery</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/apimachinery" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/apimachinery">k8s.io/apimachinery</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/apiserver" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/apiserver">k8s.io/apiserver</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/apiserver" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/apiserver">k8s.io/apiserver</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/client-go" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/client-go">k8s.io/client-go</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/client-go" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/client-go">k8s.io/client-go</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/component-base" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/component-base">k8s.io/component-base</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/component-base" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/component-base">k8s.io/component-base</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/cri-api" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/cri-api">k8s.io/cri-api</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/cri-api" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/cri-api">k8s.io/cri-api</a></td><td class="font-mono">v0.36.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/klog/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/klog/v2">k8s.io/klog/v2</a></td><td class="font-mono">v2.140.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/klog/v2" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/klog/v2">k8s.io/klog/v2</a></td><td class="font-mono">v2.140.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/kube-openapi" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/kube-openapi">k8s.io/kube-openapi</a></td><td class="font-mono">v0.0.0-20260317180543-43fb72c5454a</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/kube-openapi" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/kube-openapi">k8s.io/kube-openapi</a></td><td class="font-mono">v0.0.0-20260317180543-43fb72c5454a</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/utils" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/utils">k8s.io/utils</a></td><td class="font-mono">v0.0.0-20260210185600-b8788abfbbc2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=k8s.io/utils" class="text-accent-ok hover:underline font-mono" title="See other images that include k8s.io/utils">k8s.io/utils</a></td><td class="font-mono">v0.0.0-20260210185600-b8788abfbbc2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/json" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/json">sigs.k8s.io/json</a></td><td class="font-mono">v0.0.0-20250730193827-2d320260d730</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/json" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/json">sigs.k8s.io/json</a></td><td class="font-mono">v0.0.0-20250730193827-2d320260d730</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/randfill" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/randfill">sigs.k8s.io/randfill</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/randfill" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/randfill">sigs.k8s.io/randfill</a></td><td class="font-mono">v1.0.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/structured-merge-diff/v6" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/structured-merge-diff/v6">sigs.k8s.io/structured-merge-diff/v6</a></td><td class="font-mono">v6.3.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/structured-merge-diff/v6" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/structured-merge-diff/v6">sigs.k8s.io/structured-merge-diff/v6</a></td><td class="font-mono">v6.3.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/yaml" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/yaml">sigs.k8s.io/yaml</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=sigs.k8s.io/yaml" class="text-accent-ok hover:underline font-mono" title="See other images that include sigs.k8s.io/yaml">sigs.k8s.io/yaml</a></td><td class="font-mono">v1.6.0</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=stdlib" class="text-accent-ok hover:underline font-mono" title="See other images that include stdlib">stdlib</a></td><td class="font-mono">go1.26.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=stdlib" class="text-accent-ok hover:underline font-mono" title="See other images that include stdlib">stdlib</a></td><td class="font-mono">go1.26.2</td><td class="text-fg-muted">go-module</td><td class="text-fg-muted text-xs">BSD-3-Clause</td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tetra-fips" class="text-accent-ok hover:underline font-mono" title="See other images that include tetra-fips">tetra-fips</a></td><td class="font-mono">1.7.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/tetra-fips/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> mkImage<span class="p">,</span> pkgs<span class="p">,</span> lib<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+<span class="c1"># tetra-fips - CLI for Tetragon (Cilium)</span>
+<span class="c1"># -fips variant packages the upstream tetra binary (no FIPS claim made).</span>
+<span class="c1"># https://github.com/cilium/tetragon</span>
+<span class="c1">#</span>
+<span class="c1"># Built from source with current nixpkgs Go so Go-stdlib CVEs from the</span>
+<span class="c1"># upstream prebuilt binary clear at each rebuild.</span>
+
+<span class="k">let</span>
+  <span class="ss">version</span> <span class="o">=</span> <span class="s2">&quot;1.7.0&quot;</span><span class="p">;</span>
+
+  <span class="ss">drv</span> <span class="o">=</span> pkgs<span class="o">.</span>buildGoModule <span class="p">{</span>
+    <span class="ss">pname</span> <span class="o">=</span> <span class="s2">&quot;tetra-fips&quot;</span><span class="p">;</span>
+    <span class="k">inherit</span> version<span class="p">;</span>
+
+    <span class="ss">src</span> <span class="o">=</span> pkgs<span class="o">.</span>fetchFromGitHub <span class="p">{</span>
+      <span class="ss">owner</span> <span class="o">=</span> <span class="s2">&quot;cilium&quot;</span><span class="p">;</span>
+      <span class="ss">repo</span> <span class="o">=</span> <span class="s2">&quot;tetragon&quot;</span><span class="p">;</span>
+      <span class="ss">rev</span> <span class="o">=</span> <span class="s2">&quot;v</span><span class="si">${</span>version<span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+      <span class="ss">hash</span> <span class="o">=</span> <span class="s2">&quot;sha256-MOBT2hdzssrWW34v0K4CE4qlAmB+Y7F/R5kAxjl6yT8=&quot;</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="ss">vendorHash</span> <span class="o">=</span> <span class="no">null</span><span class="p">;</span>
+
+    <span class="ss">subPackages</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;cmd/tetra&quot;</span> <span class="p">];</span>
+    <span class="ss">ldflags</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;-s&quot;</span> <span class="s2">&quot;-w&quot;</span> <span class="p">];</span>
+    env<span class="o">.</span><span class="ss">CGO_ENABLED</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="ss">doCheck</span> <span class="o">=</span> <span class="no">false</span><span class="p">;</span>
+
+    <span class="ss">meta</span> <span class="o">=</span> <span class="k">with</span> lib<span class="p">;</span> <span class="p">{</span>
+      <span class="ss">description</span> <span class="o">=</span> <span class="s2">&quot;CLI for Tetragon&quot;</span><span class="p">;</span>
+      <span class="ss">homepage</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/cilium/tetragon&quot;</span><span class="p">;</span>
+      <span class="ss">license</span> <span class="o">=</span> licenses<span class="o">.</span>asl20<span class="p">;</span>
+      <span class="ss">platforms</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;x86_64-linux&quot;</span> <span class="p">];</span>
+    <span class="p">};</span>
+  <span class="p">};</span>
+
+<span class="k">in</span> mkImage <span class="p">{</span>
+  <span class="k">inherit</span> drv<span class="p">;</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;tetra-fips&quot;</span><span class="p">;</span>
+  <span class="ss">tag</span> <span class="o">=</span> <span class="s2">&quot;v</span><span class="si">${</span>version<span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+  <span class="ss">entrypoint</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;</span><span class="si">${</span>drv<span class="si">}</span><span class="s2">/bin/tetra&quot;</span> <span class="p">];</span>
+  <span class="ss">cmd</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;--help&quot;</span> <span class="p">];</span>
+
+  <span class="ss">labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;tetra-fips&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;CLI for Tetragon&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> version<span class="p">;</span>
+    <span class="s2">&quot;io.nix-containers.source&quot;</span> <span class="o">=</span> <span class="s2">&quot;upstream-source&quot;</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

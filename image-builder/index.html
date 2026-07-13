@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Builder — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+  <script>window.SITE_BASE = "/images/";</script>
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <a href="/images/" class="text-3xl font-bold font-mono text-accent-ok">nix-containers</a>
+          <p class="text-fg-muted mt-1">
+            Image builder
+            <span class="ml-2 text-xs uppercase tracking-wide px-2 py-0.5 rounded
+                         border border-accent-warn text-accent-warn">preview</span>
+          </p>
+        </div>
+        <nav class="flex items-center gap-4 text-sm">
+          <a href="/images/" class="text-fg-muted hover:text-fg-primary">Home</a>
+          <a href="/images/charts/" class="text-fg-muted hover:text-fg-primary">Charts</a>
+          <a href="/images/packages/" class="text-fg-muted hover:text-fg-primary">Packages</a>
+          <a href="https://github.com/nix-containers/images"
+             class="text-fg-muted hover:text-fg-primary inline-flex items-center"
+             aria-label="View source on GitHub" title="View source on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+
+    <div class="card">
+      <p class="text-fg-muted text-sm">
+        Compose a container image from a nixpkgs base package and optional
+        layers. The generated <code class="text-fg-primary">nix build</code>
+        command below runs locally — no CI required. Everything reuses the
+        flake's <code class="text-fg-primary">mkImage</code> helper.
+      </p>
+    </div>
+
+    <div class="card space-y-3">
+      <label class="block text-sm text-fg-muted">Base package</label>
+      <input type="text"
+             id="base-package"
+             list="package-suggestions"
+             placeholder="e.g. curl, jq, kubectl, nginx…"
+             autocomplete="off"
+             class="w-full bg-bg-input rounded px-3 py-2 text-fg-primary
+                    placeholder-fg-muted focus:outline-none focus:ring-2
+                    focus:ring-accent-ok font-mono">
+      <datalist id="package-suggestions"></datalist>
+      <p id="base-help" class="text-xs text-fg-muted">
+        Any nixpkgs attribute name (top-level attrs work; <code>pkgs.&lt;name&gt;</code>).
+      </p>
+    </div>
+
+    <div class="card space-y-3">
+      <label class="block text-sm text-fg-muted">Architecture</label>
+      <div class="grid grid-cols-3 gap-2" id="arch-picker">
+        <label class="flex items-center justify-center gap-2 text-sm cursor-pointer
+                      p-3 border border-neutral-800 rounded hover:border-accent-ok">
+          <input type="radio" name="arch" value="amd64" checked
+                 class="accent-accent-ok">
+          <span class="font-mono">amd64</span>
+          <span class="text-xs text-fg-muted">(x86_64-linux)</span>
+        </label>
+        <label class="flex items-center justify-center gap-2 text-sm cursor-pointer
+                      p-3 border border-neutral-800 rounded hover:border-accent-ok">
+          <input type="radio" name="arch" value="arm64" class="accent-accent-ok">
+          <span class="font-mono">arm64</span>
+          <span class="text-xs text-fg-muted">(aarch64-linux)</span>
+        </label>
+        <label class="flex items-center justify-center gap-2 text-sm cursor-pointer
+                      p-3 border border-neutral-800 rounded hover:border-accent-ok">
+          <input type="radio" name="arch" value="both" class="accent-accent-ok">
+          <span class="font-mono">both</span>
+          <span class="text-xs text-fg-muted">(multi-arch manifest)</span>
+        </label>
+      </div>
+      <p class="text-xs text-fg-muted">
+        <span class="font-mono">both</span> generates two <code>nix build</code>
+        commands (one per arch) plus a follow-up <code>skopeo manifest</code>
+        push to combine them into one multi-arch image ref.
+      </p>
+    </div>
+
+    <div class="card space-y-3">
+      <label class="block text-sm text-fg-muted">Layers</label>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="layers">
+        <label class="flex items-start gap-2 text-sm cursor-pointer p-3 border
+                      border-neutral-800 rounded hover:border-accent-ok">
+          <input type="checkbox" class="mt-1 accent-accent-ok"
+                 data-layer="cacert" data-packages="cacert">
+          <span>
+            <span class="font-mono">cacert</span>
+            <span class="block text-xs text-fg-muted">CA certificates for TLS.</span>
+          </span>
+        </label>
+        <label class="flex items-start gap-2 text-sm cursor-pointer p-3 border
+                      border-neutral-800 rounded hover:border-accent-ok">
+          <input type="checkbox" class="mt-1 accent-accent-ok"
+                 data-layer="basic-tools"
+                 data-packages="bash coreutils findutils gnused gnugrep gawk which curl wget">
+          <span>
+            <span class="font-mono">basic tools</span>
+            <span class="block text-xs text-fg-muted">bash · coreutils · findutils · gnused · gnugrep · gawk · which · curl · wget</span>
+          </span>
+        </label>
+        <label class="flex items-start gap-2 text-sm cursor-pointer p-3 border
+                      border-neutral-800 rounded hover:border-accent-ok">
+          <input type="checkbox" class="mt-1 accent-accent-ok"
+                 data-layer="dev-tools"
+                 data-packages="git vim nano jq yq tree htop procps unzip zip gnutar">
+          <span>
+            <span class="font-mono">dev tools</span>
+            <span class="block text-xs text-fg-muted">git · vim · nano · jq · yq · tree · htop · procps · unzip · zip · tar</span>
+          </span>
+        </label>
+        <label class="flex items-start gap-2 text-sm cursor-pointer p-3 border
+                      border-neutral-800 rounded hover:border-accent-ok">
+          <input type="checkbox" class="mt-1 accent-accent-ok"
+                 data-layer="net-tools"
+                 data-packages="iproute2 iputils nettools openssh">
+          <span>
+            <span class="font-mono">net tools</span>
+            <span class="block text-xs text-fg-muted">iproute2 · iputils · nettools · openssh</span>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card space-y-3">
+      <label class="block text-sm text-fg-muted">Extra packages (optional)</label>
+      <input type="text"
+             id="extra-packages"
+             placeholder="e.g. kubectl helm jq (type ≥2 chars for suggestions)"
+             autocomplete="off"
+             class="w-full bg-bg-input rounded px-3 py-2 text-fg-primary
+                    placeholder-fg-muted focus:outline-none focus:ring-2
+                    focus:ring-accent-ok font-mono">
+      <ul id="extra-suggestions"
+          class="hidden bg-bg-input border border-neutral-800 rounded max-h-60
+                 overflow-y-auto divide-y divide-neutral-800"></ul>
+      <p class="text-xs text-fg-muted">
+        Space- or comma-separated nixpkgs attribute names. Appended to
+        <code>extraPkgs</code>.
+      </p>
+    </div>
+
+    <div class="card space-y-3">
+      <div class="flex items-center justify-between">
+        <label class="block text-sm text-fg-muted">External package (optional)</label>
+        <label class="flex items-center gap-2 text-xs cursor-pointer">
+          <input type="checkbox" id="ext-enable" class="accent-accent-ok">
+          <span>enable</span>
+        </label>
+      </div>
+      <div id="ext-fields" class="space-y-3 hidden">
+        <p class="text-xs text-fg-muted">
+          Import a prebuilt binary or tarball from a URL (e.g. a GitHub release
+          asset) as a custom layer. Generated as a
+          <code>pkgs.stdenv.mkDerivation</code> under <code>extraContents</code>.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label class="text-xs text-fg-muted block mb-1">Name</label>
+            <input type="text" id="ext-name"
+                   placeholder="my-tool"
+                   autocomplete="off"
+                   class="w-full bg-bg-input rounded px-3 py-2 text-fg-primary
+                          placeholder-fg-muted focus:outline-none focus:ring-2
+                          focus:ring-accent-ok font-mono text-sm">
+          </div>
+          <div>
+            <label class="text-xs text-fg-muted block mb-1">Version</label>
+            <input type="text" id="ext-version"
+                   placeholder="1.0.0"
+                   autocomplete="off"
+                   class="w-full bg-bg-input rounded px-3 py-2 text-fg-primary
+                          placeholder-fg-muted focus:outline-none focus:ring-2
+                          focus:ring-accent-ok font-mono text-sm">
+          </div>
+          <div>
+            <label class="text-xs text-fg-muted block mb-1">Install path</label>
+            <input type="text" id="ext-installpath"
+                   placeholder="/bin  or  /opt/my-tool"
+                   autocomplete="off"
+                   class="w-full bg-bg-input rounded px-3 py-2 text-fg-primary
+                          placeholder-fg-muted focus:outline-none focus:ring-2
+                          focus:ring-accent-ok font-mono text-sm">
+          </div>
+        </div>
+        <div>
+          <label class="text-xs text-fg-muted block mb-1">URL</label>
+          <input type="text" id="ext-url"
+                 placeholder="https://github.com/owner/repo/releases/download/v1.0.0/tool-linux-amd64.tar.gz"
+                 autocomplete="off"
+                 class="w-full bg-bg-input rounded px-3 py-2 text-fg-primary
+                        placeholder-fg-muted focus:outline-none focus:ring-2
+                        focus:ring-accent-ok font-mono text-sm">
+          <p class="text-xs text-fg-muted mt-1">
+            <code>.tar.gz</code>/<code>.tgz</code>/<code>.zip</code> → extracted;
+            anything else → treated as a single binary.
+          </p>
+        </div>
+        <div>
+          <label class="text-xs text-fg-muted block mb-1">
+            SHA256 <span class="opacity-70">(paste, or leave blank + let <code>nix build</code> tell you the <code>got:</code> hash)</span>
+          </label>
+          <input type="text" id="ext-hash"
+                 placeholder="sha256-…"
+                 autocomplete="off"
+                 class="w-full bg-bg-input rounded px-3 py-2 text-fg-primary
+                        placeholder-fg-muted focus:outline-none focus:ring-2
+                        focus:ring-accent-ok font-mono text-sm">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center justify-between mb-3">
+        <div class="text-sm text-fg-muted">
+          Command <span id="cmd-status" class="ml-2 text-xs">(waiting for a base package)</span>
+        </div>
+        <button id="copy-cmd"
+                class="text-xs px-3 py-1 rounded border border-neutral-800
+                       hover:border-accent-ok text-fg-muted hover:text-fg-primary
+                       disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled>
+          Copy
+        </button>
+      </div>
+      <pre id="cmd-output"
+           class="bg-bg-input rounded p-3 text-xs font-mono overflow-x-auto
+                  whitespace-pre-wrap text-fg-muted"></pre>
+      <p class="text-xs text-fg-muted mt-2">
+        Runs on the machine that has this flake cloned; the same command
+        also works via <code>nix run/build github:nix-containers/images#…</code>
+        once you've committed the derivation.
+      </p>
+
+      <div id="cve-preview"
+           class="mt-4 pt-4 border-t border-neutral-800 text-sm hidden">
+        <div class="text-fg-muted mb-2">
+          Inherited CVEs
+          <span class="text-xs opacity-70">(from images that already package these attrs)</span>
+        </div>
+        <div id="cve-rows" class="space-y-1 font-mono text-xs"></div>
+        <div id="cve-totals"
+             class="mt-3 pt-2 border-t border-neutral-900 text-xs
+                    flex flex-wrap gap-x-4 gap-y-1 font-mono"></div>
+        <p id="cve-caveat" class="text-xs text-fg-muted mt-2 leading-relaxed"></p>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="/images/static/image-builder.js"></script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cockroachdb — nix-containers</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/static/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/static/favicon/favicon-16.png">
+  <link rel="icon" type="image/x-icon" href="/images/static/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/static/favicon/apple-touch-icon.png">
+  <link rel="stylesheet" href="/images/static/css/site.css">
+</head>
+<body class="bg-bg-base text-fg-primary min-h-screen">
+  <header class="border-b border-neutral-800 bg-bg-elevated">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/images/" class="font-mono text-lg font-bold text-accent-ok">
+        nix-containers
+      </a>
+      <nav class="text-sm text-fg-muted space-x-4">
+        <a href="/images/" class="hover:text-fg-primary">All images</a>
+        <a href="/images/charts/" class="hover:text-fg-primary">Charts</a>
+        <a href="/images/packages/" class="hover:text-fg-primary">Packages</a>
+        <a href="https://github.com/nix-containers/images"
+           class="hover:text-fg-primary inline-flex items-center align-middle"
+           aria-label="View source on GitHub" title="View source on GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold font-mono mb-2">cockroachdb</h1>
+    <div class="mb-4 flex items-center gap-2 text-sm">
+      <span class="badge-cat-utility" title="General-purpose utilities">utility</span>
+      
+      
+      <span class="text-fg-muted">23.1.14</span>
+      <a href="https://www.cockroachlabs.com/" target="_blank" rel="noopener" class="text-accent-ok hover:underline">Upstream ↗</a>
+    </div>
+    
+    <p class="text-fg-muted mb-8">Distributed SQL database built on a transactional key-value store</p>
+
+    <section class="card mb-6">
+      <h2 class="text-sm font-semibold text-fg-muted uppercase tracking-wide mb-3">Get this image</h2>
+
+      <!-- Variant switch: "minimal" is the base image (no shell, smaller surface).
+           "with shell (-dev)" is the cockroachdb-dev variant — same image + a shell
+           and common debug tools for interactive use. Same pattern for every image
+           in this repo. -->
+      <div class="flex gap-2 mb-4 text-xs">
+        <button type="button" data-variant="minimal"
+                class="variant-button variant-active bg-bg-input rounded px-3 py-1.5">Minimal (no shell)</button>
+        <button type="button" data-variant="dev"
+                class="variant-button variant-inactive bg-bg-base rounded px-3 py-1.5 border border-neutral-800">With shell (<code class="text-xs">-dev</code>)</button>
+      </div>
+
+      <!-- ===== Minimal variant ===== -->
+      <div class="variant-block" data-variant-block="minimal">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/cockroachdb:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source (current version: <span class="font-mono text-fg-primary">23.1.14</span>)</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#cockroachdb</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2">
+          <code id="load-cmd"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-cockroachdb-to-docker &amp;&amp; ./result/bin/load-cockroachdb-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+      </div>
+
+      <!-- ===== With-shell (-dev) variant ===== -->
+      <div class="variant-block hidden" data-variant-block="dev">
+        <p class="text-xs text-fg-muted mb-1">Pull from registry</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="pull-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">docker pull ghcr.io/nix-containers/images/cockroachdb-dev:latest</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pull-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Build from source</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="build-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#cockroachdb-dev</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('build-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted mb-1">Load into local Docker</p>
+        <div class="flex items-center gap-2 mb-3">
+          <code id="load-cmd-dev"
+                class="flex-1 bg-bg-base rounded px-3 py-2 text-sm overflow-x-auto">nix build github:nix-containers/images#load-cockroachdb-dev-to-docker &amp;&amp; ./result/bin/load-cockroachdb-dev-to-docker</code>
+          <button onclick="navigator.clipboard.writeText(document.getElementById('load-cmd-dev').innerText)"
+                  class="bg-bg-input hover:bg-neutral-700 text-sm rounded px-3 py-2">Copy</button>
+        </div>
+
+        <p class="text-xs text-fg-muted italic">
+          The <code>-dev</code> variant bundles the same software with a shell and common debug tools.
+          May not yet be built for every image — file an issue if you'd like one added.
+        </p>
+      </div>
+    </section>
+
+    <nav class="tab-bar" role="tablist" aria-label="Image details">
+      <button type="button" class="tab-button tab-active" data-tab="description" role="tab" aria-selected="true">Description</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="tags" role="tab" aria-selected="false">Tags</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="vulnerabilities" role="tab" aria-selected="false">Vulnerabilities</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="sbom" role="tab" aria-selected="false">SBOM</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="used-by" role="tab" aria-selected="false">Used by</button>
+      <button type="button" class="tab-button tab-inactive" data-tab="source" role="tab" aria-selected="false">Source</button>
+    </nav>
+
+    <section class="tab-content" data-tab-panel="description" role="tabpanel">
+      <div class="card">
+        <div class="mb-6"><p class="text-fg-primary text-base mb-3">Scalable, survivable, strongly-consistent SQL database</p><p class="text-sm"><span class="text-fg-muted">Upstream project: </span><a href="https://www.cockroachlabs.com/" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">www.cockroachlabs.com ↗</a></p></div>
+        <div class="prose prose-invert max-w-none"><h1>cockroachdb</h1>
+<h2>Usage</h2>
+<pre><code class="language-bash"># Build the image
+nix build .#cockroachdb
+
+# Load into Docker
+nix build .#load-cockroachdb-to-docker &amp;&amp; ./result/bin/load-cockroachdb-to-docker
+</code></pre>
+</div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="tags" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Pull any tag with <code class="font-mono text-fg-primary">docker pull ghcr.io/nix-containers/images/cockroachdb:&lt;tag&gt;</code></p><div class="prose max-w-none"><table><thead><tr><th>Tag</th><th>Digest</th><th>Compressed</th><th>Uncompressed</th><th>Pushed</th></tr></thead><tbody><tr><td class="font-mono"><code class="text-fg-primary">latest</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:fb7ab4a24f21e4da05845e36e5cc7567c7a7432dfabaf50d876abede30fb1d23">fb7ab4a24f21</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">237.5 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 03:52 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">23.1.14</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:fb7ab4a24f21e4da05845e36e5cc7567c7a7432dfabaf50d876abede30fb1d23">fb7ab4a24f21</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">237.5 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 03:52 UTC</td></tr>
+<tr><td class="font-mono"><code class="text-fg-primary">v23.1.14</code></td><td class="font-mono text-fg-muted text-xs" title="sha256:fb7ab4a24f21e4da05845e36e5cc7567c7a7432dfabaf50d876abede30fb1d23">fb7ab4a24f21</td><td class="font-mono text-fg-muted text-xs" title="On-the-wire pull size">237.5 MB</td><td class="font-mono text-fg-muted text-xs" title="Size on disk after pull (decompressed)"><span class="opacity-60">—</span></td><td class="text-fg-muted text-xs">2026-07-09 03:52 UTC</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="vulnerabilities" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 11:44 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="space-y-1 text-sm" data-cve-counts><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="critical"><span class="text-accent-bad font-mono">Critical</span><span>2</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="high"><span class="text-accent-warn font-mono">High</span><span>12</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="medium"><span class="text-fg-muted font-mono">Medium</span><span>39</span></div><div class="flex justify-between cursor-pointer hover:bg-bg-input rounded px-1 -mx-1" data-cve-filter="low"><span class="text-fg-muted font-mono">Low</span><span>3</span></div><div class="text-xs text-fg-muted mt-2">Source: <a href="https://github.com/nix-containers/images/actions/workflows/security-scan.yml" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">ghcr.io_nix-containers_images_cockroachdb_latest-trivy.json</a></div></div><div class="mt-4" id="cve-list" data-cve-list><div class="flex items-center justify-between mb-2"><span class="text-sm font-semibold text-fg-primary">Vulnerability todo (57 CVEs)</span><button type="button" data-cve-filter="all" class="text-xs text-fg-muted hover:underline">show all</button></div><table class="prose mt-1"><thead><tr><th>✓</th><th>CVE</th><th>Severity</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Title</th></tr></thead><tbody><tr data-severity="critical"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-24790" aria-label="mark CVE-2024-24790 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-24790" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-24790</a></td><td class="font-mono uppercase text-xs">CRITICAL</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.21.11, 1.22.4</td><td>golang: net/netip: Unexpected behavior from Is methods for IPv4-mapped IPv6 addresses</td></tr>
+<tr data-severity="critical"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-68121" aria-label="mark CVE-2025-68121 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-68121" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-68121</a></td><td class="font-mono uppercase text-xs">CRITICAL</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.13, 1.25.7, 1.26.0-rc.3</td><td>crypto/tls: crypto/tls: Incorrect certificate validation during TLS session resumption</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-39325" aria-label="mark CVE-2023-39325 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-39325" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-39325</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.20.10, 1.21.3</td><td>golang: net/http, x/net/http2: rapid stream resets can cause excessive work (CVE-2023-44487)</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-45283" aria-label="mark CVE-2023-45283 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-45283" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-45283</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.20.11, 1.21.4, 1.20.12, 1.21.5</td><td>The filepath package does not recognize paths with a \??\ prefix as sp ...</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-45287" aria-label="mark CVE-2023-45287 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-45287" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-45287</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.20.0</td><td>golang: crypto/tls: Timing Side Channel attack in RSA based TLS key exchanges.</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-45288" aria-label="mark CVE-2023-45288 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-45288" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-45288</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.21.9, 1.22.2</td><td>golang: net/http, x/net/http2: unlimited number of CONTINUATION frames causes DoS</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-34156" aria-label="mark CVE-2024-34156 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-34156" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-34156</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.22.7, 1.23.1</td><td>encoding/gob: golang: Calling Decoder.Decode on a message which contains deeply nested structures can cause a panic due to stack exhaustion</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-61726" aria-label="mark CVE-2025-61726 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61726" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-61726</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.12, 1.25.6</td><td>golang: net/url: Memory exhaustion in query parameter parsing in net/url</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-61729" aria-label="mark CVE-2025-61729 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61729" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-61729</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.11, 1.25.5</td><td>crypto/x509: golang: Denial of Service due to excessive resource consumption via crafted certificate</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-25679" aria-label="mark CVE-2026-25679 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-25679" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-25679</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.8, 1.26.1</td><td>net/url: Incorrect parsing of IPv6 host literals in net/url</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-27145" aria-label="mark CVE-2026-27145 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-27145" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-27145</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.11, 1.26.4</td><td>crypto/x509: golang: golang crypto/x509: Denial of Service via excessive processing of DNS SAN entries</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-32280" aria-label="mark CVE-2026-32280 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32280" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-32280</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.9, 1.26.2</td><td>crypto/x509: crypto/tls: golang: Go: Denial of Service vulnerability in certificate chain building</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-32281" aria-label="mark CVE-2026-32281 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32281" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-32281</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.9, 1.26.2</td><td>crypto/x509: golang: Go crypto/x509: Denial of Service via inefficient certificate chain validation</td></tr>
+<tr data-severity="high"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-32283" aria-label="mark CVE-2026-32283 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32283" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-32283</a></td><td class="font-mono uppercase text-xs">HIGH</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.9, 1.26.2</td><td>crypto/tls: golang: Go crypto/tls: Denial of Service via multiple TLS 1.3 key update messages</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-39318" aria-label="mark CVE-2023-39318 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-39318" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-39318</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.20.8, 1.21.1</td><td>golang: html/template: improper handling of HTML-like comments within script contexts</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-39319" aria-label="mark CVE-2023-39319 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-39319" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-39319</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.20.8, 1.21.1</td><td>golang: html/template: improper handling of special tags within script contexts</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-39326" aria-label="mark CVE-2023-39326 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-39326" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-39326</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.20.12, 1.21.5</td><td>golang: net/http/internal: Denial of Service (DoS) via Resource Consumption via HTTP requests</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-45284" aria-label="mark CVE-2023-45284 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-45284" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-45284</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.20.11, 1.21.4</td><td>On Windows, The IsLocal function does not correctly detect reserved de ...</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-45289" aria-label="mark CVE-2023-45289 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-45289" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-45289</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.21.8, 1.22.1</td><td>golang: net/http/cookiejar: incorrect forwarding of sensitive headers and cookies on HTTP redirect</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2023-45290" aria-label="mark CVE-2023-45290 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-45290" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2023-45290</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.21.8, 1.22.1</td><td>golang: net/http: golang: mime/multipart: golang: net/textproto: memory exhaustion in Request.ParseMultipartForm</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-24783" aria-label="mark CVE-2024-24783 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-24783" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-24783</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.21.8, 1.22.1</td><td>golang: crypto/x509: Verify panics on certificates with an unknown public key algorithm</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-24784" aria-label="mark CVE-2024-24784 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-24784" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-24784</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.21.8, 1.22.1</td><td>golang: net/mail: comments in display names are incorrectly handled</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-24785" aria-label="mark CVE-2024-24785 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-24785" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-24785</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.21.8, 1.22.1</td><td>golang: html/template: errors returned from MarshalJSON methods may break template escaping</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-24789" aria-label="mark CVE-2024-24789 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-24789" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-24789</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.21.11, 1.22.4</td><td>golang: archive/zip: Incorrect handling of certain ZIP files</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-24791" aria-label="mark CVE-2024-24791 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-24791" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-24791</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.21.12, 1.22.5</td><td>net/http: Denial of service due to improper 100-continue handling in net/http</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-34155" aria-label="mark CVE-2024-34155 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-34155" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-34155</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.22.7, 1.23.1</td><td>go/parser: golang: Calling any of the Parse functions containing deeply nested literals can cause a panic/stack exhaustion</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-34158" aria-label="mark CVE-2024-34158 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-34158" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-34158</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.22.7, 1.23.1</td><td>go/build/constraint: golang: Calling Parse on a &quot;// +build&quot; build tag line with deeply nested expressions can cause a panic due to stack exhaustion</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-45336" aria-label="mark CVE-2024-45336 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-45336" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-45336</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.22.11, 1.23.5, 1.24.0-rc.2</td><td>golang: net/http: net/http: sensitive headers incorrectly sent after cross-domain redirect</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-0913" aria-label="mark CVE-2025-0913 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-0913" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-0913</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.23.10, 1.24.4</td><td>Inconsistent handling of O_CREATE|O_EXCL on Unix and Windows in os in syscall</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-22866" aria-label="mark CVE-2025-22866 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-22866" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-22866</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.22.12, 1.23.6, 1.24.0-rc.3</td><td>crypto/internal/nistec: golang: Timing sidechannel for P-256 on ppc64le in crypto/internal/nistec</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-22870" aria-label="mark CVE-2025-22870 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-22870" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-22870</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.23.7, 1.24.1</td><td>golang.org/x/net/proxy: golang.org/x/net/http/httpproxy: HTTP Proxy bypass using IPv6 Zone IDs in golang.org/x/net</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-22871" aria-label="mark CVE-2025-22871 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-22871" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-22871</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.23.8, 1.24.2</td><td>net/http: Request smuggling due to acceptance of invalid chunked data in net/http</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-22873" aria-label="mark CVE-2025-22873 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-22873" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-22873</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.23.9, 1.24.3</td><td>os: os: Information disclosure via path traversal using specially crafted filenames</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-4673" aria-label="mark CVE-2025-4673 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-4673" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-4673</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.23.10, 1.24.4</td><td>net/http: Sensitive headers not cleared on cross-origin redirect in net/http</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-47906" aria-label="mark CVE-2025-47906 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-47906" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-47906</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.23.12, 1.24.6</td><td>os/exec: Unexpected paths returned from LookPath in os/exec</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-47907" aria-label="mark CVE-2025-47907 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-47907" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-47907</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.23.12, 1.24.6</td><td>database/sql: Postgres Scan Race Condition</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-47912" aria-label="mark CVE-2025-47912 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-47912" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-47912</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.8, 1.25.2</td><td>net/url: Insufficient validation of bracketed IPv6 hostnames in net/url</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-58183" aria-label="mark CVE-2025-58183 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58183" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-58183</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.8, 1.25.2</td><td>golang: archive/tar: Unbounded allocation when parsing GNU sparse map</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-58185" aria-label="mark CVE-2025-58185 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58185" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-58185</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.8, 1.25.2</td><td>encoding/asn1: Parsing DER payload can cause memory exhaustion in encoding/asn1</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-58187" aria-label="mark CVE-2025-58187 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58187" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-58187</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.9, 1.25.3</td><td>crypto/x509: Quadratic complexity when checking name constraints in crypto/x509</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-58188" aria-label="mark CVE-2025-58188 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58188" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-58188</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.8, 1.25.2</td><td>crypto/x509: golang: Panic when validating certificates with DSA public keys in crypto/x509</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-58189" aria-label="mark CVE-2025-58189 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58189" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-58189</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.8, 1.25.2</td><td>crypto/tls: go crypto/tls ALPN negotiation error contains attacker controlled information</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-61723" aria-label="mark CVE-2025-61723 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61723" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-61723</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.8, 1.25.2</td><td>encoding/pem: Quadratic complexity when parsing some invalid inputs in encoding/pem</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-61724" aria-label="mark CVE-2025-61724 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61724" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-61724</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.8, 1.25.2</td><td>net/textproto: Excessive CPU consumption in Reader.ReadResponse in net/textproto</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-61725" aria-label="mark CVE-2025-61725 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61725" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-61725</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.8, 1.25.2</td><td>net/mail: Excessive CPU consumption in ParseAddress in net/mail</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-61727" aria-label="mark CVE-2025-61727 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61727" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-61727</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.11, 1.25.5</td><td>golang: crypto/x509: excluded subdomain constraint does not restrict wildcard SANs</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-61728" aria-label="mark CVE-2025-61728 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61728" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-61728</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.12, 1.25.6</td><td>golang: archive/zip: Excessive CPU consumption when building archive index in archive/zip</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-61730" aria-label="mark CVE-2025-61730 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-61730" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-61730</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.12, 1.25.6</td><td>crypto/tls: Handshake messages may be processed at the incorrect encryption level in crypto/tls</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-27142" aria-label="mark CVE-2026-27142 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-27142" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-27142</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.8, 1.26.1</td><td>html/template: URLs in meta content attribute actions are not escaped in html/template</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-32282" aria-label="mark CVE-2026-32282 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32282" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-32282</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.9, 1.26.2</td><td>golang: internal/syscall/unix: Root.Chmod can follow symlinks out of the root</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-32288" aria-label="mark CVE-2026-32288 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32288" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-32288</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.9, 1.26.2</td><td>archive/tar: golang: Go&#39;s archive/tar package: Denial of Service via maliciously-crafted archive</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-32289" aria-label="mark CVE-2026-32289 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32289" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-32289</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.9, 1.26.2</td><td>html/template: golang: html/template: Cross-Site Scripting (XSS) via improper context and brace depth tracking in JS template literals</td></tr>
+<tr data-severity="medium"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-39826" aria-label="mark CVE-2026-39826 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39826" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-39826</a></td><td class="font-mono uppercase text-xs">MEDIUM</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.10, 1.26.3</td><td>html/template: golang: html/template: Cross-site scripting due to incorrect script tag escaping</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2024-45341" aria-label="mark CVE-2024-45341 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-45341" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2024-45341</a></td><td class="font-mono uppercase text-xs">LOW</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.22.11, 1.23.5, 1.24.0-rc.2</td><td>golang: crypto/x509: crypto/x509: usage of IPv6 zone IDs can bypass URI name constraints</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2025-58186" aria-label="mark CVE-2025-58186 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-58186" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2025-58186</a></td><td class="font-mono uppercase text-xs">LOW</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.24.8, 1.25.2</td><td>golang.org/net/http: Lack of limit when parsing cookies can cause memory exhaustion in net/http</td></tr>
+<tr data-severity="low"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-27139" aria-label="mark CVE-2026-27139 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-27139" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-27139</a></td><td class="font-mono uppercase text-xs">LOW</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.8, 1.26.1</td><td>os: FileInfo can escape from a Root in golang os module</td></tr>
+<tr data-severity="unknown"><td><input type="checkbox" class="cve-todo" data-cve="CVE-2026-39822" aria-label="mark CVE-2026-39822 done"></td><td><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-39822" target="_blank" rel="noopener" class="text-accent-ok hover:underline font-mono">CVE-2026-39822</a></td><td class="font-mono uppercase text-xs">UNKNOWN</td><td>stdlib</td><td class="font-mono text-xs">v1.19.13</td><td class="font-mono text-xs">1.25.12, 1.26.5, 1.27.0-rc.2</td><td>On Unix systems, opening a file in an os.Root improperly follows symli ...</td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="sbom" role="tabpanel">
+      <div class="card">
+        <p class="text-xs text-fg-muted mb-3">Packages contained in
+          <span class="font-mono text-fg-primary">cockroachdb</span> at version
+          <span class="font-mono text-fg-primary">23.1.14</span>.</p>
+        <p class="text-xs text-fg-muted mb-3 pb-3 border-b border-neutral-800">Last scan: <span class="font-mono text-fg-primary">2026-07-09 11:44 UTC</span> · Next scheduled scan: <span class="font-mono text-fg-primary">2026-07-13 06:00 UTC</span></p><div class="prose max-w-none"><table><thead><tr><th>Name</th><th>Version</th><th>Type</th><th>License</th></tr></thead><tbody><tr><td class="font-mono"><a href="/images/packages/?q=acl" class="text-accent-ok hover:underline font-mono" title="See other images that include acl">acl</a></td><td class="font-mono">2.3.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=attr" class="text-accent-ok hover:underline font-mono" title="See other images that include attr">attr</a></td><td class="font-mono">2.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=audit" class="text-accent-ok hover:underline font-mono" title="See other images that include audit">audit</a></td><td class="font-mono">4.1.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3.9</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash" class="text-accent-ok hover:underline font-mono" title="See other images that include bash">bash</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bash-interactive" class="text-accent-ok hover:underline font-mono" title="See other images that include bash-interactive">bash-interactive</a></td><td class="font-mono">5.3p9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bubblewrap" class="text-accent-ok hover:underline font-mono" title="See other images that include bubblewrap">bubblewrap</a></td><td class="font-mono">0.11.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=busybox" class="text-accent-ok hover:underline font-mono" title="See other images that include busybox">busybox</a></td><td class="font-mono">1.37.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bzip2" class="text-accent-ok hover:underline font-mono" title="See other images that include bzip2">bzip2</a></td><td class="font-mono">1.0.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bzip2" class="text-accent-ok hover:underline font-mono" title="See other images that include bzip2">bzip2</a></td><td class="font-mono">1.0.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=bzip2" class="text-accent-ok hover:underline font-mono" title="See other images that include bzip2">bzip2</a></td><td class="font-mono">1.0.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cockroachdb" class="text-accent-ok hover:underline font-mono" title="See other images that include cockroachdb">cockroachdb</a></td><td class="font-mono">23.1.14</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cockroachdb" class="text-accent-ok hover:underline font-mono" title="See other images that include cockroachdb">cockroachdb</a></td><td class="font-mono">23.1.14</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cockroachdb" class="text-accent-ok hover:underline font-mono" title="See other images that include cockroachdb">cockroachdb</a></td><td class="font-mono">23.1.14</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cockroachdb" class="text-accent-ok hover:underline font-mono" title="See other images that include cockroachdb">cockroachdb</a></td><td class="font-mono">23.1.14-fhsenv</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=cockroachdb" class="text-accent-ok hover:underline font-mono" title="See other images that include cockroachdb">cockroachdb</a></td><td class="font-mono">23.1.14-fhsenv</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=coreutils" class="text-accent-ok hover:underline font-mono" title="See other images that include coreutils">coreutils</a></td><td class="font-mono">9.11</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=db" class="text-accent-ok hover:underline font-mono" title="See other images that include db">db</a></td><td class="font-mono">4.8.30</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=diffutils" class="text-accent-ok hover:underline font-mono" title="See other images that include diffutils">diffutils</a></td><td class="font-mono">3.12</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=findutils" class="text-accent-ok hover:underline font-mono" title="See other images that include findutils">findutils</a></td><td class="font-mono">4.10.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gawk" class="text-accent-ok hover:underline font-mono" title="See other images that include gawk">gawk</a></td><td class="font-mono">5.4.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gawk" class="text-accent-ok hover:underline font-mono" title="See other images that include gawk">gawk</a></td><td class="font-mono">5.4.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gcc" class="text-accent-ok hover:underline font-mono" title="See other images that include gcc">gcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc">glibc</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=glibc-locales" class="text-accent-ok hover:underline font-mono" title="See other images that include glibc-locales">glibc-locales</a></td><td class="font-mono">2.42-67</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gmp-with-cxx" class="text-accent-ok hover:underline font-mono" title="See other images that include gmp-with-cxx">gmp-with-cxx</a></td><td class="font-mono">6.3.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gnugrep" class="text-accent-ok hover:underline font-mono" title="See other images that include gnugrep">gnugrep</a></td><td class="font-mono">3.12</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gnused" class="text-accent-ok hover:underline font-mono" title="See other images that include gnused">gnused</a></td><td class="font-mono">4.9</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gnutar" class="text-accent-ok hover:underline font-mono" title="See other images that include gnutar">gnutar</a></td><td class="font-mono">1.35</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gzip" class="text-accent-ok hover:underline font-mono" title="See other images that include gzip">gzip</a></td><td class="font-mono">1.14</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=gzip" class="text-accent-ok hover:underline font-mono" title="See other images that include gzip">gzip</a></td><td class="font-mono">1.14</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=less" class="text-accent-ok hover:underline font-mono" title="See other images that include less">less</a></td><td class="font-mono">692</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=less" class="text-accent-ok hover:underline font-mono" title="See other images that include less">less</a></td><td class="font-mono">692</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libbsd" class="text-accent-ok hover:underline font-mono" title="See other images that include libbsd">libbsd</a></td><td class="font-mono">0.12.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libcap" class="text-accent-ok hover:underline font-mono" title="See other images that include libcap">libcap</a></td><td class="font-mono">2.77</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libcap-ng" class="text-accent-ok hover:underline font-mono" title="See other images that include libcap-ng">libcap-ng</a></td><td class="font-mono">0.9.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libidn2" class="text-accent-ok hover:underline font-mono" title="See other images that include libidn2">libidn2</a></td><td class="font-mono">2.3.8</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libmd" class="text-accent-ok hover:underline font-mono" title="See other images that include libmd">libmd</a></td><td class="font-mono">1.1.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libselinux" class="text-accent-ok hover:underline font-mono" title="See other images that include libselinux">libselinux</a></td><td class="font-mono">3.10</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libunistring" class="text-accent-ok hover:underline font-mono" title="See other images that include libunistring">libunistring</a></td><td class="font-mono">1.4.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=libxcrypt" class="text-accent-ok hover:underline font-mono" title="See other images that include libxcrypt">libxcrypt</a></td><td class="font-mono">4.5.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=linux-pam" class="text-accent-ok hover:underline font-mono" title="See other images that include linux-pam">linux-pam</a></td><td class="font-mono">1.7.1</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=ncurses" class="text-accent-ok hover:underline font-mono" title="See other images that include ncurses">ncurses</a></td><td class="font-mono">6.6</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=nss-cacert" class="text-accent-ok hover:underline font-mono" title="See other images that include nss-cacert">nss-cacert</a></td><td class="font-mono">3.123</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=pcre2" class="text-accent-ok hover:underline font-mono" title="See other images that include pcre2">pcre2</a></td><td class="font-mono">10.46</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=readline" class="text-accent-ok hover:underline font-mono" title="See other images that include readline">readline</a></td><td class="font-mono">8.3p3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=shadow" class="text-accent-ok hover:underline font-mono" title="See other images that include shadow">shadow</a></td><td class="font-mono">4.19.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=shadow" class="text-accent-ok hover:underline font-mono" title="See other images that include shadow">shadow</a></td><td class="font-mono">4.19.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=shadow" class="text-accent-ok hover:underline font-mono" title="See other images that include shadow">shadow</a></td><td class="font-mono">4.19.4</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=systemd-minimal-libs" class="text-accent-ok hover:underline font-mono" title="See other images that include systemd-minimal-libs">systemd-minimal-libs</a></td><td class="font-mono">260.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=tcb" class="text-accent-ok hover:underline font-mono" title="See other images that include tcb">tcb</a></td><td class="font-mono">1.2</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=util-linux-minimal" class="text-accent-ok hover:underline font-mono" title="See other images that include util-linux-minimal">util-linux-minimal</a></td><td class="font-mono">2.42</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xgcc" class="text-accent-ok hover:underline font-mono" title="See other images that include xgcc">xgcc</a></td><td class="font-mono">15.2.0</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xz" class="text-accent-ok hover:underline font-mono" title="See other images that include xz">xz</a></td><td class="font-mono">5.8.3</td><td class="text-fg-muted">binary</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xz" class="text-accent-ok hover:underline font-mono" title="See other images that include xz">xz</a></td><td class="font-mono">5.8.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xz" class="text-accent-ok hover:underline font-mono" title="See other images that include xz">xz</a></td><td class="font-mono">5.8.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr>
+<tr><td class="font-mono"><a href="/images/packages/?q=xz" class="text-accent-ok hover:underline font-mono" title="See other images that include xz">xz</a></td><td class="font-mono">5.8.3</td><td class="text-fg-muted">nix</td><td class="text-fg-muted text-xs"><span class="opacity-60">—</span></td></tr></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="used-by" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted italic text-sm">Not used by any tracked chart.</p>
+      </div>
+    </section>
+
+    <section class="tab-content hidden" data-tab-panel="source" role="tabpanel">
+      <div class="card">
+        <p class="text-fg-muted text-sm mb-4">
+          <a href="https://github.com/nix-containers/images/blob/main/images/cockroachdb/default.nix"
+             class="text-accent-ok hover:underline">View on GitHub →</a>
+        </p>
+        <div class="text-sm"><div class="highlight"><pre><span></span><code><span class="p">{</span> mkImage<span class="p">,</span> pkgs<span class="p">,</span> lib<span class="p">,</span> <span class="o">...</span> <span class="p">}:</span>
+
+<span class="c1"># CockroachDB - Distributed SQL database</span>
+<span class="c1"># https://www.cockroachlabs.com/</span>
+
+mkImage <span class="p">{</span>
+  <span class="ss">drv</span> <span class="o">=</span> pkgs<span class="o">.</span>cockroachdb<span class="p">;</span>
+  <span class="ss">name</span> <span class="o">=</span> <span class="s2">&quot;cockroachdb&quot;</span><span class="p">;</span>
+  <span class="ss">tag</span> <span class="o">=</span> <span class="s2">&quot;v</span><span class="si">${</span>pkgs<span class="o">.</span>cockroachdb<span class="o">.</span>version<span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+  <span class="ss">entrypoint</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&quot;</span><span class="si">${</span>pkgs<span class="o">.</span>cockroachdb<span class="si">}</span><span class="s2">/bin/cockroach&quot;</span> <span class="p">];</span>
+  <span class="c1"># `start-single-node` defaults its data dir to ./cockroach-data (relative to</span>
+  <span class="c1"># the CWD, &quot;/&quot;, which is read-only) and binds localhost — so the pod fails to</span>
+  <span class="c1"># write its store / isn&#39;t reachable. Put the store on the writable /tmp mkImage</span>
+  <span class="c1"># provides (cockroach creates it), and bind the SQL/RPC (26257) and web UI</span>
+  <span class="c1"># (8080) on 0.0.0.0 so the kind-test probe and clients can reach them.</span>
+  <span class="c1"># Operators mount a PVC and override --store.</span>
+  <span class="ss">cmd</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;start-single-node&quot;</span>
+    <span class="s2">&quot;--insecure&quot;</span>
+    <span class="s2">&quot;--store=/tmp/cockroach-data&quot;</span>
+    <span class="s2">&quot;--listen-addr=0.0.0.0:26257&quot;</span>
+    <span class="s2">&quot;--http-addr=0.0.0.0:8080&quot;</span>
+  <span class="p">];</span>
+
+  <span class="ss">extraPkgs</span> <span class="o">=</span> <span class="k">with</span> pkgs<span class="p">;</span> <span class="p">[</span> cacert <span class="p">];</span>
+
+  <span class="ss">labels</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;org.opencontainers.image.title&quot;</span> <span class="o">=</span> <span class="s2">&quot;CockroachDB&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.description&quot;</span> <span class="o">=</span> <span class="s2">&quot;Distributed SQL database built on a transactional key-value store&quot;</span><span class="p">;</span>
+    <span class="s2">&quot;org.opencontainers.image.version&quot;</span> <span class="o">=</span> pkgs<span class="o">.</span>cockroachdb<span class="o">.</span>version<span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-neutral-800 mt-12 py-6 text-center text-fg-muted text-sm">
+    Built 2026-07-13 01:27 UTC · <a href="/images/" class="hover:text-fg-primary">All images</a>
+  </footer>
+
+  <script>
+    // Vanilla JS tab switcher; no framework dependency.
+    (function () {
+      const buttons = document.querySelectorAll('.tab-button[data-tab]');
+      const panels = document.querySelectorAll('.tab-content[data-tab-panel]');
+      const validTabs = Array.from(buttons).map(function (b) {
+        return b.getAttribute('data-tab');
+      });
+
+      function showTab(target, opts) {
+        if (validTabs.indexOf(target) === -1) return false;
+        buttons.forEach(function (b) {
+          const active = b.getAttribute('data-tab') === target;
+          b.classList.toggle('tab-active', active);
+          b.classList.toggle('tab-inactive', !active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          const show = p.getAttribute('data-tab-panel') === target;
+          p.classList.toggle('hidden', !show);
+        });
+        if (opts && opts.updateHash) {
+          // Use replaceState (not pushState) so per-tab nav doesn't litter
+          // the browser back-stack with intra-page hops.
+          history.replaceState(null, '', '#' + target);
+        }
+        return true;
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          showTab(btn.getAttribute('data-tab'), { updateHash: true });
+        });
+      });
+
+      // Deep-link support: open in the requested tab when the URL has
+      // #vulnerabilities, #sbom, #used-by, #source. Unknown/empty falls
+      // through to the default ("description") already rendered by the HTML.
+      const initial = (location.hash || '').replace(/^#/, '');
+      if (initial) showTab(initial, { updateHash: false });
+
+      // Update the visible tab when the user nav's back/forward between hashes.
+      window.addEventListener('hashchange', function () {
+        const next = (location.hash || '').replace(/^#/, '');
+        if (next) showTab(next, { updateHash: false });
+      });
+
+      // Variant switch (Minimal / With shell -dev) inside the Get-this-image card.
+      const vButtons = document.querySelectorAll('.variant-button[data-variant]');
+      const vBlocks = document.querySelectorAll('.variant-block[data-variant-block]');
+      vButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-variant');
+          vButtons.forEach(function (b) {
+            const active = b.getAttribute('data-variant') === target;
+            b.classList.toggle('variant-active', active);
+            b.classList.toggle('variant-inactive', !active);
+          });
+          vBlocks.forEach(function (blk) {
+            const show = blk.getAttribute('data-variant-block') === target;
+            blk.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+
+    // CVE list: severity-count filtering + per-CVE remediation todo checkboxes.
+    (function () {
+      var list = document.querySelector('[data-cve-list]');
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.querySelectorAll('tbody tr'));
+
+      function filter(sev) {
+        rows.forEach(function (r) {
+          var show = (sev === 'all') || (r.getAttribute('data-severity') === sev);
+          r.classList.toggle('hidden', !show);
+        });
+      }
+      // Clicking a severity count (Critical/High/…) shows just those CVEs.
+      document.querySelectorAll('[data-cve-filter]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          filter(el.getAttribute('data-cve-filter'));
+          list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+
+      // Remediation todo: checkbox state persists per image + CVE in localStorage.
+      var key = 'cve-todo:' + (location.pathname || '');
+      var done = {};
+      try { done = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) { done = {}; }
+      list.querySelectorAll('.cve-todo').forEach(function (cb) {
+        var id = cb.getAttribute('data-cve');
+        if (done[id]) { cb.checked = true; cb.closest('tr').classList.add('opacity-50', 'line-through'); }
+        cb.addEventListener('change', function () {
+          if (cb.checked) { done[id] = 1; } else { delete done[id]; }
+          cb.closest('tr').classList.toggle('opacity-50', cb.checked);
+          cb.closest('tr').classList.toggle('line-through', cb.checked);
+          try { localStorage.setItem(key, JSON.stringify(done)); } catch (e) {}
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
