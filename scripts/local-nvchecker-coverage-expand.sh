@@ -264,6 +264,40 @@ for img in sorted(os.listdir('images')):
     if ver and key not in old_ver:
         old_ver[key] = ver
 
+# -fips variants inherit their non-fips sibling's version: they build the same
+# upstream with FIPS crypto swapped in, so the sibling's tracking covers them.
+# Attach the fips image to the sibling's nvchecker entry (it rebuilds when the
+# sibling bumps); if the sibling is nixpkgs-tracked, `nix flake update` covers
+# both and no entry is needed. The sibling name sorts before its "-fips"
+# variant, so it has already been classified in the loop above.
+img_to_entry = {}
+for _k, _imgs in idx.items():
+    for _i in _imgs: img_to_entry[_i] = _k
+for _k, _imgs in added_mapping.items():
+    for _i in _imgs: img_to_entry[_i] = _k
+_nixpkgs_sibs = set(skipped["pkgs.attr"])
+fips_inherited = 0
+_still_unknown = []
+for img in skipped["unknown"]:
+    sib = img[:-5] if img.endswith("-fips") else (
+        img.replace("-fips-", "-", 1) if "-fips-" in img else None)
+    if sib and os.path.isdir(f'images/{sib}'):
+        if sib in img_to_entry:
+            entry = img_to_entry[sib]
+            target = added_mapping.get(entry)
+            if target is None: target = idx.get(entry)
+            if target is not None and img not in target:
+                target.append(img)
+            fips_inherited += 1
+            continue
+        if sib in _nixpkgs_sibs:
+            fips_inherited += 1  # covered via nixpkgs `nix flake update`
+            continue
+    _still_unknown.append(img)
+skipped["unknown"] = _still_unknown
+mapping_changed = fips_inherited > 0
+
+print(f'== fips-inherited: {fips_inherited} -fips variants piggyback on their non-fips sibling')
 print(f'== to add: {len(added_toml)} entries (github={counts["github"]}, gitlab={counts["gitlab"]}, container={counts["container"]})')
 print(f'== skipped: pkgs.attr={len(skipped["pkgs.attr"])}  unknown={len(skipped["unknown"])}  already-mapped-differently={len(skipped["already-mapped-differently"])}')
 
@@ -277,13 +311,15 @@ if dry:
     sys.exit(0)
 
 # Persist.
-if added_toml:
-    with open('nvchecker.toml', 'a') as f:
-        f.write('\n# --- auto-added by local-nvchecker-coverage-expand.sh ---\n')
-        for e in added_toml:
-            f.write('\n' + e)
+if added_toml or mapping_changed:
+    if added_toml:
+        with open('nvchecker.toml', 'a') as f:
+            f.write('\n# --- auto-added by local-nvchecker-coverage-expand.sh ---\n')
+            for e in added_toml:
+                f.write('\n' + e)
 
     # nvchecker-images.json: preserve original key ordering; append new keys.
+    # (Also captures -fips images attached to an existing sibling entry.)
     for k, v in added_mapping.items():
         idx[k] = v
     with open('nvchecker-images.json', 'w') as f:
@@ -295,7 +331,8 @@ if added_toml:
         json.dump(old_ver, f, indent=2)
         f.write('\n')
 
-    print(f'wrote {len(added_toml)} entries to nvchecker.toml + nvchecker-images.json + old_versions.json')
+    print(f'wrote {len(added_toml)} entries + {fips_inherited} fips-inherited mappings '
+          f'to nvchecker.toml + nvchecker-images.json + old_versions.json')
 else:
     print('nothing to add')
 PY
