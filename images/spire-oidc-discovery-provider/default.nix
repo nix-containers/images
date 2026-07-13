@@ -2,7 +2,7 @@
 
 # spire-oidc-discovery-provider — built from the upstream release artifact (#618).
 let
-  version = "1.6.2";
+  version = "1.15.2";
   src = pkgs.fetchurl { url = "https://github.com/spiffe/spire/releases/download/v1.6.2/spire-extras-1.6.2-linux-x86_64-glibc.tar.gz"; hash = "sha256-v14AZYja/8ZiDOT1PkdpQroK2fKSka5MYPhfwboFj1k="; };
   drv = pkgs.runCommand "spire-oidc-discovery-provider-1.6.2" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
     mkdir -p $out/bin extract

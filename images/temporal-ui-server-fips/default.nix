@@ -4,7 +4,7 @@
 # Container image
 
 let
-  version = "latest";
+  version = "2.52.0";
   
   imagePkgs = with pkgs; [
     bash

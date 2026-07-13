@@ -5,7 +5,7 @@
 # Built from source with current nixpkgs Go so Go-stdlib CVEs from the
 # upstream prebuilt binary clear at each rebuild.
 let
-  version = "0.24.2";
+  version = "0.24.3";
   drv = pkgs.buildGoModule {
     pname = "sql_exporter";
     inherit version;
@@ -13,11 +13,11 @@ let
       owner = "burningalchemist";
       repo = "sql_exporter";
       rev = version;
-      hash = "sha256-imknv5/btSrKWHY85y4ng9+GKksyxwiMvTe2QaYv76U=";
+      hash = "sha256-xyaP9mR2We4Js8jfQpbaANihGDjrB0s2T91UMOYeKCg=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-c8OmXVA9zQ/pTR7XLhefHH4dDFoZrKHbf6Xg6EplCh4=";
+    vendorHash = "sha256-RoCz0BqdwYUmGh2XDK367k81qVnzGGw9lYidmLPp1O8=";
 
     subPackages = [ "cmd/sql_exporter" ];
     ldflags = [ "-s" "-w" ];

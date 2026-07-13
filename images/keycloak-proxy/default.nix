@@ -9,7 +9,7 @@
 # Note: This is based on the Keycloak server running in proxy mode
 
 let
-  version = "26.4.7";
+  version = "26.7.0";
 
 in
 nix2container.buildImage {

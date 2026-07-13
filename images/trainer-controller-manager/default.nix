@@ -8,7 +8,7 @@
 # Kubeflow Trainer enables scalable, distributed training of ML models
 
 let
-  version = "2.1.0";
+  version = "2.2.1";
   trainer-controller = buildGoModule {
     pname = "trainer-controller-manager";
     inherit version;
@@ -17,10 +17,10 @@ let
       owner = "kubeflow";
       repo = "trainer";
       rev = "v${version}";
-      hash = "sha256-l7wFgesFEig2ardiEmVqQgOjDRsFuayf2PU3lFJCsx8=";  # TODO: Fix hash after first build
+      hash = "sha256-lg1ttgGgj5PsxyR+pCKzbXTmWE5cdQQpWdUpDhSS/t4=";  # TODO: Fix hash after first build
     };
 
-    vendorHash = "sha256-L3D64kB305yIXTe+IrSt/ZdNpd3azJIG6tieI82iLUU=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-5/H6TJaXFc6xf75zzGRxVwvT4OLXHywGLq7L+laXB1g=";  # TODO: Fix hash after first build
 
     subPackages = [ "cmd/trainer-controller-manager" ];
 
