@@ -75,7 +75,7 @@ while IFS= read -r IMAGE_NAME || [[ -n "$IMAGE_NAME" ]]; do
     # Build and export the image
     # First, build the image to get the JSON path
     log_info "  Building image..."
-    if ! IMAGE_PATH=$(nix build ".#${IMAGE_NAME}" --print-out-paths 2>/dev/null); then
+    if ! IMAGE_PATH=$(nix build ".#\"${IMAGE_NAME}\"" --print-out-paths 2>/dev/null); then
         log_error "  Failed to build image: $IMAGE_NAME"
         FAILED=$((FAILED + 1))
         FAILED_IMAGES+=("$IMAGE_NAME")
@@ -84,7 +84,7 @@ while IFS= read -r IMAGE_NAME || [[ -n "$IMAGE_NAME" ]]; do
 
     # Export to docker-archive using copyTo
     log_info "  Exporting to docker-archive..."
-    if nix run ".#${IMAGE_NAME}.copyTo" -- "docker-archive:${TAR_FILE}:${IMAGE_NAME}:latest" 2>/dev/null; then
+    if nix run ".#\"${IMAGE_NAME}\".copyTo" -- "docker-archive:${TAR_FILE}:${IMAGE_NAME}:latest" 2>/dev/null; then
         SIZE=$(du -h "$TAR_FILE" | cut -f1)
         log_info "  Exported: $TAR_FILE ($SIZE)"
         EXPORTED=$((EXPORTED + 1))

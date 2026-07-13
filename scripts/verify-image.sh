@@ -53,7 +53,7 @@ run_step() {
 }
 
 # 1. nix build
-run_step nix_build nix build --no-link ".#${IMAGE}"
+run_step nix_build nix build --no-link ".#\"${IMAGE}\""
 
 # 2. test-image (call the underlying script directly to avoid hard dep on `make`).
 run_step make_test ./scripts/test-image-build.sh image "$IMAGE"

@@ -22,7 +22,7 @@ for img in $IMAGES; do
     COUNT=$((COUNT + 1))
     printf "[%d/%d] %s... " "$COUNT" "$TOTAL" "$img"
     
-    if nix build ".#$img" --no-link 2>/dev/null; then
+    if nix build ".#\"$img\"" --no-link 2>/dev/null; then
         echo "OK"
         echo "$img" >> "$SUCCESS_LOG"
         SUCCESS=$((SUCCESS + 1))
