@@ -169,8 +169,8 @@ jobs:
           failed=""
           for img in "${IMAGES[@]}"; do
             echo "::group::Build $img"
-            if nix build ".#${img}" --print-build-logs \
-                 && nix run ".#${img}.copyTo" -- "docker-daemon:nix-containers/${img}:${IMAGE_TAG}"; then
+            if nix build ".#\"${img}\"" --print-build-logs \
+                 && nix run ".#\"${img}\".copyTo" -- "docker-daemon:nix-containers/${img}:${IMAGE_TAG}"; then
               echo "built ${img}"
             else
               echo "::warning title=unbuildable image::${img} failed to build"
