@@ -83,8 +83,10 @@ process_one() {
     return
   fi
 
-  # Build
-  if ! nix build --no-link ".#$image" 2>/dev/null; then
+  # Build. Quote the attr: image names contain dots (version numbers like
+  # "1.18"), and nix splits unquoted flake attr paths on '.', so `.#$image`
+  # mis-parses as nested attrs and fails with "does not provide attribute".
+  if ! nix build --no-link ".#\"$image\"" 2>/dev/null; then
     echo "fail-build" > "$state_file"
     echo "[$image] fail-build" >&2
     return
@@ -92,7 +94,7 @@ process_one() {
 
   # Resolve version (same attr build-and-push.yml uses)
   local tag
-  tag=$(nix eval --raw ".#${image}.imageTag" 2>/dev/null || echo "")
+  tag=$(nix eval --raw ".#\"${image}\".imageTag" 2>/dev/null || echo "")
   if [ -z "$tag" ]; then
     tag="latest"
   fi
@@ -111,7 +113,7 @@ process_one() {
 
   local t
   for t in "${push_tags[@]}"; do
-    if ! nix run ".#${image}.copyTo" -- "docker://${REGISTRY}/${image}:${t}" >/dev/null 2>&1; then
+    if ! nix run ".#\"${image}\".copyTo" -- "docker://${REGISTRY}/${image}:${t}" >/dev/null 2>&1; then
       echo "fail-push" > "$state_file"
       echo "[$image] fail-push (:$t)" >&2
       return
