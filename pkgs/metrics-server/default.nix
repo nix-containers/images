@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "metrics-server";
-  version = "metrics-server-helm-chart-3.13.1";
+  version = "0.9.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes-sigs";
     repo = "metrics-server";
     rev = "v${version}";
-    hash = "sha256-ERrHDcacsPAL/44Ff3EWMaTvSv2c3o61uJeod1nduKc=";
+    hash = "sha256-RITmujmqDGHhhX8uOxchJE1jrIIuuhrjB/GgDHwkmo8=";
   };
 
   vendorHash = "sha256-nAzmVQqKV8QrCajWV2o6mmDoTrHXKbWaDxXheTJRko0=";
