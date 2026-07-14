@@ -8,7 +8,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "2.28.0";
+  version = "2.29.0";
 
   drv = pkgs.buildGoModule {
     pname = "kiali";
@@ -18,7 +18,7 @@ let
       owner = "kiali";
       repo = "kiali";
       rev = "v${version}";
-      hash = "sha256-y+XmtpIEb+SLIOxd/283ajRfSaG2NcoxtBrx6aGJ3Zk=";
+      hash = "sha256-vtKk+cEtEBHgqIJ2gLcy5AlaNQnzQKugEyYH28YlaKY=";
     };
 
     proxyVendor = true;

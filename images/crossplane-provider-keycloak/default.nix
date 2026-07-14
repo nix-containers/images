@@ -4,7 +4,7 @@
 # https://github.com/crossplane-contrib/provider-keycloak
 
 let
-  version = "2.22.1";
+  version = "2.23.0";
   provider-keycloak = buildGoModule {
     pname = "provider-keycloak";
     inherit version;
@@ -13,7 +13,7 @@ let
       owner = "crossplane-contrib";
       repo = "provider-keycloak";
       rev = "v${version}";
-      hash = "sha256-cPxKP4baeuxaRbs17Xt9/AXDFVPu9teHgQszGy8ePbE=";
+      hash = "sha256-URNAJ+J4dCsb47cDpvBlvsjR3wKDp8ZOOEAGftg58bY=";
     };
 
     vendorHash = "sha256-1keKb9nAkVGf5XhCUQy/ohk92ouBI2ck2BUGCzO21Zc=";

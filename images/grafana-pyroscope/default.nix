@@ -7,7 +7,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "2.1.0";
+  version = "2.1.1";
 
   drv = pkgs.buildGoModule {
     pname = "grafana-pyroscope";

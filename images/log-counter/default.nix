@@ -7,7 +7,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "1.35.2";
+  version = "1.36.0";
 
   drv = pkgs.buildGoModule {
     pname = "log-counter";

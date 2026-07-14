@@ -5,7 +5,7 @@
 # https://github.com/pulumi/pulumi
 
 let
-  version = "3.251.0";
+  version = "3.253.0";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "pulumi-language-nodejs";
@@ -13,7 +13,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/pulumi/pulumi/releases/download/v${version}/pulumi-v${version}-linux-x64.tar.gz";
-      hash = "sha256-0agIs+S0vS+58O2/K1Je4VosIRTOT/iUtKXUmYZ/xAQ=";
+      hash = "sha256-MxYeUhKA5sdzlaRjRNul/5wRipDfJUgB5mIIcUO00aw=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];

@@ -3,13 +3,13 @@
 # Grafana Beyla - eBPF-based application auto-instrumentation tool
 # https://github.com/grafana/beyla
 let
-  version = "3.27.0";
+  version = "3.28.0";
   drv = pkgs.stdenv.mkDerivation {
     pname = "grafana-beyla";
     inherit version;
     src = pkgs.fetchurl {
       url = "https://github.com/grafana/beyla/releases/download/v${version}/beyla-linux-amd64-v${version}.tar.gz";
-      hash = "sha256-0RAmDX2/IG8xz61Fbz0c8bqdLd/Tll2BXDCJ1DI6Xj4=";
+      hash = "sha256-6kwdrJ/o/SJh8CHv43rb7UEwe/tdoOSPXugNbZtuYg4=";
     };
     sourceRoot = ".";
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];

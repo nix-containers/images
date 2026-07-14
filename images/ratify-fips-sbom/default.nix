@@ -6,7 +6,7 @@
 # Built from source with nixpkgs' current Go — see ratify-sbom/default.nix.
 
 let
-  version = "1.4.0";
+  version = "1.4.3";
 
   drv = pkgs.buildGoModule {
     pname = "ratify-fips-sbom";
@@ -16,10 +16,10 @@ let
       owner = "notaryproject";
       repo = "ratify";
       rev = "v${version}";
-      hash = "sha256-qE+FUjCpJdAxZWjK90DQmGjIKx4vJS0REjjqhC79XYE=";
+      hash = "sha256-EHvMkdw2QfxOgJD8AoRzP9LvmmJvjgCGJcQUlt3Hnkw=";
     };
 
-    vendorHash = "sha256-w3ZOMpiPGVixZFM1scibOEwDLTO9WCxZuQf4VkqwmiA=";
+    vendorHash = "sha256-qNoEjU/Ypy8zJUaiFh/9/tQqZi4E3Aqzb2nm2aKmDFw=";
 
     subPackages = [ "plugins/verifier/sbom" ];
 
