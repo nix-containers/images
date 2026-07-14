@@ -1,6 +1,7 @@
 let allImages = [];
 let filteredImages = [];
 let criticalsOnly = false;
+let newCvesOnly = false;
 let bigbangSet = new Set();
 let exampleClusterSet = new Set();
 let reframeAwaiting = true;   // "awaiting upstream fix" reframe — on by default
@@ -44,6 +45,23 @@ document.addEventListener('DOMContentLoaded', () => {
     critCard.addEventListener('click', toggleCrit);
     critCard.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCrit(); }
+    });
+  }
+  const newCard = document.getElementById('new-cves-card');
+  if (newCard) {
+    const toggleNew = () => {
+      newCvesOnly = !newCvesOnly;
+      newCard.classList.toggle('border-accent-warn', newCvesOnly);
+      newCard.setAttribute('aria-pressed', String(newCvesOnly));
+      filter();
+      if (newCvesOnly) {
+        document.getElementById('images-container')
+          .scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+    newCard.addEventListener('click', toggleNew);
+    newCard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleNew(); }
     });
   }
   fetchAutoUpdateCount();
@@ -110,6 +128,10 @@ function imgAwaiting(i) {
 function imgHigh(i) {
   const h = (i.scan && i.scan.high) || 0;
   return reframeAwaiting ? h - ((i.scan && i.scan.awaitingHigh) || 0) : h;
+}
+
+function imgNewCves3d(i) {
+  return (i.scan && i.scan.newCves3d) || 0;
 }
 
 async function loadImages() {
@@ -313,15 +335,19 @@ function filter() {
     const matchesExampleCluster = !exampleClusterOnly || exampleClusterSet.has(i.name);
     // The Critical/High stat card filters to images with either severity.
     const matchesCrit = !criticalsOnly || imgCritical(i) > 0 || imgHigh(i) > 0;
+    // The "New CVEs (3d)" stat card filters to images with a fresh disclosure.
+    const matchesNew = !newCvesOnly || imgNewCves3d(i) > 0;
     // "Zero CVEs": scan exists AND every severity is zero. Missing scan ≠ clean,
     // so unscanned images are excluded (mirrors the 0 CVE badge semantics).
     const matchesZeroCve = !zeroCveOnly || (i.scan && i.scan.total === 0);
-    return matchesQ && matchesCat && matchesChart && matchesBigbang && matchesExampleCluster && matchesCrit && matchesZeroCve;
+    return matchesQ && matchesCat && matchesChart && matchesBigbang && matchesExampleCluster && matchesCrit && matchesNew && matchesZeroCve;
   });
   // Surface the worst offenders first: by critical count, then high count.
   if (criticalsOnly) {
     filteredImages.sort((a, b) =>
       (imgCritical(b) - imgCritical(a)) || (imgHigh(b) - imgHigh(a)));
+  } else if (newCvesOnly) {
+    filteredImages.sort((a, b) => imgNewCves3d(b) - imgNewCves3d(a));
   }
   // Stat cards (total images, CVEs, packages) reflect the filtered set.
   updateReactiveStats(filteredImages);

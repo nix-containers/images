@@ -150,6 +150,16 @@ _CVE_LIST_MAX = 100  # cap per-image; truncation note disclosed in UI.
 _SEVERITY_ORDER = {"critical": 0, "high": 1, "medium": 2, "low": 3, "unknown": 4}
 
 
+def _published_within_3d(s):
+    """True if the trivy PublishedDate string is within the last 3 days."""
+    try:
+        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=3)
+        return datetime.datetime.fromisoformat(
+            s.replace("Z", "").split("+")[0].split(".")[0]) >= cutoff
+    except (ValueError, AttributeError):
+        return False
+
+
 def _parse_semver(s: str) -> tuple:
     """Best-effort semver parse for auto-fix reachability comparison."""
     if not s:
@@ -316,6 +326,9 @@ def scan_for_image(image_name: str, scan_dir: str | None,
     counts["sourceFile"] = os.path.basename(target)
     counts["autoFixCritical"] = auto_fix["critical"]
     counts["autoFixHigh"] = auto_fix["high"]
+    # Per-image count of CVEs first disclosed upstream in the last 3 days —
+    # powers the clickable "New CVEs (3d)" card filter on the homepage.
+    counts["newCves3d"] = sum(1 for v in cves if _published_within_3d(v["published"]))
     # "Awaiting upstream fix": crit/high CVEs the auto-updater can't reach —
     # we're at the tracked-latest, no upstream fix exists, or upstream's newest
     # is still below the fix. Fixing these would mean rebuilding the upstream
