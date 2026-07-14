@@ -5,9 +5,9 @@
 # Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "datadog-operator-fips";
-  tag = "1.28.0-fips";
+  tag = "1.28.0";
   config.Labels = {
-    "org.opencontainers.image.version" = "1.28.0-fips";
+    "org.opencontainers.image.version" = "1.28.0";
     "org.opencontainers.image.description" = "Upstream reference — pull docker.io/datadog/operator:1.28.0-fips directly.";
     "io.nix-containers.upstream-image" = "docker.io/datadog/operator:1.28.0-fips";
     "io.nix-containers.image.upstream" = "docker.io/datadog/operator";
