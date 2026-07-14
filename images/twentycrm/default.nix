@@ -13,7 +13,7 @@
 { nix2container, pkgs, lib, ... }:
 
 let
-  version = "2.12.0";
+  version = "2.21.0";
 
   # Pull upstream image via nix2container (uses skopeo under the hood).
   # sha256 is the NAR hash of the pulled image directory — refresh with:

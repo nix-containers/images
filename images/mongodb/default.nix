@@ -9,13 +9,13 @@
 { nix2container, pkgs, lib, base, nonRoot, ... }:
 
 let
-  version = "8.0.16";
+  version = "8.3.4";
 
   # Download MongoDB Community Server binary
   # Using Ubuntu 22.04 build which works well with glibc
   mongodbBin = pkgs.fetchurl {
     url = "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2204-${version}.tgz";
-    hash = "sha256-XLE25XkwaDntbp2ZFHy/b4tJBxmMyrGi+Ch70S+pXNg=";
+    hash = "sha256-APnJtTOSPlrirzZoPG17ICsWNRpotSUFQJet0094JnQ=";
   };
 
   userEnv = nonRoot.mkDefaultUserEnv pkgs [];

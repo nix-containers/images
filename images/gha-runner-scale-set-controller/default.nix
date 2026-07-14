@@ -5,9 +5,9 @@
 # Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "gha-runner-scale-set-controller";
-  tag = "0.5.0";
+  tag = "0.14.2";
   config.Labels = {
-    "org.opencontainers.image.version" = "0.5.0";
+    "org.opencontainers.image.version" = "0.14.2";
     "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/actions/gha-runner-scale-set-controller:0.5.0 directly.";
     "io.nix-containers.upstream-image" = "ghcr.io/actions/gha-runner-scale-set-controller:0.5.0";
     "io.nix-containers.image.upstream" = "ghcr.io/actions/gha-runner-scale-set-controller";

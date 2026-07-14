@@ -5,9 +5,9 @@
 # Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "debezium-connect";
-  tag = "2.7.3.Final";
+  tag = "2.6";
   config.Labels = {
-    "org.opencontainers.image.version" = "2.7.3.Final";
+    "org.opencontainers.image.version" = "2.6";
     "org.opencontainers.image.description" = "Upstream reference — pull docker.io/debezium/connect:2.7.3.Final directly.";
     "io.nix-containers.upstream-image" = "docker.io/debezium/connect:2.7.3.Final";
     "io.nix-containers.image.upstream" = "docker.io/debezium/connect";

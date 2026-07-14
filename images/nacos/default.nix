@@ -5,7 +5,7 @@
 # Packaged from the upstream prebuilt server release tarball (Java application).
 
 let
-  version = "3.2.2";
+  version = "3.2.3";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "nacos";
@@ -13,7 +13,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/alibaba/nacos/releases/download/${version}/nacos-server-${version}.tar.gz";
-      hash = "sha256-+ue8ZBQp3WYAhP8kImvckq6aD0DicT9G9iheW9nQJOs=";
+      hash = "sha256-EMyk6S545cV5NIkP6H5FiItG1/2MBTLcO3Fh7dk8FV4=";
     };
 
     # No ELF binaries in the distribution (pure-Java); autoPatchelfHook is a no-op.

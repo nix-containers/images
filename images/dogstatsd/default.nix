@@ -5,9 +5,9 @@
 # Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "dogstatsd";
-  tag = "7.80.4";
+  tag = "7.81.0";
   config.Labels = {
-    "org.opencontainers.image.version" = "7.80.4";
+    "org.opencontainers.image.version" = "7.81.0";
     "org.opencontainers.image.description" = "Upstream reference — pull docker.io/datadog/dogstatsd:7.80.4 directly.";
     "io.nix-containers.upstream-image" = "docker.io/datadog/dogstatsd:7.80.4";
     "io.nix-containers.image.upstream" = "docker.io/datadog/dogstatsd";

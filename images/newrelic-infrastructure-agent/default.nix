@@ -2,7 +2,7 @@
 
 # newrelic-infrastructure-agent — built from the upstream release artifact (#618).
 let
-  version = "1.77.1";
+  version = "1.78.0";
   src = pkgs.fetchurl { url = "https://github.com/newrelic/infrastructure-agent/releases/download/1.77.1/newrelic-infra_linux_1.77.1_amd64.tar.gz"; hash = "sha256-az8ivGNI57L0JDSLTGGH/VVrfuwLbklRGk2QPhdjA6c="; };
   drv = pkgs.runCommand "newrelic-infrastructure-agent-1.77.1" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip pkgs.unzip ]; } ''
     mkdir -p $out/bin extract
@@ -18,12 +18,12 @@ in
 mkImage {
   drv = drv;
   name = "newrelic-infrastructure-agent";
-  tag = "1.77.1";
+  tag = "1.78.0";
   entrypoint = [ "${drv}/bin/newrelic-infra" ];
   cmd = [];
   extraPkgs = with pkgs; [ cacert tzdata ];
   labels = {
-    "org.opencontainers.image.version" = "1.77.1";
+    "org.opencontainers.image.version" = "1.78.0";
     "org.opencontainers.image.description" = "newrelic-infrastructure-agent (built from upstream release 1.77.1)";
   };
 }

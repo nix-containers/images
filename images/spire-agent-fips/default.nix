@@ -4,9 +4,9 @@
 # Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "spire-agent-fips";
-  tag = "1.15.1";
+  tag = "1.15.2";
   config.Labels = {
-    "org.opencontainers.image.version" = "1.15.1";
+    "org.opencontainers.image.version" = "1.15.2";
     "org.opencontainers.image.description" = "Upstream reference — pull ghcr.io/spiffe/spire-agent:1.15.1 directly.";
     "io.nix-containers.upstream-image" = "ghcr.io/spiffe/spire-agent:1.15.1";
     "io.nix-containers.image.upstream" = "ghcr.io/spiffe/spire-agent";

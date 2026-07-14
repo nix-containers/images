@@ -5,9 +5,9 @@
 # Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "langfuse";
-  tag = "3.208.0";
+  tag = "3.213.0";
   config.Labels = {
-    "org.opencontainers.image.version" = "3.208.0";
+    "org.opencontainers.image.version" = "3.213.0";
     "org.opencontainers.image.description" = "Upstream reference — pull docker.io/langfuse/langfuse:3.208.0 directly.";
     "io.nix-containers.upstream-image" = "docker.io/langfuse/langfuse:3.208.0";
     "io.nix-containers.image.upstream" = "docker.io/langfuse/langfuse";
