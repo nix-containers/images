@@ -471,7 +471,15 @@ function render() {
     // in the catalog so we hide it whenever possible.
     const v = (i.version || '').trim();
     const hasRealVersion = v && v !== 'latest' && !v.startsWith('dynamic-');
-    const versionLine = hasRealVersion ? escapeHtml(v) : 'latest';
+    const fullVer = hasRealVersion ? v : 'latest';
+    // Some images carry a bare content digest (e.g. sha256-<64 hex>) instead of
+    // a semver — that unbroken string overflows the card. Show a short prefix
+    // with an ellipsis and keep the full value on hover.
+    const shownVer = /^sha256-[0-9a-f]{16,}$/i.test(fullVer)
+      ? fullVer.slice(0, 'sha256-'.length + 12) + '…'
+      : fullVer;
+    const versionLine = escapeHtml(shownVer);
+    const versionTitle = shownVer !== fullVer ? ` title="${escapeAttr(fullVer)}"` : '';
     return `
     <a href="${BASE}images/${escapeAttr(i.name)}/"
        class="card block">
@@ -491,7 +499,7 @@ function render() {
         </div>
       </div>
       <p class="text-sm text-fg-muted line-clamp-2">${escapeHtml(i.description || '')}</p>
-      <div class="mt-3 text-xs text-fg-muted font-mono">${versionLine}</div>
+      <div class="mt-3 text-xs text-fg-muted font-mono truncate"${versionTitle}>${versionLine}</div>
     </a>
   `;}).join('');
 }
