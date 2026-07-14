@@ -5,7 +5,7 @@
 # Upstream ships a noarch (Java) tarball; we install the jar and wrap it with a JRE.
 
 let
-  version = "2.12.0";
+  version = "2.13.0";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "nrjmx";
@@ -13,7 +13,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/newrelic/nrjmx/releases/download/v${version}/nrjmx_linux_${version}_noarch.tar.gz";
-      hash = "sha256-AnXinmYAkxtqQ/GoT6sMwcpmJe2YmlvuA3gqVfnqtqU=";
+      hash = "sha256-jZ15pagOXiWJsoYDcQrSNV1YRb7q16QHAdUwS5QWfn0=";
     };
 
     sourceRoot = ".";
