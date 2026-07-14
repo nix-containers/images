@@ -5,9 +5,9 @@
 # Cataloged with a "Good Upstream" badge (interim). #618
 nix2container.buildImage {
   name = "k8s-agents-operator-fips";
-  tag = "0.44.3";
+  tag = "0.45.0";
   config.Labels = {
-    "org.opencontainers.image.version" = "0.44.3";
+    "org.opencontainers.image.version" = "0.45.0";
     "org.opencontainers.image.description" = "Upstream reference — pull docker.io/newrelic/k8s-agents-operator:0.44.3 directly.";
     "io.nix-containers.upstream-image" = "docker.io/newrelic/k8s-agents-operator:0.44.3";
     "io.nix-containers.image.upstream" = "docker.io/newrelic/k8s-agents-operator";
