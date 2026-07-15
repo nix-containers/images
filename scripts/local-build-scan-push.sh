@@ -63,6 +63,19 @@ done
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
+# Optional secondary nix store (warm cache on another drive). When
+# IMAGE_NIX_STORE is set, build/eval/copyTo run against it and each built image
+# gets a per-image gc root under IMAGE_NIX_ROOTS (so `nix store gc --store
+# <store>` reaps superseded versions). The scan step reads the pushed GHCR
+# image, not the store, so it needs no store arg. Unset (default) → normal /nix.
+STORE_ARG=()
+if [ -n "${IMAGE_NIX_STORE:-}" ]; then
+  STORE_ARG=(--store "${IMAGE_NIX_STORE}")
+  IMAGE_NIX_ROOTS="${IMAGE_NIX_ROOTS:-/mnt/models/nixbuild-roots}"
+  mkdir -p "$IMAGE_NIX_ROOTS"
+  echo "==> secondary store: ${IMAGE_NIX_STORE} (roots: ${IMAGE_NIX_ROOTS})"
+fi
+
 STATE_DIR="audit-results/local-bsp"
 # Write directly to website/scan-data/ so the site build's SCAN_DATA_PATH
 # picks up fresh scans without a manual rsync step. Same directory that
@@ -134,7 +147,9 @@ while IFS= read -r image; do
 
   # --- 1. Build ---
   echo "==> [$image] build"
-  if ! nix build --no-link ".#\"$image\"" 2>/dev/null; then
+  LINK_ARG=(--no-link)
+  [ -n "${IMAGE_NIX_STORE:-}" ] && LINK_ARG=(--out-link "${IMAGE_NIX_ROOTS}/${image}")
+  if ! nix build "${STORE_ARG[@]}" "${LINK_ARG[@]}" ".#\"$image\"" 2>/dev/null; then
     echo "fail-build" > "$state_file"
     total_fail_build=$((total_fail_build + 1))
     continue
@@ -146,7 +161,7 @@ while IFS= read -r image; do
   # "latest" so we still publish something for images whose default.nix
   # doesn't expose a clean version.
   echo "==> [$image] resolve version tag"
-  TAG=$(nix eval --raw ".#\"${image}\".imageTag" 2>/dev/null || echo "")
+  TAG=$(nix eval "${STORE_ARG[@]}" --raw ".#\"${image}\".imageTag" 2>/dev/null || echo "")
   if [ -z "$TAG" ] || [ "$TAG" = "latest" ]; then
     TAG="latest"
     # No second push needed; the `latest` push below already covers it.
@@ -159,14 +174,14 @@ while IFS= read -r image; do
   # `copyTo docker://...` writes directly to the registry via skopeo —
   # no local docker daemon needed, no `docker pull/load/rmi` disk thrash.
   echo "==> [$image] push :latest"
-  if ! nix run ".#\"${image}\".copyTo" -- "docker://${REGISTRY}/${image}:latest" >/dev/null 2>&1; then
+  if ! nix run "${STORE_ARG[@]}" ".#\"${image}\".copyTo" -- "docker://${REGISTRY}/${image}:latest" >/dev/null 2>&1; then
     echo "fail-push" > "$state_file"
     total_fail_push=$((total_fail_push + 1))
     continue
   fi
   if [ "$PUSH_VERSION_TOO" = "true" ]; then
     echo "==> [$image] push :$TAG"
-    if ! nix run ".#\"${image}\".copyTo" -- "docker://${REGISTRY}/${image}:${TAG}" >/dev/null 2>&1; then
+    if ! nix run "${STORE_ARG[@]}" ".#\"${image}\".copyTo" -- "docker://${REGISTRY}/${image}:${TAG}" >/dev/null 2>&1; then
       echo "fail-push" > "$state_file"
       total_fail_push=$((total_fail_push + 1))
       continue
