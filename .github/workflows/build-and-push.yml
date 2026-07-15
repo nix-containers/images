@@ -60,6 +60,25 @@ jobs:
         if: env.NIX_PREINSTALLED != 'true'
         run: echo "NIX_INSTALLED=true" >> $GITHUB_ENV
 
+      # skopeo — used both by nix2container base-image pulls during the build
+      # and by copyTo when pushing — refuses to load /etc/containers/registries.conf
+      # when it's still in v1 format, dying with:
+      #   "registries.conf must be in v2 format but is in v1"
+      # ubuntu-latest ships a v1 file, so every copyTo push (and some base pulls)
+      # failed while the image itself built fine. Materialize a minimal v2 file and
+      # point skopeo at it via CONTAINERS_REGISTRIES_CONF (in $GITHUB_ENV so both
+      # the Build and Push steps inherit it). Mirrors the same workaround in
+      # scripts/local-build-scan-push.sh.
+      - name: Provide v2 registries.conf for skopeo
+        run: |
+          conf="$RUNNER_TEMP/registries-v2.conf"
+          cat > "$conf" <<'REG_EOF'
+          unqualified-search-registries = ["docker.io"]
+          short-name-mode = "permissive"
+          REG_EOF
+          echo "CONTAINERS_REGISTRIES_CONF=$conf" >> "$GITHUB_ENV"
+          echo "wrote $conf (v2 format)"
+
       # (FlakeHub Cache removed — it requires FlakeHub org registration /
       # OIDC-linking this org doesn't have, so the action hard-errored
       # "registration required" and broke builds even under continue-on-error.
