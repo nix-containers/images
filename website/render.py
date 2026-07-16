@@ -424,6 +424,8 @@ def render_cve_list(cves: list[dict]) -> str:
         f"<td>{_html_escape(c['package'])}</td>"
         f"<td class=\"font-mono text-xs\">{_html_escape(c['installed'])}</td>"
         f"<td class=\"font-mono text-xs\">{_html_escape(c['fixed']) or '—'}</td>"
+        # CVE publish date (trivy PublishedDate, trimmed to YYYY-MM-DD).
+        f"<td class=\"font-mono text-xs whitespace-nowrap\">{_html_escape((c.get('published') or '')[:10]) or '—'}</td>"
         f"<td>{_html_escape(c['title'])}</td>"
         f"</tr>"
         for c in shown
@@ -439,7 +441,7 @@ def render_cve_list(cves: list[dict]) -> str:
         f'{truncated_note}'
         f'<table class="prose mt-1">'
         f'<thead><tr><th>✓</th><th>CVE</th><th>Severity</th><th>Package</th>'
-        f'<th>Installed</th><th>Fixed</th><th>Title</th></tr></thead>'
+        f'<th>Installed</th><th>Fixed</th><th>Published</th><th>Title</th></tr></thead>'
         f'<tbody>{rows}</tbody>'
         f'</table>'
         f'</div>'
