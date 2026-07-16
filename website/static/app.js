@@ -4,7 +4,8 @@ let criticalsOnly = false;
 let newCvesOnly = false;
 let bigbangSet = new Set();
 let exampleClusterSet = new Set();
-let reframeAwaiting = true;   // "awaiting upstream fix" reframe — on by default
+let reframeAwaiting = true;      // "awaiting upstream fix" reframe — on by default
+let reframeAwaitingNix = true;   // "awaiting nixpkgs package" reframe — on by default
 let siteData = null;
 const BASE = window.SITE_BASE || '/';
 
@@ -26,6 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
     reframeAwaiting = awEl.checked;
     awEl.addEventListener('change', () => {
       reframeAwaiting = awEl.checked;
+      if (siteData) updateStats(siteData);
+      filter();
+    });
+  }
+  const awNixEl = document.getElementById('awaiting-nix-filter');
+  if (awNixEl) {
+    reframeAwaitingNix = awNixEl.checked;
+    awNixEl.addEventListener('change', () => {
+      reframeAwaitingNix = awNixEl.checked;
       if (siteData) updateStats(siteData);
       filter();
     });
@@ -111,23 +121,32 @@ async function fetchAutoUpdateCount() {
   }
 }
 
-// When the "awaiting upstream fix" reframe is on (default), the critical/high
-// counts we surface exclude CVEs the auto-updater can't reach — those are the
-// upstream maintainer's to fix, shown separately under a badge. Toggle off to
-// see raw totals.
+// Two independent reframes exclude CVEs the auto-updater can't reach right now,
+// each shown separately under a badge. "awaiting upstream" = bundled/compiled-in
+// deps only the app maintainer can fix; "awaiting nixpkgs" = deps nixpkgs ships
+// as its own package, fixed by a nixpkgs bump + our rebuild. Both on (default)
+// reproduces the fully-reframed count; toggle either off to fold that bucket
+// back into the visible total.
 function imgCritical(i) {
   const c = (i.scan && i.scan.critical) || 0;
-  return reframeAwaiting ? c - ((i.scan && i.scan.awaitingCritical) || 0) : c;
-}
-
-function imgAwaiting(i) {
-  return ((i.scan && i.scan.awaitingCritical) || 0) +
-         ((i.scan && i.scan.awaitingHigh) || 0);
+  return c - (reframeAwaiting ? ((i.scan && i.scan.awaitingUpstreamCritical) || 0) : 0)
+           - (reframeAwaitingNix ? ((i.scan && i.scan.awaitingNixCritical) || 0) : 0);
 }
 
 function imgHigh(i) {
   const h = (i.scan && i.scan.high) || 0;
-  return reframeAwaiting ? h - ((i.scan && i.scan.awaitingHigh) || 0) : h;
+  return h - (reframeAwaiting ? ((i.scan && i.scan.awaitingUpstreamHigh) || 0) : 0)
+           - (reframeAwaitingNix ? ((i.scan && i.scan.awaitingNixHigh) || 0) : 0);
+}
+
+function imgAwaitingUpstream(i) {
+  return ((i.scan && i.scan.awaitingUpstreamCritical) || 0) +
+         ((i.scan && i.scan.awaitingUpstreamHigh) || 0);
+}
+
+function imgAwaitingNix(i) {
+  return ((i.scan && i.scan.awaitingNixCritical) || 0) +
+         ((i.scan && i.scan.awaitingNixHigh) || 0);
 }
 
 function imgNewCves3d(i) {
@@ -454,13 +473,19 @@ function render() {
     // High-CVE count badge (only in the criticals/highs filtered view, to
     // avoid cluttering every card in the full catalog).
     const highCount = imgHigh(i);
-    // "⏳ awaiting upstream" badge — CVEs the auto-updater can't reach (fix is
-    // the upstream maintainer's job). Only shown while the reframe is on.
-    const awaitCount = reframeAwaiting ? imgAwaiting(i) : 0;
-    const awaitBadge = awaitCount > 0
+    // "awaiting" badges — CVEs the auto-updater can't reach, split by who ships
+    // the fix. Each shows only while its reframe is on and its count > 0.
+    const awaitUpCount = reframeAwaiting ? imgAwaitingUpstream(i) : 0;
+    const awaitNixCount = reframeAwaitingNix ? imgAwaitingNix(i) : 0;
+    const awaitUpBadge = awaitUpCount > 0
       ? `<span class="badge bg-neutral-700 text-neutral-300 font-mono"
-               title="${awaitCount} critical/high CVE${awaitCount === 1 ? '' : 's'} with no upstream fix yet — awaiting the maintainer, not counted against us">⏳ ${awaitCount} awaiting upstream</span>`
+               title="${awaitUpCount} critical/high CVE${awaitUpCount === 1 ? '' : 's'} in bundled/compiled-in deps — the app's upstream maintainer must fix, not counted against us">⏳ ${awaitUpCount} awaiting upstream</span>`
       : '';
+    const awaitNixBadge = awaitNixCount > 0
+      ? `<span class="badge bg-sky-900 text-sky-300 font-mono"
+               title="${awaitNixCount} critical/high CVE${awaitNixCount === 1 ? '' : 's'} in nixpkgs-shipped deps — fixed by a nixpkgs bump + rebuild, not counted against us">🔧 ${awaitNixCount} awaiting nixpkgs</span>`
+      : '';
+    const awaitBadge = awaitUpBadge + awaitNixBadge;
     const highBadge = (criticalsOnly && highCount > 0)
       ? `<span class="badge bg-accent-warn/20 text-accent-warn font-mono"
                title="${highCount} high CVE${highCount === 1 ? '' : 's'} — click the image to see them">${highCount} high</span>`

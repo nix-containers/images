@@ -316,6 +316,10 @@ def scan_for_image(image_name: str, scan_dir: str | None,
                 "fixed": fixed_ver,
                 "title": vuln.get("Title", "") or vuln.get("Description", "") or "",
                 "autoFix": fix_status,
+                # trivy finding type (jar / gobinary / gemspec / python-pkg /
+                # node-pkg / os-pkgs …) — used to split the "awaiting" bucket
+                # into nixpkgs-fixable vs upstream-bundled.
+                "pkgType": (result.get("Type") or ""),
                 "published": vuln.get("PublishedDate", "") or "",
             })
     # Sort by severity (critical first) then CVE ID descending.
@@ -336,10 +340,34 @@ def scan_for_image(image_name: str, scan_dir: str | None,
     # job, not ours — so we surface them separately rather than count them
     # against us. (critical == autoFixCritical + awaitingCritical.)
     _AWAIT = ("at-latest", "no-fix", "bump-below-fix", "manual", "unknown")
-    counts["awaitingCritical"] = sum(
-        1 for v in cves if v["severity"] == "CRITICAL" and v["autoFix"] in _AWAIT)
-    counts["awaitingHigh"] = sum(
-        1 for v in cves if v["severity"] == "HIGH" and v["autoFix"] in _AWAIT)
+    # Split the awaiting bucket by who actually ships the fix, using the trivy
+    # finding type. Bundled/compiled-in artifacts (Java JARs, Go binaries/
+    # modules, .NET) can only be fixed by the app's upstream maintainer — nixpkgs
+    # just repackages them. Everything else awaiting (ruby/python/npm packages,
+    # OS/nix-store deps) is assembled by nixpkgs as its own derivation, so a
+    # nixpkgs bump + our rebuild fixes it. Each CVE is tagged with awaitClass so
+    # the site can badge/filter the two independently. Invariant preserved:
+    # awaitingNix* + awaitingUpstream* == awaiting* (kept for back-compat).
+    _UPSTREAM_TYPES = {"jar", "gobinary", "gomod", "dotnet-core"}
+    for v in cves:
+        if v["severity"] in ("CRITICAL", "HIGH") and v["autoFix"] in _AWAIT:
+            # Go "stdlib" findings show up as gobinary but are the Go *toolchain*
+            # — nixpkgs' to bump, not the app's — so keep them in the nix bucket.
+            is_upstream = (v.get("pkgType") in _UPSTREAM_TYPES
+                           and v.get("package") != "stdlib")
+            v["awaitClass"] = "upstream" if is_upstream else "nix"
+        else:
+            v["awaitClass"] = None
+
+    def _await_count(sev, cls):
+        return sum(1 for v in cves if v["severity"] == sev and v["awaitClass"] == cls)
+
+    counts["awaitingNixCritical"] = _await_count("CRITICAL", "nix")
+    counts["awaitingNixHigh"] = _await_count("HIGH", "nix")
+    counts["awaitingUpstreamCritical"] = _await_count("CRITICAL", "upstream")
+    counts["awaitingUpstreamHigh"] = _await_count("HIGH", "upstream")
+    counts["awaitingCritical"] = counts["awaitingNixCritical"] + counts["awaitingUpstreamCritical"]
+    counts["awaitingHigh"] = counts["awaitingNixHigh"] + counts["awaitingUpstreamHigh"]
     counts["cves"] = cves
     return counts
 
