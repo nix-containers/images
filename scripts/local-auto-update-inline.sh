@@ -155,6 +155,16 @@ echo ""
 echo "==> bumped: $BUMPED  failed: $FAILED"
 [ -s bumped.md ] && { echo "-- bumped.md --"; cat bumped.md; }
 [ -s failed.md ] && { echo "-- failed.md --"; cat failed.md; }
+
+# When routing builds to a secondary store (IMAGE_NIX_STORE), reap versions
+# superseded by this batch's bumps: each bumped image's gc root now points at
+# the NEW version, so the old one is unreachable and collectable. Shared deps
+# still referenced by other image roots survive.
+if [ -n "${IMAGE_NIX_STORE:-}" ] && [ "$BUMPED" -gt 0 ]; then
+  echo ""
+  echo "==> gc secondary store ${IMAGE_NIX_STORE} (reap superseded versions)…"
+  nix store gc --store "${IMAGE_NIX_STORE}" 2>&1 | tail -2 || true
+fi
 echo ""
 echo "next steps:"
 echo "  review + commit: git diff images/ old_versions.json"

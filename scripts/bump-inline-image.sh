@@ -34,6 +34,21 @@ FAKE="sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
 ORIG=$(cat "$F")
 revert() { printf '%s' "$ORIG" > "$F"; }
 
+# Optional secondary nix store (e.g. a warm cache on another drive). When
+# IMAGE_NIX_STORE is set, builds run against it and the converged build is
+# pinned with a per-image gc root under IMAGE_NIX_ROOTS — so the cache is
+# reused and, once a later bump moves the root, the old version becomes
+# collectable by `nix store gc --store <store>`. Unset (default, incl. CI) →
+# normal /nix store with --no-link, behaviour unchanged.
+STORE_ARG=()
+LINK_ARG=(--no-link)
+if [ -n "${IMAGE_NIX_STORE:-}" ]; then
+  STORE_ARG=(--store "${IMAGE_NIX_STORE}")
+  ROOTS_DIR="${IMAGE_NIX_ROOTS:-/mnt/models/nixbuild-roots}"
+  mkdir -p "$ROOTS_DIR"
+  LINK_ARG=(--out-link "${ROOTS_DIR}/${IMG}")
+fi
+
 OLD=$(grep -oE '^[[:space:]]*version = "[^"]+"' "$F" | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
 [ -z "$OLD" ] && { echo "$IMG: no version line"; exit 2; }
 
@@ -106,7 +121,7 @@ fi
 
 # 2. iteratively repair hashes (src, then vendorHash, etc.)
 for attempt in 1 2 3 4; do
-  LOG=$(nix build ".#packages.${SYS}.\"${IMG}\"" --no-link --impure 2>&1)
+  LOG=$(nix build "${STORE_ARG[@]}" ".#packages.${SYS}.\"${IMG}\"" "${LINK_ARG[@]}" --impure 2>&1)
   if [ $? -eq 0 ]; then
     echo "$IMG: $OLD -> $NEW (built OK)"
     exit 0
