@@ -1,7 +1,7 @@
 { mkImage, fetchFromGitHub, buildGoModule, lib, ... }:
 
 let
-  version = "1.12.0";
+  version = "2.2.1";
   csi-resizer = buildGoModule {
     pname = "csi-resizer";
     inherit version;
@@ -10,7 +10,7 @@ let
       owner = "kubernetes-csi";
       repo = "external-resizer";
       rev = "v${version}";
-      hash = "sha256-4YN4XzLjjhULfkxmgMpSVYK4H/snJDSnCdub6Vn7BFw=";
+      hash = "sha256-kjRiJt25hjnwwt53vBOXZLBKvoyQDkaMquISBdTPtRs=";
     };
 
     vendorHash = null;

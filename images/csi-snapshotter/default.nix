@@ -1,7 +1,7 @@
 { mkImage, fetchFromGitHub, buildGoModule, lib, ... }:
 
 let
-  version = "8.2.0";
+  version = "8.6.0";
   csi-snapshotter = buildGoModule {
     pname = "csi-snapshotter";
     inherit version;
@@ -10,7 +10,7 @@ let
       owner = "kubernetes-csi";
       repo = "external-snapshotter";
       rev = "v${version}";
-      hash = "sha256-cJFNsCdKF5EJ3y/Y/JWYN2o0Ey8tTMeLsgPHDhLfdyg=";
+      hash = "sha256-9WSflI44XhecRqBWGKDfeMMHqOBwyInX9w2qMLDPylA=";
     };
 
     vendorHash = null;

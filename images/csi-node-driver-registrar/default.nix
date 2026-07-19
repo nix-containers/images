@@ -1,7 +1,7 @@
 { mkImage, fetchFromGitHub, buildGoModule, lib, ... }:
 
 let
-  version = "2.12.0";
+  version = "2.17.0";
   csi-node-driver-registrar = buildGoModule {
     pname = "csi-node-driver-registrar";
     inherit version;
@@ -10,7 +10,7 @@ let
       owner = "kubernetes-csi";
       repo = "node-driver-registrar";
       rev = "v${version}";
-      hash = "sha256-5uWpaIbD/bmAwLdwkU8GHxrSjD3bw0tibofTqumC+dA=";
+      hash = "sha256-RZAvYehWtGlyF5nasB0xPjMaVZDVLCgSJtoZtRgM64s=";
     };
 
     vendorHash = null;

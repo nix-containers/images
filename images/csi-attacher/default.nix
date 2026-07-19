@@ -1,7 +1,7 @@
 { mkImage, fetchFromGitHub, buildGoModule, lib, ... }:
 
 let
-  version = "4.8.1";
+  version = "4.12.0";
   csi-attacher = buildGoModule {
     pname = "csi-attacher";
     inherit version;
@@ -10,7 +10,7 @@ let
       owner = "kubernetes-csi";
       repo = "external-attacher";
       rev = "v${version}";
-      hash = "sha256-qJcnvAmMBqqYVzK7IBsVJl/d3/13t3EKUFrYMY8WatM=";
+      hash = "sha256-Q1/r/V1j++rwiqjZQ7CvHO5+DWLiqBN2X3rL7QQJgdc=";
     };
 
     vendorHash = null;

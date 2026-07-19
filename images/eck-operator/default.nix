@@ -10,7 +10,7 @@
 # Packages NOT in nixpkgs - must build from source
 
 let
-  version = "3.2.0";
+  version = "3.4.1";
   eck-operator = buildGoModule {
     pname = "eck-operator";
     inherit version;
@@ -19,10 +19,10 @@ let
       owner = "elastic";
       repo = "cloud-on-k8s";
       rev = "v${version}";
-      hash = "sha256-zqQY5RrCPWODEKAriBNWG/KJQnA4+bOEMcaI2T75DoU=";
+      hash = "sha256-z7uO9PmaOlBBqdiH7yy8SZCmoFZ2qTe8Lv08RbLg/j4=";
     };
 
-    vendorHash = "sha256-lnxQLYzLyfk5SoqB/WkWcYXqNUYmlkiP7T+PRBQH9g4=";  # TODO: Fix hash after first build
+    vendorHash = "sha256-G33lO935WQDE6WHiLScC0/T8z1xY4XlzimucVBkgZn0=";  # TODO: Fix hash after first build
 
     subPackages = [ "cmd" ];
 

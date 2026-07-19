@@ -10,7 +10,7 @@
 #   pkgs.crossplane  # crossplane-2.1 (2.1.3-r1)
 
 let
-  version = "0.54.0";
+  version = "0.58.0";
   provider-aws = buildGoModule {
     pname = "provider-aws";
     inherit version;
@@ -19,7 +19,7 @@ let
       owner = "crossplane-contrib";
       repo = "provider-aws";
       rev = "v${version}";
-      hash = "sha256-ng6LoxNnow8RkhIBa+CdKEToCQdA4eEY0JhzuxPSqlU=";  # TODO: Fix hash after first build
+      hash = "sha256-z1ZqesqvW6VLgnxfqnlccJ0HqNqA3zd0vGvnxtUgkPI=";  # TODO: Fix hash after first build
     };
 
     vendorHash = "sha256-dNA0DOQjL9tp/RSgo2wmFghxjDMybeMLtglJTLYyM8A=";  # TODO: Fix hash after first build
