@@ -4,7 +4,7 @@
 # Calico networking component
 
 let
-  version = "3.29.0";
+  version = "3.32.1";
   calico-component = buildGoModule {
     pname = "calico-goldmane";
     inherit version;

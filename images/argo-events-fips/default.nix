@@ -3,15 +3,15 @@
 # argo-events (fips variant) - https://github.com/argoproj/argo-events
 # Built from source + GOTOOLCHAIN=local to clear stale Go-stdlib CVEs.
 let
-  version = "1.9.10";
+  version = "1.9.11";
   drv = pkgs.buildGoModule {
     pname = "argo-events-fips";
     inherit version;
     src = pkgs.fetchFromGitHub {
       owner = "argoproj"; repo = "argo-events";
-      rev = "v${version}"; hash = "sha256-C0FDilzSjY7OMtqQV/mudT+Ojg4+w2FL6IKVgs0dNQ4=";
+      rev = "v${version}"; hash = "sha256-nj/5h5oQEKXbWJLeCzVD0CGQT9vpr/YNgN0nboarFqU=";
     };
-    vendorHash = "sha256-XeA2SwqS8qZVWisXhGAGE+kFH/tyRdb29L+3sPfLIZU=";
+    vendorHash = "sha256-ElF11vh24MeGs5xcFVkFxiBc3eahg3np+XT9GMwhgpw=";
     env.CGO_ENABLED = 0;
     preBuild = "export GOTOOLCHAIN=local";
     ldflags = [ "-s" "-w" ];

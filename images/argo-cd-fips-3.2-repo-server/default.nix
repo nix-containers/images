@@ -9,7 +9,7 @@
 # prebuilt binary clear at each rebuild.
 
 let
-  version = "3.2.12";
+  version = "3.4.5";
 
   drv = pkgs.buildGoModule {
     pname = "argocd";
@@ -19,11 +19,11 @@ let
       owner = "argoproj";
       repo = "argo-cd";
       rev = "v${version}";
-      hash = "sha256-aIeaXlr4YyfVreogIA2d2EWqaxG6pZNq/a/NZycwCTo=";
+      hash = "sha256-hM7ss948dr7KntUGwiFDhr1OrbI+LAJlDgUMnegm+es=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-+QFPvlGMvcQRnl83AApZEnU4ivnmqsOYEwuPaNc4AL4=";
+    vendorHash = "sha256-yzVSMdupFdrYUWMCPFhiYTnjCDGZo4Se0osXbCvB7gM=";
 
     subPackages = [ "cmd" ];
     ldflags = [ "-s" "-w" ];
