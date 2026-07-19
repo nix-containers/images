@@ -38,13 +38,13 @@
 # baked layers stay read-only while new derivations land in the upper.
 
 let
-  version = "2.330.0";
+  version = "2.335.1";
 
   arch = if pkgs.stdenv.hostPlatform.isAarch64 then "arm64" else "x64";
 
   hashes = {
-    x64 = "sha256-r1wz+pTzzDO46Xk3k5E2prBBl+ba38+ztuM64b9B55o=";
-    arm64 = "sha256-nLQ1J5EghsfI+0EZywZAn8vL1vk6LYUH8wsHxJViD1w=";
+    x64 = "sha256-TvLyUoXwrkR38f4eNG23bS8+vwOCTi3dGXOigZv2yM8=";
+    arm64 = "sha256-bR6Fv9GlBqixfB8bm1fbpFj/7ZCJh5mqqfWZUgsNkgc=";
   };
 
   actions-runner = pkgs.stdenv.mkDerivation rec {
