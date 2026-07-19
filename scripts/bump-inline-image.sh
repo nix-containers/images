@@ -119,6 +119,39 @@ if grep -q 'pullImage' "$F"; then
   echo "$IMG: imageDigest ${OLD_DIGEST:0:19}... -> ${NEW_DIGEST:0:19}..."
 fi
 
+# 1c. per-arch hash attrset — e.g.
+#        arch   = if isAarch64 then "arm64" else "x64";
+#        hashes = { x64 = "sha256-…"; arm64 = "sha256-…"; };
+#        src    = fetchurl { url = "…-${arch}-${version}.tar.gz"; hash = hashes.${arch}; };
+#     The generic build loop below only builds x86_64-linux, so it exercises
+#     (and repairs) exactly ONE arch's hash. The other arch's hash would never
+#     be checked and would silently rot on every bump, breaking that image.
+#     Prefetch each arch's hash directly from its concrete release URL — no
+#     cross-arch build needed. Relies on the attr key (x64/arm64/…) being the
+#     same string interpolated into the URL via `${arch}`, which is the
+#     convention these definitions use.
+if grep -qE '\$\{arch\}' "$F" \
+   && grep -qE '^[[:space:]]*(x64|arm64|aarch64|amd64|x86_64)[[:space:]]*=[[:space:]]*"sha256-' "$F"; then
+  URL_TMPL=$(grep -oE 'url[[:space:]]*=[[:space:]]*"[^"]+"' "$F" \
+    | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+  if [ -z "$URL_TMPL" ]; then
+    echo "$IMG: per-arch hashes present but no url template found"
+    revert; exit 1
+  fi
+  for key in $(grep -oE '^[[:space:]]*(x64|arm64|aarch64|amd64|x86_64)[[:space:]]*=[[:space:]]*"sha256-' "$F" \
+                 | grep -oE '(x64|arm64|aarch64|amd64|x86_64)' | sort -u); do
+    # substitute the nix interpolations we know how to resolve
+    CU=$(printf '%s' "$URL_TMPL" | sed -e "s/\${version}/${NEW}/g" -e "s/\${arch}/${key}/g")
+    NH=$(nix store prefetch-file --json --hash-type sha256 "$CU" 2>/dev/null | jq -r '.hash // empty')
+    if [ -z "$NH" ]; then
+      echo "$IMG: prefetch failed for arch=$key ($CU)"
+      revert; exit 1
+    fi
+    sed -i -E "s|(^[[:space:]]*${key}[[:space:]]*=[[:space:]]*)\"sha256-[^\"]+\"|\1\"${NH}\"|" "$F"
+    echo "$IMG: ${key} hash -> ${NH}"
+  done
+fi
+
 # 2. iteratively repair hashes (src, then vendorHash, etc.)
 for attempt in 1 2 3 4; do
   LOG=$(nix build "${STORE_ARG[@]}" ".#packages.${SYS}.\"${IMG}\"" "${LINK_ARG[@]}" --impure 2>&1)
