@@ -8,7 +8,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "3.4.4";
+  version = "3.4.5";
 
   drv = pkgs.buildGoModule {
     pname = "argocd";

@@ -7,7 +7,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "0.31.1";
+  version = "0.31.2";
 
   drv = pkgs.buildGoModule {
     pname = "buildctl";
