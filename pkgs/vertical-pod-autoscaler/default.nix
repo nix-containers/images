@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "vertical-pod-autoscaler";
-  version = "cluster-autoscaler-chart-9.59.0";
+  version = "1.7.1";
 
   src = fetchFromGitHub {
     owner = "kubernetes";
     repo = "autoscaler";
     rev = "vertical-pod-autoscaler-${version}";
-    hash = "sha256-72v+jXGmsvb9mcMH56GpHRyCtGd58IOZdXHPGuUjWq4=";
+    hash = "sha256-amD3w5S7z4vCpVSHss57WP+YSfxe7XmJy0jDliLD7Ag=";
   };
 
   vendorHash = null;
