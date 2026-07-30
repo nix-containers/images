@@ -5,13 +5,13 @@
 
 buildGoModule rec {
   pname = "cilium-certgen";
-  version = "0.4.8";
+  version = "0.4.9";
 
   src = fetchFromGitHub {
     owner = "cilium";
     repo = "certgen";
     rev = "v${version}";
-    hash = "sha256-yFlUi4QBztUEPI4JMxR9/JtbdMJu340u3W4CzBlc4vw=";
+    hash = "sha256-FQzl56PwUX+0SXvLxvu+XA1m1wxhOyJWi0O0xnZHPDk=";
   };
 
   vendorHash = null;  # Uses vendored dependencies
