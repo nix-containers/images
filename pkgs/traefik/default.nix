@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "traefik";
-  version = "3.7.9";
+  version = "3.7.10";
 
   src = fetchFromGitHub {
     owner = "traefik";
