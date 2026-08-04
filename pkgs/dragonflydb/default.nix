@@ -10,11 +10,11 @@
 { stdenv, lib, fetchurl, autoPatchelfHook, zlib }:
 
 let
-  version = "19_6_26_with_instrumentation";
+  version = "1.40.0";
   selectSystem = {
     "x86_64-linux" = {
       arch = "x86_64";
-      hash = "sha256-gfiM/QCWxVDkFacAyX61v2Btsd9hBswDWE6Hj9eqEmo=";
+      hash = "sha256-dZZ33Umb/6vRTr3F2McT/K6DT9loaydmFVxH6DNZyVM=";
     };
     "aarch64-linux" = {
       arch = "aarch64";
