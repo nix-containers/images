@@ -10,11 +10,11 @@
 { stdenv, lib, fetchurl, autoPatchelfHook, zlib }:
 
 let
-  version = "1.40.0";
+  version = "1.40.1";
   selectSystem = {
     "x86_64-linux" = {
       arch = "x86_64";
-      hash = "sha256-dZZ33Umb/6vRTr3F2McT/K6DT9loaydmFVxH6DNZyVM=";
+      hash = "sha256-/Jubb684jXANGp2WS1H1chuO/txlkjkzCwO0zoVSYd4=";
     };
     "aarch64-linux" = {
       arch = "aarch64";

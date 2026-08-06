@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "loki";
-  version = "3.7.5";
+  version = "helm-loki-7.2.0";
 
   src = fetchFromGitHub {
     owner = "grafana";
