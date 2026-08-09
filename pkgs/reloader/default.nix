@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "reloader";
-  version = "merge-1191";
+  version = "1.4.21";
 
   src = fetchFromGitHub {
     owner = "stakater";
     repo = "Reloader";
     rev = "v${version}";
-    hash = "sha256-j1K8l/1b25DhD74xJx5CcWUXYm0P/ny8FOID9ABSJSM=";
+    hash = "sha256-jvPqv7gOBQm5g/OjfhhhVYI6aqyoEmb1nndAzRpmtnA=";
   };
 
   vendorHash = null;
