@@ -5,11 +5,11 @@
 # Uses the upstream statically-linked prebuilt binary tarball.
 
 let
-  version = "3.256.0";
+  version = "3.257.0";
   srcs = {
     x86_64-linux = fetchurl {
       url = "https://github.com/pulumi/pulumi/releases/download/v${version}/pulumi-v${version}-linux-x64.tar.gz";
-      hash = "sha256-/kr9TNpI9/4GlhJog0yvePse+osx7mGtAO4ubPqRyuo=";
+      hash = "sha256-0OVLRkW5jG4QjZBWH+LvlJxnNIeF/4D43FEUpyJPJps=";
     };
     aarch64-linux = fetchurl {
       url = "https://github.com/pulumi/pulumi/releases/download/v${version}/pulumi-v${version}-linux-arm64.tar.gz";
