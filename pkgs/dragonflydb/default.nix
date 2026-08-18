@@ -10,7 +10,7 @@
 { stdenv, lib, fetchurl, autoPatchelfHook, zlib }:
 
 let
-  version = "i1.40.4";
+  version = "i1.40.5";
   selectSystem = {
     "x86_64-linux" = {
       arch = "x86_64";
