@@ -5,7 +5,7 @@
 # Uses the upstream statically-linked prebuilt binary tarball.
 
 let
-  version = "3.257.0";
+  version = "3.258.0";
   srcs = {
     x86_64-linux = fetchurl {
       url = "https://github.com/pulumi/pulumi/releases/download/v${version}/pulumi-v${version}-linux-x64.tar.gz";
