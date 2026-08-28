@@ -36,6 +36,11 @@ mkImage {
 
   extraPkgs = with pkgs; [
     cacert
+    # Exposes the bundle as /etc/ssl/certs/ca-certificates.crt, the first path
+    # pilot-agent's security.GetOSRootFilePath() probes. cacert alone installs
+    # it as ca-bundle.crt, which matches none of istio's candidates, so every
+    # proxy logged "OS CA Cert could not be found for agent".
+    istio-fips.osCaCompat
     iptables
     iproute2
   ];
