@@ -21,10 +21,13 @@
 # which must report boringcrypto. A binary without that line is not a FIPS
 # build regardless of what the derivation is called.
 
-{ lib, fetchFromGitHub, buildGoModule }:
+{ lib, fetchFromGitHub, buildGoModule, fetchurl, stdenvNoCC, autoPatchelfHook, zlib, stdenv }:
 
 let
   version = "1.30.4";
+
+  # PROXY_REPO_SHA from istio/istio istio.deps at tag 1.30.4.
+  proxySha = "ce177c56fe75661f16b654e2f164d4ab02058222";
 
   src = fetchFromGitHub {
     owner = "istio";
@@ -80,4 +83,60 @@ rec {
       mainProgram = "pilot-agent";
     };
   });
+
+  # Envoy for the combined proxyv2 image. Prebuilt from the istio-build bucket
+  # at the SAME proxy SHA istio 1.30.4 pins, so the agent and the proxy in the
+  # image below are from one release rather than mixed.
+  #
+  # NOT FIPS, and it cannot be made so here: Envoy is C++, GOEXPERIMENT does
+  # nothing for it, and a validated build needs Bazel --define boringssl=fips
+  # against the frozen FIPS BoringSSL. Kept explicit so the combined image's
+  # labelling can be honest about which half is which.
+  envoy = stdenv.mkDerivation {
+    pname = "istio-envoy-for-fips-proxyv2";
+    inherit version;
+    src = fetchurl {
+      url = "https://storage.googleapis.com/istio-build/proxy/envoy-alpha-${proxySha}.tar.gz";
+      hash = "sha256-/tbAdsthLw0Nn/JcYtVYeqnWBMfYAFRFTQWhV7U98+s=";
+    };
+    nativeBuildInputs = [ autoPatchelfHook ];
+    buildInputs = [ stdenv.cc.cc.lib zlib ];
+    sourceRoot = ".";
+    installPhase = ''
+      runHook preInstall
+      install -Dm755 usr/local/bin/envoy $out/bin/envoy
+      runHook postInstall
+    '';
+    dontStrip = true;
+  };
+
+  # Combined image payload, mirroring pkgs/istio's proxyv2-bin layout:
+  # binaries in /bin plus the /usr/local/bin symlinks pilot-agent looks for, and
+  # the bootstrap template at the path Envoy is handed.
+  #
+  # PARTIAL FIPS, DELIBERATELY. pilot-agent is BoringCrypto; envoy is not. The
+  # gateway's external TLS is terminated by ENVOY, so this does not make the
+  # edge FIPS — it makes the agent that manages it FIPS. Labelled accordingly.
+  proxyv2-bin = stdenvNoCC.mkDerivation {
+    pname = "istio-proxyv2-fips";
+    inherit version;
+    dontUnpack = true;
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/bin $out/usr/local/bin $out/var/lib/istio/envoy
+      cp ${envoy}/bin/envoy $out/bin/
+      cp ${pilot-agent}/bin/pilot-agent $out/bin/
+      ln -s $out/bin/envoy $out/usr/local/bin/envoy
+      ln -s $out/bin/pilot-agent $out/usr/local/bin/pilot-agent
+      cp ${src}/tools/packaging/common/envoy_bootstrap.json \
+         $out/var/lib/istio/envoy/envoy_bootstrap_tmpl.json
+      runHook postInstall
+    '';
+    meta = with lib; {
+      description = "Istio proxyv2 payload: BoringCrypto pilot-agent + stock Envoy + bootstrap";
+      homepage = "https://istio.io/";
+      license = licenses.asl20;
+      platforms = [ "x86_64-linux" ];
+    };
+  };
 }
