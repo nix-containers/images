@@ -21,7 +21,7 @@
 # which must report boringcrypto. A binary without that line is not a FIPS
 # build regardless of what the derivation is called.
 
-{ lib, fetchFromGitHub, buildGoModule, fetchurl, stdenvNoCC, autoPatchelfHook, zlib, stdenv }:
+{ lib, fetchFromGitHub, buildGoModule, fetchurl, stdenvNoCC, autoPatchelfHook, zlib, stdenv, runCommand, cacert }:
 
 let
   version = "1.30.4";
@@ -109,6 +109,31 @@ rec {
     '';
     dontStrip = true;
   };
+
+  # OS CA bundle under the filename istio actually probes.
+  #
+  # pilot-agent calls security.GetOSRootFilePath(), which stats a fixed list of
+  # distro paths and takes the first hit:
+  #   /etc/ssl/certs/ca-certificates.crt   (Debian/Ubuntu — first, so this one)
+  #   /etc/pki/tls/certs/ca-bundle.crt, /etc/ssl/ca-bundle.pem, ... (7 more)
+  # nixpkgs cacert installs the bundle as /etc/ssl/certs/ca-bundle.crt, which
+  # matches NONE of them — note the second candidate IS ca-bundle.crt but under
+  # /etc/pki/tls/certs, not /etc/ssl/certs. So the bundle was present all along
+  # under a name istio never looks for, and every proxy logged
+  #   warn  OS CA Cert could not be found for agent
+  # while upstream proxyv2, being Debian-based, did not.
+  #
+  # Inert on our clusters today — nothing makes the proxy fetch remote JWKS over
+  # TLS (no RequestAuthentication, no jwt_authn filter, and the ext_authz
+  # provider is plaintext in-cluster gRPC) — but it is a real divergence from
+  # upstream that would bite the moment a RequestAuthentication with a remote
+  # jwksUri is added, and it would surface as a TLS verification error rather
+  # than anything pointing back here.
+  osCaCompat = runCommand "istio-os-ca-certificates" { } ''
+    mkdir -p $out/etc/ssl/certs
+    ln -s ${cacert}/etc/ssl/certs/ca-bundle.crt \
+          $out/etc/ssl/certs/ca-certificates.crt
+  '';
 
   # Combined image payload, mirroring pkgs/istio's proxyv2-bin layout:
   # binaries in /bin plus the /usr/local/bin symlinks pilot-agent looks for, and

@@ -34,6 +34,8 @@ mkImage {
   extraPkgs = with pkgs; [
     busybox
     cacert
+    # See pkgs/istio-fips: gives pilot-agent the OS CA path it actually probes.
+    istio-fips.osCaCompat
     iptables
   ];
 
