@@ -5,9 +5,17 @@
 # proxy SHA pinned in istio/istio's istio.deps for the release.
 # https://github.com/istio/proxy
 
+#
+# ALIGNED TO WHAT IS ACTUALLY DEPLOYED. This previously pinned the proxy SHA
+# from istio 1.30.2 while every cluster runs
+# registry.istio.io/release/proxyv2:1.30.4, so the packaged Envoy was two patch
+# releases behind the one in production and the image could not be used as a
+# drop-in for it. The SHA below is PROXY_REPO_SHA from istio/istio's istio.deps
+# at tag 1.30.4, which is the authoritative pin for that release.
+
 let
-  version = "1.30.2";
-  proxySha = "34ce4554c88740f88bfc4dc826ae33e1dd21d8fc";
+  version = "1.30.4";
+  proxySha = "ce177c56fe75661f16b654e2f164d4ab02058222";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "istio-envoy";
@@ -15,7 +23,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://storage.googleapis.com/istio-build/proxy/envoy-alpha-${proxySha}.tar.gz";
-      hash = "sha256-UG+3+9hpahF3gARUZKeR7dx0ND1kz9iYct0HugKMfVU=";
+      hash = "sha256-/tbAdsthLw0Nn/JcYtVYeqnWBMfYAFRFTQWhV7U98+s=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook ];
