@@ -1,15 +1,49 @@
-{ nix2container, lib, pkgs, ... }:
+# istio-pilot-discovery-fips
+# https://istio.io/
 
-# istio-pilot-discovery-fips — UPSTREAM REFERENCE (not built or hosted by us).
-# Use the OSS upstream image directly: docker.io/istio/pilot:1.28.10
-# Cataloged with a "Good Upstream" badge (interim). #618
-nix2container.buildImage {
+{ mkImage, pkgs, lib, ... }:
+
+# GENUINELY FIPS, unlike every other istio-*-fips image before this. It uses
+# pkgs.istio-fips, which builds pilot-discovery from istio/istio source with
+# CGO_ENABLED=1 and GOEXPERIMENT=boringcrypto, rather than pkgs.istio, which
+# extracts a stock prebuilt binary out of the official release image. Extraction
+# can never yield a FIPS artifact, which is why the compliance label is earned
+# here and was removed from the images that only carried the name.
+#
+# Verify, do not assume:
+#   go version -m /path/to/pilot-discovery | grep GOEXPERIMENT
+# must report boringcrypto, and the binary self-reports
+# GolangVersion:"goX.Y.Z-X:boringcrypto" under `pilot-discovery version`.
+#
+# THE EDGE IS STILL NOT COVERED. Envoy is C++; GOEXPERIMENT does nothing for it
+# and it needs Bazel --define boringssl=fips against the frozen FIPS-validated
+# BoringSSL. istio-proxy-fips and istio-envoy-fips remain stock upstream and are
+# labelled accordingly. External TLS terminates in Envoy, so this covers the
+# control plane, xDS and mTLS crypto — not the ingress gateway.
+
+let
+  istio = pkgs.istio-fips;
+  version = istio.version;
+in
+mkImage {
+  drv = istio.pilot-discovery;
   name = "istio-pilot-discovery-fips";
-  tag = "1.30.2";
-  config.Labels = {
-    "org.opencontainers.image.version" = "1.30.2";
-    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/istio/pilot:1.28.10 directly.";
-    "io.nix-containers.upstream-image" = "docker.io/istio/pilot:1.28.10";
-    "io.nix-containers.image.upstream" = "docker.io/istio/pilot";
+  tag = version;
+  entrypoint = [ "${istio.pilot-discovery}/bin/pilot-discovery" ];
+  cmd = [ "discovery" ];
+
+  extraPkgs = with pkgs; [
+    busybox
+    cacert
+    iptables
+  ];
+
+  labels = {
+    "org.opencontainers.image.title" = "Istio pilot-discovery (FIPS/BoringCrypto)";
+    "org.opencontainers.image.description" = "Istio pilot-discovery, built with GOEXPERIMENT=boringcrypto";
+    "org.opencontainers.image.version" = version;
+    "io.nix-containers.chart" = "istio";
+    # Earned: the binary in this image is a BoringCrypto build. See the header.
+    "io.nix-containers.compliance" = "FIPS-140-2";
   };
 }
