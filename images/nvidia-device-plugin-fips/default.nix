@@ -34,7 +34,11 @@ nix2container.buildImage {
       "org.opencontainers.image.title" = "nvidia device plugin fips";
       "org.opencontainers.image.description" = "NVIDIA nvidia-device-plugin-fips";
       "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
+    # No compliance label here: this image has no FIPS crypto backend.
+    # The -fips images that genuinely qualify set
+    # env.GOEXPERIMENT = "boringcrypto" (with CGO_ENABLED = 1) so the
+    # binary links BoringCrypto; see age-fips for the reference shape.
+    # Re-add this label only alongside such a build.
     };
   };
 }

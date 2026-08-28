@@ -186,7 +186,11 @@ in nix2container.buildImage {
       "org.opencontainers.image.title" = "keycloak-fips";
       "org.opencontainers.image.description" = "Keycloak identity broker (FIPS-intent build) with docker-library-compatible entrypoint, runs as uid 999";
       "org.opencontainers.image.version" = keycloak.version;
-      "io.nix-containers.compliance" = "FIPS-140-2";
+      # No compliance label here: this image has no FIPS crypto backend.
+      # The -fips images that genuinely qualify set
+      # env.GOEXPERIMENT = "boringcrypto" (with CGO_ENABLED = 1) so the
+      # binary links BoringCrypto; see age-fips for the reference shape.
+      # Re-add this label only alongside such a build.
     };
   };
 }
