@@ -1,15 +1,48 @@
-{ nix2container, lib, pkgs, ... }:
+# istio-pilot-agent-fips
+# https://istio.io/
 
-# istio-pilot-agent-fips — UPSTREAM REFERENCE (not built or hosted by us).
-# Use the OSS upstream image directly: docker.io/istio/proxyv2:1.28.10
-# Cataloged with a "Good Upstream" badge (interim). #618
-nix2container.buildImage {
+{ mkImage, pkgs, lib, ... }:
+
+# GENUINELY FIPS, unlike every other istio-*-fips image before this. It uses
+# pkgs.istio-fips, which builds pilot-agent from istio/istio source with
+# CGO_ENABLED=1 and GOEXPERIMENT=boringcrypto, rather than pkgs.istio, which
+# extracts a stock prebuilt binary out of the official release image. Extraction
+# can never yield a FIPS artifact, which is why the compliance label is earned
+# here and was removed from the images that only carried the name.
+#
+# Verify, do not assume:
+#   go version -m /path/to/pilot-agent | grep GOEXPERIMENT
+# must report boringcrypto, and the binary self-reports
+# GolangVersion:"goX.Y.Z-X:boringcrypto" under `pilot-agent version`.
+#
+# THE EDGE IS STILL NOT COVERED. Envoy is C++; GOEXPERIMENT does nothing for it
+# and it needs Bazel --define boringssl=fips against the frozen FIPS-validated
+# BoringSSL. istio-proxy-fips and istio-envoy-fips remain stock upstream and are
+# labelled accordingly. External TLS terminates in Envoy, so this covers the
+# control plane, xDS and mTLS crypto — not the ingress gateway.
+
+let
+  istio = pkgs.istio-fips;
+  version = istio.version;
+in
+mkImage {
+  drv = istio.pilot-agent;
   name = "istio-pilot-agent-fips";
-  tag = "1.30.2";
-  config.Labels = {
-    "org.opencontainers.image.version" = "1.30.2";
-    "org.opencontainers.image.description" = "Upstream reference — pull docker.io/istio/proxyv2:1.28.10 directly.";
-    "io.nix-containers.upstream-image" = "docker.io/istio/proxyv2:1.28.10";
-    "io.nix-containers.image.upstream" = "docker.io/istio/proxyv2";
+  tag = version;
+  entrypoint = [ "${istio.pilot-agent}/bin/pilot-agent" ];
+
+  extraPkgs = with pkgs; [
+    busybox
+    cacert
+    iptables
+  ];
+
+  labels = {
+    "org.opencontainers.image.title" = "Istio pilot-agent (FIPS/BoringCrypto)";
+    "org.opencontainers.image.description" = "Istio sidecar agent, built with GOEXPERIMENT=boringcrypto";
+    "org.opencontainers.image.version" = version;
+    "io.nix-containers.chart" = "istio";
+    # Earned: the binary in this image is a BoringCrypto build. See the header.
+    "io.nix-containers.compliance" = "FIPS-140-2";
   };
 }

@@ -109,7 +109,11 @@ nix2container.buildImage {
       "io.nix-containers.image.category" = "runtime";
       "io.nix-containers.image.aliases" = "python-fips,py-fips";
       "io.nix-containers.image.fips" = "true";
-      "io.nix-containers.image.compliance" = "FIPS-140-2";
+      # No compliance label here: this image has no FIPS crypto backend.
+      # The -fips images that genuinely qualify set
+      # env.GOEXPERIMENT = "boringcrypto" (with CGO_ENABLED = 1) so the
+      # binary links BoringCrypto; see age-fips for the reference shape.
+      # Re-add this label only alongside such a build.
     };
   };
 }

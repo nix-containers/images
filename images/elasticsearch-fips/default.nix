@@ -33,7 +33,11 @@ in nix2container.buildImage {
       "org.opencontainers.image.title" = "elasticsearch fips";
       "org.opencontainers.image.description" = "elasticsearch-fips container image";
       "org.opencontainers.image.version" = version;
-    "io.nix-containers.compliance" = "FIPS-140-2";
+    # No compliance label here: this image has no FIPS crypto backend.
+    # The -fips images that genuinely qualify set
+    # env.GOEXPERIMENT = "boringcrypto" (with CGO_ENABLED = 1) so the
+    # binary links BoringCrypto; see age-fips for the reference shape.
+    # Re-add this label only alongside such a build.
     };
   };
 }

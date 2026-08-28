@@ -51,6 +51,7 @@
   hubble-ui = pkgs.callPackage ./hubble-ui { };
   ingress-nginx-controller = pkgs.callPackage ./ingress-nginx-controller { };
   istio = pkgs.callPackage ./istio { };
+  istio-fips = pkgs.callPackage ./istio-fips { };
   karpenter = pkgs.callPackage ./karpenter { };
   keda = pkgs.callPackage ./keda { };
   kube-rbac-proxy = pkgs.callPackage ./kube-rbac-proxy { };
