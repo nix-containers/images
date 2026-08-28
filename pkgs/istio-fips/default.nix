@@ -84,27 +84,54 @@ rec {
     };
   });
 
-  # Envoy for the combined proxyv2 image. Prebuilt from the istio-build bucket
-  # at the SAME proxy SHA istio 1.30.4 pins, so the agent and the proxy in the
-  # image below are from one release rather than mixed.
+  # BoringSSL-FIPS Envoy, fetched by hash from a GitHub release.
   #
-  # NOT FIPS, and it cannot be made so here: Envoy is C++, GOEXPERIMENT does
-  # nothing for it, and a validated build needs Bazel --define boringssl=fips
-  # against the frozen FIPS BoringSSL. Kept explicit so the combined image's
-  # labelling can be honest about which half is which.
+  # WHY NOT BUILT HERE. This is a ~75 minute Bazel build that needs network
+  # access mid-build and its own clang/cmake/ninja/go toolchain, so it cannot
+  # run in a nix derivation. scripts/build-istio-envoy-fips.sh is the exact
+  # recipe and regenerates this artifact; the hash below pins it, so the IMAGE
+  # stays reproducible from git even though the binary is a documented input.
+  #
+  # WHY NOT UPSTREAM ENVOY. Istio's data plane needs istio/proxy's build — the
+  # bootstrap requires type.googleapis.com/istio.workload.BootstrapExtension and
+  # the binary must carry io.istio.http.peer_metadata, io.istio.local_principal
+  # and io.istio.peer_principal. Chainguard's envoy-fips is upstream Envoy and
+  # rejects Istio's config; Google's ASM ships no FIPS variant; Tetrate's is
+  # subscription-gated. Nothing publishes a FIPS Envoy Istio can use.
+  #
+  # Built from PROXY_REPO_SHA ce177c56 (istio 1.30.4's pin) with
+  # --config=boringssl-fips. Reports:
+  #   ce177c56.../1.38.4-dev/Clean/RELEASE/BoringSSL-FIPS
+  # Envoy always links BoringSSL, so that suffix is the only thing separating a
+  # FIPS build from a stock one.
+  #
+  # autoPatchelfHook IS LOAD-BEARING. The Bazel build emits a binary requesting
+  # /lib64/ld-linux-x86-64.so.2, absent in a nix image. Without patching,
+  # pilot-agent fails with "fork/exec /usr/local/bin/envoy: no such file or
+  # directory" — ENOENT for the missing INTERPRETER, not the missing file, which
+  # is thoroughly misleading. Patching does not disturb the crypto; the patched
+  # binary still reports BoringSSL-FIPS.
+  #
+  # NOT CMVP-VALIDATED. See the fips.* labels on images/istio-proxyv2-fips and
+  # the header of the build script.
   envoy = stdenv.mkDerivation {
-    pname = "istio-envoy-for-fips-proxyv2";
+    pname = "istio-envoy-boringssl-fips";
     inherit version;
+
     src = fetchurl {
-      url = "https://storage.googleapis.com/istio-build/proxy/envoy-alpha-${proxySha}.tar.gz";
-      hash = "sha256-/tbAdsthLw0Nn/JcYtVYeqnWBMfYAFRFTQWhV7U98+s=";
+      url = "https://github.com/nix-containers/images/releases/download/istio-envoy-fips-1.30.4/istio-envoy-fips-${proxySha}.gz";
+      hash = "sha256-JitAZRmjGTAdlmkDBe67AxlQHYbuWi+WhYtp1608Suo=";
     };
+
     nativeBuildInputs = [ autoPatchelfHook ];
     buildInputs = [ stdenv.cc.cc.lib zlib ];
-    sourceRoot = ".";
+
+    unpackPhase = "true";
     installPhase = ''
       runHook preInstall
-      install -Dm755 usr/local/bin/envoy $out/bin/envoy
+      mkdir -p $out/bin
+      gzip -dc $src > $out/bin/envoy
+      chmod 755 $out/bin/envoy
       runHook postInstall
     '';
     dontStrip = true;
