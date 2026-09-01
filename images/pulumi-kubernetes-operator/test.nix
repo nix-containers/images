@@ -29,5 +29,54 @@ pkgs.writeShellScript "test-pulumi-kubernetes-operator" ''
   echo "  Checking /manager is present..."
   docker run --rm --entrypoint /bin/sh ${image.imageName}:test -c 'test -x /manager'
 
+  # 4. THE AGENT_IMAGE CONTRACT: /agent and /tini must execute in a
+  #    FOREIGN container, not just in this one.
+  #
+  #    Test 2 above only proves the copy succeeds. It cannot catch the real
+  #    failure, because it runs the binaries inside this image where
+  #    /nix/store exists. In production the bootstrap init container copies
+  #    them onto a shared emptyDir and the *workspace* container execs them
+  #    -- and that is a different image entirely (pulumi/pulumi:<ver>-nonroot)
+  #    with no /nix/store. A dynamically-linked binary's ELF interpreter
+  #    (/nix/store/<hash>-glibc-*/lib/ld-linux-x86-64.so.2) is absent there,
+  #    and Linux reports a missing interpreter as ENOENT -- so the symptom is
+  #    "exec /share/tini: no such file or directory" for a file that is
+  #    present and executable.
+  #
+  #    This shipped once (v2.9.0, dynamic tini) and wedged every Stack on a
+  #    live cluster while every other assertion here passed.
+  echo "  Checking /agent and /tini exec in a foreign container..."
+  share=$(mktemp -d)
+  # The image runs as UID 65532; the host temp dir is owned by the caller,
+  # so make it writable for the copy-out step.
+  ${pkgs.coreutils}/bin/chmod 777 "$share"
+  docker run --rm -v "$share:/out" --entrypoint /bin/sh ${image.imageName}:test \
+    -c 'cp /agent /tini /out/'
+
+  # No chmod needed: the binaries come out of the image already mode 0555,
+  # and they are owned by UID 65532 so the caller could not chmod them anyway.
+  #
+  # debian:12-slim stands in for the workspace image: glibc-based, no
+  # /nix/store. Any non-nix base would do.
+  if ! tv=$(docker run --rm -v "$share/tini:/share/tini:ro" debian:12-slim \
+              /share/tini --version 2>&1); then
+    echo "FAIL: /tini does not exec in a foreign container:"
+    echo "  $tv"
+    echo "tini must be statically linked (pkgs.pkgsStatic.tini) -- a nixpkgs"
+    echo "dynamic build carries a /nix/store ELF interpreter that does not"
+    echo "exist in the workspace image."
+    rm -rf "$share"; exit 1
+  fi
+  echo "    tini in foreign container: $tv"
+
+  if ! docker run --rm -v "$share/agent:/share/agent:ro" debian:12-slim \
+         /share/agent --help >/dev/null 2>&1; then
+    echo "FAIL: /agent does not exec in a foreign container."
+    echo "It must stay a static build (buildGoModule with CGO_ENABLED=0)."
+    rm -rf "$share"; exit 1
+  fi
+  echo "    agent in foreign container: ok"
+  rm -rf "$share"
+
   echo "All pulumi-kubernetes-operator tests passed!"
 ''

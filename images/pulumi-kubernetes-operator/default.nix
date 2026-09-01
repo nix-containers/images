@@ -73,6 +73,22 @@ let
   # `cp /agent /tini /share/`. Same pattern as the keda chart's /keda symlink
   # and the cloudnative-pg chart's /manager symlink.
   #
+  # tini MUST be statically linked (pkgsStatic), and this is not a
+  # preference. /agent and /tini do not run in this image -- the bootstrap
+  # init container copies them onto a shared emptyDir and the *workspace*
+  # container execs them, and that container is a completely different
+  # image (pulumi/pulumi:<ver>-nonroot, Debian-based) with no /nix/store.
+  # A dynamically-linked tini carries an ELF interpreter of
+  # /nix/store/<hash>-glibc-*/lib/ld-linux-x86-64.so.2, which does not exist
+  # there, so the exec fails. Linux reports a missing ELF interpreter as
+  # ENOENT, so the symptom is the maximally misleading
+  #   exec /share/tini: no such file or directory
+  # for a file that is present and executable. Observed on a live cluster
+  # with the v2.9.0 build that shipped dynamic tini.
+  #
+  # /agent needs no equivalent treatment: buildGoModule with
+  # CGO_ENABLED=0 already produces a static binary.
+  #
   # tini is deliberately NOT listed in mkImage's `extraPkgs` below. Any
   # package passed there is a *direct* member of the base layer's
   # `copyToRoot`, and nix2container flattens direct copyToRoot members by
@@ -88,7 +104,7 @@ let
     mkdir -p $out
     ln -s ${pkoBin}/bin/manager $out/manager
     ln -s ${pkoBin}/bin/agent   $out/agent
-    ln -s ${pkgs.tini}/bin/tini $out/tini
+    ln -s ${pkgs.pkgsStatic.tini}/bin/tini $out/tini
   '';
 in
 mkImage {
@@ -100,7 +116,8 @@ mkImage {
   entrypoint = [ "/tini" "--" ];
   cmd = [ "/manager" ];
 
-  # tini is intentionally excluded here -- see the rootCompat comment above.
+  # tini is intentionally excluded here -- see the rootCompat comment above
+  # (both for the flattening reason and because it must stay pkgsStatic).
   extraPkgs = with pkgs; [ cacert tzdata ];
   extraContents = [ rootCompat ];
 
