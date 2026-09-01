@@ -76,6 +76,34 @@ pkgs.writeShellScript "test-pulumi-kubernetes-operator" ''
     rm -rf "$share"; exit 1
   fi
   echo "    agent in foreign container: ok"
+
+  # 5. tini must CONSUME the `--` separator. The operator's workspace command
+  #    is `/share/tini /share/agent -- serve --workspace ...`, with the `--`
+  #    after the program name. Whether the child sees it depends on the
+  #    libc's getopt: GNU permutes and eats it, musl (POSIX) preserves it.
+  #    The agent is a cobra CLI and `agent -- serve` does NOT resolve the
+  #    subcommand -- it prints help and exits 0, so the workspace container
+  #    reports "Completed" while serving nothing and the Stack hangs forever
+  #    with no error anywhere. A musl-static tini passes every other check
+  #    here and still breaks the operator this way.
+  echo "  Checking tini consumes the -- separator (glibc getopt semantics)..."
+  argv=$(docker run --rm -v "$share/tini:/share/tini:ro" debian:12-slim \
+           /share/tini /bin/echo "ARGV>" -- serve --workspace /tmp 2>&1 | tail -1)
+  case "$argv" in
+    "ARGV> serve --workspace /tmp")
+      echo "    tini argv handling: ok" ;;
+    *"-- serve"*)
+      echo "FAIL: tini passed the '--' through to the child:"
+      echo "  $argv"
+      echo "This is musl/POSIX getopt behaviour. The agent is a cobra CLI and"
+      echo "'agent -- serve' prints help and exits 0 instead of serving --"
+      echo "the workspace pod Completes and the Stack hangs with no error."
+      echo "Use the upstream glibc-built tini-static release binary."
+      rm -rf "$share"; exit 1 ;;
+    *)
+      echo "FAIL: unexpected child argv from tini: $argv"
+      rm -rf "$share"; exit 1 ;;
+  esac
   rm -rf "$share"
 
   echo "All pulumi-kubernetes-operator tests passed!"

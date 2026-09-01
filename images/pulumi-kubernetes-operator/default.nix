@@ -73,8 +73,9 @@ let
   # `cp /agent /tini /share/`. Same pattern as the keda chart's /keda symlink
   # and the cloudnative-pg chart's /manager symlink.
   #
-  # tini MUST be statically linked (pkgsStatic), and this is not a
-  # preference. /agent and /tini do not run in this image -- the bootstrap
+  # tini MUST be the upstream `tini-static` release binary, and this is not
+  # a preference -- it has to satisfy TWO independent constraints that no
+  # nixpkgs build of tini satisfies at once. /agent and /tini do not run in this image -- the bootstrap
   # init container copies them onto a shared emptyDir and the *workspace*
   # container execs them, and that container is a completely different
   # image (pulumi/pulumi:<ver>-nonroot, Debian-based) with no /nix/store.
@@ -86,8 +87,27 @@ let
   # for a file that is present and executable. Observed on a live cluster
   # with the v2.9.0 build that shipped dynamic tini.
   #
+  # CONSTRAINT 2 -- glibc getopt semantics. The operator's workspace command
+  # is literally
+  #     /share/tini /share/agent -- serve --workspace ...
+  # with the `--` AFTER the program name. tini passes everything from the
+  # first non-option onward to the child, so whether the child sees that
+  # `--` depends on the libc's getopt: GNU getopt PERMUTES and consumes it,
+  # POSIX getopt (musl) stops at the first non-option and preserves it. The
+  # agent is a cobra CLI, and `agent -- serve` does not resolve the `serve`
+  # subcommand -- it prints help and exits 0, so the workspace container
+  # "Completed" successfully while serving nothing and the Stack hangs.
+  #
+  # This rules out pkgs.pkgsStatic.tini, which is musl. Measured:
+  #     glibc tini -> child argv: serve --workspace X
+  #     musl  tini -> child argv: -- serve --workspace X
+  # The upstream release binary is static AND glibc-built, so it satisfies
+  # both constraints. It is also exactly what upstream's own Dockerfile
+  # ships, which is the compatibility target.
+  #
   # /agent needs no equivalent treatment: buildGoModule with
-  # CGO_ENABLED=0 already produces a static binary.
+  # CGO_ENABLED=0 already produces a static binary, and it is exec'd
+  # directly rather than through an option parser.
   #
   # tini is deliberately NOT listed in mkImage's `extraPkgs` below. Any
   # package passed there is a *direct* member of the base layer's
@@ -100,11 +120,36 @@ let
   # is likewise never a direct `extraPkgs`/`extraContents` member, only the
   # image's `drv`. Verified empirically: with tini in extraPkgs, /tini
   # resolved to a dangling symlink; removing it fixed the bootstrap `cp`.
+  # Upstream tini release binary -- static, glibc-built. See the two
+  # constraints documented above.
+  tiniStatic =
+    let
+      arch =
+        if pkgs.stdenv.hostPlatform.isAarch64 then "arm64"
+        else "amd64";
+      hash = {
+        amd64 = "sha256-xbBma0y2dpAfkN/LNxBng8X+IHewRZCXO4hZUGEbMO4=";
+        arm64 = "sha256-6uHTqlDEj7I7jL3042nQkQ38U4Vmv9Cd+Jp3SqhKSLk=";
+      }.${arch};
+    in
+    pkgs.stdenv.mkDerivation {
+      pname = "tini-static";
+      version = "0.19.0";
+      src = pkgs.fetchurl {
+        url = "https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-${arch}";
+        inherit hash;
+      };
+      dontUnpack = true;
+      dontStrip = true;
+      installPhase = "install -Dm755 $src $out/bin/tini";
+      meta.description = "tini (upstream static release binary)";
+    };
+
   rootCompat = pkgs.runCommand "pko-root-compat" {} ''
     mkdir -p $out
     ln -s ${pkoBin}/bin/manager $out/manager
     ln -s ${pkoBin}/bin/agent   $out/agent
-    ln -s ${pkgs.pkgsStatic.tini}/bin/tini $out/tini
+    ln -s ${tiniStatic}/bin/tini $out/tini
   '';
 in
 mkImage {
@@ -117,7 +162,8 @@ mkImage {
   cmd = [ "/manager" ];
 
   # tini is intentionally excluded here -- see the rootCompat comment above
-  # (both for the flattening reason and because it must stay pkgsStatic).
+  # (both for the flattening reason and because it must stay the upstream
+  # static release binary).
   extraPkgs = with pkgs; [ cacert tzdata ];
   extraContents = [ rootCompat ];
 
