@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "mimir";
-  version = "mimir-distributed-6.3.0-weekly.409";
+  version = "distributed-6.3.0-weekly.410";
 
   src = fetchFromGitHub {
     owner = "grafana";
     repo = "mimir";
     rev = "mimir-${version}";
-    hash = "sha256-O7MsBgxOlimDIoVGGNE5/WDMacdHzOLu0UPE9B1y7oM=";
+    hash = "sha256-B3i5XE4uZZhVR3/fx19hExLeLnjTNbpiOyTEJE4qHOk=";
   };
 
   vendorHash = null;
