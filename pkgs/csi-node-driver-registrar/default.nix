@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "csi-node-driver-registrar";
-  version = "2.17.0";
+  version = "2.18.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes-csi";
     repo = "node-driver-registrar";
     rev = "v${version}";
-    hash = "sha256-RZAvYehWtGlyF5nasB0xPjMaVZDVLCgSJtoZtRgM64s=";
+    hash = "sha256-iFefaNV5goahSwDa0IRcLXgQy0WzXDM/CjjrXsSgjVA=";
   };
 
   vendorHash = null;
