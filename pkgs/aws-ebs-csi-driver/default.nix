@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "aws-ebs-csi-driver";
-  version = "helm-chart-aws-ebs-csi-driver-2.65.1";
+  version = "1.65.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes-sigs";
