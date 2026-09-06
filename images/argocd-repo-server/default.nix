@@ -12,7 +12,7 @@
 # Go so stdlib patches forward at each build.
 
 let
-  version = "3.4.5";
+  version = "3.5.2";
 
   drv = pkgs.buildGoModule {
     pname = "argocd-repo-server";

@@ -8,7 +8,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "4.0.7";
+  version = "4.1.2";
 
   drv = pkgs.buildGoModule {
     pname = "argo";
@@ -18,11 +18,11 @@ let
       owner = "argoproj";
       repo = "argo-workflows";
       rev = "v${version}";
-      hash = "sha256-vT1sJyYxUS7oiWvSwPE9LnduMP3WNw/Qq7xyPlghPyI=";
+      hash = "sha256-j7ccFyFcVFwIa9jhVTPmH9Lq3CP74n7jGXeKCs0HFFc=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-dbBer2RhUWcc+o/HdSy9xrsuQ9vJhL/7sUuwpnHcMz8=";
+    vendorHash = "sha256-mKaHHGNAoEP+h4EHvRQlfbPGMZDRs86pCuJc/+6RqH0=";
 
     subPackages = [ "cmd/argo" ];
     ldflags = [ "-s" "-w" ];
