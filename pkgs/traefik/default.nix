@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "traefik";
-  version = "3.7.12";
+  version = "3.7.13";
 
   src = fetchFromGitHub {
     owner = "traefik";
     repo = "traefik";
     rev = "v${version}";
-    hash = "sha256-70QVPt0uC37o4jsQ8PS8AIspEbZ5cTs36xy9wJbJ7Ks=";
+    hash = "sha256-1GMJ2DPULEVw/YZarK/exSsyhuEbnKBki1lTFCG5cdE=";
   };
 
   vendorHash = "sha256-zIj943rlUWoYdBgmgdYaw6dBPZBEZtlBDs4p1rurpLc=";
