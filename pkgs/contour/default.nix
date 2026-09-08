@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "contour";
-  version = "1.33.6";
+  version = "1.33.7";
 
   src = fetchFromGitHub {
     owner = "projectcontour";
     repo = "contour";
     rev = "v${version}";
-    hash = "sha256-wDNzNZ8KOYSeF9dj8V4T0XMSgeM+4UB/nrribh+NQ2U=";
+    hash = "sha256-01ylrdEkCGkOcLqaJ2hLUo1XfKgNXBm78tEXE6mKIDs=";
   };
 
   vendorHash = "sha256-RB2uSY//FV/JvCQRMyXFFBc5ASfTFQImgUAtwjyfNqM=";
