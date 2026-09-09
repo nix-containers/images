@@ -4,13 +4,13 @@
 
 buildGoModule (finalAttrs: {
   pname = "openfga";
-  version = "1.19.0";
+  version = "1.20.0";
 
   src = fetchFromGitHub {
     owner = "openfga";
     repo = "openfga";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-6+tlAmvaEs72d5NoZw5yUwUOdUAWQ65YYPm9y2xSNHk=";
+    hash = "sha256-ugwYxU2x0hlJe0MWtnSUaOjQRSJbYw0PDsPfLsL1pp8=";
   };
 
   vendorHash = "sha256-CeYNV1jRqUERS6qpZQtlJu68gr1qDFwl4u2n9im2EgU=";
