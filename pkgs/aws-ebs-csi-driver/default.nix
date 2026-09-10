@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "aws-ebs-csi-driver";
-  version = "1.65.0";
+  version = "1.66.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes-sigs";
     repo = "aws-ebs-csi-driver";
     rev = "v${version}";
-    hash = "sha256-vg8GNHULpBPqB3ghZghMuNX3iV+nAsqPKuyjeNXN2vQ=";
+    hash = "sha256-Tshx4WTA2eKW1tcTXHXv8vMWB3DgaHmZDcq2hH7/XH8=";
   };
 
   proxyVendor = true;
