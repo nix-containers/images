@@ -8,7 +8,7 @@
 # Authservice implements Envoy External Authorization for OIDC authentication
 
 let
-  version = "1.1.7";
+  version = "1.1.8";
   authservice = buildGoModule {
     pname = "authservice";
     inherit version;
@@ -17,10 +17,10 @@ let
       owner = "istio-ecosystem";
       repo = "authservice";
       rev = "v${version}";
-      hash = "sha256-rXXNUShJSF2xRzr8dGOHJGMzX5JL2ApxvTV79VAowaI=";
+      hash = "sha256-nlTBoXqkkkyzIBD/+eqkHKelZ0IE76RS1JK3kXlnVsI=";
     };
 
-    vendorHash = "sha256-89Yg585HVUn+QOZV8tnHSPStLjTZnrFiLQHfiyOesfU=";
+    vendorHash = "sha256-AG9v3aL9pC7rjHcoilklUpjBSGdhSJkRbx4Nau6RgCU=";
 
     subPackages = [ "cmd" ];
 

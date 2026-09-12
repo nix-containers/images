@@ -5,7 +5,7 @@
 # FIPS-compliant build for FedRAMP compliance
 
 let
-  version = "1.9.1";
+  version = "1.10.0";
 
   argo-rollouts-fips = buildGoModule rec {
     pname = "argo-rollouts-fips";
