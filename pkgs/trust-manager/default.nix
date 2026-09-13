@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "trust-manager";
-  version = "0.24.0";
+  version = "0.25.0";
 
   src = fetchFromGitHub {
     owner = "cert-manager";
     repo = "trust-manager";
     rev = "v${version}";
-    hash = "sha256-4ek0g9zoMB0TDod5iSvEc5f/KPQk3FxVkduECTWvkds=";
+    hash = "sha256-ymGT56p3liX/1n0jbtmkceoEzje4ggcKm1NM781q31Y=";
   };
 
   vendorHash = "sha256-jxmBDTmj7hZcIbYiOdoSirngkoIm4pWeO2Qu4fB5SHY=";
