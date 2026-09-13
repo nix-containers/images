@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "mimir";
-  version = "distributed-6.3.0-weekly.411";
+  version = "mimir-distributed-6.3.0-weekly.411";
 
   src = fetchFromGitHub {
     owner = "grafana";
