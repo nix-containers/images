@@ -5,7 +5,7 @@
 # FIPS-compliant build for FedRAMP compliance
 
 let
-  version = "0.46.0";
+  version = "0.47.1";
 
   atlantis-fips = buildGoModule rec {
     pname = "atlantis-fips";

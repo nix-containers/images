@@ -6,7 +6,7 @@
 # Note: the "-fips" image name refers to the same upstream AKHQ tool.
 
 let
-  version = "0.27.1";
+  version = "0.28.0";
 
   drv = pkgs.stdenv.mkDerivation {
     pname = "akhq";
@@ -14,7 +14,7 @@ let
 
     src = pkgs.fetchurl {
       url = "https://github.com/tchiotludo/akhq/releases/download/${version}/akhq-${version}-all.jar";
-      hash = "sha256:1b1ca2zi9s3n3fvi2ii019sv49arn8lg1g9jmw0v947x9iwzv7y8";
+      hash = "sha256-uzxfj/UuZ/qLMySmWXZk+qRn2+O2DAU+bZcwSmB5tco=";
     };
 
     nativeBuildInputs = [ pkgs.autoPatchelfHook pkgs.makeWrapper ];
