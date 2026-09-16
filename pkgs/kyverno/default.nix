@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "kyverno";
-  version = "kyverno-policies-chart-3.9.1";
+  version = "1.19.1";
 
   src = fetchFromGitHub {
     owner = "kyverno";
