@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "vertical-pod-autoscaler";
-  version = "cluster-autoscaler-chart-9.59.0";
+  version = "1.7.1";
 
   src = fetchFromGitHub {
     owner = "kubernetes";
