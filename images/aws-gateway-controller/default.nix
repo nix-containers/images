@@ -4,7 +4,7 @@
 # AWS component
 
 let
-  version = "2.1.2";
+  version = "2.1.3";
   component = buildGoModule {
     pname = "aws-gateway-controller";
     inherit version;
@@ -12,7 +12,7 @@ let
       owner = "aws";
       repo = "aws-application-networking-k8s";
       rev = "v${version}";
-      hash = "sha256-+YQ/TME/5ciJalafnvdod2UdcdTeMAwxQNASWYGeetA=";
+      hash = "sha256-Z16Yw8sbqQFM+OBBzPr5hEueGW689rUWwaqC1l0ccgo=";
     };
     vendorHash = "sha256-7YA7cK83/SrE0no+jvXGOCXPudQFOrYsm4oOhS00Fjk=";
     subPackages = [ "." ];
