@@ -15,7 +15,7 @@
 
 buildGoModule (finalAttrs: {
   pname = "VictoriaMetrics";
-  version = "1.152.0-cluster";
+  version = "pmm-6401-v1.152.0";
 
   src = fetchFromGitHub {
     owner = "VictoriaMetrics";
