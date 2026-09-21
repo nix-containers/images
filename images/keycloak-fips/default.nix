@@ -17,12 +17,12 @@ let
   # A plain version + src override on the nixpkgs derivation (the dist is a
   # prebuilt zip, no build logic to patch).
   keycloak = pkgs.keycloak.overrideAttrs (old: rec {
-    version = "26.7.0";
+    version = "26.7.4";
     # nixpkgs fetches the dist with fetchzip (auto-unpacked), so the hash is
     # over the unpacked tree, not the raw .zip.
     src = pkgs.fetchzip {
       url = "https://github.com/keycloak/keycloak/releases/download/${version}/keycloak-${version}.zip";
-      hash = "sha256-rb3Wdzc3g8jMvUffOfMfJ4Uw9HJomznXzLtPOrHoWU8=";
+      hash = "sha256-Rk9ofYspK2L68tam9S+P198rh7ojZCDBXDYgKx1cSoo=";
     };
   });
 
