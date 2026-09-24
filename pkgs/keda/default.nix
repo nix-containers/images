@@ -6,13 +6,13 @@
 
 buildGoModule rec {
   pname = "keda";
-  version = "2.20.2";
+  version = "2.21.0";
 
   src = fetchFromGitHub {
     owner = "kedacore";
     repo = "keda";
     rev = "v${version}";
-    hash = "sha256-AC4MMNZrEzzxGToh+3/wr9idO9pCGJcSlIk0kBadCT8=";
+    hash = "sha256-P/039bvT7xK8lv3YTDdOWmn8T1Olk08zizpstODAkqg=";
   };
 
   # KEDA includes vendor directory
