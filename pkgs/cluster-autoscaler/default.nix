@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "cluster-autoscaler";
-  version = "cluster-autoscaler-chart-9.59.0";
+  version = "addon-resizer-1.8.24";
 
   src = fetchFromGitHub {
     owner = "kubernetes";
