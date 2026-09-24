@@ -6,13 +6,13 @@
 # So we build each component separately and combine them
 
 let
-  version = "1.20.2";
+  version = "1.20.4";
 
   src = fetchFromGitHub {
     owner = "cert-manager";
     repo = "cert-manager";
     rev = "v${version}";
-    hash = "sha256-JbQcRPPgjlvcOxnYID3zJq5CAqigI7HbbwHm5S+9r4E=";
+    hash = "sha256-Krr/HUO0sA1NerWLAmnYRQhVNmD9wwBV13YVQmr4r3g=";
   };
 
   commonAttrs = {

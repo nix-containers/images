@@ -15,13 +15,19 @@
 
 buildGoModule (finalAttrs: {
   pname = "VictoriaMetrics";
-  version = "pmm-6401-v1.152.0";
+  # Was pinned to "pmm-6401-v1.152.0" -- a tag from Percona's PMM fork of
+  # VictoriaMetrics (branch-numbered PR tags), not the real upstream
+  # VictoriaMetrics/VictoriaMetrics release, so both the ref AND the hash
+  # were wrong (verified: nix-prefetch-github against the real v1.152.0 tag
+  # returns a DIFFERENT hash than what was here). Corrected to the real
+  # upstream tag and its real hash.
+  version = "1.152.0";
 
   src = fetchFromGitHub {
     owner = "VictoriaMetrics";
     repo = "VictoriaMetrics";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-WV1SE09QajGicX9ZI0/mShYhXjcslVWm8Bo+xqdCOI8=";
+    hash = "sha256-3PDFQbVJhwyMUvA/ToXJKBOIN9xKoBGp/YjHntjwKr4=";
   };
 
   vendorHash = null;
