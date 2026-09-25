@@ -5,7 +5,7 @@
 # Uses the upstream statically-linked prebuilt binary (no autoPatchelf needed).
 
 let
-  version = "17.0.0-dev";
+  version = "18.0.0-dev";
   srcs = {
     x86_64-linux = fetchurl {
       url = "https://codeberg.org/forgejo/forgejo/releases/download/v${version}/forgejo-${version}-linux-amd64.xz";
