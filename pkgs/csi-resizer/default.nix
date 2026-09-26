@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "csi-resizer";
-  version = "2.2.1";
+  version = "2.3.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes-csi";
     repo = "external-resizer";
     rev = "v${version}";
-    hash = "sha256-kjRiJt25hjnwwt53vBOXZLBKvoyQDkaMquISBdTPtRs=";
+    hash = "sha256-DyxlmJ/YFPCEreS9chjkV/dQFOEBgLv1ec00QV2hWls=";
   };
 
   vendorHash = null;
