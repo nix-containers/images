@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "reloader";
-  version = "1.4.22";
+  version = "merge-1233";
 
   src = fetchFromGitHub {
     owner = "stakater";
