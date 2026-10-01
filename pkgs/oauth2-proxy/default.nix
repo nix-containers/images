@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "oauth2-proxy";
-  version = "7.15.4";
+  version = "7.15.5";
 
   src = fetchFromGitHub {
     owner = "oauth2-proxy";
     repo = "oauth2-proxy";
     rev = "v${version}";
-    hash = "sha256-G1luz0CjcAGMCFBzMQMA18mPh02lwQMV4CwSWDCq1gA=";
+    hash = "sha256-X63Bea/0ZiyqbNt6B+3J//dGkAmbT1Qon9hCsGJEVqo=";
   };
 
   vendorHash = "sha256-o4JWhqLbfHmlIY1XhaupIhYLfXJNguFueH+SpAe9xaw=";
