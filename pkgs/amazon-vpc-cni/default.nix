@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "amazon-vpc-cni-k8s";
-  version = "1.23.1";
+  version = "1.23.2";
 
   src = fetchFromGitHub {
     owner = "aws";
     repo = "amazon-vpc-cni-k8s";
     rev = "v${version}";
-    hash = "sha256-F2VWWNyLBiv9ZLoRdK1LthJEIU5pVB2aa5w+iAfg6dY=";
+    hash = "sha256-g2ERBnyEHgZSPdkDj4j8j6qTwvRaGCmMM44vxiLFq7k=";
   };
 
   vendorHash = null;
