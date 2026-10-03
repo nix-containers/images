@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "vertical-pod-autoscaler";
-  version = "addon-resizer-1.8.24";
+  version = "1.8.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes";
