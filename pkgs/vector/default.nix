@@ -17,7 +17,7 @@
 #   already uses for pulumi (see ../pulumi/default.nix).
 
 let
-  version = "0.58.0";
+  version = "dev-v0.3.26";
   srcs = {
     x86_64-linux = fetchurl {
       url = "https://github.com/vectordotdev/vector/releases/download/v${version}/vector-${version}-x86_64-unknown-linux-musl.tar.gz";
