@@ -7,7 +7,7 @@
 # Built from source with current nixpkgs Go so Go-stdlib CVEs from the
 # upstream prebuilt binary clear at each rebuild.
 let
-  version = "1.1.7";
+  version = "1.1.8";
 
   drv = pkgs.buildGoModule {
     pname = "authservice-fips";
@@ -17,11 +17,11 @@ let
       owner = "istio-ecosystem";
       repo = "authservice";
       rev = "v${version}";
-      hash = "sha256-rXXNUShJSF2xRzr8dGOHJGMzX5JL2ApxvTV79VAowaI=";
+      hash = "sha256-nlTBoXqkkkyzIBD/+eqkHKelZ0IE76RS1JK3kXlnVsI=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-vLPfmFNYCBJMYtarIoQY+1lw0F1eRCipZ79pYJ6VxVk=";
+    vendorHash = "sha256-ytiF+J4YcRCEC1pqTuP7C5ul1m7klRDRqFeO2culjPg=";
 
     subPackages = [ "cmd" ];
     ldflags = [ "-s" "-w" ];

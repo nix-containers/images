@@ -11,7 +11,7 @@
 # - Adversarial detection
 
 let
-  version = "0.12.0";
+  version = "0.13.0";
 
   pythonEnv = pkgs.python312.withPackages (ps: with ps; [
     # Core ML libraries
