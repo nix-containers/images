@@ -21,7 +21,7 @@ buildGoModule (finalAttrs: {
   # were wrong (verified: nix-prefetch-github against the real v1.153.0-cluster tag
   # returns a DIFFERENT hash than what was here). Corrected to the real
   # upstream tag and its real hash.
-  version = "1.153.0-cluster";
+  version = "pmm-6401-v1.153.0";
 
   src = fetchFromGitHub {
     owner = "VictoriaMetrics";
