@@ -1,0 +1,145 @@
+diff --git a/BUILD b/BUILD
+index ac05d8e4..7e3142c6 100644
+--- a/BUILD
++++ b/BUILD
+@@ -52,6 +52,12 @@ envoy_cc_binary(
+         "@envoy//source/exe:envoy_main_entry_lib",
+     ] + select({
+         "@envoy//bazel:using_openssl": [],
++        # AWS-LC FIPS build: drop the cryptomb (Intel ipp-crypto) and QAT
++        # private-key providers. They perform private-key operations outside
++        # the validated AWS-LC module (and ipp-crypto needs BN_bn2lebinpad,
++        # absent from AWS-LC FIPS 3.1.0). Same exclusion istio/proxy already
++        # applies to OpenSSL builds.
++        "@envoy//bazel:using_aws_lc": [],
+         "//conditions:default": OPENSSL_INCOMPATIBLE_CONTRIB_DEPS,
+     }),
+ )
+diff --git a/WORKSPACE b/WORKSPACE
+index 68527aa8..8dc572f3 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -50,6 +50,7 @@ http_archive(
+         "@io_istio_proxy//bazel:0011-http-prevent-generic-upgrade-connection-poisoning.patch",
+         "@io_istio_proxy//bazel:0012-Include-the-length-of-dropped-Host-headers-in-HTTP-2.patch",
+         "@io_istio_proxy//bazel:0013-Fix-RBAC-bypass-via-path-parameters.patch",
++        "@io_istio_proxy//bazel:0014-tls-emulate-FIPS_202205-compliance-policy-on-AWS-LC.patch",
+     ],
+     sha256 = ENVOY_SHA256,
+     strip_prefix = ENVOY_REPO + "-" + ENVOY_SHA,
+@@ -70,6 +71,43 @@ load("@envoy//bazel:api_repositories.bzl", "envoy_api_dependencies")
+ 
+ envoy_api_dependencies()
+ 
++# Pin @aws_lc to the CMVP-validated AWS-LC FIPS module instead of Envoy's
++# default AWS-LC mainline release. envoy_http_archive() skips any repository
++# already defined here, so Envoy's own aws_lc BUILD file and FIPS genrule
++# (bazel/external/aws_lc.BUILD, aws_lc.genrule_cmd: cmake -DFIPS=1, static
++# libcrypto.a) are reused unchanged.
++#
++# Module : AWS-LC 3 Cryptographic Module (static), version AWS-LC FIPS 3.1.0
++# Cert   : NIST CMVP #5314 (FIPS 140-3 L1)
++# Source : URL and SHA2-256 exactly as given in Security Policy section 11.1.
++# The archive is used unmodified (no patches), as the policy requires.
++new_local_repository(
++    name = "aws_lc",
++    path = "/awslc-prebuilt",
++    build_file_content = """
++load("@rules_cc//cc:defs.bzl", "cc_library")
++licenses(["notice"])
++cc_library(
++    name = "crypto",
++    srcs = ["crypto/libcrypto.a"],
++    hdrs = glob(["include/openssl/*.h"]),
++    includes = ["include"],
++    linkstatic = True,
++    visibility = ["//visibility:public"],
++)
++cc_library(
++    name = "ssl",
++    srcs = ["ssl/libssl.a"],
++    hdrs = glob(["include/openssl/*.h"]),
++    includes = ["include"],
++    linkstatic = True,
++    visibility = ["//visibility:public"],
++    deps = [":crypto"],
++)
++""",
++)
++
++
+ load("@envoy//bazel:repositories.bzl", "envoy_dependencies")
+ 
+ envoy_dependencies()
+diff --git a/bazel/0014-tls-emulate-FIPS_202205-compliance-policy-on-AWS-LC.patch b/bazel/0014-tls-emulate-FIPS_202205-compliance-policy-on-AWS-LC.patch
+new file mode 100644
+index 00000000..4bb1e6da
+--- /dev/null
++++ b/bazel/0014-tls-emulate-FIPS_202205-compliance-policy-on-AWS-LC.patch
+@@ -0,0 +1,66 @@
++From: Lucas Pick <lpick@tiberius.com>
++Subject: [PATCH] tls: emulate FIPS_202205 compliance policy on AWS-LC
++
++---
++--- a/source/common/tls/aws_lc_compat.h
+++++ b/source/common/tls/aws_lc_compat.h
++@@ -1,5 +1,6 @@
++ #pragma once
++ 
+++#include <openssl/nid.h>
++ #include <openssl/ssl.h>
++ 
++ // Aws-lc can be utilized as an alternative to boringssl
++@@ -13,16 +14,46 @@
++ #ifdef OPENSSL_IS_AWSLC
++ #define sk_X509_NAME_find sk_X509_NAME_find_awslc
++ 
++-// AWS-LC does not support BoringSSL's compliance policy API.
++-// Define the enum and a stub that returns failure so call sites
++-// can handle it through normal error paths without #ifdef guards.
+++// AWS-LC does not support BoringSSL's compliance policy API. Emulate
+++// ssl_compliance_policy_fips_202205 with public AWS-LC APIs so that
+++// TlsParameters.compliance_policies: [FIPS_202205] enforces the same
+++// restrictions as on BoringSSL instead of failing context creation:
+++//   * protocol: TLS 1.2 minimum (a higher configured minimum is kept)
+++//   * TLS 1.2 ciphers: ECDHE-(ECDSA|RSA)-AES(128|256)-GCM only
+++//   * TLS 1.3 ciphers: TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384 only
+++//   * groups: P-256, P-384 (no X25519, no hybrid KEMs)
+++//   * signature algorithms: RSA PKCS#1 / PSS with SHA-256/384/512 and
+++//     ECDSA P-256/SHA-256, P-384/SHA-384 (no SHA-1, no Ed25519)
+++// Not emulated: AWS-LC has no API to *require* the extended master secret
+++// extension on TLS 1.2; it is negotiated whenever the peer offers it.
+++// Envoy applies the compliance policy last, so these settings override any
+++// earlier cipher/curve configuration, matching BoringSSL's behaviour.
++ enum ssl_compliance_policy_t {
++   ssl_compliance_policy_fips_202205 = 1,
++ };
++ 
++-inline int SSL_CTX_set_compliance_policy(SSL_CTX* /*ctx*/,
++-                                         enum ssl_compliance_policy_t /*policy*/) {
++-  return 0;
+++inline int SSL_CTX_set_compliance_policy(SSL_CTX* ctx, enum ssl_compliance_policy_t policy) {
+++  if (ctx == nullptr || policy != ssl_compliance_policy_fips_202205) {
+++    return 0;
+++  }
+++  static const int kGroups[] = {NID_X9_62_prime256v1, NID_secp384r1};
+++  static const uint16_t kSigAlgs[] = {
+++      SSL_SIGN_RSA_PKCS1_SHA256,       SSL_SIGN_RSA_PKCS1_SHA384,
+++      SSL_SIGN_RSA_PKCS1_SHA512,       SSL_SIGN_ECDSA_SECP256R1_SHA256,
+++      SSL_SIGN_ECDSA_SECP384R1_SHA384, SSL_SIGN_RSA_PSS_RSAE_SHA256,
+++      SSL_SIGN_RSA_PSS_RSAE_SHA384,    SSL_SIGN_RSA_PSS_RSAE_SHA512,
+++  };
+++  const uint16_t min_version = SSL_CTX_get_min_proto_version(ctx);
+++  return (min_version >= TLS1_2_VERSION ||
+++          SSL_CTX_set_min_proto_version(ctx, TLS1_2_VERSION)) &&
+++         SSL_CTX_set_strict_cipher_list(ctx, "ECDHE-ECDSA-AES128-GCM-SHA256:"
+++                                             "ECDHE-RSA-AES128-GCM-SHA256:"
+++                                             "ECDHE-ECDSA-AES256-GCM-SHA384:"
+++                                             "ECDHE-RSA-AES256-GCM-SHA384") &&
+++         SSL_CTX_set_ciphersuites(ctx, "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384") &&
+++         SSL_CTX_set1_groups(ctx, kGroups, sizeof(kGroups) / sizeof(kGroups[0])) &&
+++         SSL_CTX_set_signing_algorithm_prefs(ctx, kSigAlgs, sizeof(kSigAlgs) / sizeof(kSigAlgs[0])) &&
+++         SSL_CTX_set_verify_algorithm_prefs(ctx, kSigAlgs, sizeof(kSigAlgs) / sizeof(kSigAlgs[0]));
++ }
++ 
++ // AWS-LC's X509_NAME_dup takes non-const X509_NAME*, unlike BoringSSL which accepts const.
