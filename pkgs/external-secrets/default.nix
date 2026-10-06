@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "external-secrets";
-  version = "2.11.0";
+  version = "2.12.0";
 
   src = fetchFromGitHub {
     owner = "external-secrets";
     repo = "external-secrets";
     rev = "v${version}";
-    hash = "sha256-QndmhH8xIyVCKuK7KP0Qeuxnuz8bEx7h+FxwZSWJaU8=";
+    hash = "sha256-JWO0sgYKe8FAz6jQJc61DTJ+OLkrbot09vW1ouSH4KM=";
   };
 
   vendorHash = "sha256-6Gdii+/UhOkaWwJRNZEtKXXDmodcBz1l8wjawAEToKY=";
