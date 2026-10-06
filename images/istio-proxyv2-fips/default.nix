@@ -1,21 +1,17 @@
 # istio-proxyv2-fips (Istio sidecar / gateway proxy)
 # https://istio.io/
 #
-# PARTIAL FIPS, AND THE SPLIT MATTERS. proxyv2 is a combined image: pilot-agent
-# is the entrypoint and it execs Envoy. Only one of those two can be a FIPS
-# build today:
+# CRYPTO MODULES, PER BINARY. proxyv2 is a combined image: pilot-agent is the
+# entrypoint and it execs Envoy.
 #
-#   pilot-agent  BoringCrypto (pkgs.istio-fips, GOEXPERIMENT=boringcrypto)  FIPS
-#   envoy        stock upstream prebuilt from the istio-build bucket         NOT
+#   pilot-agent  BoringCrypto (pkgs.istio-fips, GOEXPERIMENT=boringcrypto)  CMVP #4735
+#   envoy        AWS-LC FIPS 3.1.0, static, built per its Security Policy  CMVP #5314
 #
-# Envoy is C++, so GOEXPERIMENT does nothing for it; a validated build needs
-# Bazel --define boringssl=fips against the frozen FIPS BoringSSL, which nixpkgs
-# does not expose and this repo deliberately avoids (see pkgs/istio's header).
-#
-# ENVOY TERMINATES EXTERNAL TLS at the ingress gateway. So this image does NOT
-# make the edge FIPS. It makes the agent that configures the edge FIPS. Anyone
-# mapping this to a control that says "cryptographic module validated" should
-# read the two-line table above and stop there.
+# ENVOY TERMINATES EXTERNAL TLS at the ingress gateway. Its module is
+# AWS-LC 3 Cryptographic Module (static) v3.1.0, see pkgs/istio-fips `envoy`
+# for the build, the FIPS_202205 policy shim, and the operational-environment
+# caveat: #5314 was tested on Amazon Linux 2023 only, so running elsewhere
+# (e.g. GKE COS) is a user affirmation, not a CMVP-listed configuration.
 #
 # Both halves come from the same release: pilot-agent from istio/istio 1.30.4
 # source, envoy from PROXY_REPO_SHA as pinned in that tag's istio.deps — not a
@@ -52,14 +48,15 @@ mkImage {
   };
 
   labels = {
-    "org.opencontainers.image.title" = "Istio Proxy (pilot-agent FIPS, Envoy not)";
+    "org.opencontainers.image.title" = "Istio Proxy (FIPS: BoringCrypto pilot-agent, AWS-LC FIPS Envoy)";
     "org.opencontainers.image.description" =
-      "Istio proxyv2: BoringCrypto pilot-agent with stock upstream Envoy. Envoy is not a FIPS build.";
+      "Istio proxyv2: BoringCrypto pilot-agent (CMVP #4735) with Envoy statically linked to AWS-LC FIPS 3.1.0 (CMVP #5314, tested OE Amazon Linux 2023).";
     "org.opencontainers.image.version" = version;
     "io.nix-containers.chart" = "istio";
-    # No io.nix-containers.compliance label on purpose. The image contains a
-    # non-FIPS Envoy and Envoy is what terminates TLS here, so claiming
-    # FIPS-140-2 for the image would be the exact overstatement this branch is
-    # removing elsewhere.
+    "io.nix-containers.envoy.crypto-module" = "AWS-LC 3 Cryptographic Module (static) AWS-LC FIPS 3.1.0";
+    "io.nix-containers.envoy.cmvp-certificate" = "5314";
+    # No io.nix-containers.compliance label: the certificate's tested OE is
+    # Amazon Linux 2023, so FIPS standing on any other host OS is a user
+    # affirmation the deployer makes, not something the image can claim.
   };
 }

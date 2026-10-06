@@ -9,12 +9,10 @@
 # GOEXPERIMENT=boringcrypto, the same mechanism the 286 genuinely-qualifying
 # -fips images here use (see pkgs/cert-manager-fips).
 #
-# SCOPE, AND ITS LIMIT. pilot-discovery (istiod) and pilot-agent are pure Go, so
-# boringcrypto applies. The Envoy data plane is C++ and CANNOT be built this way
-# at all: it needs Bazel --define boringssl=fips against the frozen
-# FIPS-validated BoringSSL. Envoy terminates external TLS at the ingress
-# gateway, so this package covers the control plane and mTLS/xDS crypto, NOT the
-# edge. Do not read it as "Istio is FIPS".
+# SCOPE. pilot-discovery (istiod) and pilot-agent are pure Go, so boringcrypto
+# applies. The Envoy data plane is C++ and cannot be built this way; it is a
+# separate Bazel build linked against the CMVP #5314 AWS-LC FIPS 3.1.0 module
+# (see `envoy` below), fetched as a hash-pinned release asset.
 #
 # Verify a build with:
 #   go version -m result/bin/pilot-discovery | grep GOEXPERIMENT
@@ -84,9 +82,9 @@ rec {
     };
   });
 
-  # BoringSSL-FIPS Envoy, fetched by hash from a GitHub release.
+  # AWS-LC-FIPS Envoy, fetched by hash from a GitHub release.
   #
-  # WHY NOT BUILT HERE. This is a ~75 minute Bazel build that needs network
+  # WHY NOT BUILT HERE. This is a ~60 minute Bazel build that needs network
   # access mid-build and its own clang/cmake/ninja/go toolchain, so it cannot
   # run in a nix derivation. scripts/build-istio-envoy-fips.sh is the exact
   # recipe and regenerates this artifact; the hash below pins it, so the IMAGE
@@ -99,28 +97,49 @@ rec {
   # rejects Istio's config; Google's ASM ships no FIPS variant; Tetrate's is
   # subscription-gated. Nothing publishes a FIPS Envoy Istio can use.
   #
-  # Built from PROXY_REPO_SHA ce177c56 (istio 1.30.4's pin) with
-  # --config=boringssl-fips. Reports:
-  #   ce177c56.../1.38.4-dev/Clean/RELEASE/BoringSSL-FIPS
-  # Envoy always links BoringSSL, so that suffix is the only thing separating a
-  # FIPS build from a stock one.
+  # THE MODULE. TLS crypto is the AWS-LC 3 Cryptographic Module (static),
+  # version AWS-LC FIPS 3.1.0, NIST CMVP certificate #5314 (FIPS 140-3 L1,
+  # Active, sunset 2031-06-04). libcrypto.a/libssl.a are built outside Bazel
+  # exactly as Security Policy section 11.1 prescribes (Amazon Linux 2023,
+  # "cmake3 -DFIPS=1 .. && make", from the unmodified AWS-LC-FIPS-3.1.0.zip,
+  # sha256 fe408fa4...c9f1, `bssl isfips` = 1) and linked statically into
+  # istio/proxy ce177c56 (istio 1.30.4's pin) with --config=aws-lc-fips.
+  # Reports:
+  #   ce177c56.../1.38.4-dev/Modified/RELEASE/AWS-LC-FIPS
+  # and `nm envoy | grep awslc_version_string` shows T (statically linked).
+  #
+  # FIPS_202205 COMPLIANCE POLICY. AWS-LC has no SSL_CTX_set_compliance_policy,
+  # and Envoy's AWS-LC compat shim stubs it to FAIL, which would reject any
+  # listener carrying compliance_policies: [FIPS_202205]. The build applies a
+  # small Envoy-only patch (scripts/istio-envoy-awslc-fips/0014-*.patch; the
+  # module is untouched) that implements the policy with public AWS-LC APIs:
+  # TLS >= 1.2, TLS 1.2 ECDHE-*-AES-GCM only, TLS 1.3 AES-GCM only (no
+  # ChaCha20), P-256/P-384 only, no SHA-1/Ed25519 signatures. Not emulated:
+  # AWS-LC cannot REQUIRE extended master secret.
+  #
+  # OPERATIONAL ENVIRONMENT. #5314's tested OE is Amazon Linux 2023 on
+  # c6i.metal / r8g.metal-24xl; no vendor-affirmed OEs. Running on GKE
+  # (Container-Optimized OS, x86_64) rests on USER affirmation under the
+  # FIPS 140-3 Management Manual 7.9.2 ("another compatible operating
+  # system"). CMVP makes no statement about operation on unlisted OEs.
   #
   # autoPatchelfHook IS LOAD-BEARING. The Bazel build emits a binary requesting
   # /lib64/ld-linux-x86-64.so.2, absent in a nix image. Without patching,
   # pilot-agent fails with "fork/exec /usr/local/bin/envoy: no such file or
   # directory" — ENOENT for the missing INTERPRETER, not the missing file, which
-  # is thoroughly misleading. Patching does not disturb the crypto; the patched
-  # binary still reports BoringSSL-FIPS.
-  #
-  # NOT CMVP-VALIDATED. See the fips.* labels on images/istio-proxyv2-fips and
-  # the header of the build script.
+  # is thoroughly misleading. Patching rewrites the ELF interpreter/RPATH only;
+  # the module's integrity check covers its own .text and still passes (Envoy
+  # aborts at startup if the FIPS power-on self-test fails).
   envoy = stdenv.mkDerivation {
-    pname = "istio-envoy-boringssl-fips";
+    pname = "istio-envoy-awslc-fips";
     inherit version;
 
     src = fetchurl {
-      url = "https://github.com/nix-containers/images/releases/download/istio-envoy-fips-1.30.4/istio-envoy-fips-${proxySha}.gz";
-      hash = "sha256-JitAZRmjGTAdlmkDBe67AxlQHYbuWi+WhYtp1608Suo=";
+      # New asset under a new tag; the BoringSSL-FIPS asset at
+      # istio-envoy-fips-1.30.4 is left untouched.
+      url = "https://github.com/nix-containers/images/releases/download/istio-envoy-awslc-fips-1.30.4/istio-envoy-awslc-fips-3.1.0-${proxySha}.gz";
+      # gunzipped envoy sha256: 83da948d7afa82926afd1c9be4d2a9661aa065c89cf7b24e8fa6bacccbeb19f5
+      hash = "sha256-VTMq/gX9y1BqIC+XlWDADl9vLbRs53bGhB3F2M+AjFs=";
     };
 
     nativeBuildInputs = [ autoPatchelfHook ];
@@ -166,9 +185,8 @@ rec {
   # binaries in /bin plus the /usr/local/bin symlinks pilot-agent looks for, and
   # the bootstrap template at the path Envoy is handed.
   #
-  # PARTIAL FIPS, DELIBERATELY. pilot-agent is BoringCrypto; envoy is not. The
-  # gateway's external TLS is terminated by ENVOY, so this does not make the
-  # edge FIPS — it makes the agent that manages it FIPS. Labelled accordingly.
+  # pilot-agent is BoringCrypto (CMVP #4735); envoy links AWS-LC FIPS 3.1.0
+  # (CMVP #5314). The gateway's external TLS is terminated by ENVOY.
   proxyv2-bin = stdenvNoCC.mkDerivation {
     pname = "istio-proxyv2-fips";
     inherit version;
@@ -185,7 +203,7 @@ rec {
       runHook postInstall
     '';
     meta = with lib; {
-      description = "Istio proxyv2 payload: BoringCrypto pilot-agent + stock Envoy + bootstrap";
+      description = "Istio proxyv2 payload: BoringCrypto pilot-agent + AWS-LC-FIPS Envoy + bootstrap";
       homepage = "https://istio.io/";
       license = licenses.asl20;
       platforms = [ "x86_64-linux" ];
