@@ -7,7 +7,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "9.4.2";
+  version = "9.5.5";
 
   drv = pkgs.buildGoModule {
     pname = "apm-server";
@@ -17,11 +17,11 @@ let
       owner = "elastic";
       repo = "apm-server";
       rev = "v${version}";
-      hash = "sha256-HCdIWiqkj2/385Lfa6Un7/8HT7o4i4S6NjvrZfP/LB4=";
+      hash = "sha256-Ti8Q90fHqvyECtPuyHt+OlyIS4GKIDrD02hRG/Zlqsw=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-EDYlW3qU4rUx3X0KCdTk7nBPl1jXSBbzz9GlR2+fpnk=";
+    vendorHash = "sha256-btzSWVoYhC96F1fUM34iwPkUqnXsraqYxXbrRhHkrg4=";
 
     subPackages = [ "cmd/apm-server" ];
     ldflags = [ "-s" "-w" ];
