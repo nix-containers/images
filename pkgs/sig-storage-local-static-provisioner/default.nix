@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "local-volume-provisioner";
-  version = "2.9.0";
+  version = "2.10.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes-sigs";
     repo = "sig-storage-local-static-provisioner";
     rev = "v${version}";
-    hash = "sha256-a6rnyp2zhCauD1FQT1LJT302iEu5+NZU9thpFf1SqyE=";
+    hash = "sha256-rQXVC4rrPLzSjWEn07553RCzn32Mhdr4TvMxjdwvYMM=";
   };
 
   vendorHash = null;
