@@ -15,19 +15,19 @@
 
 buildGoModule (finalAttrs: {
   pname = "VictoriaMetrics";
-  # Was pinned to "pmm-6401-v1.153.0-cluster" -- a tag from Percona's PMM fork of
+  # Was pinned to "pmm-6401-v1.154.0-cluster" -- a tag from Percona's PMM fork of
   # VictoriaMetrics (branch-numbered PR tags), not the real upstream
   # VictoriaMetrics/VictoriaMetrics release, so both the ref AND the hash
-  # were wrong (verified: nix-prefetch-github against the real v1.153.0-cluster tag
+  # were wrong (verified: nix-prefetch-github against the real v1.154.0-cluster tag
   # returns a DIFFERENT hash than what was here). Corrected to the real
   # upstream tag and its real hash.
-  version = "1.153.0-cluster";
+  version = "1.154.0-cluster";
 
   src = fetchFromGitHub {
     owner = "VictoriaMetrics";
     repo = "VictoriaMetrics";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-/h677p/ozlm1UGfIird5T6xKMR6dddO8R8TrPCxxlF4=";
+    hash = "sha256-G19vHqujYDjX8p5PEs43J8ZnqVArqXFY9hcUDCpsnbs=";
   };
 
   vendorHash = null;
