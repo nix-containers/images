@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "snapshot-controller";
-  version = "8.6.0";
+  version = "8.7.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes-csi";
     repo = "external-snapshotter";
     rev = "v${version}";
-    hash = "sha256-9WSflI44XhecRqBWGKDfeMMHqOBwyInX9w2qMLDPylA=";
+    hash = "sha256-O3GLie9MDjr56L1xD1fdqo6E0C3hAx60KE39XLFgQwE=";
   };
 
   vendorHash = null;
