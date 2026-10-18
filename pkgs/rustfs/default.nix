@@ -6,11 +6,11 @@
 
 stdenv.mkDerivation rec {
   pname = "rustfs";
-  version = "1.0.2";
+  version = "1.0.3";
 
   src = fetchurl {
     url = "https://github.com/rustfs/rustfs/releases/download/${version}/rustfs-linux-x86_64-gnu-v${version}.zip";
-    hash = "sha256-KYL/eDUJlL0va7ZNHBuQaCjlN42jh7EKpOGyAQCcMGs=";
+    hash = "sha256-DLCSTfk3NNFPcIAE7/Sw5IoUf73AdHVsoNa47JGWKbg=";
   };
 
   nativeBuildInputs = [ autoPatchelfHook unzip ];
