@@ -7,13 +7,13 @@
 # build's version-specific llama.cpp patches.
 
 let
-  version = "0.32.0";
+  version = "0.34.2";
   ollama = pkgs.stdenv.mkDerivation {
     pname = "ollama-fips";
     inherit version;
     src = pkgs.fetchurl {
       url = "https://github.com/ollama/ollama/releases/download/v${version}/ollama-linux-amd64.tar.zst";
-      hash = "sha256-VjYtdgnfqeNarrt8nKslYF2PBSjsPV1YXcg9ZkIAK6s=";
+      hash = "sha256-4VW4NYmYbSxYH9vxOB6j69sWVJiDZ5zVoGJ/fNwFsSs=";
     };
     nativeBuildInputs = [ pkgs.zstd pkgs.autoPatchelfHook ];
     buildInputs = [ pkgs.stdenv.cc.cc.lib ];
