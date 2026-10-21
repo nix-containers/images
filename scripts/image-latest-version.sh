@@ -12,17 +12,17 @@ img="${1:?usage: image-latest-version.sh <image> [--json]}"
 def="images/$img/default.nix"
 [ -f "$def" ] || { echo "no def: $def" >&2; exit 2; }
 
-cur=$(grep -oE 'version = "[0-9][0-9A-Za-z.+-]*"' "$def" | head -1 | sed -E 's/version = "([^"]+)"/\1/')
+cur=$(grep -oE 'version = "[0-9][0-9A-Za-z.+-]*"' "$def" | head -1 | sed -E 's/version = "([^"]+)"/\1/' || true)
 
 # owner/repo from fetchFromGitHub or any github.com/OWNER/REPO
-owner=$(grep -oE 'owner = "[^"]+"' "$def" | head -1 | sed -E 's/owner = "([^"]+)"/\1/')
-repo=$(grep -oE 'repo = "[^"]+"' "$def" | head -1 | sed -E 's/repo = "([^"]+)"/\1/')
+owner=$(grep -oE 'owner = "[^"]+"' "$def" | head -1 | sed -E 's/owner = "([^"]+)"/\1/' || true)
+repo=$(grep -oE 'repo = "[^"]+"' "$def" | head -1 | sed -E 's/repo = "([^"]+)"/\1/' || true)
 host="github"
 if [ -z "$owner" ] || [ -z "$repo" ]; then
-  slug=$(grep -oE 'github\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+' "$def" | head -1 | sed 's#github.com/##;s/\.git$//')
+  slug=$(grep -oE 'github\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+' "$def" | head -1 | sed 's#github.com/##;s/\.git$//' || true)
   if [ -n "$slug" ]; then owner="${slug%%/*}"; repo="${slug##*/}";
   else
-    slug=$(grep -oE 'gitlab\.com/[A-Za-z0-9._/-]+' "$def" | head -1 | sed 's#gitlab.com/##')
+    slug=$(grep -oE 'gitlab\.com/[A-Za-z0-9._/-]+' "$def" | head -1 | sed 's#gitlab.com/##' || true)
     [ -n "$slug" ] && { host="gitlab"; owner="${slug%%/*}"; repo="${slug##*/}"; }
   fi
 fi
