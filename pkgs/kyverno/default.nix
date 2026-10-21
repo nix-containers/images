@@ -11,13 +11,13 @@ buildGoModule rec {
   # real v1.19.1 app release -- verified independently via
   # `nix-prefetch-github kyverno kyverno --rev v1.19.1` returning the exact
   # same hash. Fixing the version string to match what the hash actually is.
-  version = "kyverno-policies-chart-3.9.1";
+  version = "1.19.2";
 
   src = fetchFromGitHub {
     owner = "kyverno";
     repo = "kyverno";
     rev = "v${version}";
-    hash = "sha256-3sFvqB3/18NJWViJynhk5urJ4rdHWrXQkzwNrjIE9iA=";
+    hash = "sha256-Q94qvOTrGl/82cooREqFAw+G7lY/tnpmaOb1JA2ZYOQ=";
   };
 
   vendorHash = null;
