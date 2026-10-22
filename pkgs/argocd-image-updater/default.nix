@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "argocd-image-updater";
-  version = "1.3.1";
+  version = "1.4.0";
 
   src = fetchFromGitHub {
     owner = "argoproj-labs";
     repo = "argocd-image-updater";
     rev = "v${version}";
-    hash = "sha256-7WCnnEbw1Up3JylrQgR9WVrxVInHVSLNZMr1BvzCmZg=";
+    hash = "sha256-z6nqAxSJtXuPlqwGDoedkEMtN0t3Syj4bIdtUZ/4w+U=";
   };
 
   vendorHash = "sha256-8r+XThKzH5619Su+sxK83CF8XuSFGtLXMKZOHgWQR7c=";

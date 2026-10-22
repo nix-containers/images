@@ -4,7 +4,7 @@
 
 buildGoModule rec {
   pname = "cluster-autoscaler";
-  version = "addon-resizer-1.8.24";
+  version = "ertical-pod-autoscaler/v1.8.1";
 
   src = fetchFromGitHub {
     owner = "kubernetes";
