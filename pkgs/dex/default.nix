@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "dex";
-  version = "2.46.0";
+  version = "2.46.1";
 
   src = fetchFromGitHub {
     owner = "dexidp";
     repo = "dex";
     rev = "v${version}";
-    hash = "sha256-5An46m2am9Z7HJkgn6TU1rVEkmROwNePqZ/fapHJPao=";
+    hash = "sha256-1GlA38uxneuTvA0qbzHpZzavVKhyzSz1RqgymZ1SctQ=";
   };
 
   vendorHash = "sha256-1D20aZhNUi7MUPfRTmSV4CZjLr0lUzbX4TI2LFcPY3U=";
