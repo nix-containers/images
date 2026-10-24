@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "karpenter";
-  version = "1.15.0";
+  version = "1.15.1";
 
   src = fetchFromGitHub {
     owner = "aws";
     repo = "karpenter-provider-aws";
     rev = "v${version}";
-    hash = "sha256-oLr822XopwnS9hgiCTwAFbZrHq2oAf8D10nFXwnQ+b0=";
+    hash = "sha256-1U4pHxm0/PQWqbftZFU/5sVOtfnJy6E3mwEnDEejlCo=";
   };
 
   proxyVendor = true;

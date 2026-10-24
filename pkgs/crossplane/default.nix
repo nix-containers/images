@@ -2,13 +2,13 @@
 
 buildGoModule rec {
   pname = "crossplane";
-  version = "2.4.2";
+  version = "2.4.3";
 
   src = fetchFromGitHub {
     owner = "crossplane";
     repo = "crossplane";
     rev = "v${version}";
-    hash = "sha256-m4xt/ZxTAvW2ECIwBsY4CpuSE037cHPusWsBCa8BNAU=";
+    hash = "sha256-LqefQ/Ov3Q+lYh06CdESNPlcs9QWk+d2KlK5eIZ6oWY=";
   };
 
   vendorHash = "sha256-mpgMwrAFpGeef5R+I3up8Ezjey17ppHfUpnvdeLDnbc=";
