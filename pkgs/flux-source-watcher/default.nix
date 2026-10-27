@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "flux-source-watcher";
-  version = "2.3.0";
+  version = "2.3.1";
 
   src = fetchFromGitHub {
     owner = "fluxcd";
     repo = "source-watcher";
     rev = "v${version}";
-    hash = "sha256-nH/QrWjCjV/03QZzB43vKBUUVSAXjuARrwmoV0NkQSI=";
+    hash = "sha256-nz4apstaLH/1eEE2pWpBoAeKDvCubwv6b4TW6ZhLeYE=";
   };
 
   vendorHash = "sha256-XdhUgd4Z0RX+HqWGdRBNeXsAprNkbDEqtoldwZ+YZp8=";
