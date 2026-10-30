@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "cluster-autoscaler";
-  version = "ertical-pod-autoscaler/v1.8.1";
+  version = "1.37.0";
 
   src = fetchFromGitHub {
     owner = "kubernetes";
     repo = "autoscaler";
     rev = "cluster-autoscaler-${version}";
-    hash = "sha256-yswbA5NDzXTiGkamljNySTe6aOZKWWhR8Hc9UJUhWRY=";
+    hash = "sha256-Yt0bpkYFDi7jAOn1lCSPzttX3H5BaxrrZI6Ljy5YKTY=";
   };
 
   vendorHash = null;
