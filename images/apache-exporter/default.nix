@@ -7,7 +7,7 @@
 # upstream prebuilt binary clear at each rebuild.
 
 let
-  version = "1.1.1";
+  version = "1.1.3";
 
   drv = pkgs.buildGoModule {
     pname = "apache_exporter";
@@ -17,11 +17,11 @@ let
       owner = "Lusitaniae";
       repo = "apache_exporter";
       rev = "v${version}";
-      hash = "sha256-Aa325MbiPAoXr/30N5ELX61/Uo7MwrYbDj8cGLSI0fY=";
+      hash = "sha256-XhhQA65TA5FRbZLb5CKhpdU8zS69J08i95I+5uFs82A=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-nXUJIl3rfWisL5wOg3WrFB+BAtecgDuZUBhVVmWN+QM=";
+    vendorHash = "sha256-MjD0iTM7YowzUjK9rifHkD1uBZnXRHe+ltCUGDaf8d4=";
 
     subPackages = [ "." ];
     ldflags = [ "-s" "-w" ];

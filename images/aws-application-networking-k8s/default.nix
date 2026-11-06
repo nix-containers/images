@@ -4,7 +4,7 @@
 # AWS Kubernetes component
 
 let
-  version = "2.1.2";
+  version = "2.1.4";
   aws-component = buildGoModule {
     pname = "aws-application-networking-k8s";
     inherit version;
@@ -13,10 +13,10 @@ let
       owner = "aws";
       repo = "aws-application-networking-k8s";
       rev = "v${version}";
-      hash = "sha256-+YQ/TME/5ciJalafnvdod2UdcdTeMAwxQNASWYGeetA=";
+      hash = "sha256-A1C4MZkOGS8kTiGr02eOcSiT7OZ7TgEnPw7bsBba86g=";
     };
 
-    vendorHash = "sha256-7YA7cK83/SrE0no+jvXGOCXPudQFOrYsm4oOhS00Fjk=";
+    vendorHash = "sha256-cqW/kPhZFbmwQo63EOYZxcCuYOXMcGRUJF1sl5Uz/is=";
     subPackages = [ "." ];
     
     env.CGO_ENABLED = 0;

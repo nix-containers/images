@@ -5,7 +5,7 @@
 # FIPS-compliant build using BoringCrypto
 
 let
-  version = "1.3.1";
+  version = "1.3.2";
 
   age-fips = buildGoModule rec {
     pname = "age-fips";
