@@ -39,7 +39,8 @@
 # ECDHE-*-AES-GCM; TLS1.3 AES-GCM only; P-256/P-384; no SHA-1/Ed25519 sigalgs).
 # AWS-LC cannot REQUIRE extended master secret, so that part is not emulated.
 #
-# Requirements: docker, ~60 GB free disk, ~20 cores recommended.
+# Requirements: docker, ~60 GB free disk. Defaults to JOBS=6 (several hours);
+# raise JOBS only on a host whose system disk is NVMe and not shared with etcd.
 #
 # THREE THINGS THAT WILL WASTE YOUR TIME IF YOU DO NOT KNOW THEM:
 #   1. `build-tools` has NO bazel. The proxy repo needs `build-tools-proxy`.
@@ -97,7 +98,18 @@ git -C "$WORK/proxy" clean -fdq
 [ -f "$PROXY_PATCH" ] || { echo "ERROR: no istio/proxy patch for ${PROXY_SHA}: $PROXY_PATCH" >&2; exit 1; }
 git -C "$WORK/proxy" apply "$PROXY_PATCH"
 
+# Parallelism and priority. JOBS caps Bazel actions AND the container's CPU
+# quota; NICE/IONICE wrap bazel inside the container (nice on the host-side
+# `docker run` would not reach the build). ionice -c3 only bites on I/O
+# schedulers that honour it (bfq); on NVMe with `none` it is a no-op, so the
+# real protection is JOBS plus running on a node whose system disk can take it.
+JOBS="${JOBS:-6}"
+NICE="${NICE:-10}"
+IONICE_CLASS="${IONICE_CLASS:-3}"
+echo "==> bazel: --jobs=${JOBS}, nice ${NICE}, ionice -c${IONICE_CLASS}"
 docker run --rm -u 0:0 \
+  --cpus="$JOBS" \
+  -e JOBS="$JOBS" -e NICE="$NICE" -e IONICE_CLASS="$IONICE_CLASS" \
   -v "$WORK/proxy":/work \
   -v "$WORK/bazel-out":/bazel-out \
   -v "$WORK/bazel-cache":/root/.cache/bazel \
@@ -107,11 +119,14 @@ docker run --rm -u 0:0 \
     git config --global --add safe.directory /work
     # Follow the checked-out tree: 1.30 (ce177c56) pins 7.7.1, 1.31 (defdcd65) 8.7.0.
     export USE_BAZEL_VERSION="$(cat .bazelversion)"
-    bazel --output_base=/bazel-out build \
+    prio=(nice -n "$NICE")
+    command -v ionice >/dev/null && prio+=(ionice -c "$IONICE_CLASS")
+    "${prio[@]}" bazel --output_base=/bazel-out build \
       --config=release \
       --config=aws-lc-fips \
       --verbose_failures \
-      --jobs="${JOBS:-20}" \
+      --jobs="$JOBS" \
+      --local_resources=cpu="$JOBS" \
       --disk_cache=/root/.cache/bazel/disk \
       //:envoy
   '
