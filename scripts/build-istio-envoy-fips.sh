@@ -25,7 +25,7 @@
 #      used: it compiles with a different compiler/flags than the policy's
 #      method, and the Management Manual (7.9.2 fn 5) only allows a user
 #      recompile that follows the policy's method without modification.
-#   2. istio/proxy at PROXY_SHA with istio-envoy-awslc-fips/istio-proxy-*.patch:
+#   2. istio/proxy at PROXY_SHA with istio-envoy-awslc-fips/istio-proxy-<sha8>-*.patch:
 #        WORKSPACE  @aws_lc -> new_local_repository on the stage-1 libraries
 #                   + envoy patch 0014 (FIPS_202205 policy on AWS-LC, below)
 #        BUILD      drop cryptomb/QAT key providers for AWS-LC (as istio/proxy
@@ -55,9 +55,15 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 PATCHDIR="$HERE/istio-envoy-awslc-fips"
-PROXY_SHA="${PROXY_SHA:-ce177c56fe75661f16b654e2f164d4ab02058222}"
-ISTIO_TAG="${ISTIO_TAG:-1.30.4}"
-IMG="${IMG:-registry.istio.io/testing/build-tools-proxy:release-1.30-ad8991a47cf3c61799caa5569b9458d95eb612f2}"
+# Defaults track istio 1.31.4: PROXY_SHA is istio.deps PROXY_REPO_SHA at that
+# tag, IMG is istio/proxy common/scripts/setup_env.sh IMAGE_VERSION at PROXY_SHA.
+# To rebuild 1.30.4: PROXY_SHA=ce177c56fe75661f16b654e2f164d4ab02058222
+#   ISTIO_TAG=1.30.4 IMG=registry.istio.io/testing/build-tools-proxy:release-1.30-ad8991a47cf3c61799caa5569b9458d95eb612f2
+PROXY_SHA="${PROXY_SHA:-defdcd65d0c035b54b324dc6ed4ef258e22bf94d}"
+ISTIO_TAG="${ISTIO_TAG:-1.31.4}"
+IMG="${IMG:-registry.istio.io/testing/build-tools-proxy:release-1.31-1e91690fdecc6121b740c677fc8049f4f76319c3}"
+# istio/proxy patch, one per PROXY_SHA (WORKSPACE drifts between releases).
+PROXY_PATCH="${PROXY_PATCH:-$PATCHDIR/istio-proxy-${PROXY_SHA:0:8}-awslc-fips.patch}"
 AL2023="${AL2023:-amazonlinux:2023}"
 WORK="${WORK:-/tmp/istio-envoy-awslc-fips-build}"
 AWSLC_ZIP_URL="https://github.com/aws/aws-lc/archive/refs/tags/AWS-LC-FIPS-3.1.0.zip"
@@ -88,7 +94,8 @@ fi
 git -C "$WORK/proxy" fetch --depth 1 origin "$PROXY_SHA"
 git -C "$WORK/proxy" checkout -f "$PROXY_SHA"
 git -C "$WORK/proxy" clean -fdq
-git -C "$WORK/proxy" apply "$PATCHDIR/istio-proxy-ce177c56-awslc-fips.patch"
+[ -f "$PROXY_PATCH" ] || { echo "ERROR: no istio/proxy patch for ${PROXY_SHA}: $PROXY_PATCH" >&2; exit 1; }
+git -C "$WORK/proxy" apply "$PROXY_PATCH"
 
 docker run --rm -u 0:0 \
   -v "$WORK/proxy":/work \
@@ -98,7 +105,8 @@ docker run --rm -u 0:0 \
   -w /work "$IMG" \
   bash -c '
     git config --global --add safe.directory /work
-    export USE_BAZEL_VERSION=7.7.1
+    # Follow the checked-out tree: 1.30 (ce177c56) pins 7.7.1, 1.31 (defdcd65) 8.7.0.
+    export USE_BAZEL_VERSION="$(cat .bazelversion)"
     bazel --output_base=/bazel-out build \
       --config=release \
       --config=aws-lc-fips \
