@@ -19,19 +19,21 @@
 # which must report boringcrypto. A binary without that line is not a FIPS
 # build regardless of what the derivation is called.
 
-{ lib, fetchFromGitHub, buildGoModule, fetchurl, stdenvNoCC, autoPatchelfHook, zlib, stdenv, runCommand, cacert }:
+{ lib, fetchFromGitHub, buildGoModule, fetchurl, stdenvNoCC, autoPatchelfHook, zlib, stdenv, runCommand, cacert
+, elfutils, libpcap, iptables, libbpf, iproute2 }:
 
 let
-  version = "1.30.4";
+  version = "1.31.4";
 
-  # PROXY_REPO_SHA from istio/istio istio.deps at tag 1.30.4.
-  proxySha = "ce177c56fe75661f16b654e2f164d4ab02058222";
+  # PROXY_REPO_SHA from istio/istio istio.deps at tag 1.31.4 (Envoy 1.39.7-dev,
+  # envoyproxy/envoy 8893f913).
+  proxySha = "defdcd65d0c035b54b324dc6ed4ef258e22bf94d";
 
   src = fetchFromGitHub {
     owner = "istio";
     repo = "istio";
     rev = version;
-    hash = "sha256-v/fcC+rtU5ScKjiRfgJ/CC4G1+DbaYri9BG146is+AA=";
+    hash = "sha256-PYzR97GLahmOHQYFsLCjQ16jZjZuVUXO3LH085iFsNw=";
   };
 
   commonAttrs = {
@@ -55,7 +57,7 @@ rec {
 
   pilot-discovery = buildGoModule (commonAttrs // {
     pname = "pilot-discovery-fips";
-    vendorHash = "sha256-CEoahz/BPtKpsjvjB/FQKDX9QEk9mycCtMSOSPZbL3o=";
+    vendorHash = "sha256-aG3aG+0E4roSFVX+0s3WI8Gt1SuSf6MArauiOJv+6r0=";
     subPackages = [ "pilot/cmd/pilot-discovery" ];
     ldflags = [
       "-s" "-w"
@@ -70,7 +72,7 @@ rec {
 
   pilot-agent = buildGoModule (commonAttrs // {
     pname = "pilot-agent-fips";
-    vendorHash = "sha256-CEoahz/BPtKpsjvjB/FQKDX9QEk9mycCtMSOSPZbL3o=";
+    vendorHash = "sha256-aG3aG+0E4roSFVX+0s3WI8Gt1SuSf6MArauiOJv+6r0=";
     subPackages = [ "pilot/cmd/pilot-agent" ];
     ldflags = [
       "-s" "-w"
@@ -103,9 +105,9 @@ rec {
   # exactly as Security Policy section 11.1 prescribes (Amazon Linux 2023,
   # "cmake3 -DFIPS=1 .. && make", from the unmodified AWS-LC-FIPS-3.1.0.zip,
   # sha256 fe408fa4...c9f1, `bssl isfips` = 1) and linked statically into
-  # istio/proxy ce177c56 (istio 1.30.4's pin) with --config=aws-lc-fips.
+  # istio/proxy defdcd65 (istio 1.31.4's pin) with --config=aws-lc-fips.
   # Reports:
-  #   ce177c56.../1.38.4-dev/Modified/RELEASE/AWS-LC-FIPS
+  #   defdcd65.../1.39.7-dev/Modified/RELEASE/AWS-LC-FIPS
   # and `nm envoy | grep awslc_version_string` shows T (statically linked).
   #
   # FIPS_202205 COMPLIANCE POLICY. AWS-LC has no SSL_CTX_set_compliance_policy,
@@ -135,11 +137,17 @@ rec {
     inherit version;
 
     src = fetchurl {
-      # New asset under a new tag; the BoringSSL-FIPS asset at
-      # istio-envoy-fips-1.30.4 is left untouched.
-      url = "https://github.com/nix-containers/images/releases/download/istio-envoy-awslc-fips-1.30.4/istio-envoy-awslc-fips-3.1.0-${proxySha}.gz";
-      # gunzipped envoy sha256: 83da948d7afa82926afd1c9be4d2a9661aa065c89cf7b24e8fa6bacccbeb19f5
-      hash = "sha256-VTMq/gX9y1BqIC+XlWDADl9vLbRs53bGhB3F2M+AjFs=";
+      # One release tag per istio version; the 1.30.4 assets (AWS-LC and
+      # BoringSSL-FIPS) are left untouched.
+      url = "https://github.com/nix-containers/images/releases/download/istio-envoy-awslc-fips-${version}/istio-envoy-awslc-fips-3.1.0-${proxySha}.gz";
+      # PENDING: the 1.31.4 asset does not exist yet. Produce it with
+      #   scripts/build-istio-envoy-fips.sh   (defaults now track 1.31.4)
+      # on an x86_64 Linux docker host (~60 GB disk, ~20 cores), attach it to a
+      # new release istio-envoy-awslc-fips-1.31.4, then replace this with
+      #   nix hash file --type sha256 --sri istio-envoy-awslc-fips-3.1.0-<proxySha>.gz
+      # Until then istio-proxyv2-fips fails to build, by design: there is no
+      # silent fallback to a non-FIPS or older Envoy.
+      hash = lib.fakeHash;
     };
 
     nativeBuildInputs = [ autoPatchelfHook ];
@@ -154,6 +162,28 @@ rec {
       runHook postInstall
     '';
     dontStrip = true;
+  };
+
+  # Minimal iptables / iproute2 for the istio images.
+  #
+  # WHY. The stock nixpkgs builds pull two optional dependency chains that no
+  # istio component ever exercises, and both carried unpatched Critical CVEs
+  # into istio-proxyv2-fips 1.30.4 (grype, 2026-11-08):
+  #   iptables -> libpcap (withRdma) -> rdma-core -> perl
+  #       perl CVE-2026-13221 (Critical, no fix)
+  #   iproute2, libbpf -> elfutils (debuginfod) -> curl -> openssl, libssh2, krb5
+  #       libssh2 CVE-2026-7598 (Critical, no fix), openssl CVE-2026-63073 /
+  #       CVE-2026-75803 (Critical), plus a dozen Highs across the three.
+  # istio-iptables only needs the xtables binaries; `ip` only needs netlink.
+  # RDMA packet capture (nfbpf_compile's libpcap) and debuginfod symbol fetching
+  # are dead weight, so they are switched off rather than patched around.
+  elfutilsMin = elfutils.override { enableDebuginfod = false; };
+  libpcapMin = libpcap.override { withRdma = false; };
+  iptablesMin = iptables.override { libpcap = libpcapMin; };
+  iproute2Min = iproute2.override {
+    iptables = iptablesMin;
+    elfutils = elfutilsMin;
+    libbpf = libbpf.override { elfutils = elfutilsMin; };
   };
 
   # OS CA bundle under the filename istio actually probes.
