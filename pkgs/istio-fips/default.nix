@@ -32,7 +32,9 @@ let
   src = fetchFromGitHub {
     owner = "istio";
     repo = "istio";
-    rev = version;
+    # refs/tags/: istio/istio has both a branch and a tag named 1.31.4, so the
+    # bare-ref archive URL is ambiguous and GitHub returns an error page.
+    rev = "refs/tags/${version}";
     hash = "sha256-PYzR97GLahmOHQYFsLCjQ16jZjZuVUXO3LH085iFsNw=";
   };
 
