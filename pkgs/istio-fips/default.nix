@@ -142,14 +142,10 @@ rec {
       # One release tag per istio version; the 1.30.4 assets (AWS-LC and
       # BoringSSL-FIPS) are left untouched.
       url = "https://github.com/nix-containers/images/releases/download/istio-envoy-awslc-fips-${version}/istio-envoy-awslc-fips-3.1.0-${proxySha}.gz";
-      # PENDING: the 1.31.4 asset does not exist yet. Produce it with
-      #   scripts/build-istio-envoy-fips.sh   (defaults now track 1.31.4)
-      # on an x86_64 Linux docker host (~60 GB disk, ~20 cores), attach it to a
-      # new release istio-envoy-awslc-fips-1.31.4, then replace this with
-      #   nix hash file --type sha256 --sri istio-envoy-awslc-fips-3.1.0-<proxySha>.gz
-      # Until then istio-proxyv2-fips fails to build, by design: there is no
-      # silent fallback to a non-FIPS or older Envoy.
-      hash = lib.fakeHash;
+      # Built by scripts/build-istio-envoy-fips.sh at 3f131340f (Envoy patches
+      # 0014-0017); binary sha256
+      # 332766762611079856fe459ede27074ae3811bc4fe1f6a292db1531b018a43d1.
+      hash = "sha256-2zrBp9BwgCD+1cOZwN9tSkOL9Ww0iFJfdbI9xVph3K4=";
     };
 
     nativeBuildInputs = [ autoPatchelfHook ];
