@@ -58,7 +58,7 @@
 #   ... and 6 more
 
 let
-  version = "3.4.5";
+  version = "3.6.1";
   argocd = buildGoModule {
     pname = "argocd";
     inherit version;

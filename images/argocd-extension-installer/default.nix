@@ -1,7 +1,7 @@
 { mkImage, fetchFromGitHub, buildGoModule, lib, ... }:
 
 let
-  version = "0.0.5";
+  version = "1.1.0";
   argocd-extension-installer = buildGoModule {
     pname = "argocd-extension-installer";
     inherit version;
@@ -10,7 +10,7 @@ let
       owner = "argoproj-labs";
       repo = "argocd-extension-installer";
       rev = "v${version}";
-      hash = "sha256-dExoVcy9v4PtkAOkzj2vMWBvyDoxid9+AmwJWi5QoO8=";
+      hash = "sha256-NYBVT+q2GN5ZPjse911VzMV/D6fc9OGgwN+8bwypBh8=";
     };
 
     vendorHash = null;
