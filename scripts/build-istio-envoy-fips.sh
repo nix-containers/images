@@ -134,11 +134,13 @@ docker run --rm -u 0:0 \
 BIN="$WORK/bazel-out/execroot/io_istio_proxy/bazel-out/k8-opt/bin/envoy"
 echo "==> verifying the binary reports AWS-LC-FIPS and statically links the module"
 docker run --rm -u 0:0 -v "$(dirname "$BIN")":/b:ro "$IMG" /b/envoy --version \
-  | grep -q 'AWS-LC-FIPS' \
+  | grep 'AWS-LC-FIPS' >/dev/null \
   || { echo "ERROR: binary does not report AWS-LC-FIPS" >&2; exit 1; }
-nm "$BIN" | grep -q ' T awslc_version_string$' \
+# grep >/dev/null, not grep -q: -q exits on the first match, nm/strings then
+# die of SIGPIPE and pipefail turns a found symbol into a failure.
+nm "$BIN" | grep ' T awslc_version_string$' >/dev/null \
   || { echo "ERROR: awslc_version_string not statically linked" >&2; exit 1; }
-strings -a "$BIN" | grep -qx 'AWS-LC FIPS 3.1.0' \
+strings -a "$BIN" | grep -x 'AWS-LC FIPS 3.1.0' >/dev/null \
   || { echo "ERROR: module version string 'AWS-LC FIPS 3.1.0' missing" >&2; exit 1; }
 
 ASSET="$WORK/istio-envoy-awslc-fips-3.1.0-${PROXY_SHA}.gz"
