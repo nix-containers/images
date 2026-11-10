@@ -6,7 +6,7 @@
 
 stdenv.mkDerivation rec {
   pname = "rustfs";
-  version = "1.0.4";
+  version = "1.0.5";
 
   src = fetchurl {
     url = "https://github.com/rustfs/rustfs/releases/download/${version}/rustfs-linux-x86_64-gnu-v${version}.zip";
