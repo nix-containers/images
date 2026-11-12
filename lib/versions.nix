@@ -574,6 +574,7 @@ let
     "openjdk-8-openj9" = getVer "jdk8";
     "openjdk-8-openj9-default-jdk" = getVer "jdk8";
     "openjdk-crac" = getVer "jdk21";
+    "os-shell" = getVer "bash";
     "os-shell-nixchart" = getVer "util-linux";
     "rabbitmq-nixchart" = getVer "rabbitmq-server";
     "selenium-base" = getVer "selenium-server-standalone";
