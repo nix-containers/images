@@ -7,6 +7,7 @@
 let
   cloudnative-pg = pkgs.cloudnative-pg;
   version = cloudnative-pg.version;
+  goArch = pkgs.stdenv.hostPlatform.go.GOARCH;
 
   # The cloudnative-pg helm chart hardcodes the operator container's
   # command as `["/manager"]` (see chart's Deployment template), so any
@@ -14,9 +15,12 @@ let
   # level. nixpkgs puts the binary at /nix/store/.../bin/manager, so we
   # inject a symlink. Same pattern as the keda chart's `/keda` symlink
   # added in PR #39 (chart-cmd-paths assertion in smoketest-helpers.sh).
+  # The operator discovers injectable instance-manager binaries by globbing
+  # `operator/manager_<goarch>` relative to its working directory (`/`).
   managerCompat = pkgs.runCommand "cloudnative-pg-manager-compat" {} ''
-    mkdir -p $out
+    mkdir -p $out/operator
     ln -s ${cloudnative-pg}/bin/manager $out/manager
+    ln -s ${cloudnative-pg}/bin/manager_${goArch} $out/operator/manager_${goArch}
   '';
 in
 mkImage {
