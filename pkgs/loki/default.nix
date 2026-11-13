@@ -4,13 +4,13 @@
 
 buildGoModule rec {
   pname = "loki";
-  version = "helm-loki-7.6.0";
+  version = "3.7.10";
 
   src = fetchFromGitHub {
     owner = "grafana";
     repo = "loki";
     rev = "v${version}";
-    hash = "sha256-47zCi1qY3/IHLaSd02Br/SDclHQFLqv2OAusxbYPftk=";
+    hash = "sha256-hEzhXFejqJbDdQ5OyV2U2wqQyAm8IovbCoSMzumTeio=";
   };
 
   vendorHash = null;
