@@ -5,7 +5,7 @@
 # FIPS-compliant build for FedRAMP compliance
 
 let
-  version = "1.2.2";
+  version = "1.5.0";
 
   argocd-image-updater-fips = buildGoModule rec {
     pname = "argocd-image-updater-fips";
@@ -15,10 +15,10 @@ let
       owner = "argoproj-labs";
       repo = "argocd-image-updater";
       rev = "v${version}";
-      hash = "sha256-fncxBIRDPwxbtRIxp4Ql+55Ez1jjKZBmC6ClZ2OlQhI=";
+      hash = "sha256-hHO9rPKSRbRsHzN52T+zfkHAbOM4SvH0i+NFwe+ZwTE=";
     };
 
-    vendorHash = "sha256-8r+XThKzH5619Su+sxK83CF8XuSFGtLXMKZOHgWQR7c=";
+    vendorHash = "sha256-p3o8WBPAHNbtwBcZbvLakoK2nI1Dkzmc9AyU7UzN+Pg=";
 
     subPackages = [ "cmd" ];
 

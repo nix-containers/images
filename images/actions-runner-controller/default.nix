@@ -4,7 +4,7 @@
 # https://github.com/actions/actions-runner-controller
 
 let
-  version = "0.14.2";
+  version = "0.15.1";
 
   actions-runner-controller = buildGoModule rec {
     pname = "actions-runner-controller";
@@ -14,10 +14,10 @@ let
       owner = "actions";
       repo = "actions-runner-controller";
       rev = "gha-runner-scale-set-${version}";
-      hash = "sha256-KAbZWKjJ9vJDeKy1IXU80aZa7+IecVpfo5ZqFGfamgc=";
+      hash = "sha256-kkwWr/LpD9ggMGye+aeBgHUWWM9aV2os3fYAVgG/J2Y=";
     };
 
-    vendorHash = "sha256-dC4KNfx83fZR+x8SsOc4rVPhAeJxo4DmjGivDaFnnkQ=";
+    vendorHash = "sha256-mWQOyfWxazkxDxYyN4qdcyy0t0UWBSiqQ9hHIzzdq0A=";
 
     subPackages = [ "." ];
 
